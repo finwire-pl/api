@@ -313,7 +313,573 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
+    schemas: {
+        RateTableEntryDto: {
+            /** @example wibor-3m */
+            indicator: string;
+            /** @example 2026-06-05 */
+            date: string;
+            /** @example 3.85 */
+            value: number;
+        };
+        InterestRatesTableDataDto: {
+            /** @example NBP, GPW Benchmark */
+            source: string;
+            /** @example 2026-06-05T06:00:00.000Z */
+            fetched_at: string;
+            /** @example 7 */
+            count: number;
+            entries: components["schemas"]["RateTableEntryDto"][];
+        };
+        ResponseMetaDto: {
+            /** @example cpi */
+            datasetId: string;
+            /** @example GUS */
+            source: string;
+            /** @example https://stat.gov.pl */
+            sourceUrl: string;
+            /** @example Public GUS data (CC BY 4.0) - attribution required. */
+            license: string;
+            /** @example 2026-06-05 */
+            asOf: string | null;
+            /** @example 2026-06-06T08:00:00.000Z */
+            fetchedAt: string;
+            /** @example Source: finwire.pl (GUS), https://public-api.finwire.pl/datasets/cpi */
+            citation: string;
+            /** @example https://public-api.finwire.pl/datasets/cpi */
+            docsUrl: string;
+        };
+        InterestRatesTableResponseDto: {
+            data: components["schemas"]["InterestRatesTableDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        TimeValuePointDto: {
+            /** @example 2026-06-05 */
+            date: string;
+            /** @example 5.85 */
+            value: number;
+        };
+        RateHistoryDataDto: {
+            /** @example NBP, GPW Benchmark */
+            source: string;
+            /** @example wibor-3m */
+            indicator: string;
+            /** @example 365 */
+            days: number;
+            /** @example 252 */
+            count: number;
+            points: components["schemas"]["TimeValuePointDto"][];
+        };
+        RateHistoryResponseDto: {
+            data: components["schemas"]["RateHistoryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        CpiEntryDto: {
+            /**
+             * @description Period for monthly (YYYY-MM)
+             * @example 2026-04
+             */
+            period?: string | null;
+            /**
+             * @description Year for yearly
+             * @example 2025
+             */
+            year?: number | null;
+            /**
+             * @description Year-over-year change (%)
+             * @example 3.2
+             */
+            yoy: number;
+            /**
+             * @description Month-over-month change (%)
+             * @example 0.1
+             */
+            mom?: number | null;
+        };
+        CpiDataDto: {
+            /** @example GUS (stat.gov.pl) */
+            source: string;
+            /** @example 24 */
+            count: number;
+            entries: components["schemas"]["CpiEntryDto"][];
+        };
+        CpiResponseDto: {
+            data: components["schemas"]["CpiDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        FxTableEntryDto: {
+            /** @example EUR */
+            code: string;
+            /** @example 4.25 */
+            mid: number;
+            /** @example 4.21 */
+            bid: number | null;
+            /** @example 4.29 */
+            ask: number | null;
+            /** @example 0.01 */
+            change: number;
+            /** @example 0.24 */
+            changePct: number;
+        };
+        FxTableDataDto: {
+            /** @example NBP */
+            source: string;
+            /** @example NBP Table A (mid) + C (bid/ask) */
+            source_type: string;
+            /** @example 4 */
+            count: number;
+            entries: components["schemas"]["FxTableEntryDto"][];
+        };
+        FxTableResponseDto: {
+            data: components["schemas"]["FxTableDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        FxHistoryDataDto: {
+            /** @example NBP */
+            source: string;
+            /** @example EUR */
+            code: string;
+            /** @example 365 */
+            days: number;
+            /** @example 252 */
+            count: number;
+            points: components["schemas"]["TimeValuePointDto"][];
+        };
+        FxHistoryResponseDto: {
+            data: components["schemas"]["FxHistoryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        HousingCityDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            city: string;
+            /** @example wait */
+            verdict: string;
+        };
+        HousingListDataDto: {
+            /** @example 2026-06-06T06:00:00.000Z */
+            generatedAt: string;
+            /** @example 17 */
+            count: number;
+            /** @example Q4 2025 */
+            asOf: string;
+            cities: components["schemas"]["HousingCityDto"][];
+        };
+        HousingListResponseDto: {
+            data: components["schemas"]["HousingListDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        HousingPricePointDto: {
+            /** @example Q4 2025 */
+            kwartal: string;
+            /** @example wtorny */
+            market: string;
+            /** @example 13500 */
+            cenaM2: number;
+        };
+        HousingDetailDataDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            city: string;
+            /** @example wait */
+            verdict: string;
+            /** @description Quarterly price history */
+            history: components["schemas"]["HousingPricePointDto"][];
+        };
+        HousingDetailResponseDto: {
+            data: components["schemas"]["HousingDetailDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        BondEntryDto: {
+            /** @example EDO0635 */
+            code: string;
+            /** @example 2026-06 */
+            month: string;
+            /**
+             * @description First-year rate (%)
+             * @example 6.55
+             */
+            first_year_rate: number;
+            /**
+             * @description Margin over CPI (pp)
+             * @example 2
+             */
+            margin_over_cpi: number | null;
+            /** @example cpi-linked */
+            indexation_type: string;
+        };
+        BondsDataDto: {
+            /** @example Ministry of Finance */
+            source: string;
+            /** @example 2026-06-01T00:00:00.000Z */
+            scraped_at: string;
+            /** @example 8 */
+            count: number;
+            entries: components["schemas"]["BondEntryDto"][];
+        };
+        BondsResponseDto: {
+            data: components["schemas"]["BondsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        WageBreakpointDto: {
+            /**
+             * @description Percentile
+             * @example 90
+             */
+            p: number;
+            /** @example 12500 */
+            value: number;
+        };
+        WageRegionDto: {
+            /** @example mazowieckie */
+            slug: string;
+            /** @example Mazowieckie */
+            label: string;
+            /** @example 9488.94 */
+            avgPln: number;
+        };
+        WageRegionAvgDto: {
+            /** @example 8181.72 */
+            nationalAvgPln: number;
+            /** @example GUS, average gross wage by province 2024 */
+            source: string;
+            regions: components["schemas"]["WageRegionDto"][];
+        };
+        WagesDataDto: {
+            /** @example 2024-10 */
+            period: string;
+            /** @example October 2024 */
+            label: string;
+            /** @example GUS */
+            source: string;
+            /** @example 8500 */
+            meanPln: number | null;
+            /** @example 7200 */
+            medianPln: number;
+            breakpoints: components["schemas"]["WageBreakpointDto"][];
+            regionAvg: components["schemas"]["WageRegionAvgDto"];
+        };
+        WagesResponseDto: {
+            data: components["schemas"]["WagesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LegalLimitsDataDto: {
+            /** @example MRPiPS */
+            source: string;
+            /**
+             * @description Limit values keyed by name (e.g. ikeAnnual, ikzeAnnual)
+             * @example {
+             *       "ikeAnnual": 26019,
+             *       "ikzeAnnual": 10407.6
+             *     }
+             */
+            limits: {
+                [key: string]: number;
+            };
+        };
+        LegalLimitsResponseDto: {
+            data: components["schemas"]["LegalLimitsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        BarometrListItemDto: {
+            /** @example oplacalnosc-lokat */
+            slug: string;
+            /** @example Real return on deposits */
+            headline: string;
+            /** @example -0.55 */
+            value: number;
+            /** @example 0.1 */
+            delta: number | null;
+            /** @example up */
+            trend: string;
+        };
+        BarometrListInnerDto: {
+            /** @example 2026-06-06T06:00:00.000Z */
+            generatedAt: string;
+            /** @example 5 */
+            count: number;
+            /** @example 2026-04 */
+            asOfLatest: string;
+            barometry: components["schemas"]["BarometrListItemDto"][];
+        };
+        CreditStressRefDto: {
+            /** @example /v1/index/credit-stress */
+            ref: string;
+        };
+        IndexListDataDto: {
+            barometry: components["schemas"]["BarometrListInnerDto"];
+            creditStress: components["schemas"]["CreditStressRefDto"];
+        };
+        IndexListResponseDto: {
+            data: components["schemas"]["IndexListDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        StressParamsDto: {
+            /** @example 50 */
+            metrazM2: number;
+            /** @example 25 */
+            okresLat: number;
+            /** @example 80 */
+            ltvPct: number;
+            /** @example 20 */
+            wkladPct: number;
+            /** @example wtorny */
+            rynek: string;
+        };
+        StressRatesDto: {
+            /** @example 3.85 */
+            wibor3m: number;
+            /** @example 2 */
+            marginPp: number;
+            /** @example 5.85 */
+            ratePct: number;
+            /** @example 2026-06-05 */
+            wiborAsOf: string;
+        };
+        StressSourcesDto: {
+            /** @example Q1 2026 */
+            barnQuarter: string;
+            /** @example Q4 2025 */
+            gusPeriod: string;
+        };
+        StressThresholdsDto: {
+            /** @example 40 */
+            dstiBelowPct: number;
+            /** @example 50 */
+            dstiAbovePct: number;
+        };
+        StressExtremeDto: {
+            /** @example malopolskie */
+            slug: string;
+            /** @example Malopolskie */
+            label: string;
+            /** @example 64.6 */
+            stressPct: number;
+        };
+        StressNationalDto: {
+            /** @example 47.2 */
+            avgStressPct: number;
+            /** @example 43.8 */
+            medianStressPct: number;
+            mostStressed: components["schemas"]["StressExtremeDto"];
+            leastStressed: components["schemas"]["StressExtremeDto"];
+            /** @example 6 */
+            countAboveKnf: number;
+        };
+        StressTierDto: {
+            /** @example 2 */
+            id: number;
+            /** @example napiecie */
+            label: string;
+            /** @example #facc15 */
+            fill: string;
+            /** @example 50 */
+            upTo: number;
+        };
+        StressRegionDto: {
+            /** @example malopolskie */
+            slug: string;
+            /** @example Malopolskie */
+            label: string;
+            /** @example Krakow */
+            capitalCity: string;
+            /** @example 13500 */
+            pricePerM2: number;
+            /** @example 675000 */
+            cost50m2: number;
+            /** @example 6200 */
+            salaryNet: number;
+            /** @example 4005 */
+            rata: number;
+            /** @example 64.6 */
+            stressPct: number;
+            /** @example 3 */
+            tier: number;
+            /** @example trudno */
+            tierLabel: string;
+            /** @example #fb923c */
+            fill: string;
+            /** @example 1 */
+            rank: number;
+        };
+        CreditStressDataDto: {
+            /** @example 2026-06-06T06:00:00.000Z */
+            generatedAt: string;
+            params: components["schemas"]["StressParamsDto"];
+            rates: components["schemas"]["StressRatesDto"];
+            sources: components["schemas"]["StressSourcesDto"];
+            thresholds: components["schemas"]["StressThresholdsDto"];
+            national: components["schemas"]["StressNationalDto"];
+            tiers: components["schemas"]["StressTierDto"][];
+            regions: components["schemas"]["StressRegionDto"][];
+        };
+        CreditStressResponseDto: {
+            data: components["schemas"]["CreditStressDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        BarometrGaugeDto: {
+            /** @example 2 */
+            band: number;
+            /** @example Deposits below inflation */
+            label: string;
+        };
+        BarometrDetailDataDto: {
+            /** @example oplacalnosc-lokat */
+            slug: string;
+            /** @example Real return on deposits */
+            headline: string;
+            gauge: components["schemas"]["BarometrGaugeDto"];
+            /** @description Historical series */
+            series: components["schemas"]["TimeValuePointDto"][];
+            /** @example Methodology... */
+            methodology: string;
+        };
+        IndexDetailResponseDto: {
+            data: components["schemas"]["BarometrDetailDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        DepositModelDto: {
+            /** @example 10000 */
+            amount: number;
+            /** @example 3 */
+            period: number;
+            /** @example PLN */
+            currency: string;
+        };
+        NumericAggregateDto: {
+            /** @example 12 */
+            count: number;
+            /** @example 2 */
+            min: number;
+            /**
+             * @description 25th percentile
+             * @example 3
+             */
+            p25: number;
+            /**
+             * @description Median (50th percentile)
+             * @example 3.45
+             */
+            median: number;
+            /**
+             * @description 75th percentile
+             * @example 4.5
+             */
+            p75: number;
+            /** @example 3.67 */
+            avg: number;
+            /** @example 5.5 */
+            max: number;
+        };
+        DepositRatesValuesDto: {
+            interestRate: components["schemas"]["NumericAggregateDto"] | null;
+        };
+        DepositRatesDataDto: {
+            /** @example deposit */
+            product: string;
+            model: components["schemas"]["DepositModelDto"];
+            /** @example 12 */
+            sampleSize: number;
+            /** @example 7 */
+            bankCount: number;
+            note: string;
+            rates: components["schemas"]["DepositRatesValuesDto"];
+        };
+        DepositRatesResponseDto: {
+            data: components["schemas"]["DepositRatesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        SavingsModelDto: {
+            /** @example 10000 */
+            amount: number;
+        };
+        SavingsRatesValuesDto: {
+            interestRate: components["schemas"]["NumericAggregateDto"] | null;
+        };
+        SavingsRatesDataDto: {
+            /** @example savings */
+            product: string;
+            model: components["schemas"]["SavingsModelDto"];
+            /** @example 9 */
+            sampleSize: number;
+            /** @example 5 */
+            bankCount: number;
+            note: string;
+            rates: components["schemas"]["SavingsRatesValuesDto"];
+        };
+        SavingsRatesResponseDto: {
+            data: components["schemas"]["SavingsRatesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        MortgageModelDto: {
+            /** @example 400000 */
+            amount: number;
+            /** @example 25 */
+            period: number;
+            /** @example 80 */
+            ltvPct: number;
+        };
+        MortgageRatesValuesDto: {
+            /** @description APRC (RRSO) */
+            rrso: components["schemas"]["NumericAggregateDto"] | null;
+            margin: components["schemas"]["NumericAggregateDto"] | null;
+            nominalRate: components["schemas"]["NumericAggregateDto"] | null;
+        };
+        MortgageRatesDataDto: {
+            /** @example mortgage */
+            product: string;
+            model: components["schemas"]["MortgageModelDto"];
+            /** @example 9 */
+            sampleSize: number;
+            /** @example 4 */
+            bankCount: number;
+            note: string;
+            rates: components["schemas"]["MortgageRatesValuesDto"];
+        };
+        MortgageRatesResponseDto: {
+            data: components["schemas"]["MortgageRatesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        CashLoanModelDto: {
+            /** @example 20000 */
+            amount: number;
+            /** @example 48 */
+            period: number;
+        };
+        CashLoanRatesValuesDto: {
+            /** @description APRC (RRSO) */
+            rrso: components["schemas"]["NumericAggregateDto"] | null;
+            nominalRate: components["schemas"]["NumericAggregateDto"] | null;
+        };
+        CashLoanRatesDataDto: {
+            /** @example cash_loan */
+            product: string;
+            model: components["schemas"]["CashLoanModelDto"];
+            /** @example 11 */
+            sampleSize: number;
+            /** @example 6 */
+            bankCount: number;
+            note: string;
+            rates: components["schemas"]["CashLoanRatesValuesDto"];
+        };
+        CashLoanRatesResponseDto: {
+            data: components["schemas"]["CashLoanRatesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        SnapshotDataDto: {
+            interestRates: components["schemas"]["InterestRatesTableDataDto"] | null;
+            inflation: components["schemas"]["CpiDataDto"] | null;
+            currencies: components["schemas"]["FxTableDataDto"] | null;
+            creditStress: components["schemas"]["CreditStressDataDto"] | null;
+            barometry: components["schemas"]["BarometrListInnerDto"] | null;
+        };
+        SnapshotResponseDto: {
+            data: components["schemas"]["SnapshotDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+    };
     responses: never;
     parameters: never;
     requestBodies: never;
@@ -335,14 +901,17 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["InterestRatesTableResponseDto"];
+                };
             };
         };
     };
     SeriesController_interestRateHistory: {
         parameters: {
-            query: {
-                days: string;
+            query?: {
+                /** @description 1-3650, default 365 */
+                days?: number;
             };
             header?: never;
             path: {
@@ -356,15 +925,18 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["RateHistoryResponseDto"];
+                };
             };
         };
     };
     SeriesController_cpi: {
         parameters: {
-            query: {
-                type: string;
-                limit: string;
+            query?: {
+                type?: "monthly" | "yearly";
+                /** @description 1-600 (monthly) */
+                limit?: number;
             };
             header?: never;
             path?: never;
@@ -376,7 +948,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["CpiResponseDto"];
+                };
             };
         };
     };
@@ -393,14 +967,16 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["FxTableResponseDto"];
+                };
             };
         };
     };
     SeriesController_fxHistory: {
         parameters: {
-            query: {
-                days: string;
+            query?: {
+                days?: number;
             };
             header?: never;
             path: {
@@ -414,7 +990,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["FxHistoryResponseDto"];
+                };
             };
         };
     };
@@ -431,7 +1009,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["HousingListResponseDto"];
+                };
             };
         };
     };
@@ -450,7 +1030,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["HousingDetailResponseDto"];
+                };
             };
         };
     };
@@ -467,7 +1049,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["BondsResponseDto"];
+                };
             };
         };
     };
@@ -484,7 +1068,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["WagesResponseDto"];
+                };
             };
         };
     };
@@ -501,7 +1087,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["LegalLimitsResponseDto"];
+                };
             };
         };
     };
@@ -518,7 +1106,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["IndexListResponseDto"];
+                };
             };
         };
     };
@@ -535,7 +1125,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["CreditStressResponseDto"];
+                };
             };
         };
     };
@@ -544,7 +1136,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                slug: string;
+                slug: "real-deposit-rate" | "housing-affordability" | "credit-cost" | "borrowing-power" | "purchasing-power";
             };
             cookie?: never;
         };
@@ -554,16 +1146,19 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["IndexDetailResponseDto"];
+                };
             };
         };
     };
     MarketController_depositRates: {
         parameters: {
-            query: {
-                amount: string;
-                period: string;
-                currency: string;
+            query?: {
+                amount?: number;
+                /** @description months */
+                period?: number;
+                currency?: "PLN" | "EUR" | "USD";
             };
             header?: never;
             path?: never;
@@ -575,14 +1170,16 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["DepositRatesResponseDto"];
+                };
             };
         };
     };
     MarketController_savingsRates: {
         parameters: {
-            query: {
-                amount: string;
+            query?: {
+                amount?: number;
             };
             header?: never;
             path?: never;
@@ -594,15 +1191,18 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SavingsRatesResponseDto"];
+                };
             };
         };
     };
     MarketController_mortgageRates: {
         parameters: {
-            query: {
-                amount: string;
-                period: string;
+            query?: {
+                amount?: number;
+                /** @description years */
+                period?: number;
             };
             header?: never;
             path?: never;
@@ -614,15 +1214,18 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["MortgageRatesResponseDto"];
+                };
             };
         };
     };
     MarketController_cashLoanRates: {
         parameters: {
-            query: {
-                amount: string;
-                period: string;
+            query?: {
+                amount?: number;
+                /** @description months */
+                period?: number;
             };
             header?: never;
             path?: never;
@@ -634,7 +1237,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["CashLoanRatesResponseDto"];
+                };
             };
         };
     };
@@ -651,7 +1256,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SnapshotResponseDto"];
+                };
             };
         };
     };
