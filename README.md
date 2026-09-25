@@ -108,8 +108,10 @@ cached at the edge (refreshed once a day), so under typical use the limit is unr
 
 #### `GET /v1/series/interest-rate/{indicator}`
 
-History of a rate indicator. `indicator`: e.g. `wibor-3m`, `wibor-6m`, `wibor-1m`,
-`wibor-1y`, `nbp_rate`, `polstr-3m`, `polstr-6m`. Query `days` (1-3650, default 365).
+History of a rate indicator. `indicator` is the `id` from the table endpoint:
+`stopa-referencyjna`, `stopa-lombardowa`, `stopa-depozytowa`, `stopa-redyskontowa`,
+`stopa-dyskontowa`, `wibor-1m`, `wibor-3m`, `wibor-6m`, `wibor-1y`, `polstr-on`,
+`polstr-1m`, `polstr-3m`, `polstr-6m`. Query `days` (7-3650, default 365).
 Without `{indicator}` it returns a table of current values for all indicators.
 
 ```bash

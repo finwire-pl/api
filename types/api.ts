@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Indicator history (e.g. wibor-3m, nbp_rate, polstr-3m) */
+        /** Indicator history (e.g. wibor-3m, stopa-referencyjna, polstr-3m). Available ids: GET /v1/series/interest-rate */
         get: operations["SeriesController_interestRateHistory"];
         put?: never;
         post?: never;
@@ -356,7 +356,7 @@ export interface components {
         TimeValuePointDto: {
             /** @example 2026-06-05 */
             date: string;
-            /** @example 5.85 */
+            /** @example 3.84 */
             value: number;
         };
         RateHistoryDataDto: {
@@ -493,13 +493,13 @@ export interface components {
             meta: components["schemas"]["ResponseMetaDto"];
         };
         BondEntryDto: {
-            /** @example EDO0635 */
+            /** @example EDO0636 */
             code: string;
             /** @example 2026-06 */
             month: string;
             /**
              * @description First-year rate (%)
-             * @example 6.55
+             * @example 5.35
              */
             first_year_rate: number;
             /**
@@ -571,8 +571,8 @@ export interface components {
             /**
              * @description Limit values keyed by name (e.g. ikeAnnual, ikzeAnnual)
              * @example {
-             *       "ikeAnnual": 26019,
-             *       "ikzeAnnual": 10407.6
+             *       "ikeAnnual": 28260,
+             *       "ikzeAnnual": 11304
              *     }
              */
             limits: {
@@ -910,7 +910,7 @@ export interface operations {
     SeriesController_interestRateHistory: {
         parameters: {
             query?: {
-                /** @description 1-3650, default 365 */
+                /** @description 7-3650, default 365 */
                 days?: number;
             };
             header?: never;
