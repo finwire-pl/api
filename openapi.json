@@ -296,6 +296,94 @@
         ]
       }
     },
+    "/v1/series/unemployment": {
+      "get": {
+        "operationId": "SeriesController_unemployment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnemploymentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Registered unemployment rate (GUS): Poland and 16 provinces, latest month",
+        "tags": [
+          "Time series"
+        ]
+      }
+    },
+    "/v1/series/unemployment/counties": {
+      "get": {
+        "operationId": "SeriesController_unemploymentCounties",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "1-50, default 10",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnemploymentCountiesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Counties (powiaty) with the lowest and highest registered unemployment rate",
+        "tags": [
+          "Time series"
+        ]
+      }
+    },
+    "/v1/series/unemployment/history": {
+      "get": {
+        "operationId": "SeriesController_unemploymentHistory",
+        "parameters": [
+          {
+            "name": "unit",
+            "required": false,
+            "in": "query",
+            "description": "GUS BDL unit id (12 digits) from /v1/series/unemployment regions[].unitId; default Poland",
+            "schema": {
+              "example": "071400000000",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnemploymentHistoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Monthly unemployment rate history for Poland or a province",
+        "tags": [
+          "Time series"
+        ]
+      }
+    },
     "/v1/bonds": {
       "get": {
         "operationId": "ReferenceController_bonds",
@@ -362,6 +450,83 @@
         ]
       }
     },
+    "/v1/wages/occupations": {
+      "get": {
+        "operationId": "ReferenceController_occupations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OccupationsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Gross wages by occupation (GUS): mean, median, deciles, by gender and sector",
+        "tags": [
+          "Reference data"
+        ]
+      }
+    },
+    "/v1/wages/occupations/{code}": {
+      "get": {
+        "operationId": "ReferenceController_occupation",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "description": "Occupation code from /v1/wages/occupations",
+            "schema": {
+              "example": "25",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OccupationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Wages in one occupation group with its parent groups and edition history",
+        "tags": [
+          "Reference data"
+        ]
+      }
+    },
+    "/v1/legal-limits/local-tax": {
+      "get": {
+        "operationId": "ReferenceController_localTax",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalTaxResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Upper limits of local property tax rates per year (Minister of Finance announcement)",
+        "tags": [
+          "Reference data"
+        ]
+      }
+    },
     "/v1/index": {
       "get": {
         "operationId": "IndicesController_list",
@@ -406,6 +571,64 @@
         ]
       }
     },
+    "/v1/index/entry-threshold": {
+      "get": {
+        "operationId": "IndicesController_entryThreshold",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntryThresholdResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Entry threshold: gross monthly wage needed for a mortgage on a model flat in 17 cities, and the share of employees earning at least that",
+        "tags": [
+          "finwire indicators"
+        ]
+      }
+    },
+    "/v1/index/entry-threshold/history": {
+      "get": {
+        "operationId": "IndicesController_entryThresholdHistory",
+        "parameters": [
+          {
+            "name": "household",
+            "required": false,
+            "in": "query",
+            "description": "default single",
+            "schema": {
+              "enum": [
+                "single",
+                "couple"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntryThresholdHistoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Daily history of the entry threshold per city (change points)",
+        "tags": [
+          "finwire indicators"
+        ]
+      }
+    },
     "/v1/index/{slug}": {
       "get": {
         "operationId": "IndicesController_index",
@@ -438,7 +661,7 @@
             }
           }
         },
-        "summary": "finwire indicator: real-deposit-rate | housing-affordability | credit-cost | borrowing-power | purchasing-power",
+        "summary": "finwire barometer: real-deposit-rate | housing-affordability | credit-cost | borrowing-power | purchasing-power",
         "tags": [
           "finwire indicators"
         ]
@@ -769,6 +992,61 @@
         ]
       }
     },
+    "/v1/housing/supply": {
+      "get": {
+        "operationId": "RealEstateController_housingSupply",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HousingSupplyResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Housing supply and demand (GUS): dwellings per 1000, completions, permits, population, migration",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/supply/{city}": {
+      "get": {
+        "operationId": "RealEstateController_housingSupplyCity",
+        "parameters": [
+          {
+            "name": "city",
+            "required": true,
+            "in": "path",
+            "description": "City slug from /v1/housing/supply",
+            "schema": {
+              "example": "warszawa",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HousingSupplyCityResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Housing supply in a city vs its province and Poland, with yearly history",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
     "/v1/calendar": {
       "get": {
         "operationId": "CalendarController_upcoming",
@@ -805,7 +1083,7 @@
   },
   "info": {
     "title": "finwire.pl - Public financial data API",
-    "description": "Open API: NBP rates, WIBOR/POLSTR, CPI inflation, FX rates, 10-year bond yields, flat transaction prices (RCN, GUS), rents and rental yield, GUS wages, government bonds, macro calendar and finwire indicators (credit stress map, barometers). Cite as: Source: finwire.pl, https://public-api.finwire.pl",
+    "description": "Open API: NBP rates, WIBOR/POLSTR, CPI inflation, FX rates, 10-year bond yields, flat transaction prices (RCN, GUS), rents and rental yield, housing supply, wages by occupation, unemployment, government bonds, property tax limits, macro calendar and finwire indicators (credit stress map, barometers). Cite as: Source: finwire.pl, https://public-api.finwire.pl",
     "version": "1.0",
     "contact": {
       "name": "finwire.pl",
@@ -1648,6 +1926,232 @@
           "meta"
         ]
       },
+      "UnemploymentPolandDto": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "example": 5.8
+          },
+          "valueYearAgo": {
+            "type": "number",
+            "nullable": true,
+            "example": 5.5
+          },
+          "changeYoyPp": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.3
+          }
+        },
+        "required": [
+          "value",
+          "valueYearAgo",
+          "changeYoyPp"
+        ]
+      },
+      "UnemploymentUnitDto": {
+        "type": "object",
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "example": "071400000000",
+            "description": "GUS BDL unit id"
+          },
+          "name": {
+            "type": "string",
+            "example": "Mazowieckie"
+          },
+          "teryt": {
+            "type": "string",
+            "nullable": true,
+            "example": "14"
+          },
+          "value": {
+            "type": "number",
+            "example": 4.5,
+            "description": "Registered unemployment rate, %"
+          },
+          "valueYearAgo": {
+            "type": "number",
+            "nullable": true,
+            "example": 4.4
+          },
+          "changeYoyPp": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.1
+          }
+        },
+        "required": [
+          "unitId",
+          "name",
+          "teryt",
+          "value",
+          "valueYearAgo",
+          "changeYoyPp"
+        ]
+      },
+      "UnemploymentDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "example": "GUS, Bank Danych Lokalnych - stopa bezrobocia rejestrowanego (dane miesi\u0119czne, P3559)"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "example": "https://bdl.stat.gov.pl/bdl/dane/podgrup/temat"
+          },
+          "asOf": {
+            "type": "string",
+            "example": "2026-08"
+          },
+          "poland": {
+            "$ref": "#/components/schemas/UnemploymentPolandDto"
+          },
+          "historyMonths": {
+            "type": "number",
+            "example": 188
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnemploymentUnitDto"
+            }
+          }
+        },
+        "required": [
+          "source",
+          "sourceUrl",
+          "asOf",
+          "poland",
+          "historyMonths",
+          "regions"
+        ]
+      },
+      "UnemploymentResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/UnemploymentDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "UnemploymentCountiesDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "example": "GUS, Bank Danych Lokalnych"
+          },
+          "asOf": {
+            "type": "string",
+            "example": "2026-08"
+          },
+          "countiesTotal": {
+            "type": "number",
+            "nullable": true,
+            "example": 380
+          },
+          "lowest": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnemploymentUnitDto"
+            }
+          },
+          "highest": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnemploymentUnitDto"
+            }
+          }
+        },
+        "required": [
+          "source",
+          "asOf",
+          "countiesTotal",
+          "lowest",
+          "highest"
+        ]
+      },
+      "UnemploymentCountiesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/UnemploymentCountiesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "UnemploymentHistoryDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "example": "GUS, Bank Danych Lokalnych"
+          },
+          "unitId": {
+            "type": "string",
+            "example": "000000000000"
+          },
+          "unitName": {
+            "type": "string",
+            "example": "Polska"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08"
+          },
+          "count": {
+            "type": "number",
+            "example": 188
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeriodValuePointDto"
+            }
+          }
+        },
+        "required": [
+          "source",
+          "unitId",
+          "unitName",
+          "asOf",
+          "count",
+          "points"
+        ]
+      },
+      "UnemploymentHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/UnemploymentHistoryDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "BondEntryDto": {
         "type": "object",
         "properties": {
@@ -1879,6 +2383,374 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/LegalLimitsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "OccupationDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "25",
+            "description": "Occupation code (KZiS / ISCO group)"
+          },
+          "level": {
+            "type": "number",
+            "example": 2,
+            "description": "0 = all employees, higher = more detailed group"
+          },
+          "name": {
+            "type": "string",
+            "example": "Specjali\u015bci do spraw technologii informacyjno-komunikacyjnych"
+          },
+          "meanPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 8944.79
+          },
+          "medianPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 7404.69
+          },
+          "meanMenPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "meanWomenPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "medianMenPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "medianWomenPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "meanPublicPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "meanPrivatePln": {
+            "type": "number",
+            "nullable": true
+          },
+          "deciles": {
+            "description": "Deciles D1-D9 of gross monthly wage, PLN",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "genderPayGapPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 4.1,
+            "description": "Median gender pay gap, %"
+          },
+          "ref": {
+            "type": "string",
+            "example": "/v1/wages/occupations/25"
+          }
+        },
+        "required": [
+          "code",
+          "level",
+          "name",
+          "meanPln",
+          "medianPln",
+          "meanMenPln",
+          "meanWomenPln",
+          "medianMenPln",
+          "medianWomenPln",
+          "meanPublicPln",
+          "meanPrivatePln",
+          "deciles",
+          "genderPayGapPct",
+          "ref"
+        ]
+      },
+      "OccupationsDataDto": {
+        "type": "object",
+        "properties": {
+          "edition": {
+            "type": "string",
+            "example": "2024-10",
+            "description": "GUS survey month"
+          },
+          "source": {
+            "type": "string",
+            "example": "GUS, Struktura wynagrodze\u0144 wed\u0142ug zawod\u00f3w w pa\u017adzierniku 2024 r."
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": "string",
+            "example": "2026-02-10"
+          },
+          "count": {
+            "type": "number",
+            "example": 175
+          },
+          "occupations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OccupationDto"
+            }
+          }
+        },
+        "required": [
+          "edition",
+          "source",
+          "sourceUrl",
+          "publishedAt",
+          "count",
+          "occupations"
+        ]
+      },
+      "OccupationsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/OccupationsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "OccupationParentDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "2"
+          },
+          "name": {
+            "type": "string",
+            "example": "Specjali\u015bci"
+          },
+          "level": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "level"
+        ]
+      },
+      "OccupationEditionDto": {
+        "type": "object",
+        "properties": {
+          "edition": {
+            "type": "string",
+            "example": "2024-10"
+          },
+          "meanPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "medianPln": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "edition",
+          "meanPln",
+          "medianPln"
+        ]
+      },
+      "OccupationDataDto": {
+        "type": "object",
+        "properties": {
+          "edition": {
+            "type": "string",
+            "example": "2024-10"
+          },
+          "source": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": "string",
+            "example": "2026-02-10"
+          },
+          "occupation": {
+            "$ref": "#/components/schemas/OccupationDto"
+          },
+          "parents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OccupationParentDto"
+            }
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OccupationEditionDto"
+            }
+          }
+        },
+        "required": [
+          "edition",
+          "source",
+          "sourceUrl",
+          "publishedAt",
+          "occupation",
+          "parents",
+          "history"
+        ]
+      },
+      "OccupationResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/OccupationDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LocalTaxActDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Obwieszczenie Ministra Finans\u00f3w ... w sprawie g\u00f3rnych granic stawek kwotowych podatk\u00f3w i op\u0142at lokalnych na rok 2027"
+          },
+          "citation": {
+            "type": "string",
+            "example": "M.P. 2026 poz. 741"
+          },
+          "actDate": {
+            "type": "string",
+            "example": "2026-07-23"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://eli.gov.pl/eli/MP/2026/741/ogl"
+          }
+        },
+        "required": [
+          "title",
+          "citation",
+          "actDate",
+          "url"
+        ]
+      },
+      "LocalTaxRateDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "grunty_dzialalnosc"
+          },
+          "label": {
+            "type": "string",
+            "example": "Grunty zwi\u0105zane z prowadzeniem dzia\u0142alno\u015bci gospodarczej"
+          },
+          "group": {
+            "type": "string",
+            "example": "grunty"
+          },
+          "legalRef": {
+            "type": "string",
+            "example": "art. 5 ust. 1 pkt 1 lit. a"
+          },
+          "unit": {
+            "type": "string",
+            "example": "z\u0142/m\u00b2"
+          },
+          "maxRate": {
+            "type": "number",
+            "example": 1.49,
+            "description": "Upper limit; municipalities set their own rate up to it"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "group",
+          "legalRef",
+          "unit",
+          "maxRate"
+        ]
+      },
+      "LocalTaxYearDto": {
+        "type": "object",
+        "properties": {
+          "taxYear": {
+            "type": "number",
+            "example": 2027
+          },
+          "act": {
+            "$ref": "#/components/schemas/LocalTaxActDto"
+          },
+          "rates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalTaxRateDto"
+            }
+          }
+        },
+        "required": [
+          "taxYear",
+          "act",
+          "rates"
+        ]
+      },
+      "LocalTaxDataDto": {
+        "type": "object",
+        "properties": {
+          "currentYear": {
+            "type": "number",
+            "example": 2026
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "years": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalTaxYearDto"
+            }
+          }
+        },
+        "required": [
+          "currentYear",
+          "updatedAt",
+          "years"
+        ]
+      },
+      "LocalTaxResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LocalTaxDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -2415,6 +3287,231 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/CreditStressDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EntryThresholdParamsDto": {
+        "type": "object",
+        "properties": {
+          "flatAreaM2": {
+            "type": "number",
+            "example": 50
+          },
+          "downPaymentPct": {
+            "type": "number",
+            "example": 20
+          },
+          "termYears": {
+            "type": "number",
+            "example": 25
+          },
+          "market": {
+            "type": "string",
+            "example": "secondary",
+            "description": "secondary | primary"
+          }
+        },
+        "required": [
+          "flatAreaM2",
+          "downPaymentPct",
+          "termYears",
+          "market"
+        ]
+      },
+      "EntryThresholdCityDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "warszawa"
+          },
+          "city": {
+            "type": "string",
+            "example": "Warszawa"
+          },
+          "requiredGrossMonthly": {
+            "type": "number",
+            "example": 16444,
+            "description": "Gross monthly wage per person needed for the mortgage, PLN"
+          },
+          "installment": {
+            "type": "number",
+            "example": 4076,
+            "description": "Monthly installment, PLN"
+          },
+          "employeesAbovePct": {
+            "type": "number",
+            "example": 6,
+            "description": "Share of employees earning at least the required wage, %"
+          }
+        },
+        "required": [
+          "slug",
+          "city",
+          "requiredGrossMonthly",
+          "installment",
+          "employeesAbovePct"
+        ]
+      },
+      "EntryThresholdDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "example": "2026-10-15"
+          },
+          "household": {
+            "type": "string",
+            "example": "single"
+          },
+          "params": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntryThresholdParamsDto"
+              }
+            ]
+          },
+          "count": {
+            "type": "number",
+            "example": 17
+          },
+          "cities": {
+            "description": "From the least to the most accessible city",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntryThresholdCityDto"
+            }
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/prog-wejscia"
+          }
+        },
+        "required": [
+          "asOf",
+          "household",
+          "params",
+          "count",
+          "cities",
+          "pageUrl"
+        ]
+      },
+      "EntryThresholdResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EntryThresholdDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EntryThresholdPointDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-10-15"
+          },
+          "requiredGrossMonthly": {
+            "type": "number",
+            "example": 16444
+          },
+          "employeesAbovePct": {
+            "type": "number",
+            "example": 6
+          }
+        },
+        "required": [
+          "date",
+          "requiredGrossMonthly",
+          "employeesAbovePct"
+        ]
+      },
+      "EntryThresholdHistoryCityDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "warszawa"
+          },
+          "city": {
+            "type": "string",
+            "example": "Warszawa"
+          },
+          "points": {
+            "description": "First record, every change and the last record",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntryThresholdPointDto"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "city",
+          "points"
+        ]
+      },
+      "EntryThresholdHistoryDataDto": {
+        "type": "object",
+        "properties": {
+          "household": {
+            "type": "string",
+            "example": "single",
+            "description": "single | couple"
+          },
+          "params": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntryThresholdParamsDto"
+              }
+            ]
+          },
+          "from": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09-19"
+          },
+          "to": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-15"
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntryThresholdHistoryCityDto"
+            }
+          }
+        },
+        "required": [
+          "household",
+          "params",
+          "from",
+          "to",
+          "cities"
+        ]
+      },
+      "EntryThresholdHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EntryThresholdHistoryDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -3882,6 +4979,572 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/RentCityDetailDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "YearValueDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number",
+            "nullable": true,
+            "example": 2025
+          },
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "example": 432.9
+          }
+        },
+        "required": [
+          "year",
+          "value"
+        ]
+      },
+      "SupplyPolandDto": {
+        "type": "object",
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "example": "000000000000"
+          },
+          "name": {
+            "type": "string",
+            "example": "Polska"
+          },
+          "slug": {
+            "type": "string",
+            "nullable": true,
+            "example": "lodz"
+          },
+          "teryt": {
+            "type": "string",
+            "nullable": true
+          },
+          "dwellingsPer1000": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "dwellingsPer1000YearAgo": {
+            "type": "number",
+            "nullable": true
+          },
+          "floorAreaPerPersonM2": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "personsPerDwelling": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "dwellingsStock": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "completed": {
+            "description": "Dwellings completed in the year",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "completedYearAgo": {
+            "type": "number",
+            "nullable": true
+          },
+          "completedForSaleOrRent": {
+            "description": "Completed by developers for sale or rent",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "completedPer1000": {
+            "type": "number",
+            "nullable": true
+          },
+          "permits": {
+            "description": "Dwellings in building permits issued",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "permitsPer1000": {
+            "type": "number",
+            "nullable": true
+          },
+          "population": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "populationChange": {
+            "type": "number",
+            "nullable": true
+          },
+          "netForeignMigration": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "registrationsFromAbroad": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "census2021": {
+            "type": "object",
+            "nullable": true,
+            "description": "National Census 2021: households, dwellings, unoccupied"
+          },
+          "populationForecast": {
+            "type": "object",
+            "nullable": true,
+            "description": "GUS population forecast 2030/2040/2050"
+          },
+          "completedYearToDate": {
+            "type": "object",
+            "nullable": true,
+            "description": "Completions year to date vs the same period a year ago"
+          }
+        },
+        "required": [
+          "unitId",
+          "name",
+          "slug",
+          "teryt",
+          "dwellingsPer1000",
+          "dwellingsPer1000YearAgo",
+          "floorAreaPerPersonM2",
+          "personsPerDwelling",
+          "dwellingsStock",
+          "completed",
+          "completedYearAgo",
+          "completedForSaleOrRent",
+          "completedPer1000",
+          "permits",
+          "permitsPer1000",
+          "population",
+          "populationChange",
+          "netForeignMigration",
+          "registrationsFromAbroad",
+          "census2021",
+          "populationForecast",
+          "completedYearToDate"
+        ]
+      },
+      "SupplyHistoryPointDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number",
+            "example": 2010
+          },
+          "completed": {
+            "type": "number",
+            "nullable": true
+          },
+          "completedForSaleOrRent": {
+            "type": "number",
+            "nullable": true
+          },
+          "permits": {
+            "type": "number",
+            "nullable": true
+          },
+          "population": {
+            "type": "number",
+            "nullable": true
+          },
+          "dwellingsPer1000": {
+            "type": "number",
+            "nullable": true
+          },
+          "netForeignMigration": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "year",
+          "completed",
+          "completedForSaleOrRent",
+          "permits",
+          "population",
+          "dwellingsPer1000",
+          "netForeignMigration"
+        ]
+      },
+      "SupplyUnitDto": {
+        "type": "object",
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "example": "000000000000"
+          },
+          "name": {
+            "type": "string",
+            "example": "Polska"
+          },
+          "slug": {
+            "type": "string",
+            "nullable": true,
+            "example": "lodz"
+          },
+          "teryt": {
+            "type": "string",
+            "nullable": true
+          },
+          "dwellingsPer1000": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "dwellingsPer1000YearAgo": {
+            "type": "number",
+            "nullable": true
+          },
+          "floorAreaPerPersonM2": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "personsPerDwelling": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "dwellingsStock": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "completed": {
+            "description": "Dwellings completed in the year",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "completedYearAgo": {
+            "type": "number",
+            "nullable": true
+          },
+          "completedForSaleOrRent": {
+            "description": "Completed by developers for sale or rent",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "completedPer1000": {
+            "type": "number",
+            "nullable": true
+          },
+          "permits": {
+            "description": "Dwellings in building permits issued",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "permitsPer1000": {
+            "type": "number",
+            "nullable": true
+          },
+          "population": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "populationChange": {
+            "type": "number",
+            "nullable": true
+          },
+          "netForeignMigration": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "registrationsFromAbroad": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "unitId",
+          "name",
+          "slug",
+          "teryt",
+          "dwellingsPer1000",
+          "dwellingsPer1000YearAgo",
+          "floorAreaPerPersonM2",
+          "personsPerDwelling",
+          "dwellingsStock",
+          "completed",
+          "completedYearAgo",
+          "completedForSaleOrRent",
+          "completedPer1000",
+          "permits",
+          "permitsPer1000",
+          "population",
+          "populationChange",
+          "netForeignMigration",
+          "registrationsFromAbroad"
+        ]
+      },
+      "SupplyCityDto": {
+        "type": "object",
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "example": "000000000000"
+          },
+          "name": {
+            "type": "string",
+            "example": "Polska"
+          },
+          "slug": {
+            "type": "string",
+            "nullable": true,
+            "example": "lodz"
+          },
+          "teryt": {
+            "type": "string",
+            "nullable": true
+          },
+          "dwellingsPer1000": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "dwellingsPer1000YearAgo": {
+            "type": "number",
+            "nullable": true
+          },
+          "floorAreaPerPersonM2": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "personsPerDwelling": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "dwellingsStock": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "completed": {
+            "description": "Dwellings completed in the year",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "completedYearAgo": {
+            "type": "number",
+            "nullable": true
+          },
+          "completedForSaleOrRent": {
+            "description": "Completed by developers for sale or rent",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "completedPer1000": {
+            "type": "number",
+            "nullable": true
+          },
+          "permits": {
+            "description": "Dwellings in building permits issued",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "permitsPer1000": {
+            "type": "number",
+            "nullable": true
+          },
+          "population": {
+            "$ref": "#/components/schemas/YearValueDto"
+          },
+          "populationChange": {
+            "type": "number",
+            "nullable": true
+          },
+          "netForeignMigration": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "registrationsFromAbroad": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YearValueDto"
+              }
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "example": "/v1/housing/supply/lodz"
+          }
+        },
+        "required": [
+          "unitId",
+          "name",
+          "slug",
+          "teryt",
+          "dwellingsPer1000",
+          "dwellingsPer1000YearAgo",
+          "floorAreaPerPersonM2",
+          "personsPerDwelling",
+          "dwellingsStock",
+          "completed",
+          "completedYearAgo",
+          "completedForSaleOrRent",
+          "completedPer1000",
+          "permits",
+          "permitsPer1000",
+          "population",
+          "populationChange",
+          "netForeignMigration",
+          "registrationsFromAbroad",
+          "ref"
+        ]
+      },
+      "HousingSupplyDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "example": "https://bdl.stat.gov.pl/bdl/dane/podgrup/temat"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2026-10-15 14:05:29.837+00"
+          },
+          "poland": {
+            "$ref": "#/components/schemas/SupplyPolandDto"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplyHistoryPointDto"
+            }
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplyUnitDto"
+            }
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplyCityDto"
+            }
+          }
+        },
+        "required": [
+          "source",
+          "sourceUrl",
+          "updatedAt",
+          "poland",
+          "history",
+          "regions",
+          "cities"
+        ]
+      },
+      "HousingSupplyResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/HousingSupplyDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "HousingSupplyCityDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "city": {
+            "$ref": "#/components/schemas/SupplyUnitDto"
+          },
+          "voivodeship": {
+            "$ref": "#/components/schemas/SupplyUnitDto"
+          },
+          "poland": {
+            "$ref": "#/components/schemas/SupplyUnitDto"
+          },
+          "rankDwellingsPer1000": {
+            "type": "number",
+            "nullable": true,
+            "example": 1
+          },
+          "rankCompletedPer1000": {
+            "type": "number",
+            "nullable": true,
+            "example": 3
+          },
+          "citiesCount": {
+            "type": "number",
+            "nullable": true,
+            "example": 17
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplyHistoryPointDto"
+            }
+          }
+        },
+        "required": [
+          "source",
+          "updatedAt",
+          "city",
+          "voivodeship",
+          "poland",
+          "rankDwellingsPer1000",
+          "rankCompletedPer1000",
+          "citiesCount",
+          "history"
+        ]
+      },
+      "HousingSupplyCityResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/HousingSupplyCityDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
