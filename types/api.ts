@@ -96,7 +96,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List of cities with NBP BaRN housing prices */
+        /** Flat transaction prices per sqm in 17 cities (GUS), latest quarter */
         get: operations["SeriesController_housingList"];
         put?: never;
         post?: never;
@@ -115,6 +115,40 @@ export interface paths {
         };
         /** Housing price history for a city (e.g. warszawa, krakow) */
         get: operations["SeriesController_housingCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/series/bond-yields": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Long-term (10-year) government bond yields: Poland vs Germany, euro area, EU + spreads */
+        get: operations["SeriesController_bondYields"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/series/bond-yields/{geo}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Monthly history of long-term government bond yields */
+        get: operations["SeriesController_bondYieldsHistory"];
         put?: never;
         post?: never;
         delete?: never;
@@ -310,6 +344,108 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/housing/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Flat transaction prices per sqm (RCN): median, quartiles, quarterly trend per city */
+        get: operations["RealEstateController_transactionCities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/transactions/{city}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Flat transaction prices per sqm (RCN) by district, last 12 months */
+        get: operations["RealEstateController_transactionDistricts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Asking rents per city: median, mean, per sqm, month-over-month change */
+        get: operations["RealEstateController_rentList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rent/yield": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gross and net rental yield per city (rents vs transaction prices) */
+        get: operations["RealEstateController_rentYield"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rent/{city}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Asking rents in a city with a breakdown by district */
+        get: operations["RealEstateController_rentCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Upcoming macro releases and decisions: MPC (RPP) rates, CPI, wages, GDP */
+        get: operations["CalendarController_upcoming"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -449,21 +585,49 @@ export interface components {
             data: components["schemas"]["FxHistoryDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        HousingPriceSourceDto: {
+            /**
+             * @description gus | rcn
+             * @example gus
+             */
+            kind: string;
+            /** @example GUS (mediana cen transakcyjnych, rejestr RCiWN) */
+            label: string;
+            /** @example Q1 2026 */
+            quarter: string;
+        };
         HousingCityDto: {
             /** @example warszawa */
             slug: string;
             /** @example Warszawa */
             city: string;
-            /** @example wait */
-            verdict: string;
+            /** @example mazowieckie */
+            voivodeship: string;
+            /** @example Q1 2026 */
+            quarter: string;
+            /**
+             * @description Secondary market, PLN/sqm
+             * @example 16498
+             */
+            secondaryM2: number | null;
+            /**
+             * @description Primary market, PLN/sqm
+             * @example 17736
+             */
+            primaryM2: number | null;
+            /** @example -0.1 */
+            secondaryYoyPct: number | null;
+            priceSource: components["schemas"]["HousingPriceSourceDto"];
+            /** @example /v1/series/housing/warszawa */
+            ref: string;
+            /** @example https://finwire.pl/czy-kupic-mieszkanie/warszawa */
+            pageUrl: string;
         };
         HousingListDataDto: {
-            /** @example 2026-06-06T06:00:00.000Z */
-            generatedAt: string;
+            /** @example Q1 2026 */
+            asOf: string;
             /** @example 17 */
             count: number;
-            /** @example Q4 2025 */
-            asOf: string;
             cities: components["schemas"]["HousingCityDto"][];
         };
         HousingListResponseDto: {
@@ -471,25 +635,125 @@ export interface components {
             meta: components["schemas"]["ResponseMetaDto"];
         };
         HousingPricePointDto: {
-            /** @example Q4 2025 */
-            kwartal: string;
-            /** @example wtorny */
-            market: string;
-            /** @example 13500 */
-            cenaM2: number;
+            /** @example Q1 2026 */
+            quarter: string;
+            /** @example 16498 */
+            secondaryM2: number | null;
+            /** @example 17736 */
+            primaryM2: number | null;
         };
         HousingDetailDataDto: {
             /** @example warszawa */
             slug: string;
             /** @example Warszawa */
             city: string;
-            /** @example wait */
-            verdict: string;
-            /** @description Quarterly price history */
+            /** @example mazowieckie */
+            voivodeship: string;
+            /** @example Q1 2026 */
+            quarter: string;
+            /**
+             * @description Secondary market, PLN/sqm
+             * @example 16498
+             */
+            secondaryM2: number | null;
+            /**
+             * @description Primary market, PLN/sqm
+             * @example 17736
+             */
+            primaryM2: number | null;
+            /** @example -0.1 */
+            secondaryYoyPct: number | null;
+            priceSource: components["schemas"]["HousingPriceSourceDto"];
+            /** @example /v1/series/housing/warszawa */
+            ref: string;
+            /** @example https://finwire.pl/czy-kupic-mieszkanie/warszawa */
+            pageUrl: string;
+            /** @example 17.4 */
+            primaryYoyPct: number | null;
+            /** @example 6 */
+            secondaryQoqPct: number | null;
+            /**
+             * @description Secondary YoY change net of CPI inflation
+             * @example -4.2
+             */
+            secondaryRealYoyPct: number | null;
+            /** @description Last quarters */
             history: components["schemas"]["HousingPricePointDto"][];
         };
         HousingDetailResponseDto: {
             data: components["schemas"]["HousingDetailDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        BondYieldEntryDto: {
+            /**
+             * @description Eurostat geo code: PL, DE, EA (euro area), EU27_2020
+             * @example PL
+             */
+            geo: string;
+            /** @example 2026-09 */
+            period: string;
+            /**
+             * @description Yield, %
+             * @example 6.23
+             */
+            value: number;
+            /** @example 2026-08 */
+            previousPeriod: string | null;
+            /** @example 5.81 */
+            previousValue: number | null;
+            /**
+             * @description Month-over-month change, bps
+             * @example 42
+             */
+            changeBps: number | null;
+            /**
+             * @description Year-over-year change, bps
+             * @example 76
+             */
+            changeYearBps: number | null;
+        };
+        BondYieldsLatestDataDto: {
+            /** @example Eurostat (irt_lt_mcby_m) */
+            source: string;
+            /** @example https://ec.europa.eu/eurostat/databrowser/view/irt_lt_mcby_m/default/table */
+            sourceUrl: string;
+            /** @example 2026-09 */
+            asOf: string;
+            /** @example 2026-10-15T12:59:08.008Z */
+            updatedAt: string | null;
+            /** @example 276 */
+            spreadPlDeBps: number | null;
+            /** @example 230 */
+            spreadPlEaBps: number | null;
+            /** @example 2026-09 */
+            spreadPeriod: string | null;
+            entries: components["schemas"]["BondYieldEntryDto"][];
+        };
+        BondYieldsLatestResponseDto: {
+            data: components["schemas"]["BondYieldsLatestDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        PeriodValuePointDto: {
+            /** @example 2026-09 */
+            period: string;
+            /** @example 6.23 */
+            value: number | null;
+        };
+        BondYieldsHistoryDataDto: {
+            /** @example Eurostat (irt_lt_mcby_m) */
+            source: string;
+            /** @example https://ec.europa.eu/eurostat/databrowser/view/irt_lt_mcby_m/default/table */
+            sourceUrl: string;
+            /** @example PL */
+            geo: string;
+            /** @example 2026-09 */
+            asOf: string | null;
+            /** @example 309 */
+            count: number;
+            points: components["schemas"]["PeriodValuePointDto"][];
+        };
+        BondYieldsHistoryResponseDto: {
+            data: components["schemas"]["BondYieldsHistoryDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         BondEntryDto: {
@@ -583,24 +847,85 @@ export interface components {
             data: components["schemas"]["LegalLimitsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        BarometrExtremeDto: {
+            /** @example 2024-03 */
+            month: string | null;
+            /** @example 5.25 */
+            value: number | null;
+        };
+        BarometrHistoryDto: {
+            /**
+             * @description First month of the history
+             * @example 2015-01
+             */
+            since: string | null;
+            /** @example 1.15 */
+            current: number | null;
+            best: components["schemas"]["BarometrExtremeDto"] | null;
+            worst: components["schemas"]["BarometrExtremeDto"] | null;
+            /**
+             * @description Share of historical months (%) in which the indicator was worse than now
+             * @example 50
+             */
+            betterThanPct: number | null;
+        };
         BarometrListItemDto: {
-            /** @example oplacalnosc-lokat */
-            slug: string;
-            /** @example Real return on deposits */
-            headline: string;
-            /** @example -0.55 */
-            value: number;
-            /** @example 0.1 */
-            delta: number | null;
-            /** @example up */
-            trend: string;
+            /**
+             * @description Public indicator id
+             * @example real-deposit-rate
+             */
+            id: string;
+            /** @example /v1/index/real-deposit-rate */
+            ref: string;
+            /** @example Barometr opłacalności lokat */
+            title: string;
+            /** @example 1.15 */
+            value: number | null;
+            /** @example pp */
+            unit: string;
+            /**
+             * @description pp | pct | pln | pln-precise | m2
+             * @example pp
+             */
+            valueFormat: string;
+            /**
+             * @description 0-100, higher = better for households: share of months in the history with a worse value
+             * @example 50
+             */
+            gauge: number | null;
+            /**
+             * @description gauge band: b1 (<20) .. b5 (>=80)
+             * @example b3
+             */
+            gaugeBand: string;
+            /** @example Najniższy realny zysk od grudnia 2023 */
+            gaugeLabel: string;
+            /** @example -0.7 */
+            deltaMom: number | null;
+            /** @example -37.84 */
+            deltaMomPct: number | null;
+            /**
+             * @description up | down | flat
+             * @example down
+             */
+            direction: string;
+            /**
+             * @description Whether a higher value is better for households
+             * @example true
+             */
+            goodWhenHigh: boolean;
+            /** @example 2026-09-01 */
+            asOf: string;
+            history: components["schemas"]["BarometrHistoryDto"] | null;
+            /** @example https://finwire.pl/barometr-oplacalnosci-lokat */
+            pageUrl: string;
         };
         BarometrListInnerDto: {
-            /** @example 2026-06-06T06:00:00.000Z */
+            /** @example 2026-10-15T06:00:00.000Z */
             generatedAt: string;
             /** @example 5 */
             count: number;
-            /** @example 2026-04 */
+            /** @example 2026-09 */
             asOfLatest: string;
             barometry: components["schemas"]["BarometrListItemDto"][];
         };
@@ -719,22 +1044,88 @@ export interface components {
             data: components["schemas"]["CreditStressDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
-        BarometrGaugeDto: {
-            /** @example 2 */
-            band: number;
-            /** @example Deposits below inflation */
-            label: string;
+        BarometrDeltaDto: {
+            /** @example -0.7 */
+            mom: number | null;
+            /** @example -37.84 */
+            momPct: number | null;
+            /** @example -2.2 */
+            yoy: number | null;
+            /** @example -65.67 */
+            yoyPct: number | null;
+        };
+        MonthValuePointDto: {
+            /** @example 2026-09 */
+            month: string;
+            /** @example 1.15 */
+            value: number | null;
+        };
+        MethodologyItemDto: {
+            /** @example Realny zysk */
+            term: string;
+            /** @example oprocentowanie nominalne najlepszej lokaty minus inflacja CPI r/r */
+            definition: string;
         };
         BarometrDetailDataDto: {
-            /** @example oplacalnosc-lokat */
-            slug: string;
-            /** @example Real return on deposits */
-            headline: string;
-            gauge: components["schemas"]["BarometrGaugeDto"];
-            /** @description Historical series */
-            series: components["schemas"]["TimeValuePointDto"][];
-            /** @example Methodology... */
-            methodology: string;
+            /**
+             * @description Public indicator id
+             * @example real-deposit-rate
+             */
+            id: string;
+            /** @example /v1/index/real-deposit-rate */
+            ref: string;
+            /** @example Barometr opłacalności lokat */
+            title: string;
+            /** @example 1.15 */
+            value: number | null;
+            /** @example pp */
+            unit: string;
+            /**
+             * @description pp | pct | pln | pln-precise | m2
+             * @example pp
+             */
+            valueFormat: string;
+            /**
+             * @description 0-100, higher = better for households: share of months in the history with a worse value
+             * @example 50
+             */
+            gauge: number | null;
+            /**
+             * @description gauge band: b1 (<20) .. b5 (>=80)
+             * @example b3
+             */
+            gaugeBand: string;
+            /** @example Najniższy realny zysk od grudnia 2023 */
+            gaugeLabel: string;
+            /** @example -0.7 */
+            deltaMom: number | null;
+            /** @example -37.84 */
+            deltaMomPct: number | null;
+            /**
+             * @description up | down | flat
+             * @example down
+             */
+            direction: string;
+            /**
+             * @description Whether a higher value is better for households
+             * @example true
+             */
+            goodWhenHigh: boolean;
+            /** @example 2026-09-01 */
+            asOf: string;
+            history: components["schemas"]["BarometrHistoryDto"] | null;
+            /** @example https://finwire.pl/barometr-oplacalnosci-lokat */
+            pageUrl: string;
+            delta: components["schemas"]["BarometrDeltaDto"];
+            /** @example Realne oprocentowanie lokaty po odjęciu inflacji CPI */
+            seriesLabel: string;
+            /** @example pp */
+            seriesUnit: string;
+            /** @description Monthly history */
+            series: components["schemas"]["MonthValuePointDto"][];
+            methodology: components["schemas"]["MethodologyItemDto"][];
+            /** @example finwire.pl - ranking lokat (SP) + inflacja CPI GUS */
+            source: string;
         };
         IndexDetailResponseDto: {
             data: components["schemas"]["BarometrDetailDataDto"];
@@ -877,6 +1268,373 @@ export interface components {
         };
         SnapshotResponseDto: {
             data: components["schemas"]["SnapshotDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        TransactionTrendPointDto: {
+            /** @example 2026-Q1 */
+            quarter: string;
+            /** @example 16577 */
+            medianM2: number;
+            /** @example 7275 */
+            transactions: number;
+        };
+        TransactionCityDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            name: string;
+            /**
+             * @description TERYT code
+             * @example 1465
+             */
+            teryt: string;
+            /**
+             * @description Latest complete quarter
+             * @example 2026-Q1
+             */
+            latestQuarter: string;
+            /**
+             * @description Median price per sqm, PLN
+             * @example 16577
+             */
+            medianM2: number;
+            /** @example 14262 */
+            p25M2: number | null;
+            /** @example 19150 */
+            p75M2: number | null;
+            /** @example 16699 */
+            primaryMedianM2: number | null;
+            /** @example 16454 */
+            secondaryMedianM2: number | null;
+            /**
+             * @description Deeds in the latest quarter
+             * @example 7275
+             */
+            transactions: number;
+            /** @example 7.4 */
+            yoyPct: number | null;
+            /** @example 2010-Q1 */
+            firstQuarter: string;
+            /**
+             * @description Quarters still being filled in by the registry (not final)
+             * @example [
+             *       "2026-Q2",
+             *       "2026-Q3"
+             *     ]
+             */
+            provisionalQuarters: string[];
+            trend: components["schemas"]["TransactionTrendPointDto"][];
+            /** @example /v1/housing/transactions/warszawa */
+            ref: string;
+            /** @example https://finwire.pl/ceny-mieszkan/warszawa */
+            pageUrl: string;
+        };
+        TransactionCitiesDataDto: {
+            /** @example Rejestr Cen Nieruchomości (GUGiK, geoportal.gov.pl, oraz rejestry prowadzone przez miasta) */
+            source: string;
+            /**
+             * @description Date of the newest deed in the data
+             * @example 2026-08-04
+             */
+            dataThrough: string;
+            /** @example 2026-10-15T03:22:34.055Z */
+            updatedAt: string;
+            /** @example 17 */
+            count: number;
+            cities: components["schemas"]["TransactionCityDto"][];
+        };
+        TransactionCitiesResponseDto: {
+            data: components["schemas"]["TransactionCitiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        TransactionWindowDto: {
+            /** @example 2025-Q2 */
+            from: string;
+            /** @example 2026-Q1 */
+            to: string;
+        };
+        TransactionCitySummaryDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            name: string;
+            /** @example 2026-Q1 */
+            anchorQuarter: string;
+            /** @description 12-month window used for the medians */
+            window: components["schemas"]["TransactionWindowDto"];
+            /** @example 2026-08-04 */
+            dataUntil: string;
+            /** @example 15815 */
+            medianM2: number;
+            /** @example 31998 */
+            transactions: number;
+            /** @example 1.2 */
+            yoyPct: number | null;
+        };
+        TransactionDistrictDto: {
+            /** @example zoliborz */
+            slug: string;
+            /** @example Żoliborz */
+            name: string;
+            /** @example dzielnica */
+            kind: string;
+            /** @example 22489 */
+            medianM2: number;
+            /**
+             * @description Deeds in the 12-month window
+             * @example 490
+             */
+            transactions: number;
+            /** @example 4.1 */
+            yoyPct: number | null;
+            /**
+             * @description Median vs city median, %
+             * @example 42.2
+             */
+            vsCityPct: number | null;
+            /** @example 1 */
+            rank: number | null;
+            /** @example https://finwire.pl/ceny-mieszkan/warszawa/zoliborz */
+            pageUrl: string | null;
+        };
+        TransactionDistrictsDataDto: {
+            city: components["schemas"]["TransactionCitySummaryDto"];
+            /** @example 18 */
+            count: number;
+            districts: components["schemas"]["TransactionDistrictDto"][];
+        };
+        TransactionDistrictsResponseDto: {
+            data: components["schemas"]["TransactionDistrictsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        RentSourceDto: {
+            /** @example znajdznajem.pl */
+            name: string;
+            /** @example https://znajdznajem.pl */
+            url: string;
+            /** @example https://znajdznajem.pl/metodologia */
+            methodologyUrl: string;
+            /** @example CC BY 4.0 */
+            license: string;
+        };
+        RentCityDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            name: string;
+            /** @example mazowieckie */
+            voivodeship: string;
+            /** @example 2026-10-15 */
+            snapshotDate: string;
+            /**
+             * @description Active listings
+             * @example 45650
+             */
+            offers: number;
+            /**
+             * @description Median monthly asking rent, PLN
+             * @example 3200
+             */
+            medianRent: number;
+            /** @example 3573 */
+            avgRent: number;
+            /** @example 84 */
+            avgRentPerM2: number;
+            /** @example 48 */
+            avgArea: number;
+            /** @example 3200 */
+            medianPrevMonth: number | null;
+            /** @example 2026-08 */
+            prevMonth: string | null;
+            /** @example 0 */
+            medianChangePct: number | null;
+            /** @example /v1/rent/warszawa */
+            ref: string;
+            /** @example https://finwire.pl/za-ile-wynajac-mieszkanie/warszawa */
+            pageUrl: string;
+        };
+        RentListDataDto: {
+            /** @example 2026-10-15 */
+            asOf: string;
+            source: components["schemas"]["RentSourceDto"];
+            /** @example 34 */
+            count: number;
+            cities: components["schemas"]["RentCityDto"][];
+        };
+        RentListResponseDto: {
+            data: components["schemas"]["RentListDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        RentYieldCityDto: {
+            /** @example bydgoszcz */
+            slug: string;
+            /** @example Bydgoszcz */
+            name: string;
+            /** @example kujawsko-pomorskie */
+            voivodeship: string;
+            /** @example 2026-10-15 */
+            snapshotDate: string;
+            /**
+             * @description Median monthly asking rent, PLN
+             * @example 2100
+             */
+            medianRent: number;
+            /**
+             * @description "2 pokoje" (2-room flats) or "ogółem" (all listings)
+             * @example 2 pokoje
+             */
+            rentBasis: string;
+            /** @example 42 */
+            rentAreaM2: number;
+            /** @example 1706 */
+            rentOffers: number;
+            /** @example 53 */
+            rentPerM2: number;
+            /**
+             * @description Secondary-market transaction price per sqm, PLN
+             * @example 7942
+             */
+            pricePerM2: number;
+            /** @example Q1 2026 */
+            priceQuarter: string;
+            /** @example Rejestr Cen Nieruchomości (ceny z aktów notarialnych), Q1 2026 */
+            priceSource: string;
+            /** @example 536 */
+            priceTransactions: number | null;
+            /**
+             * @description pricePerM2 x rentAreaM2
+             * @example 333564
+             */
+            purchaseCost: number;
+            /**
+             * @description 12 x medianRent / purchaseCost, %
+             * @example 7.6
+             */
+            grossYieldPct: number;
+            /**
+             * @description Gross yield after vacancy and the flat-rate rental income tax, %
+             * @example 6.3
+             */
+            netYieldPct: number;
+            /** @example 15.8 */
+            paybackYears: number;
+            /** @example https://finwire.pl/rentownosc-najmu/bydgoszcz */
+            pageUrl: string;
+        };
+        RentYieldDataDto: {
+            /** @example 2026-10-15 */
+            asOf: string;
+            source: components["schemas"]["RentSourceDto"];
+            /** @example 18 */
+            count: number;
+            cities: components["schemas"]["RentYieldCityDto"][];
+        };
+        RentYieldResponseDto: {
+            data: components["schemas"]["RentYieldDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        RentDistrictDto: {
+            /** @example Wilanów */
+            name: string;
+            /** @example 5294 */
+            avgRent: number;
+            /** @example 1024 */
+            offers: number;
+        };
+        RentCityDetailDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            name: string;
+            /** @example mazowieckie */
+            voivodeship: string;
+            /** @example 2026-10-15 */
+            snapshotDate: string;
+            /**
+             * @description Active listings
+             * @example 45650
+             */
+            offers: number;
+            /**
+             * @description Median monthly asking rent, PLN
+             * @example 3200
+             */
+            medianRent: number;
+            /** @example 3573 */
+            avgRent: number;
+            /** @example 84 */
+            avgRentPerM2: number;
+            /** @example 48 */
+            avgArea: number;
+            /** @example 3200 */
+            medianPrevMonth: number | null;
+            /** @example 2026-08 */
+            prevMonth: string | null;
+            /** @example 0 */
+            medianChangePct: number | null;
+            /** @example /v1/rent/warszawa */
+            ref: string;
+            /** @example https://finwire.pl/za-ile-wynajac-mieszkanie/warszawa */
+            pageUrl: string;
+            /** @example 550 */
+            minRent: number;
+            /** @example 15000 */
+            maxRent: number;
+            districts: components["schemas"]["RentDistrictDto"][];
+        };
+        RentCityResponseDto: {
+            data: components["schemas"]["RentCityDetailDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        CalendarEventDto: {
+            /** @example 97 */
+            id: number;
+            /** @example 2026-10-19 */
+            date: string;
+            /**
+             * @description Europe/Warsaw
+             * @example 09:30
+             */
+            time: string | null;
+            /** @example null */
+            endDate: string | null;
+            /** @example Przeciętne wynagrodzenie w sektorze przedsiębiorstw (wrzesień 2026) */
+            title: string;
+            /** @example Average Wages in Enterprise Sector */
+            titleEn: string | null;
+            /** @example PL */
+            country: string;
+            /** @example GUS */
+            source: string;
+            /**
+             * @description bezrobocie | budownictwo | handel | inflacja | pkb | produkcja | sprzedaz | stopy_procentowe | wynagrodzenia
+             * @example wynagrodzenia
+             */
+            category: string;
+            /**
+             * @description 1-10
+             * @example 8
+             */
+            importance: number;
+            /**
+             * @description Date not yet confirmed by the publisher
+             * @example false
+             */
+            tentative: boolean;
+            /** @example null */
+            previousValue: string | null;
+            /** @example null */
+            forecastValue: string | null;
+            /** @example null */
+            actualValue: string | null;
+        };
+        CalendarDataDto: {
+            /** @example 10 */
+            count: number;
+            events: components["schemas"]["CalendarEventDto"][];
+        };
+        CalendarResponseDto: {
+            data: components["schemas"]["CalendarDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
     };
@@ -1032,6 +1790,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HousingDetailResponseDto"];
+                };
+            };
+        };
+    };
+    SeriesController_bondYields: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BondYieldsLatestResponseDto"];
+                };
+            };
+        };
+    };
+    SeriesController_bondYieldsHistory: {
+        parameters: {
+            query?: {
+                /** @description Oldest month (YYYY-MM) */
+                since?: string;
+            };
+            header?: never;
+            path: {
+                geo: "PL" | "DE" | "EA" | "EU27_2020";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BondYieldsHistoryResponseDto"];
                 };
             };
         };
@@ -1258,6 +2059,129 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SnapshotResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_transactionCities: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransactionCitiesResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_transactionDistricts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description City slug from /v1/housing/transactions */
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransactionDistrictsResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_rentList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RentListResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_rentYield: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RentYieldResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_rentCity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description City slug from /v1/rent */
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RentCityResponseDto"];
+                };
+            };
+        };
+    };
+    CalendarController_upcoming: {
+        parameters: {
+            query?: {
+                /** @description 1-100, default 10 */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarResponseDto"];
                 };
             };
         };

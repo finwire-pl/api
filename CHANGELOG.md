@@ -1,0 +1,57 @@
+# Changelog
+
+Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
+All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
+
+## 2026-10-15
+
+### Added
+
+- `GET /v1/series/bond-yields` - latest 10-year government bond yields for Poland, Germany, the euro area and the EU, with PL-DE and PL-EA spreads in basis points (Eurostat).
+- `GET /v1/series/bond-yields/{geo}` - monthly yield history for `PL`, `DE`, `EA` or `EU27_2020`, optional `since=YYYY-MM`.
+- `GET /v1/housing/transactions` - flat transaction prices per m² from notarial deeds (Real Estate Price Register, RCN) in 17 cities: median, quartiles, primary vs secondary market, transaction count, YoY change, quarterly trend.
+- `GET /v1/housing/transactions/{city}` - 12-month median price per m² by district, with the difference vs the city median.
+- `GET /v1/rent` and `GET /v1/rent/{city}` - asking rents per city and district: median, mean, per m², month-over-month change.
+- `GET /v1/rent/yield` - gross and net rental yield and payback period per city.
+- `GET /v1/calendar` - upcoming Polish macro releases and Monetary Policy Council (RPP) decisions, with Warsaw time, category and importance.
+- Barometers (`/v1/index`, `/v1/index/{slug}`): `history` with the best and worst month since 2015 and `betterThanPct`, public `id` and `ref`, and `pageUrl` linking to the barometer page.
+
+### Changed
+
+- **Breaking** - `/v1/index/{slug}`, `/v1/index` and `barometry` in `/v1/snapshot` return a fixed, documented set of data fields:
+  - the internal `slug` (e.g. `oplacalnosc-lokat`) is replaced by the public `id` (e.g. `real-deposit-rate`) and `ref`;
+  - `methodology` items are `{ term, definition }` (were `{ k, v }`);
+  - `series` items are `{ month, value }`;
+  - page-only content is no longer included (FAQ, intro texts, calls to action, calculator and scenario data).
+  The OpenAPI schema now matches the responses (it previously documented `headline` and an object `gauge`, which were never returned).
+- **Breaking** - `/v1/series/housing` and `/v1/series/housing/{city}` return a fixed set of price fields: `secondaryM2`, `primaryM2`, `secondaryYoyPct`, `primaryYoyPct`, `secondaryRealYoyPct`, `history` of the latest quarters and `priceSource`. Page-only content (verdict, scores, FAQ) is no longer included. The data source is GUS; documentation previously named NBP BaRN. For a longer price trend use `/v1/housing/transactions`.
+
+### Fixed
+
+- Documentation examples used the invalid indicator id `nbp_rate`; the NBP reference rate id is `stopa-referencyjna`.
+
+## 2026-09-25
+
+### Fixed
+
+- Unknown identifiers and invalid parameters (e.g. a typo in `{indicator}`) return `404` instead of `503`.
+- `days` below 7 on history endpoints is raised to 7 instead of failing.
+- `/v1/series/interest-rate/{indicator}` documentation lists the valid ids.
+
+## 2026-06-23
+
+### Fixed
+
+- `meta.sourceUrl` of the barometer datasets points to the current barometer pages on finwire.pl.
+
+## 2026-06-06
+
+### Added
+
+- First public release: interest rates (NBP, WIBOR, POLSTR), CPI, NBP FX rates, housing prices, retail government bonds, GUS wages, IKE/IKZE limits, deposit, savings, mortgage and cash loan rate aggregates, the credit stress map, barometers and `/v1/snapshot`.
+- `{ data, meta }` envelope with the source, license, `asOf` and a ready-to-use `meta.citation` in every response.
+- OpenAPI 3 specification with field-level response schemas, interactive reference, dataset pages and `llms.txt`.
+
+### Fixed
+
+- `meta.asOf` of `/v1/snapshot` is the date of its oldest component instead of the request time.
