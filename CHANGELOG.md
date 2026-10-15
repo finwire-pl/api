@@ -14,6 +14,13 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 - `GET /v1/rent` and `GET /v1/rent/{city}` - asking rents per city and district: median, mean, per m², month-over-month change.
 - `GET /v1/rent/yield` - gross and net rental yield and payback period per city.
 - `GET /v1/calendar` - upcoming Polish macro releases and Monetary Policy Council (RPP) decisions, with Warsaw time, category and importance.
+- `GET /v1/index/entry-threshold` and `/history` - the gross monthly wage needed for a mortgage on a model flat within KNF DSTI limits in 17 cities, the installment and the share of employees earning at least that; daily history for a single person or a couple.
+- `GET /v1/series/unemployment`, `/counties` and `/history` - GUS registered unemployment rate for Poland and the 16 provinces, counties with the lowest and highest rate, monthly history since 2011.
+- `GET /v1/wages/occupations` and `/{code}` - GUS wages by occupation: mean, median, deciles, by gender and sector, gender pay gap.
+- `GET /v1/housing/supply` and `/{city}` - GUS housing supply and demand: dwellings per 1000, completions, permits, population and migration, yearly since 2010.
+- `GET /v1/legal-limits/local-tax` - upper limits of property tax rates per tax year with the announcing act.
+- POLSTR history: `/v1/series/interest-rate/polstr-*` now go back to 2021 (GPW Benchmark yearly files; values before June 2025 are the administrator's pre-production history). Previously the series started in September 2026.
+- NBP exchange rate history: `/v1/series/fx/{code}` returns up to 10 years (`days` up to 3650); previously the history started in 2021.
 - Barometers (`/v1/index`, `/v1/index/{slug}`): `history` with the best and worst month since 2015 and `betterThanPct`, public `id` and `ref`, and `pageUrl` linking to the barometer page.
 
 ### Changed

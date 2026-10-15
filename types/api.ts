@@ -157,6 +157,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/series/unemployment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Registered unemployment rate (GUS): Poland and 16 provinces, latest month */
+        get: operations["SeriesController_unemployment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/series/unemployment/counties": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Counties (powiaty) with the lowest and highest registered unemployment rate */
+        get: operations["SeriesController_unemploymentCounties"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/series/unemployment/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Monthly unemployment rate history for Poland or a province */
+        get: operations["SeriesController_unemploymentHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/bonds": {
         parameters: {
             query?: never;
@@ -208,6 +259,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/wages/occupations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gross wages by occupation (GUS): mean, median, deciles, by gender and sector */
+        get: operations["ReferenceController_occupations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/wages/occupations/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Wages in one occupation group with its parent groups and edition history */
+        get: operations["ReferenceController_occupation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/legal-limits/local-tax": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Upper limits of local property tax rates per year (Minister of Finance announcement) */
+        get: operations["ReferenceController_localTax"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/index": {
         parameters: {
             query?: never;
@@ -242,6 +344,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/index/entry-threshold": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Entry threshold: gross monthly wage needed for a mortgage on a model flat in 17 cities, and the share of employees earning at least that */
+        get: operations["IndicesController_entryThreshold"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/index/entry-threshold/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Daily history of the entry threshold per city (change points) */
+        get: operations["IndicesController_entryThresholdHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/index/{slug}": {
         parameters: {
             query?: never;
@@ -249,7 +385,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** finwire indicator: real-deposit-rate | housing-affordability | credit-cost | borrowing-power | purchasing-power */
+        /** finwire barometer: real-deposit-rate | housing-affordability | credit-cost | borrowing-power | purchasing-power */
         get: operations["IndicesController_index"];
         put?: never;
         post?: never;
@@ -421,6 +557,40 @@ export interface paths {
         };
         /** Asking rents in a city with a breakdown by district */
         get: operations["RealEstateController_rentCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/supply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Housing supply and demand (GUS): dwellings per 1000, completions, permits, population, migration */
+        get: operations["RealEstateController_housingSupply"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/supply/{city}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Housing supply in a city vs its province and Poland, with yearly history */
+        get: operations["RealEstateController_housingSupplyCity"];
         put?: never;
         post?: never;
         delete?: never;
@@ -756,6 +926,81 @@ export interface components {
             data: components["schemas"]["BondYieldsHistoryDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        UnemploymentPolandDto: {
+            /** @example 5.8 */
+            value: number;
+            /** @example 5.5 */
+            valueYearAgo: number | null;
+            /** @example 0.3 */
+            changeYoyPp: number | null;
+        };
+        UnemploymentUnitDto: {
+            /**
+             * @description GUS BDL unit id
+             * @example 071400000000
+             */
+            unitId: string;
+            /** @example Mazowieckie */
+            name: string;
+            /** @example 14 */
+            teryt: string | null;
+            /**
+             * @description Registered unemployment rate, %
+             * @example 4.5
+             */
+            value: number;
+            /** @example 4.4 */
+            valueYearAgo: number | null;
+            /** @example 0.1 */
+            changeYoyPp: number | null;
+        };
+        UnemploymentDataDto: {
+            /** @example GUS, Bank Danych Lokalnych - stopa bezrobocia rejestrowanego (dane miesięczne, P3559) */
+            source: string;
+            /** @example https://bdl.stat.gov.pl/bdl/dane/podgrup/temat */
+            sourceUrl: string;
+            /** @example 2026-08 */
+            asOf: string;
+            poland: components["schemas"]["UnemploymentPolandDto"];
+            /** @example 188 */
+            historyMonths: number;
+            regions: components["schemas"]["UnemploymentUnitDto"][];
+        };
+        UnemploymentResponseDto: {
+            data: components["schemas"]["UnemploymentDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        UnemploymentCountiesDataDto: {
+            /** @example GUS, Bank Danych Lokalnych */
+            source: string;
+            /** @example 2026-08 */
+            asOf: string;
+            /** @example 380 */
+            countiesTotal: number | null;
+            lowest: components["schemas"]["UnemploymentUnitDto"][];
+            highest: components["schemas"]["UnemploymentUnitDto"][];
+        };
+        UnemploymentCountiesResponseDto: {
+            data: components["schemas"]["UnemploymentCountiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        UnemploymentHistoryDataDto: {
+            /** @example GUS, Bank Danych Lokalnych */
+            source: string;
+            /** @example 000000000000 */
+            unitId: string;
+            /** @example Polska */
+            unitName: string;
+            /** @example 2026-08 */
+            asOf: string | null;
+            /** @example 188 */
+            count: number;
+            points: components["schemas"]["PeriodValuePointDto"][];
+        };
+        UnemploymentHistoryResponseDto: {
+            data: components["schemas"]["UnemploymentHistoryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         BondEntryDto: {
             /** @example EDO0636 */
             code: string;
@@ -845,6 +1090,130 @@ export interface components {
         };
         LegalLimitsResponseDto: {
             data: components["schemas"]["LegalLimitsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        OccupationDto: {
+            /**
+             * @description Occupation code (KZiS / ISCO group)
+             * @example 25
+             */
+            code: string;
+            /**
+             * @description 0 = all employees, higher = more detailed group
+             * @example 2
+             */
+            level: number;
+            /** @example Specjaliści do spraw technologii informacyjno-komunikacyjnych */
+            name: string;
+            /** @example 8944.79 */
+            meanPln: number | null;
+            /** @example 7404.69 */
+            medianPln: number | null;
+            meanMenPln: number | null;
+            meanWomenPln: number | null;
+            medianMenPln: number | null;
+            medianWomenPln: number | null;
+            meanPublicPln: number | null;
+            meanPrivatePln: number | null;
+            /** @description Deciles D1-D9 of gross monthly wage, PLN */
+            deciles: number[];
+            /**
+             * @description Median gender pay gap, %
+             * @example 4.1
+             */
+            genderPayGapPct: number | null;
+            /** @example /v1/wages/occupations/25 */
+            ref: string;
+        };
+        OccupationsDataDto: {
+            /**
+             * @description GUS survey month
+             * @example 2024-10
+             */
+            edition: string;
+            /** @example GUS, Struktura wynagrodzeń według zawodów w październiku 2024 r. */
+            source: string;
+            sourceUrl: string;
+            /** @example 2026-02-10 */
+            publishedAt: string;
+            /** @example 175 */
+            count: number;
+            occupations: components["schemas"]["OccupationDto"][];
+        };
+        OccupationsResponseDto: {
+            data: components["schemas"]["OccupationsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        OccupationParentDto: {
+            /** @example 2 */
+            code: string;
+            /** @example Specjaliści */
+            name: string;
+            /** @example 1 */
+            level: number;
+        };
+        OccupationEditionDto: {
+            /** @example 2024-10 */
+            edition: string;
+            meanPln: number | null;
+            medianPln: number | null;
+        };
+        OccupationDataDto: {
+            /** @example 2024-10 */
+            edition: string;
+            source: string;
+            sourceUrl: string;
+            /** @example 2026-02-10 */
+            publishedAt: string;
+            occupation: components["schemas"]["OccupationDto"];
+            parents: components["schemas"]["OccupationParentDto"][];
+            history: components["schemas"]["OccupationEditionDto"][];
+        };
+        OccupationResponseDto: {
+            data: components["schemas"]["OccupationDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LocalTaxActDto: {
+            /** @example Obwieszczenie Ministra Finansów ... w sprawie górnych granic stawek kwotowych podatków i opłat lokalnych na rok 2027 */
+            title: string;
+            /** @example M.P. 2026 poz. 741 */
+            citation: string;
+            /** @example 2026-07-23 */
+            actDate: string;
+            /** @example https://eli.gov.pl/eli/MP/2026/741/ogl */
+            url: string;
+        };
+        LocalTaxRateDto: {
+            /** @example grunty_dzialalnosc */
+            key: string;
+            /** @example Grunty związane z prowadzeniem działalności gospodarczej */
+            label: string;
+            /** @example grunty */
+            group: string;
+            /** @example art. 5 ust. 1 pkt 1 lit. a */
+            legalRef: string;
+            /** @example zł/m² */
+            unit: string;
+            /**
+             * @description Upper limit; municipalities set their own rate up to it
+             * @example 1.49
+             */
+            maxRate: number;
+        };
+        LocalTaxYearDto: {
+            /** @example 2027 */
+            taxYear: number;
+            act: components["schemas"]["LocalTaxActDto"];
+            rates: components["schemas"]["LocalTaxRateDto"][];
+        };
+        LocalTaxDataDto: {
+            /** @example 2026 */
+            currentYear: number;
+            updatedAt: string;
+            years: components["schemas"]["LocalTaxYearDto"][];
+        };
+        LocalTaxResponseDto: {
+            data: components["schemas"]["LocalTaxDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         BarometrExtremeDto: {
@@ -1042,6 +1411,90 @@ export interface components {
         };
         CreditStressResponseDto: {
             data: components["schemas"]["CreditStressDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EntryThresholdParamsDto: {
+            /** @example 50 */
+            flatAreaM2: number;
+            /** @example 20 */
+            downPaymentPct: number;
+            /** @example 25 */
+            termYears: number;
+            /**
+             * @description secondary | primary
+             * @example secondary
+             */
+            market: string;
+        };
+        EntryThresholdCityDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            city: string;
+            /**
+             * @description Gross monthly wage per person needed for the mortgage, PLN
+             * @example 16444
+             */
+            requiredGrossMonthly: number;
+            /**
+             * @description Monthly installment, PLN
+             * @example 4076
+             */
+            installment: number;
+            /**
+             * @description Share of employees earning at least the required wage, %
+             * @example 6
+             */
+            employeesAbovePct: number;
+        };
+        EntryThresholdDataDto: {
+            /** @example 2026-10-15 */
+            asOf: string;
+            /** @example single */
+            household: string;
+            params: components["schemas"]["EntryThresholdParamsDto"] | null;
+            /** @example 17 */
+            count: number;
+            /** @description From the least to the most accessible city */
+            cities: components["schemas"]["EntryThresholdCityDto"][];
+            /** @example https://finwire.pl/prog-wejscia */
+            pageUrl: string;
+        };
+        EntryThresholdResponseDto: {
+            data: components["schemas"]["EntryThresholdDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EntryThresholdPointDto: {
+            /** @example 2026-10-15 */
+            date: string;
+            /** @example 16444 */
+            requiredGrossMonthly: number;
+            /** @example 6 */
+            employeesAbovePct: number;
+        };
+        EntryThresholdHistoryCityDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            city: string;
+            /** @description First record, every change and the last record */
+            points: components["schemas"]["EntryThresholdPointDto"][];
+        };
+        EntryThresholdHistoryDataDto: {
+            /**
+             * @description single | couple
+             * @example single
+             */
+            household: string;
+            params: components["schemas"]["EntryThresholdParamsDto"] | null;
+            /** @example 2026-09-19 */
+            from: string | null;
+            /** @example 2026-10-15 */
+            to: string | null;
+            cities: components["schemas"]["EntryThresholdHistoryCityDto"][];
+        };
+        EntryThresholdHistoryResponseDto: {
+            data: components["schemas"]["EntryThresholdHistoryDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         BarometrDeltaDto: {
@@ -1586,6 +2039,144 @@ export interface components {
             data: components["schemas"]["RentCityDetailDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        YearValueDto: {
+            /** @example 2025 */
+            year: number | null;
+            /** @example 432.9 */
+            value: number | null;
+        };
+        SupplyPolandDto: {
+            /** @example 000000000000 */
+            unitId: string;
+            /** @example Polska */
+            name: string;
+            /** @example lodz */
+            slug: string | null;
+            teryt: string | null;
+            dwellingsPer1000: components["schemas"]["YearValueDto"];
+            dwellingsPer1000YearAgo: number | null;
+            floorAreaPerPersonM2: components["schemas"]["YearValueDto"];
+            personsPerDwelling: components["schemas"]["YearValueDto"];
+            dwellingsStock: components["schemas"]["YearValueDto"];
+            /** @description Dwellings completed in the year */
+            completed: components["schemas"]["YearValueDto"];
+            completedYearAgo: number | null;
+            /** @description Completed by developers for sale or rent */
+            completedForSaleOrRent: components["schemas"]["YearValueDto"];
+            completedPer1000: number | null;
+            /** @description Dwellings in building permits issued */
+            permits: components["schemas"]["YearValueDto"];
+            permitsPer1000: number | null;
+            population: components["schemas"]["YearValueDto"];
+            populationChange: number | null;
+            netForeignMigration: components["schemas"]["YearValueDto"] | null;
+            registrationsFromAbroad: components["schemas"]["YearValueDto"] | null;
+            /** @description National Census 2021: households, dwellings, unoccupied */
+            census2021: Record<string, never> | null;
+            /** @description GUS population forecast 2030/2040/2050 */
+            populationForecast: Record<string, never> | null;
+            /** @description Completions year to date vs the same period a year ago */
+            completedYearToDate: Record<string, never> | null;
+        };
+        SupplyHistoryPointDto: {
+            /** @example 2010 */
+            year: number;
+            completed: number | null;
+            completedForSaleOrRent: number | null;
+            permits: number | null;
+            population: number | null;
+            dwellingsPer1000: number | null;
+            netForeignMigration: number | null;
+        };
+        SupplyUnitDto: {
+            /** @example 000000000000 */
+            unitId: string;
+            /** @example Polska */
+            name: string;
+            /** @example lodz */
+            slug: string | null;
+            teryt: string | null;
+            dwellingsPer1000: components["schemas"]["YearValueDto"];
+            dwellingsPer1000YearAgo: number | null;
+            floorAreaPerPersonM2: components["schemas"]["YearValueDto"];
+            personsPerDwelling: components["schemas"]["YearValueDto"];
+            dwellingsStock: components["schemas"]["YearValueDto"];
+            /** @description Dwellings completed in the year */
+            completed: components["schemas"]["YearValueDto"];
+            completedYearAgo: number | null;
+            /** @description Completed by developers for sale or rent */
+            completedForSaleOrRent: components["schemas"]["YearValueDto"];
+            completedPer1000: number | null;
+            /** @description Dwellings in building permits issued */
+            permits: components["schemas"]["YearValueDto"];
+            permitsPer1000: number | null;
+            population: components["schemas"]["YearValueDto"];
+            populationChange: number | null;
+            netForeignMigration: components["schemas"]["YearValueDto"] | null;
+            registrationsFromAbroad: components["schemas"]["YearValueDto"] | null;
+        };
+        SupplyCityDto: {
+            /** @example 000000000000 */
+            unitId: string;
+            /** @example Polska */
+            name: string;
+            /** @example lodz */
+            slug: string | null;
+            teryt: string | null;
+            dwellingsPer1000: components["schemas"]["YearValueDto"];
+            dwellingsPer1000YearAgo: number | null;
+            floorAreaPerPersonM2: components["schemas"]["YearValueDto"];
+            personsPerDwelling: components["schemas"]["YearValueDto"];
+            dwellingsStock: components["schemas"]["YearValueDto"];
+            /** @description Dwellings completed in the year */
+            completed: components["schemas"]["YearValueDto"];
+            completedYearAgo: number | null;
+            /** @description Completed by developers for sale or rent */
+            completedForSaleOrRent: components["schemas"]["YearValueDto"];
+            completedPer1000: number | null;
+            /** @description Dwellings in building permits issued */
+            permits: components["schemas"]["YearValueDto"];
+            permitsPer1000: number | null;
+            population: components["schemas"]["YearValueDto"];
+            populationChange: number | null;
+            netForeignMigration: components["schemas"]["YearValueDto"] | null;
+            registrationsFromAbroad: components["schemas"]["YearValueDto"] | null;
+            /** @example /v1/housing/supply/lodz */
+            ref: string;
+        };
+        HousingSupplyDataDto: {
+            source: string;
+            /** @example https://bdl.stat.gov.pl/bdl/dane/podgrup/temat */
+            sourceUrl: string;
+            /** @example 2026-10-15 14:05:29.837+00 */
+            updatedAt: string;
+            poland: components["schemas"]["SupplyPolandDto"];
+            history: components["schemas"]["SupplyHistoryPointDto"][];
+            regions: components["schemas"]["SupplyUnitDto"][];
+            cities: components["schemas"]["SupplyCityDto"][];
+        };
+        HousingSupplyResponseDto: {
+            data: components["schemas"]["HousingSupplyDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        HousingSupplyCityDataDto: {
+            source: string;
+            updatedAt: string;
+            city: components["schemas"]["SupplyUnitDto"];
+            voivodeship: components["schemas"]["SupplyUnitDto"];
+            poland: components["schemas"]["SupplyUnitDto"];
+            /** @example 1 */
+            rankDwellingsPer1000: number | null;
+            /** @example 3 */
+            rankCompletedPer1000: number | null;
+            /** @example 17 */
+            citiesCount: number | null;
+            history: components["schemas"]["SupplyHistoryPointDto"][];
+        };
+        HousingSupplyCityResponseDto: {
+            data: components["schemas"]["HousingSupplyCityDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         CalendarEventDto: {
             /** @example 97 */
             id: number;
@@ -1837,6 +2428,69 @@ export interface operations {
             };
         };
     };
+    SeriesController_unemployment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnemploymentResponseDto"];
+                };
+            };
+        };
+    };
+    SeriesController_unemploymentCounties: {
+        parameters: {
+            query?: {
+                /** @description 1-50, default 10 */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnemploymentCountiesResponseDto"];
+                };
+            };
+        };
+    };
+    SeriesController_unemploymentHistory: {
+        parameters: {
+            query?: {
+                /** @description GUS BDL unit id (12 digits) from /v1/series/unemployment regions[].unitId; default Poland */
+                unit?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnemploymentHistoryResponseDto"];
+                };
+            };
+        };
+    };
     ReferenceController_bonds: {
         parameters: {
             query?: never;
@@ -1894,6 +2548,66 @@ export interface operations {
             };
         };
     };
+    ReferenceController_occupations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OccupationsResponseDto"];
+                };
+            };
+        };
+    };
+    ReferenceController_occupation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Occupation code from /v1/wages/occupations */
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OccupationResponseDto"];
+                };
+            };
+        };
+    };
+    ReferenceController_localTax: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocalTaxResponseDto"];
+                };
+            };
+        };
+    };
     IndicesController_list: {
         parameters: {
             query?: never;
@@ -1928,6 +2642,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreditStressResponseDto"];
+                };
+            };
+        };
+    };
+    IndicesController_entryThreshold: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntryThresholdResponseDto"];
+                };
+            };
+        };
+    };
+    IndicesController_entryThresholdHistory: {
+        parameters: {
+            query?: {
+                /** @description default single */
+                household?: "single" | "couple";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntryThresholdHistoryResponseDto"];
                 };
             };
         };
@@ -2160,6 +2915,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RentCityResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_housingSupply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HousingSupplyResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_housingSupplyCity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description City slug from /v1/housing/supply */
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HousingSupplyCityResponseDto"];
                 };
             };
         };
