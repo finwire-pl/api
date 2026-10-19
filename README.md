@@ -1,7 +1,7 @@
-# finwire API - free Polish financial data API (WIBOR, POLSTR, NBP, GUS, RCN)
+# finwire API - free Polish financial data API (NBP, GUS, RCN)
 
 **finwire API is a free, open REST API with financial, labour market and real estate data for
-Poland: NBP policy rates, WIBOR and POLSTR, CPI inflation, NBP exchange rates, 10-year
+Poland: NBP policy rates, CPI inflation, NBP exchange rates, 10-year
 government bond yields, flat transaction prices from notarial deeds, rents, housing supply,
 wages by occupation, unemployment by province and county, and an economic calendar.** No API key, JSON over HTTPS, OpenAPI 3 specification, every response with its
 primary source and a ready-to-paste citation. Built and maintained by [finwire.pl](https://finwire.pl).
@@ -11,17 +11,18 @@ primary source and a ready-to-paste citation. Built and maintained by [finwire.p
 [![Data license](https://img.shields.io/badge/data-CC%20BY%204.0-orange)](https://creativecommons.org/licenses/by/4.0/)
 
 ```bash
-curl "https://public-api.finwire.pl/v1/series/interest-rate/wibor-3m?days=90"
+curl "https://public-api.finwire.pl/v1/series/interest-rate/stopa-referencyjna?days=90"
 ```
 
 - **Base URL:** `https://public-api.finwire.pl`
 - **Auth:** none - no key, no sign-up, GET only, CORS enabled (works from the browser)
 - **Format:** JSON, UTF-8, `{ data, meta }` envelope
 - **Specification:** [openapi.json](https://public-api.finwire.pl/openapi.json) · [interactive reference](https://public-api.finwire.pl/reference) · [llms.txt](https://public-api.finwire.pl/llms.txt) · [dataset pages](https://public-api.finwire.pl/datasets)
-- **Data license:** CC BY 4.0 for finwire indicators and aggregates; public data requires attribution to the original source
+- **Data license:** CC BY 4.0 for finwire indicators and aggregates; public data requires attribution to the original source; the license of each dataset is in its `license` field
+- **WIBOR and POLSTR:** not available. They are GPW Benchmark data; redistribution requires a Market Data License Agreement with GPW ([gpwbenchmark.pl](https://gpwbenchmark.pl/dane-biezace))
 - **Changes:** [CHANGELOG.md](CHANGELOG.md)
 
-> **Po polsku:** darmowe API z polskimi danymi finansowymi - stopy NBP, WIBOR i POLSTR,
+> **Po polsku:** darmowe API z polskimi danymi finansowymi - stopy NBP,
 > inflacja CPI (GUS), kursy walut NBP, rentowności obligacji, ceny transakcyjne mieszkań
 > z Rejestru Cen Nieruchomości, czynsze i rentowność najmu, podaż mieszkań, wynagrodzenia
 > GUS (także według zawodów), bezrobocie w województwach i powiatach, próg wejścia (ile trzeba
@@ -54,8 +55,6 @@ Each dataset name links to its documentation page with fields, source and citati
 | Data | Endpoint | Primary source | Frequency | History |
 |---|---|---|---|---|
 | [NBP policy rates](https://public-api.finwire.pl/datasets/interest-rates) (reference, lombard, deposit, rediscount, discount) | `/v1/series/interest-rate/{id}` | [NBP](https://nbp.pl) | on MPC decisions | up to 10 years |
-| [WIBOR](https://public-api.finwire.pl/datasets/interest-rates) 1M, 3M, 6M, 1Y | `/v1/series/interest-rate/{id}` | [GPW Benchmark](https://gpwbenchmark.pl) | daily (business days) | up to 10 years |
-| [POLSTR](https://public-api.finwire.pl/datasets/interest-rates) ON, 1M, 3M, 6M | `/v1/series/interest-rate/{id}` | [GPW Benchmark](https://gpwbenchmark.pl/historical_data) | daily (business days) | since 2021 (pre-production history before June 2025) |
 | [CPI inflation](https://public-api.finwire.pl/datasets/cpi) (YoY, MoM) | `/v1/series/cpi` | [GUS](https://stat.gov.pl) | monthly | since 1982 |
 | [NBP exchange rates](https://public-api.finwire.pl/datasets/fx) (table A mid, table C bid/ask) | `/v1/series/fx/{code}` | [NBP](https://nbp.pl/statystyka-i-sprawozdawczosc/kursy) | daily (business days) | up to 10 years |
 | [10-year government bond yields](https://public-api.finwire.pl/datasets/bond-yields): PL, DE, euro area, EU + spreads | `/v1/series/bond-yields/{geo}` | [Eurostat irt_lt_mcby_m](https://ec.europa.eu/eurostat/databrowser/view/irt_lt_mcby_m/default/table) | monthly | since 2001 |
@@ -81,7 +80,7 @@ Aggregates never expose single offers, deeds or listings - only medians, percent
 
 ## Use cases
 
-- **Mortgage and savings calculators** - current WIBOR/POLSTR, NBP reference rate and market median margins in one call (`/v1/snapshot`).
+- **Mortgage and savings calculators** - NBP reference rate and market median mortgage rates in one call (`/v1/snapshot`).
 - **Newsroom and research charts** - CPI since 1982, unemployment since 2011, bond yields since 2001, with a ready citation in `meta`.
 - **Real estate analysis** - transaction prices per district, rents, rental yield and housing supply for 17 cities.
 - **Labour market and HR** - wages by occupation with deciles and the gender pay gap, unemployment by county.
@@ -95,7 +94,7 @@ Aggregates never expose single offers, deeds or listings - only medians, percent
 **curl**
 
 ```bash
-# Current table of all NBP, WIBOR and POLSTR rates
+# Current table of NBP policy rates
 curl "https://public-api.finwire.pl/v1/series/interest-rate"
 
 # Median flat transaction price per m² by district in Kraków
@@ -108,7 +107,7 @@ curl "https://public-api.finwire.pl/v1/calendar?limit=10"
 **JavaScript / TypeScript** (browser or Node 18+)
 
 ```ts
-const res = await fetch('https://public-api.finwire.pl/v1/series/interest-rate/wibor-3m?days=365');
+const res = await fetch('https://public-api.finwire.pl/v1/series/interest-rate/stopa-referencyjna?days=365');
 const { data, meta } = await res.json();
 console.log(data.points.at(-1), meta.citation);
 ```
@@ -167,8 +166,8 @@ Every response uses the same envelope. Values below are illustrative - call the 
 
 | Endpoint | Returns |
 |---|---|
-| `GET /v1/series/interest-rate` | Current table: NBP rates, WIBOR, POLSTR (all tenors) |
-| `GET /v1/series/interest-rate/{id}?days=365` | Daily history. `id`: `stopa-referencyjna`, `stopa-lombardowa`, `stopa-depozytowa`, `stopa-redyskontowa`, `stopa-dyskontowa`, `wibor-1m`, `wibor-3m`, `wibor-6m`, `wibor-1y`, `polstr-on`, `polstr-1m`, `polstr-3m`, `polstr-6m`. `days`: 7-3650 |
+| `GET /v1/series/interest-rate` | Current table of NBP policy rates |
+| `GET /v1/series/interest-rate/{id}?days=365` | Daily history. `id`: `stopa-referencyjna`, `stopa-lombardowa`, `stopa-depozytowa`, `stopa-redyskontowa`, `stopa-dyskontowa`. `days`: 7-3650 |
 | `GET /v1/series/cpi?type=monthly&limit=24` | CPI YoY and MoM. `type`: `monthly` or `yearly`, `limit`: 1-600 |
 | `GET /v1/series/fx` | Current NBP FX table |
 | `GET /v1/series/fx/{code}?days=365` | FX history, e.g. `EUR`, `USD`, `CHF`, `GBP` |
@@ -225,11 +224,12 @@ Full field-level schemas: [openapi.json](https://public-api.finwire.pl/openapi.j
 
 ## FAQ
 
-### Is there a free API for WIBOR and POLSTR rates?
+### Does the API return WIBOR or POLSTR?
 
-finwire API returns WIBOR (1M, 3M, 6M, 1Y) and POLSTR (ON, 1M, 3M, 6M) published by GPW
-Benchmark, together with NBP policy rates, for free and without an API key: current values
-at `/v1/series/interest-rate` and daily history at `/v1/series/interest-rate/{id}`.
+No. WIBOR and POLSTR are administered by GPW Benchmark, and redistributing them requires a
+Market Data License Agreement with GPW (dystrybucja.informacji@gpw.pl). The API returns NBP
+policy rates: current values at `/v1/series/interest-rate` and daily history at
+`/v1/series/interest-rate/{id}`.
 
 ### Where can I get Polish CPI inflation data as JSON?
 
@@ -279,14 +279,14 @@ requires attribution to the original source; `meta.license` states the terms per
 ### How fresh is the data?
 
 Each dataset is refreshed automatically from its primary source on the source's own schedule
-(daily for rates, FX and rents, monthly for CPI and bond yields, quarterly for housing prices).
+(daily for FX and rents, monthly for CPI and bond yields, quarterly for housing prices).
 `meta.asOf` always shows the date of the data at the source.
 
 ### What is the difference between WIBOR and POLSTR?
 
 WIBOR and POLSTR are both Polish interest rate benchmarks administered by GPW Benchmark. In
 the ongoing Polish benchmark reform supervised by KNF, POLSTR is the designated successor to
-WIBOR. Both are available in this API.
+WIBOR. Neither is available in this API (license required from GPW Benchmark).
 
 ### Does the API give investment advice?
 

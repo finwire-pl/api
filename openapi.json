@@ -17,7 +17,7 @@
             }
           }
         },
-        "summary": "Table of current rates: NBP, WIBOR, POLSTR (all indicators)",
+        "summary": "Table of current NBP policy rates",
         "tags": [
           "Time series"
         ]
@@ -32,7 +32,7 @@
             "required": true,
             "in": "path",
             "schema": {
-              "example": "wibor-3m",
+              "example": "stopa-referencyjna",
               "type": "string"
             }
           },
@@ -59,7 +59,7 @@
             }
           }
         },
-        "summary": "Indicator history (e.g. wibor-3m, stopa-referencyjna, polstr-3m). Available ids: GET /v1/series/interest-rate",
+        "summary": "NBP rate history (e.g. stopa-referencyjna). Available ids: GET /v1/series/interest-rate",
         "tags": [
           "Time series"
         ]
@@ -1083,7 +1083,7 @@
   },
   "info": {
     "title": "finwire.pl - Public financial data API",
-    "description": "Open API: NBP rates, WIBOR/POLSTR, CPI inflation, FX rates, 10-year bond yields, flat transaction prices (RCN, GUS), rents and rental yield, housing supply, wages by occupation, unemployment, government bonds, property tax limits, macro calendar and finwire indicators (credit stress map, barometers). Cite as: Source: finwire.pl, https://public-api.finwire.pl",
+    "description": "Open API: NBP policy rates, CPI inflation, FX rates, 10-year bond yields, flat transaction prices (RCN, GUS), rents and rental yield, housing supply, wages by occupation, unemployment, government bonds, property tax limits, macro calendar and finwire indicators (credit stress map, barometers). Cite as: Source: finwire.pl, https://public-api.finwire.pl",
     "version": "1.0",
     "contact": {
       "name": "finwire.pl",
@@ -1091,8 +1091,8 @@
       "email": "kontakt@finwire.pl"
     },
     "license": {
-      "name": "CC BY 4.0",
-      "url": "https://creativecommons.org/licenses/by/4.0/"
+      "name": "Per dataset - see the license field of each dataset",
+      "url": "https://public-api.finwire.pl/#usage"
     }
   },
   "tags": [],
@@ -1106,21 +1106,21 @@
       "RateTableEntryDto": {
         "type": "object",
         "properties": {
-          "indicator": {
+          "id": {
             "type": "string",
-            "example": "wibor-3m"
+            "example": "stopa-referencyjna"
           },
           "date": {
             "type": "string",
-            "example": "2026-06-05"
+            "example": "2026-03-05"
           },
           "value": {
             "type": "number",
-            "example": 3.85
+            "example": 3.75
           }
         },
         "required": [
-          "indicator",
+          "id",
           "date",
           "value"
         ]
@@ -1130,7 +1130,7 @@
         "properties": {
           "source": {
             "type": "string",
-            "example": "NBP, GPW Benchmark"
+            "example": "NBP"
           },
           "fetched_at": {
             "type": "string",
@@ -1138,7 +1138,7 @@
           },
           "count": {
             "type": "number",
-            "example": 7
+            "example": 5
           },
           "entries": {
             "type": "array",
@@ -1239,11 +1239,11 @@
         "properties": {
           "source": {
             "type": "string",
-            "example": "NBP, GPW Benchmark"
+            "example": "NBP"
           },
           "indicator": {
             "type": "string",
-            "example": "wibor-3m"
+            "example": "stopa-referencyjna"
           },
           "days": {
             "type": "number",
@@ -3029,33 +3029,6 @@
           "rynek"
         ]
       },
-      "StressRatesDto": {
-        "type": "object",
-        "properties": {
-          "wibor3m": {
-            "type": "number",
-            "example": 3.85
-          },
-          "marginPp": {
-            "type": "number",
-            "example": 2
-          },
-          "ratePct": {
-            "type": "number",
-            "example": 5.85
-          },
-          "wiborAsOf": {
-            "type": "string",
-            "example": "2026-06-05"
-          }
-        },
-        "required": [
-          "wibor3m",
-          "marginPp",
-          "ratePct",
-          "wiborAsOf"
-        ]
-      },
       "StressSourcesDto": {
         "type": "object",
         "properties": {
@@ -3246,9 +3219,6 @@
           "params": {
             "$ref": "#/components/schemas/StressParamsDto"
           },
-          "rates": {
-            "$ref": "#/components/schemas/StressRatesDto"
-          },
           "sources": {
             "$ref": "#/components/schemas/StressSourcesDto"
           },
@@ -3274,7 +3244,6 @@
         "required": [
           "generatedAt",
           "params",
-          "rates",
           "sources",
           "thresholds",
           "national",

@@ -3,6 +3,17 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-10-19
+
+### Removed
+
+- **Breaking** - WIBOR and POLSTR are no longer available. finwire.pl has no license to redistribute GPW Benchmark data; the earlier license note ("Public NBP / GPW Benchmark data") was wrong.
+  - `/v1/series/interest-rate` and `interestRates` in `/v1/snapshot` return NBP policy rates only.
+  - `/v1/series/interest-rate/wibor-*` and `/polstr-*` return 404.
+  - `rates` (WIBOR 3M) removed from `/v1/index/credit-stress` and `creditStress` in `/v1/snapshot`.
+  - Barometer `methodology` no longer lists the current interest rate.
+  - To use WIBOR or POLSTR, contact GPW: dystrybucja.informacji@gpw.pl.
+
 ## 2026-10-15
 
 ### Added

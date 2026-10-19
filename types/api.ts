@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Table of current rates: NBP, WIBOR, POLSTR (all indicators) */
+        /** Table of current NBP policy rates */
         get: operations["SeriesController_interestRatesTable"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Indicator history (e.g. wibor-3m, stopa-referencyjna, polstr-3m). Available ids: GET /v1/series/interest-rate */
+        /** NBP rate history (e.g. stopa-referencyjna). Available ids: GET /v1/series/interest-rate */
         get: operations["SeriesController_interestRateHistory"];
         put?: never;
         post?: never;
@@ -621,19 +621,19 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         RateTableEntryDto: {
-            /** @example wibor-3m */
-            indicator: string;
-            /** @example 2026-06-05 */
+            /** @example stopa-referencyjna */
+            id: string;
+            /** @example 2026-03-05 */
             date: string;
-            /** @example 3.85 */
+            /** @example 3.75 */
             value: number;
         };
         InterestRatesTableDataDto: {
-            /** @example NBP, GPW Benchmark */
+            /** @example NBP */
             source: string;
             /** @example 2026-06-05T06:00:00.000Z */
             fetched_at: string;
-            /** @example 7 */
+            /** @example 5 */
             count: number;
             entries: components["schemas"]["RateTableEntryDto"][];
         };
@@ -666,9 +666,9 @@ export interface components {
             value: number;
         };
         RateHistoryDataDto: {
-            /** @example NBP, GPW Benchmark */
+            /** @example NBP */
             source: string;
-            /** @example wibor-3m */
+            /** @example stopa-referencyjna */
             indicator: string;
             /** @example 365 */
             days: number;
@@ -1322,16 +1322,6 @@ export interface components {
             /** @example wtorny */
             rynek: string;
         };
-        StressRatesDto: {
-            /** @example 3.85 */
-            wibor3m: number;
-            /** @example 2 */
-            marginPp: number;
-            /** @example 5.85 */
-            ratePct: number;
-            /** @example 2026-06-05 */
-            wiborAsOf: string;
-        };
         StressSourcesDto: {
             /** @example Q1 2026 */
             barnQuarter: string;
@@ -1402,7 +1392,6 @@ export interface components {
             /** @example 2026-06-06T06:00:00.000Z */
             generatedAt: string;
             params: components["schemas"]["StressParamsDto"];
-            rates: components["schemas"]["StressRatesDto"];
             sources: components["schemas"]["StressSourcesDto"];
             thresholds: components["schemas"]["StressThresholdsDto"];
             national: components["schemas"]["StressNationalDto"];
