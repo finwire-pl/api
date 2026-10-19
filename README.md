@@ -26,7 +26,7 @@ curl "https://public-api.finwire.pl/v1/series/interest-rate/stopa-referencyjna?d
 > inflacja CPI (GUS), kursy walut NBP, rentowności obligacji, ceny transakcyjne mieszkań
 > z Rejestru Cen Nieruchomości, czynsze i rentowność najmu, podaż mieszkań, wynagrodzenia
 > GUS (także według zawodów), bezrobocie w województwach i powiatach, próg wejścia (ile trzeba
-> zarabiać na kredyt na mieszkanie), limity podatku od nieruchomości, kalendarz odczytów makro. Bez klucza i rejestracji. Opis po polsku: [finwire.pl/dla-developerow](https://finwire.pl/dla-developerow).
+> zarabiać na kredyt na mieszkanie), limity podatku od nieruchomości, kalendarz odczytów makro. Bez klucza i rejestracji. Opis po polsku: [finwire.pl/otwarte-api](https://finwire.pl/otwarte-api).
 
 ---
 
