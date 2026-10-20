@@ -378,6 +378,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/index/credit-market": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Monthly credit market index (housing loans), 0-100 with 50 = 2018-2024 average: new lending (NBP), bank margin over WIBOR 3M (ECB MIR), NBP senior loan officer survey, impaired loans (KNF) */
+        get: operations["IndicesController_creditMarket"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/index/{slug}": {
         parameters: {
             query?: never;
@@ -2673,6 +2690,23 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["EntryThresholdHistoryResponseDto"];
                 };
+            };
+        };
+    };
+    IndicesController_creditMarket: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

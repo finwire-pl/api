@@ -629,6 +629,21 @@
         ]
       }
     },
+    "/v1/index/credit-market": {
+      "get": {
+        "operationId": "IndicesController_creditMarket",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Monthly credit market index (housing loans), 0-100 with 50 = 2018-2024 average: new lending (NBP), bank margin over WIBOR 3M (ECB MIR), NBP senior loan officer survey, impaired loans (KNF)",
+        "tags": [
+          "finwire indicators"
+        ]
+      }
+    },
     "/v1/index/{slug}": {
       "get": {
         "operationId": "IndicesController_index",
