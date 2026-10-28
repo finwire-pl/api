@@ -97,7 +97,7 @@ Aggregates never expose single offers, deeds or listings - only medians, percent
 - **Real estate analysis** - transaction prices per district, rents, rental yield and housing supply for 17 cities.
 - **Labour market and HR** - wages by occupation with deciles and the gender pay gap, unemployment by county.
 - **Personal finance apps** - IKE/IKZE limits, retail bond rates, deposit and savings rate medians.
-- **AI assistants and agents** - [llms.txt](https://public-api.finwire.pl/llms.txt) and the OpenAPI spec describe every dataset in machine-readable form.
+- **AI assistants and agents** - an [MCP server](https://public-api.finwire.pl/mcp) (Streamable HTTP, no key) serves live macro indicators and the release calendar to Claude, ChatGPT and other MCP clients; [llms.txt](https://public-api.finwire.pl/llms.txt) and the OpenAPI spec describe every dataset in machine-readable form.
 
 ---
 

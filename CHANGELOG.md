@@ -7,6 +7,7 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ### Added
 
+- `POST /mcp` - Model Context Protocol server (Streamable HTTP, stateless, no key). Tools: `list_macro_indicators` (filter by `group` or `query`), `get_macro_indicator` (latest reading plus history, optional `from=YYYY-MM`), `get_macro_calendar` (optional `limit`). Same data and source whitelist as `/v1/macro` and `/v1/calendar`; each result carries `asOf`, `source` and `citation`.
 - `GET /v1/macro/indicators` and `/{key}/history` - about 40 headline indicators of the Polish economy in one table (GDP, retail sales, industrial and construction output, CPI and core inflation, unemployment, wages, NBP rates, FX, household credit, sentiment, legal limits) with the latest reading, change, sparkline and source; full history per indicator, optional `from=YYYY-MM`. WIBOR and POLSTR rows are excluded.
 - `GET /v1/macro/consumer-sentiment` - GUS consumer confidence (BWUK, WWUK) and 13 components, monthly history since 2010.
 - `GET /v1/wages/enterprise` - GUS average gross wage in the enterprise sector: monthly, real change, employment, by province.
