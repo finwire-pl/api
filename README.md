@@ -67,6 +67,18 @@ Each dataset name links to its documentation page with fields, source and citati
 | [Wages](https://public-api.finwire.pl/datasets/wages): median, percentiles, 16 provinces | `/v1/wages` | [GUS](https://stat.gov.pl) | on GUS release | current |
 | [Wages by occupation](https://public-api.finwire.pl/datasets/wages-by-occupation): mean, median, deciles, gender gap - about 175 groups | `/v1/wages/occupations/{code}` | [GUS](https://stat.gov.pl) | every 2 years | survey editions |
 | [Registered unemployment](https://public-api.finwire.pl/datasets/unemployment): Poland, 16 provinces, highest/lowest counties | `/v1/series/unemployment` | [GUS BDL](https://bdl.stat.gov.pl) | monthly | since 2011 |
+| [Macroeconomic indicators](https://public-api.finwire.pl/datasets/macro-indicators): GDP, retail sales, output, CPI, unemployment, wages, FX, credit, limits | `/v1/macro/indicators` | [GUS](https://stat.gov.pl), [NBP](https://nbp.pl), [Eurostat](https://ec.europa.eu/eurostat), Ministry of Finance | on release | full history per indicator |
+| [Consumer sentiment](https://public-api.finwire.pl/datasets/consumer-sentiment): BWUK, WWUK and 13 components | `/v1/macro/consumer-sentiment` | [GUS](https://dbw.stat.gov.pl) | monthly | since 2010 |
+| [Average wage, enterprise sector](https://public-api.finwire.pl/datasets/wages-enterprise) by province | `/v1/wages/enterprise` | [GUS](https://dbw.stat.gov.pl) | monthly | 2 years |
+| [Gold price](https://public-api.finwire.pl/datasets/gold) (1 g, fineness 1000) | `/v1/series/gold` | [NBP](https://nbp.pl/statystyka-i-sprawozdawczosc/kursy/cena-zlota/) | daily (business days) | since 2013 |
+| [Maximum fuel prices](https://public-api.finwire.pl/datasets/fuel-max-prices): Pb95, Pb98, diesel | `/v1/fuel-prices` | Minister of Energy ([Monitor Polski](https://eli.gov.pl)) | on announcement | all announcements |
+| [Legal changes radar](https://public-api.finwire.pl/datasets/legal-changes): acts entering into force, bills in the Sejm | `/v1/legal-changes` | [Sejm ELI API](https://api.sejm.gov.pl/eli.html) | daily | upcoming and recent |
+| [Residents income by municipality and county](https://public-api.finwire.pl/datasets/municipal-income) | `/v1/income/municipalities` | Ministry of Finance (Rb-27S), [GUS BDL](https://bdl.stat.gov.pl), computed by finwire.pl | yearly, quarterly update | budget years |
+| [Housing running costs](https://public-api.finwire.pl/datasets/housing-upkeep) in 20 cities | `/v1/housing/upkeep/{city}` | [GUS BDL](https://bdl.stat.gov.pl) | yearly | latest year |
+| [House prices and housing conditions in Europe](https://public-api.finwire.pl/datasets/eu-housing) | `/v1/housing/europe` | [Eurostat](https://ec.europa.eu/eurostat) | quarterly, yearly | since 2010 (conditions) |
+| [Bank lending survey](https://public-api.finwire.pl/datasets/credit-survey) | `/v1/credit-market/survey` | [NBP](https://nbp.pl) | quarterly | editions |
+| [Household loans and deposits](https://public-api.finwire.pl/datasets/nbp-monetary) | `/v1/credit-market/monetary` | [NBP](https://nbp.pl) | monthly | up to 400 months |
+| [Interest rates on new loans in Europe](https://public-api.finwire.pl/datasets/ecb-mortgage-rates) | `/v1/credit-market/ecb-rates` | [ECB MIR](https://data.ecb.europa.eu) | monthly | since 2014 |
 | [Economic calendar](https://public-api.finwire.pl/datasets/economic-calendar): MPC (RPP) decisions, CPI, wages, GDP, unemployment | `/v1/calendar` | GUS, NBP, compiled by finwire.pl | continuous | upcoming events |
 | [IKE / IKZE contribution limits](https://public-api.finwire.pl/datasets/legal-limits) | `/v1/legal-limits` | Ministry of Family announcements | yearly | current year |
 | [Property tax upper limits](https://public-api.finwire.pl/datasets/local-tax) | `/v1/legal-limits/local-tax` | Minister of Finance ([Monitor Polski](https://eli.gov.pl)) | yearly | announced tax years |
@@ -201,6 +213,24 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/wages/occupations/{code}` | One occupation group with its parent groups and survey edition history |
 | `GET /v1/legal-limits` | IKE / IKZE annual contribution limits and related values |
 | `GET /v1/legal-limits/local-tax` | Upper limits of property tax rates (land, buildings, structures) per tax year, with the act and legal basis |
+| `GET /v1/macro/indicators` | Headline indicators with the latest reading, change, sparkline and source |
+| `GET /v1/macro/indicators/{key}/history?from=2020-01` | Full history of one indicator |
+| `GET /v1/macro/consumer-sentiment` | GUS BWUK, WWUK and components with the history |
+| `GET /v1/wages/enterprise` | GUS average wage in the enterprise sector, real change, by province |
+| `GET /v1/series/gold` | NBP gold price: latest, period changes, all-time high, 12-month average |
+| `GET /v1/series/gold/history?range=1y` | Gold price history, `range`: `1m`, `1y`, `5y`, `max` |
+| `GET /v1/fuel-prices` | Maximum fuel prices: in force today, announced for tomorrow, history |
+| `GET /v1/legal-changes?days=90` | Acts entering into force soon and recently, open bills in the Sejm |
+| `GET /v1/legal-changes/process/{term}/{number}` | One bill: last stage, passage, published act |
+| `GET /v1/income/municipalities?year=2025` | Residents income per capita by municipality: rank, ratio to the national average, change |
+| `GET /v1/income/counties?year=2025` | The same by county |
+| `GET /v1/housing/upkeep/{city}` | Monthly running costs of a flat in a city (list: `/v1/housing/upkeep`) |
+| `GET /v1/housing/europe` | Eurostat house price index: Poland vs EU vs euro area and country ranking |
+| `GET /v1/housing/europe/overburden` and `/overcrowding` | Housing cost overburden and overcrowding rates by country |
+| `GET /v1/credit-market/survey?quarters=12` | NBP bank lending survey |
+| `GET /v1/credit-market/monetary?months=25` | NBP household loans, deposits and new loans |
+| `GET /v1/credit-market/ecb-rates?product=mortgage_total&period=2026-08` | ECB MIR rate on new loans by country |
+| `GET /v1/credit-market/ecb-rates/series?areas=PL,U2,DE&from=2018-01` | ECB MIR history for selected countries |
 | `GET /v1/calendar?limit=10` | Upcoming releases and decisions with date, Warsaw time, category, importance 1-10 |
 | `GET /v1/market/deposit-rates?amount=10000&period=3` | Term deposit rates: median, percentiles, spread |
 | `GET /v1/market/savings-rates?amount=10000` | Savings account rates: median, percentiles |

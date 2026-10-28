@@ -633,6 +633,346 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/macro/indicators": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Headline macroeconomic indicators: latest reading, change, sparkline and source (GPW Benchmark rates excluded) */
+        get: operations["MacroController_indicators"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/macro/indicators/{key}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Full history of one indicator. Keys: GET /v1/macro/indicators */
+        get: operations["MacroController_indicatorHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/macro/consumer-sentiment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GUS consumer confidence: BWUK, WWUK and 13 components with the full history */
+        get: operations["MacroController_consumerSentiment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/wages/enterprise": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Average gross wage in the enterprise sector (GUS): monthly, real change, by province */
+        get: operations["MacroController_wageEnterprise"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/series/gold": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** NBP gold price: latest quote, period changes, all-time high, 12-month average */
+        get: operations["MacroController_gold"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/series/gold/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** NBP gold price history for a range counted back from the latest quote */
+        get: operations["MacroController_goldHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/fuel-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Maximum fuel prices (Minister of Energy): in force today, announced for tomorrow, history */
+        get: operations["MacroController_fuelPrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/legal-changes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Finance-related acts entering into force soon and recently, and open bills in the Sejm */
+        get: operations["LegalController_changes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/legal-changes/process/{term}/{number}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One bill by Sejm term and print number: last stage, passage and the published act */
+        get: operations["LegalController_process"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/income/municipalities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Residents income per capita by municipality (gmina): PIT share, rank, change vs previous year */
+        get: operations["RegionalController_incomeMunicipalities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/income/counties": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Residents income per capita by county (powiat): sum of its municipalities */
+        get: operations["RegionalController_incomeCounties"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/upkeep": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cities with housing running costs data */
+        get: operations["RegionalController_upkeepCities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/upkeep/{city}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Monthly running costs of a flat in a city: charges, heating, energy, water, waste (GUS BDL) */
+        get: operations["RegionalController_upkeepCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/europe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Eurostat house price index: Poland vs EU vs euro area and the ranking of countries */
+        get: operations["RegionalController_europe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/europe/overburden": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Housing cost overburden rate by country (Eurostat): share of people spending 40%+ of income on housing */
+        get: operations["RegionalController_overburden"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/europe/overcrowding": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Overcrowding rate by country (Eurostat) */
+        get: operations["RegionalController_overcrowding"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/credit-market/survey": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** NBP bank lending survey: credit criteria, demand, housing loan terms and drivers */
+        get: operations["CreditMarketController_survey"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/credit-market/monetary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** NBP household loans and deposits (stocks) and new loans, monthly */
+        get: operations["CreditMarketController_monetary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/credit-market/ecb-rates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ECB MIR: average interest rate on new loans by country in one month */
+        get: operations["CreditMarketController_ecbRates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/credit-market/ecb-rates/series": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ECB MIR: monthly history of the average rate on new loans for selected countries */
+        get: operations["CreditMarketController_ecbRatesSeries"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2234,6 +2574,965 @@ export interface components {
             data: components["schemas"]["CalendarDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        MacroIndicatorDto: {
+            /**
+             * @description Stable key, use it in /v1/macro/indicators/{key}/history
+             * @example cpi-rr
+             */
+            key: string;
+            /** @example Inflacja CPI r/r */
+            label: string;
+            /**
+             * @description Group, as named upstream
+             * @example inflacja
+             */
+            group: string;
+            /** @example percent */
+            unit: string;
+            /** @example 2.9 */
+            value: number;
+            /**
+             * @description YYYY-MM | YYYY-Qn | YYYY | YYYY-MM-DD
+             * @example 2026-09
+             */
+            period: string;
+            /**
+             * @description month | quarter | year | day
+             * @example month
+             */
+            periodType: string;
+            /** @example 3.1 */
+            previousValue: number | null;
+            /** @example 2026-08 */
+            previousPeriod: string | null;
+            /** @example -0.2 */
+            change: number | null;
+            /**
+             * @description pp (percentage points) | pct (percent) | abs (absolute)
+             * @example pp
+             */
+            changeKind: string;
+            /** @description Up to 24 latest readings, ascending */
+            sparkline: number[];
+            /**
+             * @description Next publication date, when known
+             * @example 2026-11-14
+             */
+            nextRelease: string | null;
+            /** @example GUS, wskaźniki cen towarów i usług konsumpcyjnych */
+            source: string;
+            sourceUrl: string | null;
+            /** @example 2026-10-15T08:00:00.000Z */
+            changedAt: string | null;
+        };
+        MacroIndicatorsDataDto: {
+            /** @example 2026-10-28 */
+            asOf: string | null;
+            /** @example 42 */
+            count: number;
+            /** @description Keys of the headline indicators */
+            headlineKeys: string[];
+            indicators: components["schemas"]["MacroIndicatorDto"][];
+        };
+        MacroIndicatorsResponseDto: {
+            data: components["schemas"]["MacroIndicatorsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        MacroIndicatorHistoryDataDto: {
+            /** @example cpi-rr */
+            key: string;
+            /** @example Inflacja CPI r/r */
+            label: string | null;
+            /** @example 537 */
+            count: number;
+            /** @example 2026-09 */
+            asOf: string | null;
+            points: components["schemas"]["PeriodValuePointDto"][];
+        };
+        MacroIndicatorHistoryResponseDto: {
+            data: components["schemas"]["MacroIndicatorHistoryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        SentimentIndicatorDto: {
+            /**
+             * @description bwuk | wwuk | household_past | household_future | economy_past | ...
+             * @example bwuk
+             */
+            key: string;
+            /** @example Bieżący wskaźnik ufności konsumenckiej */
+            label: string;
+            /** @example BWUK */
+            shortLabel: string;
+            /** @example monthly */
+            frequency: string;
+            latest: components["schemas"]["PeriodValuePointDto"] | null;
+            previous: components["schemas"]["PeriodValuePointDto"] | null;
+            yearAgo: components["schemas"]["PeriodValuePointDto"] | null;
+            /** @example -3.2 */
+            changePrevious: number | null;
+            /** @example -3.1 */
+            changeYear: number | null;
+            /** @description Highest reading in the history */
+            max: components["schemas"]["PeriodValuePointDto"] | null;
+            /** @description Lowest reading in the history */
+            min: components["schemas"]["PeriodValuePointDto"] | null;
+            /** @description Full history, ascending */
+            series: components["schemas"]["PeriodValuePointDto"][];
+        };
+        ConsumerSentimentDataDto: {
+            /** @example 2026-10 */
+            asOf: string | null;
+            /** @example 2026-10-22T20:18:51.000Z */
+            updatedAt: string | null;
+            /** @example balance, -100 to +100 */
+            unit: string;
+            indicators: components["schemas"]["SentimentIndicatorDto"][];
+        };
+        ConsumerSentimentResponseDto: {
+            data: components["schemas"]["ConsumerSentimentDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        WageEnterpriseLatestDto: {
+            /** @example 2026-09 */
+            period: string;
+            /**
+             * @description Average gross wage, PLN
+             * @example 9266.48
+             */
+            wagePln: number;
+            /** @example 5.9 */
+            yoyPct: number | null;
+            /**
+             * @description Year-over-year change deflated by CPI
+             * @example 1.6
+             */
+            realYoyPct: number | null;
+            /**
+             * @description Employment, thousand persons
+             * @example 6360
+             */
+            employmentThousands: number | null;
+            /** @example -0.8 */
+            employmentYoyPct: number | null;
+        };
+        WageEnterprisePointDto: {
+            /** @example 2026-09 */
+            period: string;
+            /** @example 9266.48 */
+            wagePln: number;
+            /** @example 5.9 */
+            yoyPct: number | null;
+            /** @example 1.6 */
+            realYoyPct: number | null;
+        };
+        WageEnterpriseRegionDto: {
+            /** @example mazowieckie */
+            slug: string;
+            /** @example Mazowieckie */
+            name: string;
+            /** @example 10576.75 */
+            wagePln: number;
+            /** @example 6 */
+            yoyPct: number | null;
+        };
+        WageEnterpriseDataDto: {
+            /** @example 2026-09 */
+            asOf: string | null;
+            updatedAt: string | null;
+            latest: components["schemas"]["WageEnterpriseLatestDto"] | null;
+            /** @description Last two years, ascending */
+            history: components["schemas"]["WageEnterprisePointDto"][];
+            /** @example 2026-09 */
+            regionsPeriod: string | null;
+            regions: components["schemas"]["WageEnterpriseRegionDto"][];
+        };
+        WageEnterpriseResponseDto: {
+            data: components["schemas"]["WageEnterpriseDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        GoldLatestDto: {
+            /** @example 2026-10-28 */
+            date: string;
+            /**
+             * @description PLN per 1 g, fineness 1000
+             * @example 508.83
+             */
+            pricePln: number;
+            /** @example 2026-10-27 */
+            previousDate: string | null;
+            /** @example 507.51 */
+            previousPricePln: number | null;
+            /** @example 1.32 */
+            change: number | null;
+            /** @example 0.26 */
+            changePct: number | null;
+        };
+        GoldChangeDto: {
+            /**
+             * @description 1m | 6m | 1y | 3y | 5y
+             * @example 1m
+             */
+            period: string;
+            /** @example 2026-09-28 */
+            fromDate: string;
+            /** @example 530.05 */
+            fromPricePln: number;
+            /** @example -4 */
+            changePct: number;
+        };
+        GoldPricePointDto: {
+            /** @example 2026-10-28 */
+            date: string;
+            /** @example 508.83 */
+            pricePln: number;
+        };
+        GoldDataDto: {
+            /** @example PLN per 1 g of gold, fineness 1000 */
+            unit: string;
+            /** @example 2026-10-28 */
+            asOf: string | null;
+            latest: components["schemas"]["GoldLatestDto"] | null;
+            changes: components["schemas"]["GoldChangeDto"][];
+            allTimeHigh: components["schemas"]["GoldPricePointDto"] | null;
+            /** @example 527.17 */
+            avg12mPln: number | null;
+            /** @example 2013-01-02 */
+            historyFrom: string | null;
+            /** @example 3487 */
+            quotesCount: number | null;
+        };
+        GoldResponseDto: {
+            data: components["schemas"]["GoldDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        GoldHistoryDataDto: {
+            /** @example PLN per 1 g of gold, fineness 1000 */
+            unit: string;
+            /**
+             * @description 1m | 1y | 5y | max
+             * @example 1y
+             */
+            range: string;
+            /** @example 2025-10-28 */
+            from: string | null;
+            /** @example 2026-10-28 */
+            to: string | null;
+            /** @example 2026-10-28 */
+            asOf: string | null;
+            /** @example 250 */
+            count: number;
+            points: components["schemas"]["GoldPricePointDto"][];
+        };
+        GoldHistoryResponseDto: {
+            data: components["schemas"]["GoldHistoryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        FuelUnitDto: {
+            /** @example PLN per litre incl. VAT */
+            gross: string;
+            /** @example PLN per cubic decimetre excl. VAT */
+            net: string;
+        };
+        FuelPriceRowDto: {
+            /**
+             * @description Date of the announcement
+             * @example 2026-10-27
+             */
+            announcedOn: string;
+            /**
+             * @description First day of application
+             * @example 2026-10-28
+             */
+            validFrom: string;
+            /**
+             * @description Last day of application, when the next price is already announced
+             * @example null
+             */
+            validTo: string | null;
+            /**
+             * @description Petrol 95, PLN per litre incl. VAT
+             * @example 6.55
+             */
+            pb95: number;
+            /**
+             * @description Petrol 98, PLN per litre incl. VAT
+             * @example 7.24
+             */
+            pb98: number;
+            /**
+             * @description Diesel, PLN per litre incl. VAT
+             * @example 8.28
+             */
+            diesel: number;
+            /**
+             * @description Petrol 95, PLN per dm3 excl. VAT
+             * @example 6.07
+             */
+            pb95Net: number;
+            /** @example 6.71 */
+            pb98Net: number;
+            /** @example 7.67 */
+            dieselNet: number;
+            /** @example M.P. 2026 poz. 1039 */
+            monitorPolski: string;
+            /** @example https://api.sejm.gov.pl/eli/acts/MP/2026/1039/text.pdf */
+            sourceUrl: string;
+        };
+        FuelPricesDataDto: {
+            unit: components["schemas"]["FuelUnitDto"];
+            /** @example 2026-10-27 */
+            asOf: string | null;
+            /** @description Price in force today (Polish time) */
+            current: components["schemas"]["FuelPriceRowDto"] | null;
+            /** @description Price announced for the next day */
+            upcoming: components["schemas"]["FuelPriceRowDto"] | null;
+            /** @description All announcements, ascending by validFrom */
+            history: components["schemas"]["FuelPriceRowDto"][];
+        };
+        FuelPricesResponseDto: {
+            data: components["schemas"]["FuelPricesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LegalTopicDto: {
+            /** @example kredyty */
+            key: string;
+            /** @example Kredyty i pożyczki */
+            label: string;
+            description: string | null;
+        };
+        LegalAffectedDto: {
+            /** @example przedsiebiorcy */
+            key: string;
+            /** @example Przedsiębiorcy i JDG */
+            label: string;
+        };
+        LegalActDto: {
+            /**
+             * @description ELI-based id (publisher/year/position)
+             * @example DU/2025/1413
+             */
+            eli: string;
+            /** @example Dz.U. 2025 poz. 1413 */
+            address: string;
+            /** @example Ustawa z dnia 12 września 2025 r. o ... */
+            title: string;
+            /** @example Ustawa */
+            type: string | null;
+            /** @example 2025-09-12 */
+            actDate: string | null;
+            /** @example 2025-10-20 */
+            promulgationDate: string | null;
+            /** @example 2026-11-01 */
+            entryIntoForce: string | null;
+            /**
+             * @example [
+             *       "zus"
+             *     ]
+             */
+            topics: string[];
+            /** @description Plain-language summary by finwire.pl (Polish) */
+            summary: string | null;
+            affected: components["schemas"]["LegalAffectedDto"][];
+            /** @example https://eli.gov.pl/eli/DU/2025/1413/ogl */
+            eliUrl: string;
+            /** @example https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20250001413 */
+            isapUrl: string;
+            /** @example https://api.sejm.gov.pl/eli/acts/DU/2025/1413/text.pdf */
+            pdfUrl: string;
+        };
+        LegalProcessDto: {
+            /**
+             * @description Sejm term
+             * @example 10
+             */
+            term: number;
+            /**
+             * @description Print number
+             * @example 3205
+             */
+            number: string;
+            /** @example Poselski projekt ustawy o ... */
+            title: string;
+            description: string | null;
+            /** @example 2026-09-18 */
+            startDate: string | null;
+            /** @example Skierowano do I czytania */
+            lastStage: string | null;
+            /** @example 2026-10-22 */
+            lastStageDate: string | null;
+            /**
+             * @example [
+             *       "zus"
+             *     ]
+             */
+            topics: string[];
+            /** @example https://www.sejm.gov.pl/Sejm10.nsf/PrzebiegProc.xsp?nr=3205 */
+            sejmUrl: string;
+        };
+        LegalChangesDataDto: {
+            /**
+             * @description Day the radar was computed for
+             * @example 2026-10-28
+             */
+            asOf: string;
+            updatedAt: string | null;
+            /**
+             * @description "Recently" window in days
+             * @example 90
+             */
+            recentDays: number;
+            topics: components["schemas"]["LegalTopicDto"][];
+            /** @description Published acts that have not entered into force yet */
+            upcoming: components["schemas"]["LegalActDto"][];
+            /** @description Acts that entered into force within the window */
+            recent: components["schemas"]["LegalActDto"][];
+            /** @description Open bills in the Sejm */
+            processes: components["schemas"]["LegalProcessDto"][];
+        };
+        LegalChangesResponseDto: {
+            data: components["schemas"]["LegalChangesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LegalProcessDetailDto: {
+            /**
+             * @description Sejm term
+             * @example 10
+             */
+            term: number;
+            /**
+             * @description Print number
+             * @example 3205
+             */
+            number: string;
+            /** @example Poselski projekt ustawy o ... */
+            title: string;
+            description: string | null;
+            /** @example 2026-09-18 */
+            startDate: string | null;
+            /** @example Skierowano do I czytania */
+            lastStage: string | null;
+            /** @example 2026-10-22 */
+            lastStageDate: string | null;
+            /**
+             * @example [
+             *       "zus"
+             *     ]
+             */
+            topics: string[];
+            /** @example https://www.sejm.gov.pl/Sejm10.nsf/PrzebiegProc.xsp?nr=3205 */
+            sejmUrl: string;
+            /**
+             * @description Passed by the Sejm
+             * @example false
+             */
+            passed: boolean;
+            /** @example null */
+            closureDate: string | null;
+            /**
+             * @description ELI id of the published act
+             * @example null
+             */
+            eli: string | null;
+        };
+        LegalProcessDataDto: {
+            asOf: string | null;
+            process: components["schemas"]["LegalProcessDetailDto"];
+            /** @description The act published in Dz.U. after promulgation */
+            act: components["schemas"]["LegalActDto"] | null;
+        };
+        LegalProcessResponseDto: {
+            data: components["schemas"]["LegalProcessDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        IncomeSourceDto: {
+            /** @example Ministerstwo Finansów, sprawozdania budżetowe JST (Rb-27S) */
+            name: string;
+            /** @example https://www.gov.pl/web/finanse/sprawozdania-budzetowe */
+            url: string;
+        };
+        IncomeMunicipalityDto: {
+            /**
+             * @description TERYT code
+             * @example 1421042
+             */
+            teryt: string;
+            /** @example Michałowice */
+            name: string;
+            /**
+             * @description Municipality type, as named upstream
+             * @example wiejska
+             */
+            type: string;
+            /** @example 19569 */
+            population: number;
+            /**
+             * @description Residents income per capita, PLN
+             * @example 96367
+             */
+            incomePerCapitaPln: number;
+            /**
+             * @description Ratio to the national average
+             * @example 1.708
+             */
+            vsNational: number;
+            /** @example 1 */
+            rank: number;
+            /**
+             * @description Change against the previous year, %
+             * @example 3.9
+             */
+            changePct: number | null;
+            /**
+             * @description Large year-to-year swing: treat the rank with care
+             * @example false
+             */
+            volatile: boolean;
+        };
+        IncomeMunicipalitiesDataDto: {
+            /** @example 2026-06-30 */
+            asOf: string | null;
+            /** @example true */
+            available: boolean;
+            /**
+             * @description Budget year of the Rb-27S report
+             * @example 2026
+             */
+            budgetYear: number | null;
+            /**
+             * @description Tax year the PIT share refers to
+             * @example 2024
+             */
+            baseYear: number | null;
+            /** @example 2 */
+            quarter: number | null;
+            /** @example 2026-06-30 */
+            periodEnd: string | null;
+            /** @example 2025 */
+            populationYear: number | null;
+            /** @example 56425 */
+            nationalIncomePerCapitaPln: number | null;
+            /** @example 2025 */
+            previousYear: number | null;
+            /** @example 10.8 */
+            nationalChangePct: number | null;
+            sources: components["schemas"]["IncomeSourceDto"][];
+            /** @example 2477 */
+            count: number;
+            /** @description Ranked by income per capita, descending */
+            entries: components["schemas"]["IncomeMunicipalityDto"][];
+        };
+        IncomeMunicipalitiesResponseDto: {
+            data: components["schemas"]["IncomeMunicipalitiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        IncomeCountyDto: {
+            /** @example 1465 */
+            teryt: string;
+            /** @example Warszawa */
+            name: string | null;
+            /**
+             * @description Number of municipalities in the county
+             * @example 1
+             */
+            municipalities: number;
+            /** @example 1866729 */
+            population: number;
+            /** @example 93486 */
+            incomePerCapitaPln: number;
+            /** @example 1.657 */
+            vsNational: number;
+            /** @example 1 */
+            rank: number;
+        };
+        IncomeCountiesDataDto: {
+            /** @example 2026-06-30 */
+            asOf: string | null;
+            /** @example true */
+            available: boolean;
+            /**
+             * @description Budget year of the Rb-27S report
+             * @example 2026
+             */
+            budgetYear: number | null;
+            /**
+             * @description Tax year the PIT share refers to
+             * @example 2024
+             */
+            baseYear: number | null;
+            /** @example 2 */
+            quarter: number | null;
+            /** @example 2026-06-30 */
+            periodEnd: string | null;
+            /** @example 2025 */
+            populationYear: number | null;
+            /** @example 56425 */
+            nationalIncomePerCapitaPln: number | null;
+            /** @example 2025 */
+            previousYear: number | null;
+            /** @example 10.8 */
+            nationalChangePct: number | null;
+            sources: components["schemas"]["IncomeSourceDto"][];
+            /** @example 380 */
+            count: number;
+            /** @description Ranked by income per capita, descending */
+            entries: components["schemas"]["IncomeCountyDto"][];
+        };
+        IncomeCountiesResponseDto: {
+            data: components["schemas"]["IncomeCountiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        UpkeepCityDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            name: string;
+        };
+        UpkeepCitiesDataDto: {
+            cities: components["schemas"]["UpkeepCityDto"][];
+        };
+        UpkeepCitiesResponseDto: {
+            data: components["schemas"]["UpkeepCitiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        UpkeepRateDto: {
+            /** @example Zaliczki właścicieli na koszty zarządu nieruchomością wspólną */
+            label: string;
+            /** @example 5.08 */
+            value: number;
+            /** @example zł/m² miesięcznie */
+            unit: string;
+            /** @example 2024 */
+            year: number;
+            /**
+             * @description city | voivodeship: level of the figure
+             * @example city
+             */
+            scope: string;
+            /** @example Warszawa */
+            scopeName: string;
+        };
+        UpkeepHouseholdDto: {
+            /** @example 1.68 */
+            value: number;
+            /** @example 2025 */
+            year: number;
+            /** @example city */
+            scope: string;
+            /** @example Warszawa */
+            scopeName: string;
+        };
+        UpkeepDataDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            name: string;
+            /** @example mazowieckie */
+            province: string;
+            /** @example 2026-09-23T12:46:22.000Z */
+            asOf: string | null;
+            /** @description Rates by key: hoaFeeM2, coopFeeM2, heatingM2, electricityKwh, gasKwh, coldWaterM3, hotWaterM3, coalTonne, wastePerPerson, electricityKwhPerHousehold, waterM3PerUser */
+            rates: {
+                [key: string]: components["schemas"]["UpkeepRateDto"];
+            };
+            /** @description Household figures by key: personsPerDwelling, floorAreaPerPerson */
+            household: {
+                [key: string]: components["schemas"]["UpkeepHouseholdDto"];
+            };
+        };
+        UpkeepResponseDto: {
+            data: components["schemas"]["UpkeepDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EuHpiAreaDto: {
+            /**
+             * @description Eurostat geo code
+             * @example PL
+             */
+            geo: string;
+            /** @example Polska */
+            name: string;
+            /**
+             * @description Index, 2015=100
+             * @example 229.22
+             */
+            index: number;
+            /** @example 6.3 */
+            yoyPct: number | null;
+            /** @example 1.5 */
+            qoqPct: number | null;
+            /** @example 2026-Q2 */
+            period: string;
+        };
+        EuHpiRankingEntryDto: {
+            /**
+             * @description Eurostat geo code
+             * @example PL
+             */
+            geo: string;
+            /** @example Polska */
+            name: string;
+            /**
+             * @description Index, 2015=100
+             * @example 229.22
+             */
+            index: number;
+            /** @example 6.3 */
+            yoyPct: number | null;
+            /** @example 1.5 */
+            qoqPct: number | null;
+            /** @example 2026-Q2 */
+            period: string;
+            /** @example 1 */
+            rank: number;
+        };
+        EuHpiRankingDto: {
+            /** @example 15 */
+            polandRank: number | null;
+            /** @example 7.4 */
+            medianYoyPct: number | null;
+            /** @example 26 */
+            count: number;
+            entries: components["schemas"]["EuHpiRankingEntryDto"][];
+        };
+        EuHousingDataDto: {
+            /** @example 2026-Q2 */
+            asOf: string | null;
+            /** @example 2015=100 */
+            indexBase: string | null;
+            poland: components["schemas"]["EuHpiAreaDto"] | null;
+            eu: components["schemas"]["EuHpiAreaDto"] | null;
+            euroArea: components["schemas"]["EuHpiAreaDto"] | null;
+            ranking: components["schemas"]["EuHpiRankingDto"];
+        };
+        EuHousingResponseDto: {
+            data: components["schemas"]["EuHousingDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EuRateEntryDto: {
+            /** @example 1 */
+            rank: number;
+            /** @example EL */
+            geo: string;
+            /** @example Grecja */
+            name: string;
+            /** @example 26.4 */
+            value: number;
+        };
+        EuRateDataDto: {
+            /**
+             * @description housing cost overburden rate | overcrowding rate
+             * @example housing cost overburden rate
+             */
+            measure: string;
+            /** @example % of population */
+            unit: string;
+            /** @example 2025 */
+            asOf: string | null;
+            /** @example 4.1 */
+            poland: number | null;
+            /** @example 7.7 */
+            eu: number | null;
+            /** @example 7.9 */
+            euroArea: number | null;
+            entries: components["schemas"]["EuRateEntryDto"][];
+            /** @description Poland, yearly history */
+            polandHistory: components["schemas"]["PeriodValuePointDto"][];
+        };
+        EuRateResponseDto: {
+            data: components["schemas"]["EuRateDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        CreditSurveyMetricDto: {
+            /** @example housing_criteria */
+            id: string;
+            /** @example Kryteria kredytów mieszkaniowych */
+            label: string;
+            /**
+             * @description S = state in the quarter, F = expectation for the next quarter
+             * @example S
+             */
+            horizon: string;
+            /** @example 2026-Q2 */
+            quarter: string;
+            /** @example 4.4 */
+            value: number | null;
+            /** @example 25.2 */
+            previous: number | null;
+            /** @example 21.4 */
+            yearAgo: number | null;
+        };
+        LabelValueDto: {
+            /** @example Marża kredytowa */
+            label: string;
+            /** @example 20.9 */
+            value: number | null;
+        };
+        CreditSurveyHistoryDto: {
+            /** @example 2023-Q4 */
+            edition: string;
+            /** @example 2023-Q3 */
+            stateQuarter: string;
+            /** @example -28.3 */
+            housingCriteria: number | null;
+            /** @example 40.1 */
+            housingDemand: number | null;
+            /** @example -58 */
+            consumerCriteria: number | null;
+            /** @example -10.7 */
+            consumerDemand: number | null;
+        };
+        CreditSurveyDataDto: {
+            /** @example 2026-06-30 */
+            asOf: string | null;
+            /**
+             * @description Edition of the survey
+             * @example 2026-Q3
+             */
+            edition: string;
+            /** @example 2026-Q2 */
+            stateQuarter: string;
+            /** @example 2026-06-30 */
+            periodEnd: string;
+            /** @example net balance, % of banks */
+            unit: string;
+            metrics: components["schemas"]["CreditSurveyMetricDto"][];
+            housingTerms: components["schemas"]["LabelValueDto"][];
+            housingPolicyDrivers: components["schemas"]["LabelValueDto"][];
+            housingDemandDrivers: components["schemas"]["LabelValueDto"][];
+            history: components["schemas"]["CreditSurveyHistoryDto"][];
+        };
+        CreditSurveyResponseDto: {
+            data: components["schemas"]["CreditSurveyDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        MonetaryReadingDto: {
+            /** @example 2026-09 */
+            period: string;
+            /** @example 847810.467 */
+            value: number;
+            /** @example 0.91 */
+            changePct: number | null;
+        };
+        MonetarySeriesDto: {
+            /** @example hh_loans_pln */
+            id: string;
+            /** @example Kredyty gospodarstw domowych w złotych */
+            label: string;
+            /**
+             * @description stock = end-of-month balance, flow = value of new loans in the month
+             * @example stock
+             */
+            kind: string;
+            latest: components["schemas"]["MonetaryReadingDto"] | null;
+            previousMonth: components["schemas"]["MonetaryReadingDto"] | null;
+            yearAgo: components["schemas"]["MonetaryReadingDto"] | null;
+            /** @description Ascending by period */
+            points: components["schemas"]["PeriodValuePointDto"][];
+        };
+        NbpMonetaryDataDto: {
+            /** @example 2026-09 */
+            asOf: string | null;
+            /** @example mln zł */
+            unit: string;
+            /**
+             * @description Period of the stock series
+             * @example 2026-09
+             */
+            stocksPeriod: string | null;
+            /**
+             * @description Period of the new-loans series
+             * @example 2026-08
+             */
+            newLoansPeriod: string | null;
+            series: components["schemas"]["MonetarySeriesDto"][];
+        };
+        NbpMonetaryResponseDto: {
+            data: components["schemas"]["NbpMonetaryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EcbProductDto: {
+            /** @example mortgage_total */
+            id: string;
+            /** @example Nowe kredyty mieszkaniowe - ogółem */
+            label: string;
+        };
+        EcbCountryRateDto: {
+            /**
+             * @description MIR area code (U2 = euro area)
+             * @example PL
+             */
+            area: string;
+            /** @example Polska */
+            name: string;
+            /**
+             * @description Average interest rate on new loans, % p.a.
+             * @example 5.94
+             */
+            valuePct: number;
+            /** @example PLN */
+            currency: string;
+            /** @example -0.06 */
+            momPp: number | null;
+            /** @example -0.74 */
+            yoyPp: number | null;
+            /**
+             * @description Rank, 1 = highest rate; null for the euro area
+             * @example 2
+             */
+            rank: number | null;
+        };
+        EcbRatesDataDto: {
+            /** @example 2026-08 */
+            asOf: string | null;
+            product: components["schemas"]["EcbProductDto"] | null;
+            /** @description Available products for the `product` parameter */
+            products: components["schemas"]["EcbProductDto"][];
+            /** @example 2026-08 */
+            period: string | null;
+            /** @example % p.a. */
+            unit: string;
+            poland: components["schemas"]["EcbCountryRateDto"] | null;
+            euroArea: components["schemas"]["EcbCountryRateDto"] | null;
+            /**
+             * @description Poland minus euro area, percentage points
+             * @example 2.34
+             */
+            gapPolandEuroAreaPp: number | null;
+            /** @example 3.59 */
+            medianPct: number | null;
+            countries: components["schemas"]["EcbCountryRateDto"][];
+        };
+        EcbRatesResponseDto: {
+            data: components["schemas"]["EcbRatesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EcbRatePointDto: {
+            /** @example 2026-08 */
+            period: string;
+            /** @example 5.94 */
+            valuePct: number | null;
+            /** @example PLN */
+            currency: string | null;
+        };
+        EcbRatesAreaSeriesDto: {
+            /** @example PL */
+            area: string;
+            /** @example Polska */
+            name: string;
+            points: components["schemas"]["EcbRatePointDto"][];
+        };
+        EcbRatesSeriesDataDto: {
+            /** @example 2026-08 */
+            asOf: string | null;
+            product: components["schemas"]["EcbProductDto"] | null;
+            /** @example % p.a. */
+            unit: string;
+            areas: components["schemas"]["EcbRatesAreaSeriesDto"][];
+        };
+        EcbRatesSeriesResponseDto: {
+            data: components["schemas"]["EcbRatesSeriesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
     };
     responses: never;
     parameters: never;
@@ -3001,6 +4300,428 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CalendarResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_indicators: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MacroIndicatorsResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_indicatorHistory: {
+        parameters: {
+            query?: {
+                /** @description First period, YYYY-MM */
+                from?: string;
+            };
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MacroIndicatorHistoryResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_consumerSentiment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsumerSentimentResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_wageEnterprise: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WageEnterpriseResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_gold: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GoldResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_goldHistory: {
+        parameters: {
+            query?: {
+                /** @description Default 1y */
+                range?: "1m" | "1y" | "5y" | "max";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GoldHistoryResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_fuelPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FuelPricesResponseDto"];
+                };
+            };
+        };
+    };
+    LegalController_changes: {
+        parameters: {
+            query?: {
+                /** @description Window of "recently entered into force", 7-365, default 90 */
+                days?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalChangesResponseDto"];
+                };
+            };
+        };
+    };
+    LegalController_process: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Sejm term */
+                term: string;
+                /** @description Print number */
+                number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalProcessResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_incomeMunicipalities: {
+        parameters: {
+            query?: {
+                /** @description Budget year, default latest */
+                year?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IncomeMunicipalitiesResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_incomeCounties: {
+        parameters: {
+            query?: {
+                /** @description Budget year, default latest */
+                year?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IncomeCountiesResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_upkeepCities: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpkeepCitiesResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_upkeepCity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description City slug from /v1/housing/upkeep */
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpkeepResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_europe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuHousingResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_overburden: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuRateResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_overcrowding: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuRateResponseDto"];
+                };
+            };
+        };
+    };
+    CreditMarketController_survey: {
+        parameters: {
+            query?: {
+                /** @description Editions in the history, 4-92, default 12 */
+                quarters?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreditSurveyResponseDto"];
+                };
+            };
+        };
+    };
+    CreditMarketController_monetary: {
+        parameters: {
+            query?: {
+                /** @description Months of history per series, 1-400, default 25 */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NbpMonetaryResponseDto"];
+                };
+            };
+        };
+    };
+    CreditMarketController_ecbRates: {
+        parameters: {
+            query?: {
+                /** @description Product id, see `products` in the response */
+                product?: string;
+                /** @description YYYY-MM, default latest */
+                period?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EcbRatesResponseDto"];
+                };
+            };
+        };
+    };
+    CreditMarketController_ecbRatesSeries: {
+        parameters: {
+            query?: {
+                product?: string;
+                /** @description Area codes (U2 = euro area) or "all"; default PL,U2 */
+                areas?: string;
+                /** @description First month, YYYY-MM */
+                from?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EcbRatesSeriesResponseDto"];
                 };
             };
         };

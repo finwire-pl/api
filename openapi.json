@@ -1094,6 +1094,620 @@
           "Calendar"
         ]
       }
+    },
+    "/v1/macro/indicators": {
+      "get": {
+        "operationId": "MacroController_indicators",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MacroIndicatorsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Headline macroeconomic indicators: latest reading, change, sparkline and source (GPW Benchmark rates excluded)",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/macro/indicators/{key}/history": {
+      "get": {
+        "operationId": "MacroController_indicatorHistory",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "cpi-rr",
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "First period, YYYY-MM",
+            "schema": {
+              "example": "2020-01",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MacroIndicatorHistoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Full history of one indicator. Keys: GET /v1/macro/indicators",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/macro/consumer-sentiment": {
+      "get": {
+        "operationId": "MacroController_consumerSentiment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsumerSentimentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "GUS consumer confidence: BWUK, WWUK and 13 components with the full history",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/wages/enterprise": {
+      "get": {
+        "operationId": "MacroController_wageEnterprise",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WageEnterpriseResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Average gross wage in the enterprise sector (GUS): monthly, real change, by province",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/series/gold": {
+      "get": {
+        "operationId": "MacroController_gold",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoldResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "NBP gold price: latest quote, period changes, all-time high, 12-month average",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/series/gold/history": {
+      "get": {
+        "operationId": "MacroController_goldHistory",
+        "parameters": [
+          {
+            "name": "range",
+            "required": false,
+            "in": "query",
+            "description": "Default 1y",
+            "schema": {
+              "enum": [
+                "1m",
+                "1y",
+                "5y",
+                "max"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoldHistoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "NBP gold price history for a range counted back from the latest quote",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/fuel-prices": {
+      "get": {
+        "operationId": "MacroController_fuelPrices",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelPricesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Maximum fuel prices (Minister of Energy): in force today, announced for tomorrow, history",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/legal-changes": {
+      "get": {
+        "operationId": "LegalController_changes",
+        "parameters": [
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "description": "Window of \"recently entered into force\", 7-365, default 90",
+            "schema": {
+              "example": 90,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalChangesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Finance-related acts entering into force soon and recently, and open bills in the Sejm",
+        "tags": [
+          "Calendar"
+        ]
+      }
+    },
+    "/v1/legal-changes/process/{term}/{number}": {
+      "get": {
+        "operationId": "LegalController_process",
+        "parameters": [
+          {
+            "name": "term",
+            "required": true,
+            "in": "path",
+            "description": "Sejm term",
+            "schema": {
+              "example": 10,
+              "type": "string"
+            }
+          },
+          {
+            "name": "number",
+            "required": true,
+            "in": "path",
+            "description": "Print number",
+            "schema": {
+              "example": "3205",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalProcessResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "One bill by Sejm term and print number: last stage, passage and the published act",
+        "tags": [
+          "Calendar"
+        ]
+      }
+    },
+    "/v1/income/municipalities": {
+      "get": {
+        "operationId": "RegionalController_incomeMunicipalities",
+        "parameters": [
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Budget year, default latest",
+            "schema": {
+              "example": 2025,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncomeMunicipalitiesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Residents income per capita by municipality (gmina): PIT share, rank, change vs previous year",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/income/counties": {
+      "get": {
+        "operationId": "RegionalController_incomeCounties",
+        "parameters": [
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Budget year, default latest",
+            "schema": {
+              "example": 2025,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncomeCountiesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Residents income per capita by county (powiat): sum of its municipalities",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/upkeep": {
+      "get": {
+        "operationId": "RegionalController_upkeepCities",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpkeepCitiesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cities with housing running costs data",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/upkeep/{city}": {
+      "get": {
+        "operationId": "RegionalController_upkeepCity",
+        "parameters": [
+          {
+            "name": "city",
+            "required": true,
+            "in": "path",
+            "description": "City slug from /v1/housing/upkeep",
+            "schema": {
+              "example": "warszawa",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpkeepResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Monthly running costs of a flat in a city: charges, heating, energy, water, waste (GUS BDL)",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/europe": {
+      "get": {
+        "operationId": "RegionalController_europe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EuHousingResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Eurostat house price index: Poland vs EU vs euro area and the ranking of countries",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/europe/overburden": {
+      "get": {
+        "operationId": "RegionalController_overburden",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EuRateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Housing cost overburden rate by country (Eurostat): share of people spending 40%+ of income on housing",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/europe/overcrowding": {
+      "get": {
+        "operationId": "RegionalController_overcrowding",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EuRateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Overcrowding rate by country (Eurostat)",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/credit-market/survey": {
+      "get": {
+        "operationId": "CreditMarketController_survey",
+        "parameters": [
+          {
+            "name": "quarters",
+            "required": false,
+            "in": "query",
+            "description": "Editions in the history, 4-92, default 12",
+            "schema": {
+              "example": 12,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditSurveyResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "NBP bank lending survey: credit criteria, demand, housing loan terms and drivers",
+        "tags": [
+          "Credit market"
+        ]
+      }
+    },
+    "/v1/credit-market/monetary": {
+      "get": {
+        "operationId": "CreditMarketController_monetary",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Months of history per series, 1-400, default 25",
+            "schema": {
+              "example": 25,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NbpMonetaryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "NBP household loans and deposits (stocks) and new loans, monthly",
+        "tags": [
+          "Credit market"
+        ]
+      }
+    },
+    "/v1/credit-market/ecb-rates": {
+      "get": {
+        "operationId": "CreditMarketController_ecbRates",
+        "parameters": [
+          {
+            "name": "product",
+            "required": false,
+            "in": "query",
+            "description": "Product id, see `products` in the response",
+            "schema": {
+              "example": "mortgage_total",
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "required": false,
+            "in": "query",
+            "description": "YYYY-MM, default latest",
+            "schema": {
+              "example": "2026-08",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EcbRatesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "ECB MIR: average interest rate on new loans by country in one month",
+        "tags": [
+          "Credit market"
+        ]
+      }
+    },
+    "/v1/credit-market/ecb-rates/series": {
+      "get": {
+        "operationId": "CreditMarketController_ecbRatesSeries",
+        "parameters": [
+          {
+            "name": "product",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "mortgage_total",
+              "type": "string"
+            }
+          },
+          {
+            "name": "areas",
+            "required": false,
+            "in": "query",
+            "description": "Area codes (U2 = euro area) or \"all\"; default PL,U2",
+            "schema": {
+              "example": "PL,U2,DE",
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "First month, YYYY-MM",
+            "schema": {
+              "example": "2018-01",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EcbRatesSeriesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "ECB MIR: monthly history of the average rate on new loans for selected countries",
+        "tags": [
+          "Credit market"
+        ]
+      }
     }
   },
   "info": {
@@ -5650,6 +6264,2620 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/CalendarDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "MacroIndicatorDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "cpi-rr",
+            "description": "Stable key, use it in /v1/macro/indicators/{key}/history"
+          },
+          "label": {
+            "type": "string",
+            "example": "Inflacja CPI r/r"
+          },
+          "group": {
+            "type": "string",
+            "example": "inflacja",
+            "description": "Group, as named upstream"
+          },
+          "unit": {
+            "type": "string",
+            "example": "percent"
+          },
+          "value": {
+            "type": "number",
+            "example": 2.9
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-09",
+            "description": "YYYY-MM | YYYY-Qn | YYYY | YYYY-MM-DD"
+          },
+          "periodType": {
+            "type": "string",
+            "example": "month",
+            "description": "month | quarter | year | day"
+          },
+          "previousValue": {
+            "type": "number",
+            "nullable": true,
+            "example": 3.1
+          },
+          "previousPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08"
+          },
+          "change": {
+            "type": "number",
+            "nullable": true,
+            "example": -0.2
+          },
+          "changeKind": {
+            "type": "string",
+            "example": "pp",
+            "description": "pp (percentage points) | pct (percent) | abs (absolute)"
+          },
+          "sparkline": {
+            "description": "Up to 24 latest readings, ascending",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "nextRelease": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-14",
+            "description": "Next publication date, when known"
+          },
+          "source": {
+            "type": "string",
+            "example": "GUS, wska\u017aniki cen towar\u00f3w i us\u0142ug konsumpcyjnych"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "changedAt": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-15T08:00:00.000Z"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "group",
+          "unit",
+          "value",
+          "period",
+          "periodType",
+          "previousValue",
+          "previousPeriod",
+          "change",
+          "changeKind",
+          "sparkline",
+          "nextRelease",
+          "source",
+          "sourceUrl",
+          "changedAt"
+        ]
+      },
+      "MacroIndicatorsDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-28"
+          },
+          "count": {
+            "type": "number",
+            "example": 42
+          },
+          "headlineKeys": {
+            "description": "Keys of the headline indicators",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "indicators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MacroIndicatorDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "count",
+          "headlineKeys",
+          "indicators"
+        ]
+      },
+      "MacroIndicatorsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/MacroIndicatorsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "MacroIndicatorHistoryDataDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "cpi-rr"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true,
+            "example": "Inflacja CPI r/r"
+          },
+          "count": {
+            "type": "number",
+            "example": 537
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeriodValuePointDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "count",
+          "asOf",
+          "points"
+        ]
+      },
+      "MacroIndicatorHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/MacroIndicatorHistoryDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "SentimentIndicatorDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "bwuk",
+            "description": "bwuk | wwuk | household_past | household_future | economy_past | ..."
+          },
+          "label": {
+            "type": "string",
+            "example": "Bie\u017c\u0105cy wska\u017anik ufno\u015bci konsumenckiej"
+          },
+          "shortLabel": {
+            "type": "string",
+            "example": "BWUK"
+          },
+          "frequency": {
+            "type": "string",
+            "example": "monthly"
+          },
+          "latest": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PeriodValuePointDto"
+              }
+            ]
+          },
+          "previous": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PeriodValuePointDto"
+              }
+            ]
+          },
+          "yearAgo": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PeriodValuePointDto"
+              }
+            ]
+          },
+          "changePrevious": {
+            "type": "number",
+            "nullable": true,
+            "example": -3.2
+          },
+          "changeYear": {
+            "type": "number",
+            "nullable": true,
+            "example": -3.1
+          },
+          "max": {
+            "nullable": true,
+            "description": "Highest reading in the history",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PeriodValuePointDto"
+              }
+            ]
+          },
+          "min": {
+            "nullable": true,
+            "description": "Lowest reading in the history",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PeriodValuePointDto"
+              }
+            ]
+          },
+          "series": {
+            "description": "Full history, ascending",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeriodValuePointDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "shortLabel",
+          "frequency",
+          "latest",
+          "previous",
+          "yearAgo",
+          "changePrevious",
+          "changeYear",
+          "max",
+          "min",
+          "series"
+        ]
+      },
+      "ConsumerSentimentDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-22T20:18:51.000Z"
+          },
+          "unit": {
+            "type": "string",
+            "example": "balance, -100 to +100"
+          },
+          "indicators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SentimentIndicatorDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "updatedAt",
+          "unit",
+          "indicators"
+        ]
+      },
+      "ConsumerSentimentResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ConsumerSentimentDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "WageEnterpriseLatestDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "wagePln": {
+            "type": "number",
+            "example": 9266.48,
+            "description": "Average gross wage, PLN"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 5.9
+          },
+          "realYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 1.6,
+            "description": "Year-over-year change deflated by CPI"
+          },
+          "employmentThousands": {
+            "type": "number",
+            "nullable": true,
+            "example": 6360,
+            "description": "Employment, thousand persons"
+          },
+          "employmentYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": -0.8
+          }
+        },
+        "required": [
+          "period",
+          "wagePln",
+          "yoyPct",
+          "realYoyPct",
+          "employmentThousands",
+          "employmentYoyPct"
+        ]
+      },
+      "WageEnterprisePointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "wagePln": {
+            "type": "number",
+            "example": 9266.48
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 5.9
+          },
+          "realYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 1.6
+          }
+        },
+        "required": [
+          "period",
+          "wagePln",
+          "yoyPct",
+          "realYoyPct"
+        ]
+      },
+      "WageEnterpriseRegionDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "mazowieckie"
+          },
+          "name": {
+            "type": "string",
+            "example": "Mazowieckie"
+          },
+          "wagePln": {
+            "type": "number",
+            "example": 10576.75
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 6
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "wagePln",
+          "yoyPct"
+        ]
+      },
+      "WageEnterpriseDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "latest": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WageEnterpriseLatestDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "Last two years, ascending",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WageEnterprisePointDto"
+            }
+          },
+          "regionsPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WageEnterpriseRegionDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "updatedAt",
+          "latest",
+          "history",
+          "regionsPeriod",
+          "regions"
+        ]
+      },
+      "WageEnterpriseResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/WageEnterpriseDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "GoldLatestDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-10-28"
+          },
+          "pricePln": {
+            "type": "number",
+            "example": 508.83,
+            "description": "PLN per 1 g, fineness 1000"
+          },
+          "previousDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-27"
+          },
+          "previousPricePln": {
+            "type": "number",
+            "nullable": true,
+            "example": 507.51
+          },
+          "change": {
+            "type": "number",
+            "nullable": true,
+            "example": 1.32
+          },
+          "changePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.26
+          }
+        },
+        "required": [
+          "date",
+          "pricePln",
+          "previousDate",
+          "previousPricePln",
+          "change",
+          "changePct"
+        ]
+      },
+      "GoldChangeDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "1m",
+            "description": "1m | 6m | 1y | 3y | 5y"
+          },
+          "fromDate": {
+            "type": "string",
+            "example": "2026-09-28"
+          },
+          "fromPricePln": {
+            "type": "number",
+            "example": 530.05
+          },
+          "changePct": {
+            "type": "number",
+            "example": -4
+          }
+        },
+        "required": [
+          "period",
+          "fromDate",
+          "fromPricePln",
+          "changePct"
+        ]
+      },
+      "GoldPricePointDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-10-28"
+          },
+          "pricePln": {
+            "type": "number",
+            "example": 508.83
+          }
+        },
+        "required": [
+          "date",
+          "pricePln"
+        ]
+      },
+      "GoldDataDto": {
+        "type": "object",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "example": "PLN per 1 g of gold, fineness 1000"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-28"
+          },
+          "latest": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoldLatestDto"
+              }
+            ]
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoldChangeDto"
+            }
+          },
+          "allTimeHigh": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoldPricePointDto"
+              }
+            ]
+          },
+          "avg12mPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 527.17
+          },
+          "historyFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": "2013-01-02"
+          },
+          "quotesCount": {
+            "type": "number",
+            "nullable": true,
+            "example": 3487
+          }
+        },
+        "required": [
+          "unit",
+          "asOf",
+          "latest",
+          "changes",
+          "allTimeHigh",
+          "avg12mPln",
+          "historyFrom",
+          "quotesCount"
+        ]
+      },
+      "GoldResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/GoldDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "GoldHistoryDataDto": {
+        "type": "object",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "example": "PLN per 1 g of gold, fineness 1000"
+          },
+          "range": {
+            "type": "string",
+            "example": "1y",
+            "description": "1m | 1y | 5y | max"
+          },
+          "from": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025-10-28"
+          },
+          "to": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-28"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-28"
+          },
+          "count": {
+            "type": "number",
+            "example": 250
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoldPricePointDto"
+            }
+          }
+        },
+        "required": [
+          "unit",
+          "range",
+          "from",
+          "to",
+          "asOf",
+          "count",
+          "points"
+        ]
+      },
+      "GoldHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/GoldHistoryDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "FuelUnitDto": {
+        "type": "object",
+        "properties": {
+          "gross": {
+            "type": "string",
+            "example": "PLN per litre incl. VAT"
+          },
+          "net": {
+            "type": "string",
+            "example": "PLN per cubic decimetre excl. VAT"
+          }
+        },
+        "required": [
+          "gross",
+          "net"
+        ]
+      },
+      "FuelPriceRowDto": {
+        "type": "object",
+        "properties": {
+          "announcedOn": {
+            "type": "string",
+            "example": "2026-10-27",
+            "description": "Date of the announcement"
+          },
+          "validFrom": {
+            "type": "string",
+            "example": "2026-10-28",
+            "description": "First day of application"
+          },
+          "validTo": {
+            "type": "string",
+            "nullable": true,
+            "example": null,
+            "description": "Last day of application, when the next price is already announced"
+          },
+          "pb95": {
+            "type": "number",
+            "example": 6.55,
+            "description": "Petrol 95, PLN per litre incl. VAT"
+          },
+          "pb98": {
+            "type": "number",
+            "example": 7.24,
+            "description": "Petrol 98, PLN per litre incl. VAT"
+          },
+          "diesel": {
+            "type": "number",
+            "example": 8.28,
+            "description": "Diesel, PLN per litre incl. VAT"
+          },
+          "pb95Net": {
+            "type": "number",
+            "example": 6.07,
+            "description": "Petrol 95, PLN per dm3 excl. VAT"
+          },
+          "pb98Net": {
+            "type": "number",
+            "example": 6.71
+          },
+          "dieselNet": {
+            "type": "number",
+            "example": 7.67
+          },
+          "monitorPolski": {
+            "type": "string",
+            "example": "M.P. 2026 poz. 1039"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "example": "https://api.sejm.gov.pl/eli/acts/MP/2026/1039/text.pdf"
+          }
+        },
+        "required": [
+          "announcedOn",
+          "validFrom",
+          "validTo",
+          "pb95",
+          "pb98",
+          "diesel",
+          "pb95Net",
+          "pb98Net",
+          "dieselNet",
+          "monitorPolski",
+          "sourceUrl"
+        ]
+      },
+      "FuelPricesDataDto": {
+        "type": "object",
+        "properties": {
+          "unit": {
+            "$ref": "#/components/schemas/FuelUnitDto"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-27"
+          },
+          "current": {
+            "nullable": true,
+            "description": "Price in force today (Polish time)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FuelPriceRowDto"
+              }
+            ]
+          },
+          "upcoming": {
+            "nullable": true,
+            "description": "Price announced for the next day",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FuelPriceRowDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "All announcements, ascending by validFrom",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FuelPriceRowDto"
+            }
+          }
+        },
+        "required": [
+          "unit",
+          "asOf",
+          "current",
+          "upcoming",
+          "history"
+        ]
+      },
+      "FuelPricesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FuelPricesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LegalTopicDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "kredyty"
+          },
+          "label": {
+            "type": "string",
+            "example": "Kredyty i po\u017cyczki"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "description"
+        ]
+      },
+      "LegalAffectedDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "przedsiebiorcy"
+          },
+          "label": {
+            "type": "string",
+            "example": "Przedsi\u0119biorcy i JDG"
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "LegalActDto": {
+        "type": "object",
+        "properties": {
+          "eli": {
+            "type": "string",
+            "example": "DU/2025/1413",
+            "description": "ELI-based id (publisher/year/position)"
+          },
+          "address": {
+            "type": "string",
+            "example": "Dz.U. 2025 poz. 1413"
+          },
+          "title": {
+            "type": "string",
+            "example": "Ustawa z dnia 12 wrze\u015bnia 2025 r. o ..."
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "example": "Ustawa"
+          },
+          "actDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025-09-12"
+          },
+          "promulgationDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025-10-20"
+          },
+          "entryIntoForce": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-01"
+          },
+          "topics": {
+            "example": [
+              "zus"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true,
+            "description": "Plain-language summary by finwire.pl (Polish)"
+          },
+          "affected": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LegalAffectedDto"
+            }
+          },
+          "eliUrl": {
+            "type": "string",
+            "example": "https://eli.gov.pl/eli/DU/2025/1413/ogl"
+          },
+          "isapUrl": {
+            "type": "string",
+            "example": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20250001413"
+          },
+          "pdfUrl": {
+            "type": "string",
+            "example": "https://api.sejm.gov.pl/eli/acts/DU/2025/1413/text.pdf"
+          }
+        },
+        "required": [
+          "eli",
+          "address",
+          "title",
+          "type",
+          "actDate",
+          "promulgationDate",
+          "entryIntoForce",
+          "topics",
+          "summary",
+          "affected",
+          "eliUrl",
+          "isapUrl",
+          "pdfUrl"
+        ]
+      },
+      "LegalProcessDto": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "number",
+            "example": 10,
+            "description": "Sejm term"
+          },
+          "number": {
+            "type": "string",
+            "example": "3205",
+            "description": "Print number"
+          },
+          "title": {
+            "type": "string",
+            "example": "Poselski projekt ustawy o ..."
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09-18"
+          },
+          "lastStage": {
+            "type": "string",
+            "nullable": true,
+            "example": "Skierowano do I czytania"
+          },
+          "lastStageDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-22"
+          },
+          "topics": {
+            "example": [
+              "zus"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sejmUrl": {
+            "type": "string",
+            "example": "https://www.sejm.gov.pl/Sejm10.nsf/PrzebiegProc.xsp?nr=3205"
+          }
+        },
+        "required": [
+          "term",
+          "number",
+          "title",
+          "description",
+          "startDate",
+          "lastStage",
+          "lastStageDate",
+          "topics",
+          "sejmUrl"
+        ]
+      },
+      "LegalChangesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "example": "2026-10-28",
+            "description": "Day the radar was computed for"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "recentDays": {
+            "type": "number",
+            "example": 90,
+            "description": "\"Recently\" window in days"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LegalTopicDto"
+            }
+          },
+          "upcoming": {
+            "description": "Published acts that have not entered into force yet",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LegalActDto"
+            }
+          },
+          "recent": {
+            "description": "Acts that entered into force within the window",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LegalActDto"
+            }
+          },
+          "processes": {
+            "description": "Open bills in the Sejm",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LegalProcessDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "updatedAt",
+          "recentDays",
+          "topics",
+          "upcoming",
+          "recent",
+          "processes"
+        ]
+      },
+      "LegalChangesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LegalChangesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LegalProcessDetailDto": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "number",
+            "example": 10,
+            "description": "Sejm term"
+          },
+          "number": {
+            "type": "string",
+            "example": "3205",
+            "description": "Print number"
+          },
+          "title": {
+            "type": "string",
+            "example": "Poselski projekt ustawy o ..."
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09-18"
+          },
+          "lastStage": {
+            "type": "string",
+            "nullable": true,
+            "example": "Skierowano do I czytania"
+          },
+          "lastStageDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-22"
+          },
+          "topics": {
+            "example": [
+              "zus"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sejmUrl": {
+            "type": "string",
+            "example": "https://www.sejm.gov.pl/Sejm10.nsf/PrzebiegProc.xsp?nr=3205"
+          },
+          "passed": {
+            "type": "boolean",
+            "example": false,
+            "description": "Passed by the Sejm"
+          },
+          "closureDate": {
+            "type": "string",
+            "nullable": true,
+            "example": null
+          },
+          "eli": {
+            "type": "string",
+            "nullable": true,
+            "example": null,
+            "description": "ELI id of the published act"
+          }
+        },
+        "required": [
+          "term",
+          "number",
+          "title",
+          "description",
+          "startDate",
+          "lastStage",
+          "lastStageDate",
+          "topics",
+          "sejmUrl",
+          "passed",
+          "closureDate",
+          "eli"
+        ]
+      },
+      "LegalProcessDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true
+          },
+          "process": {
+            "$ref": "#/components/schemas/LegalProcessDetailDto"
+          },
+          "act": {
+            "nullable": true,
+            "description": "The act published in Dz.U. after promulgation",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LegalActDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "asOf",
+          "process",
+          "act"
+        ]
+      },
+      "LegalProcessResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LegalProcessDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "IncomeSourceDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Ministerstwo Finans\u00f3w, sprawozdania bud\u017cetowe JST (Rb-27S)"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://www.gov.pl/web/finanse/sprawozdania-budzetowe"
+          }
+        },
+        "required": [
+          "name",
+          "url"
+        ]
+      },
+      "IncomeMunicipalityDto": {
+        "type": "object",
+        "properties": {
+          "teryt": {
+            "type": "string",
+            "example": "1421042",
+            "description": "TERYT code"
+          },
+          "name": {
+            "type": "string",
+            "example": "Micha\u0142owice"
+          },
+          "type": {
+            "type": "string",
+            "example": "wiejska",
+            "description": "Municipality type, as named upstream"
+          },
+          "population": {
+            "type": "number",
+            "example": 19569
+          },
+          "incomePerCapitaPln": {
+            "type": "number",
+            "example": 96367,
+            "description": "Residents income per capita, PLN"
+          },
+          "vsNational": {
+            "type": "number",
+            "example": 1.708,
+            "description": "Ratio to the national average"
+          },
+          "rank": {
+            "type": "number",
+            "example": 1
+          },
+          "changePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 3.9,
+            "description": "Change against the previous year, %"
+          },
+          "volatile": {
+            "type": "boolean",
+            "example": false,
+            "description": "Large year-to-year swing: treat the rank with care"
+          }
+        },
+        "required": [
+          "teryt",
+          "name",
+          "type",
+          "population",
+          "incomePerCapitaPln",
+          "vsNational",
+          "rank",
+          "changePct",
+          "volatile"
+        ]
+      },
+      "IncomeMunicipalitiesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-06-30"
+          },
+          "available": {
+            "type": "boolean",
+            "example": true
+          },
+          "budgetYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2026,
+            "description": "Budget year of the Rb-27S report"
+          },
+          "baseYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2024,
+            "description": "Tax year the PIT share refers to"
+          },
+          "quarter": {
+            "type": "number",
+            "nullable": true,
+            "example": 2
+          },
+          "periodEnd": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-06-30"
+          },
+          "populationYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2025
+          },
+          "nationalIncomePerCapitaPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 56425
+          },
+          "previousYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2025
+          },
+          "nationalChangePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 10.8
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncomeSourceDto"
+            }
+          },
+          "count": {
+            "type": "number",
+            "example": 2477
+          },
+          "entries": {
+            "description": "Ranked by income per capita, descending",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncomeMunicipalityDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "available",
+          "budgetYear",
+          "baseYear",
+          "quarter",
+          "periodEnd",
+          "populationYear",
+          "nationalIncomePerCapitaPln",
+          "previousYear",
+          "nationalChangePct",
+          "sources",
+          "count",
+          "entries"
+        ]
+      },
+      "IncomeMunicipalitiesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/IncomeMunicipalitiesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "IncomeCountyDto": {
+        "type": "object",
+        "properties": {
+          "teryt": {
+            "type": "string",
+            "example": "1465"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Warszawa"
+          },
+          "municipalities": {
+            "type": "number",
+            "example": 1,
+            "description": "Number of municipalities in the county"
+          },
+          "population": {
+            "type": "number",
+            "example": 1866729
+          },
+          "incomePerCapitaPln": {
+            "type": "number",
+            "example": 93486
+          },
+          "vsNational": {
+            "type": "number",
+            "example": 1.657
+          },
+          "rank": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "teryt",
+          "name",
+          "municipalities",
+          "population",
+          "incomePerCapitaPln",
+          "vsNational",
+          "rank"
+        ]
+      },
+      "IncomeCountiesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-06-30"
+          },
+          "available": {
+            "type": "boolean",
+            "example": true
+          },
+          "budgetYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2026,
+            "description": "Budget year of the Rb-27S report"
+          },
+          "baseYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2024,
+            "description": "Tax year the PIT share refers to"
+          },
+          "quarter": {
+            "type": "number",
+            "nullable": true,
+            "example": 2
+          },
+          "periodEnd": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-06-30"
+          },
+          "populationYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2025
+          },
+          "nationalIncomePerCapitaPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 56425
+          },
+          "previousYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2025
+          },
+          "nationalChangePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 10.8
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncomeSourceDto"
+            }
+          },
+          "count": {
+            "type": "number",
+            "example": 380
+          },
+          "entries": {
+            "description": "Ranked by income per capita, descending",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncomeCountyDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "available",
+          "budgetYear",
+          "baseYear",
+          "quarter",
+          "periodEnd",
+          "populationYear",
+          "nationalIncomePerCapitaPln",
+          "previousYear",
+          "nationalChangePct",
+          "sources",
+          "count",
+          "entries"
+        ]
+      },
+      "IncomeCountiesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/IncomeCountiesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "UpkeepCityDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "warszawa"
+          },
+          "name": {
+            "type": "string",
+            "example": "Warszawa"
+          }
+        },
+        "required": [
+          "slug",
+          "name"
+        ]
+      },
+      "UpkeepCitiesDataDto": {
+        "type": "object",
+        "properties": {
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpkeepCityDto"
+            }
+          }
+        },
+        "required": [
+          "cities"
+        ]
+      },
+      "UpkeepCitiesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/UpkeepCitiesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "UpkeepRateDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Zaliczki w\u0142a\u015bcicieli na koszty zarz\u0105du nieruchomo\u015bci\u0105 wsp\u00f3ln\u0105"
+          },
+          "value": {
+            "type": "number",
+            "example": 5.08
+          },
+          "unit": {
+            "type": "string",
+            "example": "z\u0142/m\u00b2 miesi\u0119cznie"
+          },
+          "year": {
+            "type": "number",
+            "example": 2024
+          },
+          "scope": {
+            "type": "string",
+            "example": "city",
+            "description": "city | voivodeship: level of the figure"
+          },
+          "scopeName": {
+            "type": "string",
+            "example": "Warszawa"
+          }
+        },
+        "required": [
+          "label",
+          "value",
+          "unit",
+          "year",
+          "scope",
+          "scopeName"
+        ]
+      },
+      "UpkeepHouseholdDto": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "example": 1.68
+          },
+          "year": {
+            "type": "number",
+            "example": 2025
+          },
+          "scope": {
+            "type": "string",
+            "example": "city"
+          },
+          "scopeName": {
+            "type": "string",
+            "example": "Warszawa"
+          }
+        },
+        "required": [
+          "value",
+          "year",
+          "scope",
+          "scopeName"
+        ]
+      },
+      "UpkeepDataDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "warszawa"
+          },
+          "name": {
+            "type": "string",
+            "example": "Warszawa"
+          },
+          "province": {
+            "type": "string",
+            "example": "mazowieckie"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09-23T12:46:22.000Z"
+          },
+          "rates": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/UpkeepRateDto"
+            },
+            "description": "Rates by key: hoaFeeM2, coopFeeM2, heatingM2, electricityKwh, gasKwh, coldWaterM3, hotWaterM3, coalTonne, wastePerPerson, electricityKwhPerHousehold, waterM3PerUser"
+          },
+          "household": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/UpkeepHouseholdDto"
+            },
+            "description": "Household figures by key: personsPerDwelling, floorAreaPerPerson"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "province",
+          "asOf",
+          "rates",
+          "household"
+        ]
+      },
+      "UpkeepResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/UpkeepDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EuHpiAreaDto": {
+        "type": "object",
+        "properties": {
+          "geo": {
+            "type": "string",
+            "example": "PL",
+            "description": "Eurostat geo code"
+          },
+          "name": {
+            "type": "string",
+            "example": "Polska"
+          },
+          "index": {
+            "type": "number",
+            "example": 229.22,
+            "description": "Index, 2015=100"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 6.3
+          },
+          "qoqPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 1.5
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-Q2"
+          }
+        },
+        "required": [
+          "geo",
+          "name",
+          "index",
+          "yoyPct",
+          "qoqPct",
+          "period"
+        ]
+      },
+      "EuHpiRankingEntryDto": {
+        "type": "object",
+        "properties": {
+          "geo": {
+            "type": "string",
+            "example": "PL",
+            "description": "Eurostat geo code"
+          },
+          "name": {
+            "type": "string",
+            "example": "Polska"
+          },
+          "index": {
+            "type": "number",
+            "example": 229.22,
+            "description": "Index, 2015=100"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 6.3
+          },
+          "qoqPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 1.5
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "rank": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "geo",
+          "name",
+          "index",
+          "yoyPct",
+          "qoqPct",
+          "period",
+          "rank"
+        ]
+      },
+      "EuHpiRankingDto": {
+        "type": "object",
+        "properties": {
+          "polandRank": {
+            "type": "number",
+            "nullable": true,
+            "example": 15
+          },
+          "medianYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 7.4
+          },
+          "count": {
+            "type": "number",
+            "example": 26
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuHpiRankingEntryDto"
+            }
+          }
+        },
+        "required": [
+          "polandRank",
+          "medianYoyPct",
+          "count",
+          "entries"
+        ]
+      },
+      "EuHousingDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-Q2"
+          },
+          "indexBase": {
+            "type": "string",
+            "nullable": true,
+            "example": "2015=100"
+          },
+          "poland": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuHpiAreaDto"
+              }
+            ]
+          },
+          "eu": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuHpiAreaDto"
+              }
+            ]
+          },
+          "euroArea": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuHpiAreaDto"
+              }
+            ]
+          },
+          "ranking": {
+            "$ref": "#/components/schemas/EuHpiRankingDto"
+          }
+        },
+        "required": [
+          "asOf",
+          "indexBase",
+          "poland",
+          "eu",
+          "euroArea",
+          "ranking"
+        ]
+      },
+      "EuHousingResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EuHousingDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EuRateEntryDto": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "number",
+            "example": 1
+          },
+          "geo": {
+            "type": "string",
+            "example": "EL"
+          },
+          "name": {
+            "type": "string",
+            "example": "Grecja"
+          },
+          "value": {
+            "type": "number",
+            "example": 26.4
+          }
+        },
+        "required": [
+          "rank",
+          "geo",
+          "name",
+          "value"
+        ]
+      },
+      "EuRateDataDto": {
+        "type": "object",
+        "properties": {
+          "measure": {
+            "type": "string",
+            "example": "housing cost overburden rate",
+            "description": "housing cost overburden rate | overcrowding rate"
+          },
+          "unit": {
+            "type": "string",
+            "example": "% of population"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025"
+          },
+          "poland": {
+            "type": "number",
+            "nullable": true,
+            "example": 4.1
+          },
+          "eu": {
+            "type": "number",
+            "nullable": true,
+            "example": 7.7
+          },
+          "euroArea": {
+            "type": "number",
+            "nullable": true,
+            "example": 7.9
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuRateEntryDto"
+            }
+          },
+          "polandHistory": {
+            "description": "Poland, yearly history",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeriodValuePointDto"
+            }
+          }
+        },
+        "required": [
+          "measure",
+          "unit",
+          "asOf",
+          "poland",
+          "eu",
+          "euroArea",
+          "entries",
+          "polandHistory"
+        ]
+      },
+      "EuRateResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EuRateDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "CreditSurveyMetricDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "housing_criteria"
+          },
+          "label": {
+            "type": "string",
+            "example": "Kryteria kredyt\u00f3w mieszkaniowych"
+          },
+          "horizon": {
+            "type": "string",
+            "example": "S",
+            "description": "S = state in the quarter, F = expectation for the next quarter"
+          },
+          "quarter": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "example": 4.4
+          },
+          "previous": {
+            "type": "number",
+            "nullable": true,
+            "example": 25.2
+          },
+          "yearAgo": {
+            "type": "number",
+            "nullable": true,
+            "example": 21.4
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "horizon",
+          "quarter",
+          "value",
+          "previous",
+          "yearAgo"
+        ]
+      },
+      "LabelValueDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Mar\u017ca kredytowa"
+          },
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "example": 20.9
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ]
+      },
+      "CreditSurveyHistoryDto": {
+        "type": "object",
+        "properties": {
+          "edition": {
+            "type": "string",
+            "example": "2023-Q4"
+          },
+          "stateQuarter": {
+            "type": "string",
+            "example": "2023-Q3"
+          },
+          "housingCriteria": {
+            "type": "number",
+            "nullable": true,
+            "example": -28.3
+          },
+          "housingDemand": {
+            "type": "number",
+            "nullable": true,
+            "example": 40.1
+          },
+          "consumerCriteria": {
+            "type": "number",
+            "nullable": true,
+            "example": -58
+          },
+          "consumerDemand": {
+            "type": "number",
+            "nullable": true,
+            "example": -10.7
+          }
+        },
+        "required": [
+          "edition",
+          "stateQuarter",
+          "housingCriteria",
+          "housingDemand",
+          "consumerCriteria",
+          "consumerDemand"
+        ]
+      },
+      "CreditSurveyDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-06-30"
+          },
+          "edition": {
+            "type": "string",
+            "example": "2026-Q3",
+            "description": "Edition of the survey"
+          },
+          "stateQuarter": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "periodEnd": {
+            "type": "string",
+            "example": "2026-06-30"
+          },
+          "unit": {
+            "type": "string",
+            "example": "net balance, % of banks"
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditSurveyMetricDto"
+            }
+          },
+          "housingTerms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelValueDto"
+            }
+          },
+          "housingPolicyDrivers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelValueDto"
+            }
+          },
+          "housingDemandDrivers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelValueDto"
+            }
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditSurveyHistoryDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "edition",
+          "stateQuarter",
+          "periodEnd",
+          "unit",
+          "metrics",
+          "housingTerms",
+          "housingPolicyDrivers",
+          "housingDemandDrivers",
+          "history"
+        ]
+      },
+      "CreditSurveyResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CreditSurveyDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "MonetaryReadingDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "value": {
+            "type": "number",
+            "example": 847810.467
+          },
+          "changePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.91
+          }
+        },
+        "required": [
+          "period",
+          "value",
+          "changePct"
+        ]
+      },
+      "MonetarySeriesDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "hh_loans_pln"
+          },
+          "label": {
+            "type": "string",
+            "example": "Kredyty gospodarstw domowych w z\u0142otych"
+          },
+          "kind": {
+            "type": "string",
+            "example": "stock",
+            "description": "stock = end-of-month balance, flow = value of new loans in the month"
+          },
+          "latest": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MonetaryReadingDto"
+              }
+            ]
+          },
+          "previousMonth": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MonetaryReadingDto"
+              }
+            ]
+          },
+          "yearAgo": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MonetaryReadingDto"
+              }
+            ]
+          },
+          "points": {
+            "description": "Ascending by period",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeriodValuePointDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "kind",
+          "latest",
+          "previousMonth",
+          "yearAgo",
+          "points"
+        ]
+      },
+      "NbpMonetaryDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "unit": {
+            "type": "string",
+            "example": "mln z\u0142"
+          },
+          "stocksPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09",
+            "description": "Period of the stock series"
+          },
+          "newLoansPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08",
+            "description": "Period of the new-loans series"
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MonetarySeriesDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "unit",
+          "stocksPeriod",
+          "newLoansPeriod",
+          "series"
+        ]
+      },
+      "NbpMonetaryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NbpMonetaryDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EcbProductDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "mortgage_total"
+          },
+          "label": {
+            "type": "string",
+            "example": "Nowe kredyty mieszkaniowe - og\u00f3\u0142em"
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ]
+      },
+      "EcbCountryRateDto": {
+        "type": "object",
+        "properties": {
+          "area": {
+            "type": "string",
+            "example": "PL",
+            "description": "MIR area code (U2 = euro area)"
+          },
+          "name": {
+            "type": "string",
+            "example": "Polska"
+          },
+          "valuePct": {
+            "type": "number",
+            "example": 5.94,
+            "description": "Average interest rate on new loans, % p.a."
+          },
+          "currency": {
+            "type": "string",
+            "example": "PLN"
+          },
+          "momPp": {
+            "type": "number",
+            "nullable": true,
+            "example": -0.06
+          },
+          "yoyPp": {
+            "type": "number",
+            "nullable": true,
+            "example": -0.74
+          },
+          "rank": {
+            "type": "number",
+            "nullable": true,
+            "example": 2,
+            "description": "Rank, 1 = highest rate; null for the euro area"
+          }
+        },
+        "required": [
+          "area",
+          "name",
+          "valuePct",
+          "currency",
+          "momPp",
+          "yoyPp",
+          "rank"
+        ]
+      },
+      "EcbRatesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08"
+          },
+          "product": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EcbProductDto"
+              }
+            ]
+          },
+          "products": {
+            "description": "Available products for the `product` parameter",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EcbProductDto"
+            }
+          },
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08"
+          },
+          "unit": {
+            "type": "string",
+            "example": "% p.a."
+          },
+          "poland": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EcbCountryRateDto"
+              }
+            ]
+          },
+          "euroArea": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EcbCountryRateDto"
+              }
+            ]
+          },
+          "gapPolandEuroAreaPp": {
+            "type": "number",
+            "nullable": true,
+            "example": 2.34,
+            "description": "Poland minus euro area, percentage points"
+          },
+          "medianPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 3.59
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EcbCountryRateDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "product",
+          "products",
+          "period",
+          "unit",
+          "poland",
+          "euroArea",
+          "gapPolandEuroAreaPp",
+          "medianPct",
+          "countries"
+        ]
+      },
+      "EcbRatesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EcbRatesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EcbRatePointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-08"
+          },
+          "valuePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 5.94
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true,
+            "example": "PLN"
+          }
+        },
+        "required": [
+          "period",
+          "valuePct",
+          "currency"
+        ]
+      },
+      "EcbRatesAreaSeriesDto": {
+        "type": "object",
+        "properties": {
+          "area": {
+            "type": "string",
+            "example": "PL"
+          },
+          "name": {
+            "type": "string",
+            "example": "Polska"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EcbRatePointDto"
+            }
+          }
+        },
+        "required": [
+          "area",
+          "name",
+          "points"
+        ]
+      },
+      "EcbRatesSeriesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08"
+          },
+          "product": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EcbProductDto"
+              }
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "example": "% p.a."
+          },
+          "areas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EcbRatesAreaSeriesDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "product",
+          "unit",
+          "areas"
+        ]
+      },
+      "EcbRatesSeriesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EcbRatesSeriesDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

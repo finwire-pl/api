@@ -3,6 +3,24 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-10-28
+
+### Added
+
+- `GET /v1/macro/indicators` and `/{key}/history` - about 40 headline indicators of the Polish economy in one table (GDP, retail sales, industrial and construction output, CPI and core inflation, unemployment, wages, NBP rates, FX, household credit, sentiment, legal limits) with the latest reading, change, sparkline and source; full history per indicator, optional `from=YYYY-MM`. WIBOR and POLSTR rows are excluded.
+- `GET /v1/macro/consumer-sentiment` - GUS consumer confidence (BWUK, WWUK) and 13 components, monthly history since 2010.
+- `GET /v1/wages/enterprise` - GUS average gross wage in the enterprise sector: monthly, real change, employment, by province.
+- `GET /v1/series/gold` and `/history?range=1m|1y|5y|max` - NBP gold price: latest quote, 1m/6m/1y/3y/5y changes, all-time high, 12-month average, history.
+- `GET /v1/fuel-prices` - maximum fuel prices (Pb95, Pb98, diesel) from the announcements of the Minister of Energy: in force today, announced for tomorrow, history.
+- `GET /v1/legal-changes` (optional `days`) and `/process/{term}/{number}` - acts of Dz.U. and Monitor Polski on finance, tax, labour and housing entering into force, and open bills in the Sejm with their last stage.
+- `GET /v1/income/municipalities` and `/counties` (optional `year`) - residents income per capita by municipality and county from the local-government share in PIT (Ministry of Finance Rb-27S, GUS BDL), with rank and change vs the previous year.
+- `GET /v1/housing/upkeep` and `/{city}` - monthly running costs of a flat in 20 cities (GUS BDL): charges, heating, electricity, gas, water, waste.
+- `GET /v1/housing/europe`, `/overburden` and `/overcrowding` - Eurostat house price index ranking (Poland, EU, euro area) and housing cost overburden and overcrowding rates by country.
+- `GET /v1/credit-market/survey` (optional `quarters`) - NBP bank lending survey: credit criteria, demand, housing loan terms and drivers.
+- `GET /v1/credit-market/monetary` (optional `months`) - NBP household loans, deposits and new loans, monthly.
+- `GET /v1/credit-market/ecb-rates` (optional `product`, `period`) and `/ecb-rates/series` (optional `product`, `areas`, `from`) - ECB MIR average interest rate on new loans by country.
+- Invalid optional parameters of the new endpoints return `400` with a short message.
+
 ## 2026-10-19
 
 ### Removed
