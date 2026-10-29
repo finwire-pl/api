@@ -7,6 +7,10 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ### Added
 
+- `GET /v1/macro/nowcast` - Finwire Nowcast, the finwire.pl model of the next CPI and core inflation readings (point and 80% interval) and the next RPP decision (probabilities of cut, hold, hike): target period, release and freeze date, status (`live`, `frozen`, `settled`, `expired`), model inputs, settled history against actual readings and backtest and live accuracy scores. CC BY 4.0, attribution "finwire.pl (Finwire Nowcast)".
+- `GET /v1/energy/regulated-prices` (optional `date=YYYY-MM-DD`) - household electricity (G11, G12, G12w) and gas (W-1.1 to W-4) tariffs approved by the President of URE in force on the day: default-seller energy prices, distribution rates per operator and gas tariff area, fees, cheaper-zone hours; net amounts with the VAT rate, each row with the URE decision, decision date and PDF. `inForce: false` marks a tariff past its `validTo` with no newer one known yet.
+- `GET /v1/brokers` - brokerage account fees from official fee tables: online commission on GPW, US and German stocks, account and currency conversion fees, IKE/IKZE, investor protection, promotions valid today, fee table URL with its effective date and the status of a weekly automatic check.
+- MCP server 1.3.0: tools `get_nowcast`, `get_energy_prices` and `get_broker_fees` over the endpoints above; the datasets are also available through `search_datasets` and `get_dataset` (`nowcast`, `energy-tariffs`, `broker-fees`).
 - MCP server 1.2.0: 14 new tools over the `/v1` datasets, with the same source whitelist (no WIBOR/POLSTR, no single bank offers): `get_interest_rates`, `get_currency_rates` (incl. gold), `get_fuel_prices`, `get_housing_prices` (RCN cities and districts, or GUS), `get_rents` (with rental yield), `get_housing_costs`, `get_credit_market`, `get_bank_rates` (offer aggregates and retail bonds), `get_legal_limits` (incl. local tax limits), `get_legal_changes`, `get_regional_data`, `get_europe_data`, `search_datasets` and `get_dataset` (any dataset by id). Each result has `outputSchema`, Polish-formatted values, `license`, `citation` and `url` to the finwire.pl page (`utm_source=mcp&utm_medium=assistant&utm_campaign=<tool>`).
 - MCP resources `finwire://datasets` and `finwire://dataset/{id}`; prompts `city_housing_report` and `personal_finance_limits`.
 - MCP protocol version `2025-11-25` accepted in `initialize`.
@@ -14,6 +18,7 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ### Changed
 
+- MCP `tools/list`: `annotations` of every tool now include `title` (same as the top-level `title`).
 - Text results of the macro tools end with a "Zobacz na finwire.pl" link. `structuredContent` of existing tools is unchanged.
 
 ## 2026-10-28

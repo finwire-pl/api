@@ -527,6 +527,28 @@
         ]
       }
     },
+    "/v1/brokers": {
+      "get": {
+        "operationId": "ReferenceController_brokers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrokerFeesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Brokerage account fees from official fee tables: commissions on GPW, US and German stocks, account and FX fees, active promotions, weekly check status",
+        "tags": [
+          "Reference data"
+        ]
+      }
+    },
     "/v1/index": {
       "get": {
         "operationId": "IndicesController_list",
@@ -1280,6 +1302,61 @@
           }
         },
         "summary": "Maximum fuel prices (Minister of Energy): in force today, announced for tomorrow, history",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/macro/nowcast": {
+      "get": {
+        "operationId": "MacroController_nowcast",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NowcastResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Finwire Nowcast: finwire.pl model forecasts of CPI and core inflation (point and 80% interval) and RPP decision probabilities, frozen 3 working days before publication, with backtest and settled history",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/energy/regulated-prices": {
+      "get": {
+        "operationId": "MacroController_energyPrices",
+        "parameters": [
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "YYYY-MM-DD, default today (Polish time)",
+            "schema": {
+              "example": "2026-10-29",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnergyPricesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Regulated household electricity (G11, G12, G12w) and gas (W-1.1 to W-4) tariffs approved by URE, in force on a day; net amounts with decision and PDF",
         "tags": [
           "Macro and prices"
         ]
@@ -3380,6 +3457,349 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/LocalTaxDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "BrokerCommissionDto": {
+        "type": "object",
+        "properties": {
+          "pct": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.39,
+            "description": "Percent of the order value"
+          },
+          "fixed": {
+            "type": "number",
+            "nullable": true,
+            "example": null,
+            "description": "Fixed part in `currency`"
+          },
+          "perShare": {
+            "type": "number",
+            "nullable": true,
+            "example": null,
+            "description": "Per share in `currency`"
+          },
+          "min": {
+            "type": "object",
+            "example": {
+              "PLN": 5
+            },
+            "description": "Minimum by settlement currency"
+          },
+          "max": {
+            "type": "number",
+            "nullable": true,
+            "example": null,
+            "description": "Maximum in `currency`"
+          },
+          "maxPct": {
+            "type": "number",
+            "nullable": true,
+            "example": null,
+            "description": "Maximum as percent of the order value"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "PLN",
+              "EUR",
+              "USD"
+            ]
+          },
+          "freeMonthlyTurnover": {
+            "type": "object",
+            "nullable": true,
+            "example": null,
+            "description": "Monthly turnover without commission"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true,
+            "example": "0,39%, min. 5 z\u0142",
+            "description": "As worded in the fee table (Polish)"
+          }
+        },
+        "required": [
+          "pct",
+          "fixed",
+          "perShare",
+          "min",
+          "max",
+          "maxPct",
+          "currency",
+          "freeMonthlyTurnover",
+          "text"
+        ]
+      },
+      "BrokerPromoDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "description": "Polish text from the fee table or the broker notice"
+          },
+          "markets": {
+            "example": [
+              "gpw"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "instruments": {
+            "example": [
+              "etf"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "accounts": {
+            "nullable": true,
+            "example": [
+              "ike"
+            ],
+            "description": "null = any account",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "commission": {
+            "$ref": "#/components/schemas/BrokerCommissionDto"
+          },
+          "validUntil": {
+            "type": "string",
+            "example": "2026-12-30",
+            "description": "Last day of the promotion"
+          },
+          "sourceUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "markets",
+          "instruments",
+          "accounts",
+          "commission",
+          "validUntil",
+          "sourceUrl"
+        ]
+      },
+      "BrokerCheckDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "changed",
+              "error",
+              "layout",
+              "unknown"
+            ],
+            "description": "Result of the weekly automatic check of the fee table"
+          },
+          "checkedAt": {
+            "type": "string",
+            "example": "2026-10-29",
+            "description": "Date the fee table was last confirmed"
+          },
+          "needsReview": {
+            "type": "boolean",
+            "example": false,
+            "description": "True when a change was detected and not yet reviewed, or the page could not be read for long"
+          }
+        },
+        "required": [
+          "status",
+          "checkedAt",
+          "needsReview"
+        ]
+      },
+      "BrokerFeesDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "mbank"
+          },
+          "name": {
+            "type": "string",
+            "example": "mBank eMakler"
+          },
+          "legalEntity": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "dom-maklerski",
+              "biuro-bankowe",
+              "zagraniczny"
+            ]
+          },
+          "regulator": {
+            "type": "string"
+          },
+          "protection": {
+            "type": "object",
+            "description": "Investor compensation scheme: scheme, text, sourceUrl"
+          },
+          "tariff": {
+            "type": "object",
+            "description": "Official fee table: title, url, validFrom"
+          },
+          "accountFeePlnYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 0,
+            "description": "Account fee, PLN per year; null = not in the fee table"
+          },
+          "accountFeeText": {
+            "type": "string",
+            "nullable": true
+          },
+          "commissions": {
+            "type": "object",
+            "description": "Online order commission by market: gpw (Warsaw), us, de; null = market not in the fee table"
+          },
+          "zeroCommission": {
+            "type": "object",
+            "nullable": true,
+            "description": "Zero-commission offer valid on `date`: text, validUntil"
+          },
+          "fxPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.5,
+            "description": "Currency conversion fee, percent; null = not in the fee table"
+          },
+          "fxText": {
+            "type": "string",
+            "nullable": true
+          },
+          "promos": {
+            "description": "Only promotions valid on `date`",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BrokerPromoDto"
+            }
+          },
+          "ike": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "ikze": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "currencyAccounts": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fractional": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "platform": {
+            "type": "string",
+            "nullable": true
+          },
+          "otherFees": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "check": {
+            "$ref": "#/components/schemas/BrokerCheckDto"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "legalEntity",
+          "kind",
+          "regulator",
+          "protection",
+          "tariff",
+          "accountFeePlnYear",
+          "accountFeeText",
+          "commissions",
+          "zeroCommission",
+          "fxPct",
+          "fxText",
+          "promos",
+          "ike",
+          "ikze",
+          "currencyAccounts",
+          "fractional",
+          "platform",
+          "otherFees",
+          "check"
+        ]
+      },
+      "BrokerFeesDataDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-29",
+            "description": "Day (Polish time) for which promotions were filtered"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-29",
+            "description": "Latest confirmation date of any fee table"
+          },
+          "lastCheckRunAt": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-02T04:10:00.000Z",
+            "description": "Last run of the weekly fee table check"
+          },
+          "brokers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BrokerFeesDto"
+            }
+          }
+        },
+        "required": [
+          "date",
+          "asOf",
+          "lastCheckRunAt",
+          "brokers"
+        ]
+      },
+      "BrokerFeesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/BrokerFeesDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -7142,6 +7562,879 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/FuelPricesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "NowcastProbabilitiesDto": {
+        "type": "object",
+        "properties": {
+          "cut": {
+            "type": "number",
+            "example": 0.081,
+            "description": "Probability of a rate cut"
+          },
+          "hold": {
+            "type": "number",
+            "example": 0.854,
+            "description": "Probability of no change"
+          },
+          "hike": {
+            "type": "number",
+            "example": 0.065,
+            "description": "Probability of a rate hike"
+          }
+        },
+        "required": [
+          "cut",
+          "hold",
+          "hike"
+        ]
+      },
+      "NowcastForecastDto": {
+        "type": "object",
+        "properties": {
+          "targetPeriod": {
+            "type": "string",
+            "example": "2026-10",
+            "description": "YYYY-MM for CPI and core inflation; date of the decision day for RPP"
+          },
+          "releaseDate": {
+            "type": "string",
+            "example": "2026-10-30",
+            "description": "Publication date of the official reading or decision"
+          },
+          "freezeDate": {
+            "type": "string",
+            "example": "2026-10-27",
+            "description": "Freeze date: 3 working days before publication"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "live",
+              "frozen",
+              "settled",
+              "expired"
+            ],
+            "description": "live = recomputed daily until the freeze date; frozen = final; settled = compared with the actual reading; expired = data came out before the freeze"
+          },
+          "frozen": {
+            "type": "boolean",
+            "example": false,
+            "description": "True once the forecast can no longer change (frozen or settled)"
+          },
+          "frozenAt": {
+            "type": "string",
+            "nullable": true,
+            "example": null
+          },
+          "point": {
+            "type": "number",
+            "nullable": true,
+            "example": 3.7,
+            "description": "Point forecast, % y/y (null for RPP)"
+          },
+          "lo80": {
+            "type": "number",
+            "nullable": true,
+            "example": 3.1,
+            "description": "Lower bound of the 80% interval"
+          },
+          "hi80": {
+            "type": "number",
+            "nullable": true,
+            "example": 4.3,
+            "description": "Upper bound of the 80% interval"
+          },
+          "probabilities": {
+            "nullable": true,
+            "description": "RPP only",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NowcastProbabilitiesDto"
+              }
+            ]
+          },
+          "inputsAsOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-29",
+            "description": "Date of the latest input data"
+          },
+          "actual": {
+            "type": "number",
+            "nullable": true,
+            "example": null,
+            "description": "Actual reading after publication"
+          },
+          "actualOutcome": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "cut",
+              "hold",
+              "hike"
+            ],
+            "example": null,
+            "description": "RPP only: actual decision"
+          },
+          "modelVersion": {
+            "type": "string",
+            "nullable": true,
+            "example": "cpi-1.0"
+          },
+          "drivers": {
+            "type": "object",
+            "nullable": true,
+            "description": "Model inputs by kind. cpi: previous reading, base effect, forecast m/m and component contributions (food, energy, fuel, core). core: CPI flash estimate and base effect. rpp: reference rate, CPI and core inflation, last move, projection meeting."
+          }
+        },
+        "required": [
+          "targetPeriod",
+          "releaseDate",
+          "freezeDate",
+          "status",
+          "frozen",
+          "frozenAt",
+          "point",
+          "lo80",
+          "hi80",
+          "probabilities",
+          "inputsAsOf",
+          "actual",
+          "actualOutcome",
+          "modelVersion",
+          "drivers"
+        ]
+      },
+      "NowcastHistoryPointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "point": {
+            "type": "number",
+            "nullable": true,
+            "example": 4.5
+          },
+          "lo80": {
+            "type": "number",
+            "nullable": true,
+            "example": 3.9
+          },
+          "hi80": {
+            "type": "number",
+            "nullable": true,
+            "example": 5.1
+          },
+          "probabilities": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NowcastProbabilitiesDto"
+              }
+            ]
+          },
+          "actual": {
+            "type": "number",
+            "nullable": true,
+            "example": 4.1
+          },
+          "actualOutcome": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "cut",
+              "hold",
+              "hike"
+            ]
+          },
+          "naive": {
+            "type": "number",
+            "nullable": true,
+            "example": 3.4,
+            "description": "Naive benchmark (previous reading)"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "backtest",
+              "live"
+            ],
+            "description": "backtest = rolling-origin simulation on historical data; live = forecast frozen before publication"
+          }
+        },
+        "required": [
+          "period",
+          "point",
+          "lo80",
+          "hi80",
+          "probabilities",
+          "actual",
+          "actualOutcome",
+          "naive",
+          "source"
+        ]
+      },
+      "NowcastScoresDto": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "numeric",
+              "rpp"
+            ]
+          },
+          "n": {
+            "type": "number",
+            "nullable": true,
+            "example": 93
+          },
+          "from": {
+            "type": "string",
+            "nullable": true,
+            "example": "2019-01"
+          },
+          "to": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "mae": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.318,
+            "description": "numeric: mean absolute error, pp"
+          },
+          "naiveMae": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.609,
+            "description": "numeric: MAE of the naive benchmark"
+          },
+          "within01": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.355,
+            "description": "numeric: share of errors up to 0.1 pp"
+          },
+          "coverage80": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.849,
+            "description": "numeric: share of readings inside the 80% interval"
+          },
+          "direction": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.72,
+            "description": "numeric: share of correct direction of change"
+          },
+          "brier": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.181,
+            "description": "rpp: Brier score (0 = perfect)"
+          },
+          "holdBrier": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.466,
+            "description": "rpp: Brier score of always \"hold\""
+          },
+          "accuracy": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.902,
+            "description": "rpp: share of meetings where the most likely outcome happened"
+          },
+          "moves": {
+            "type": "number",
+            "nullable": true,
+            "example": 38,
+            "description": "rpp: number of rate changes in the sample"
+          },
+          "movesHit": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.789,
+            "description": "rpp: share of rate changes the model ranked most likely"
+          }
+        },
+        "required": [
+          "kind",
+          "n",
+          "from",
+          "to"
+        ]
+      },
+      "NowcastIndicatorDto": {
+        "type": "object",
+        "properties": {
+          "indicator": {
+            "type": "string",
+            "enum": [
+              "cpi",
+              "core",
+              "rpp"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "example": "CPI inflation, year over year"
+          },
+          "unit": {
+            "type": "string",
+            "example": "% y/y"
+          },
+          "actualSource": {
+            "type": "string",
+            "example": "GUS flash estimate",
+            "description": "Official reading the forecast is settled against"
+          },
+          "modelVersion": {
+            "type": "string",
+            "nullable": true,
+            "example": "cpi-1.0"
+          },
+          "current": {
+            "nullable": true,
+            "description": "Forecast for the next publication",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NowcastForecastDto"
+              }
+            ]
+          },
+          "lastSettled": {
+            "nullable": true,
+            "description": "Latest settled live forecast",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NowcastForecastDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "Backtest and settled live forecasts, ascending",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NowcastHistoryPointDto"
+            }
+          },
+          "backtestScores": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NowcastScoresDto"
+              }
+            ]
+          },
+          "liveScores": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NowcastScoresDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "indicator",
+          "label",
+          "unit",
+          "actualSource",
+          "modelVersion",
+          "current",
+          "lastSettled",
+          "history",
+          "backtestScores",
+          "liveScores"
+        ]
+      },
+      "NowcastDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-29"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-29T19:23:12.949Z",
+            "description": "Last change of any forecast or settlement"
+          },
+          "indicators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NowcastIndicatorDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "updatedAt",
+          "indicators"
+        ]
+      },
+      "NowcastResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NowcastDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EnergyUnitDto": {
+        "type": "object",
+        "properties": {
+          "energy": {
+            "type": "string",
+            "example": "PLN per kWh, net of VAT (electricity: also net of excise)"
+          },
+          "fixed": {
+            "type": "string",
+            "example": "PLN per month, net of VAT"
+          }
+        },
+        "required": [
+          "energy",
+          "fixed"
+        ]
+      },
+      "ElectricitySellerDto": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "type": "string",
+            "nullable": true,
+            "example": "DRE.WRE.4211.55.10.2025.JTr",
+            "description": "URE decision number"
+          },
+          "decisionDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025-12-17"
+          },
+          "validFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-01-01"
+          },
+          "validTo": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-12-31"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://bip.ure.gov.pl/download/3/20342/PGEObrot.pdf",
+            "description": "Tariff PDF in the URE Public Information Bulletin"
+          },
+          "sourcePage": {
+            "type": "string",
+            "nullable": true,
+            "example": "pkt 5 taryfy, s. 6 (PDF s. 8)",
+            "description": "Where in the PDF the rates are"
+          },
+          "key": {
+            "type": "string",
+            "example": "pge-obrot"
+          },
+          "company": {
+            "type": "string",
+            "example": "PGE Obr\u00f3t S.A."
+          },
+          "name": {
+            "type": "string",
+            "example": "PGE Obr\u00f3t"
+          },
+          "distributionArea": {
+            "type": "string",
+            "example": "pge",
+            "description": "Key of the distribution operator where this is the default seller"
+          },
+          "tradeNames": {
+            "type": "object",
+            "example": {
+              "G11": "Komfortowa",
+              "G12": "Elastyczna"
+            },
+            "description": "Trade names of the tariff groups"
+          },
+          "energy": {
+            "type": "object",
+            "example": {
+              "G11": {
+                "all": 0.4982
+              },
+              "G12": {
+                "day": 0.5656,
+                "night": 0.3718
+              },
+              "G12w": {
+                "peak": 0.5821,
+                "offpeak": 0.4235
+              }
+            },
+            "description": "Energy price, PLN per kWh net"
+          }
+        },
+        "required": [
+          "decision",
+          "decisionDate",
+          "validFrom",
+          "validTo",
+          "sourceUrl",
+          "sourcePage",
+          "key",
+          "company",
+          "name",
+          "distributionArea",
+          "tradeNames",
+          "energy"
+        ]
+      },
+      "ElectricityDistributionDto": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "type": "string",
+            "nullable": true,
+            "example": "DRE.WRE.4211.55.10.2025.JTr",
+            "description": "URE decision number"
+          },
+          "decisionDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025-12-17"
+          },
+          "validFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-01-01"
+          },
+          "validTo": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-12-31"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://bip.ure.gov.pl/download/3/20342/PGEObrot.pdf",
+            "description": "Tariff PDF in the URE Public Information Bulletin"
+          },
+          "sourcePage": {
+            "type": "string",
+            "nullable": true,
+            "example": "pkt 5 taryfy, s. 6 (PDF s. 8)",
+            "description": "Where in the PDF the rates are"
+          },
+          "key": {
+            "type": "string",
+            "example": "pge"
+          },
+          "company": {
+            "type": "string",
+            "example": "PGE Dystrybucja S.A."
+          },
+          "name": {
+            "type": "string",
+            "example": "PGE Dystrybucja"
+          },
+          "area": {
+            "type": "string",
+            "example": "wschodnia i centralna Polska (m.in. Lublin, \u0141\u00f3d\u017a, Bia\u0142ystok, Rzesz\u00f3w)"
+          },
+          "defaultSeller": {
+            "type": "string",
+            "nullable": true,
+            "example": "pge-obrot",
+            "description": "null = no approved default-seller tariff in this area"
+          },
+          "groups": {
+            "type": "object",
+            "example": {
+              "G11": {
+                "variable": {
+                  "all": 0.3469
+                },
+                "fixed1f": 5.5,
+                "fixed3f": 9.98
+              }
+            },
+            "description": "Variable distribution rate PLN per kWh and fixed rate PLN per month (single and three phase) per group"
+          },
+          "quality": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.0331,
+            "description": "Quality rate, PLN per kWh"
+          },
+          "subscription": {
+            "type": "object",
+            "example": {
+              "1": 4.5,
+              "2": 2.25,
+              "6": 0.75
+            },
+            "description": "Subscription fee PLN per month by billing period in months"
+          },
+          "cheapZones": {
+            "type": "object",
+            "description": "Cheaper-zone hours on working days, winter time (e.g. \"22:00-06:00\"), by season for G12 and G12w; weekends and holidays are all cheaper in G12w"
+          }
+        },
+        "required": [
+          "decision",
+          "decisionDate",
+          "validFrom",
+          "validTo",
+          "sourceUrl",
+          "sourcePage",
+          "key",
+          "company",
+          "name",
+          "area",
+          "defaultSeller",
+          "groups",
+          "quality",
+          "subscription",
+          "cheapZones"
+        ]
+      },
+      "ElectricityTariffsDto": {
+        "type": "object",
+        "properties": {
+          "inForce": {
+            "type": "boolean",
+            "example": true,
+            "description": "False when the latest tariff in the data has expired and no newer one is known yet"
+          },
+          "year": {
+            "type": "number",
+            "nullable": true,
+            "example": 2026
+          },
+          "validFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-01-01"
+          },
+          "validTo": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-12-31"
+          },
+          "checkedOn": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-25",
+            "description": "Last time the entries were checked against the decisions"
+          },
+          "legalBasis": {
+            "type": "string",
+            "nullable": true
+          },
+          "periodSourceUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "URE list of tariff decisions for the period"
+          },
+          "nextChangeExpected": {
+            "type": "string",
+            "nullable": true,
+            "example": "2027-01-01"
+          },
+          "ureAvgEnergyPrice": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.49516,
+            "description": "URE average energy price in default-seller tariffs, PLN per kWh net"
+          },
+          "ureTypicalG11Kwh": {
+            "type": "number",
+            "nullable": true,
+            "example": 1800,
+            "description": "URE typical annual consumption in G11, kWh"
+          },
+          "ureAnnouncementUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "sellers": {
+            "description": "Default sellers (sprzedawcy z urz\u0119du)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ElectricitySellerDto"
+            }
+          },
+          "distribution": {
+            "description": "Distribution system operators (OSD)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ElectricityDistributionDto"
+            }
+          },
+          "surcharges": {
+            "type": "object",
+            "description": "RES (OZE), cogeneration and excise fees PLN per kWh, VAT rate, capacity fee bands PLN per month, legal bases"
+          }
+        },
+        "required": [
+          "inForce",
+          "year",
+          "validFrom",
+          "validTo",
+          "checkedOn",
+          "legalBasis",
+          "periodSourceUrl",
+          "nextChangeExpected",
+          "ureAvgEnergyPrice",
+          "ureTypicalG11Kwh",
+          "ureAnnouncementUrl",
+          "sellers",
+          "distribution",
+          "surcharges"
+        ]
+      },
+      "GasTariffsDto": {
+        "type": "object",
+        "properties": {
+          "inForce": {
+            "type": "boolean",
+            "example": true
+          },
+          "year": {
+            "type": "number",
+            "nullable": true,
+            "example": 2026
+          },
+          "validFrom": {
+            "type": "string",
+            "nullable": true
+          },
+          "validTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkedOn": {
+            "type": "string",
+            "nullable": true
+          },
+          "legalBasis": {
+            "type": "string",
+            "nullable": true
+          },
+          "periodSourceUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextChangeExpected": {
+            "type": "string",
+            "nullable": true
+          },
+          "vatRate": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.23
+          },
+          "groups": {
+            "example": [
+              {
+                "key": "W-1.1",
+                "fromM3": 0,
+                "toM3": 300
+              }
+            ],
+            "description": "Tariff groups by annual consumption in m3",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "seller": {
+            "type": "object",
+            "description": "Default seller: tariff, decisions, fuel price PLN per kWh net, subscription fee PLN per month by group, sourceUrl"
+          },
+          "distribution": {
+            "type": "object",
+            "description": "PSG distribution tariff: decision, sourceUrl and rates per tariff area (variable PLN per kWh, fixed PLN per month) by group"
+          }
+        },
+        "required": [
+          "inForce",
+          "year",
+          "validFrom",
+          "validTo",
+          "checkedOn",
+          "legalBasis",
+          "periodSourceUrl",
+          "nextChangeExpected",
+          "vatRate",
+          "groups",
+          "seller",
+          "distribution"
+        ]
+      },
+      "EnergyPricesDataDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-29",
+            "description": "Day for which the tariffs in force were selected"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-25"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/EnergyUnitDto"
+          },
+          "electricity": {
+            "$ref": "#/components/schemas/ElectricityTariffsDto"
+          },
+          "gas": {
+            "$ref": "#/components/schemas/GasTariffsDto"
+          }
+        },
+        "required": [
+          "date",
+          "asOf",
+          "unit",
+          "electricity",
+          "gas"
+        ]
+      },
+      "EnergyPricesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EnergyPricesDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

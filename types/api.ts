@@ -310,6 +310,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/brokers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Brokerage account fees from official fee tables: commissions on GPW, US and German stocks, account and FX fees, active promotions, weekly check status */
+        get: operations["ReferenceController_brokers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/index": {
         parameters: {
             query?: never;
@@ -744,6 +761,40 @@ export interface paths {
         };
         /** Maximum fuel prices (Minister of Energy): in force today, announced for tomorrow, history */
         get: operations["MacroController_fuelPrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/macro/nowcast": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Finwire Nowcast: finwire.pl model forecasts of CPI and core inflation (point and 80% interval) and RPP decision probabilities, frozen 3 working days before publication, with backtest and settled history */
+        get: operations["MacroController_nowcast"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/energy/regulated-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Regulated household electricity (G11, G12, G12w) and gas (W-1.1 to W-4) tariffs approved by URE, in force on a day; net amounts with decision and PDF */
+        get: operations["MacroController_energyPrices"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1571,6 +1622,161 @@ export interface components {
         };
         LocalTaxResponseDto: {
             data: components["schemas"]["LocalTaxDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        BrokerCommissionDto: {
+            /**
+             * @description Percent of the order value
+             * @example 0.39
+             */
+            pct: number | null;
+            /**
+             * @description Fixed part in `currency`
+             * @example null
+             */
+            fixed: number | null;
+            /**
+             * @description Per share in `currency`
+             * @example null
+             */
+            perShare: number | null;
+            /**
+             * @description Minimum by settlement currency
+             * @example {
+             *       "PLN": 5
+             *     }
+             */
+            min: Record<string, never>;
+            /**
+             * @description Maximum in `currency`
+             * @example null
+             */
+            max: number | null;
+            /**
+             * @description Maximum as percent of the order value
+             * @example null
+             */
+            maxPct: number | null;
+            /** @enum {string|null} */
+            currency: "PLN" | "EUR" | "USD" | null;
+            /**
+             * @description Monthly turnover without commission
+             * @example null
+             */
+            freeMonthlyTurnover: Record<string, never> | null;
+            /**
+             * @description As worded in the fee table (Polish)
+             * @example 0,39%, min. 5 zł
+             */
+            text: string | null;
+        };
+        BrokerPromoDto: {
+            id: string;
+            /** @description Polish text from the fee table or the broker notice */
+            text: string;
+            /**
+             * @example [
+             *       "gpw"
+             *     ]
+             */
+            markets: string[];
+            /**
+             * @example [
+             *       "etf"
+             *     ]
+             */
+            instruments: string[];
+            /**
+             * @description null = any account
+             * @example [
+             *       "ike"
+             *     ]
+             */
+            accounts: string[] | null;
+            commission: components["schemas"]["BrokerCommissionDto"];
+            /**
+             * @description Last day of the promotion
+             * @example 2026-12-30
+             */
+            validUntil: string;
+            sourceUrl: string;
+        };
+        BrokerCheckDto: {
+            /**
+             * @description Result of the weekly automatic check of the fee table
+             * @enum {string}
+             */
+            status: "ok" | "changed" | "error" | "layout" | "unknown";
+            /**
+             * @description Date the fee table was last confirmed
+             * @example 2026-10-29
+             */
+            checkedAt: string;
+            /**
+             * @description True when a change was detected and not yet reviewed, or the page could not be read for long
+             * @example false
+             */
+            needsReview: boolean;
+        };
+        BrokerFeesDto: {
+            /** @example mbank */
+            id: string;
+            /** @example mBank eMakler */
+            name: string;
+            legalEntity: string;
+            /** @enum {string} */
+            kind: "dom-maklerski" | "biuro-bankowe" | "zagraniczny";
+            regulator: string;
+            /** @description Investor compensation scheme: scheme, text, sourceUrl */
+            protection: Record<string, never>;
+            /** @description Official fee table: title, url, validFrom */
+            tariff: Record<string, never>;
+            /**
+             * @description Account fee, PLN per year; null = not in the fee table
+             * @example 0
+             */
+            accountFeePlnYear: number | null;
+            accountFeeText: string | null;
+            /** @description Online order commission by market: gpw (Warsaw), us, de; null = market not in the fee table */
+            commissions: Record<string, never>;
+            /** @description Zero-commission offer valid on `date`: text, validUntil */
+            zeroCommission: Record<string, never> | null;
+            /**
+             * @description Currency conversion fee, percent; null = not in the fee table
+             * @example 0.5
+             */
+            fxPct: number | null;
+            fxText: string | null;
+            /** @description Only promotions valid on `date` */
+            promos: components["schemas"]["BrokerPromoDto"][];
+            ike: boolean | null;
+            ikze: boolean | null;
+            currencyAccounts: string[] | null;
+            fractional: boolean | null;
+            platform: string | null;
+            otherFees: string[];
+            check: components["schemas"]["BrokerCheckDto"];
+        };
+        BrokerFeesDataDto: {
+            /**
+             * @description Day (Polish time) for which promotions were filtered
+             * @example 2026-10-29
+             */
+            date: string | null;
+            /**
+             * @description Latest confirmation date of any fee table
+             * @example 2026-10-29
+             */
+            asOf: string | null;
+            /**
+             * @description Last run of the weekly fee table check
+             * @example 2026-11-02T04:10:00.000Z
+             */
+            lastCheckRunAt: string | null;
+            brokers: components["schemas"]["BrokerFeesDto"][];
+        };
+        BrokerFeesResponseDto: {
+            data: components["schemas"]["BrokerFeesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         BarometrExtremeDto: {
@@ -2893,6 +3099,426 @@ export interface components {
             data: components["schemas"]["FuelPricesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        NowcastProbabilitiesDto: {
+            /**
+             * @description Probability of a rate cut
+             * @example 0.081
+             */
+            cut: number;
+            /**
+             * @description Probability of no change
+             * @example 0.854
+             */
+            hold: number;
+            /**
+             * @description Probability of a rate hike
+             * @example 0.065
+             */
+            hike: number;
+        };
+        NowcastForecastDto: {
+            /**
+             * @description YYYY-MM for CPI and core inflation; date of the decision day for RPP
+             * @example 2026-10
+             */
+            targetPeriod: string;
+            /**
+             * @description Publication date of the official reading or decision
+             * @example 2026-10-30
+             */
+            releaseDate: string;
+            /**
+             * @description Freeze date: 3 working days before publication
+             * @example 2026-10-27
+             */
+            freezeDate: string;
+            /**
+             * @description live = recomputed daily until the freeze date; frozen = final; settled = compared with the actual reading; expired = data came out before the freeze
+             * @enum {string}
+             */
+            status: "live" | "frozen" | "settled" | "expired";
+            /**
+             * @description True once the forecast can no longer change (frozen or settled)
+             * @example false
+             */
+            frozen: boolean;
+            /** @example null */
+            frozenAt: string | null;
+            /**
+             * @description Point forecast, % y/y (null for RPP)
+             * @example 3.7
+             */
+            point: number | null;
+            /**
+             * @description Lower bound of the 80% interval
+             * @example 3.1
+             */
+            lo80: number | null;
+            /**
+             * @description Upper bound of the 80% interval
+             * @example 4.3
+             */
+            hi80: number | null;
+            /** @description RPP only */
+            probabilities: components["schemas"]["NowcastProbabilitiesDto"] | null;
+            /**
+             * @description Date of the latest input data
+             * @example 2026-10-29
+             */
+            inputsAsOf: string | null;
+            /**
+             * @description Actual reading after publication
+             * @example null
+             */
+            actual: number | null;
+            /**
+             * @description RPP only: actual decision
+             * @example null
+             * @enum {string|null}
+             */
+            actualOutcome: "cut" | "hold" | "hike" | null;
+            /** @example cpi-1.0 */
+            modelVersion: string | null;
+            /** @description Model inputs by kind. cpi: previous reading, base effect, forecast m/m and component contributions (food, energy, fuel, core). core: CPI flash estimate and base effect. rpp: reference rate, CPI and core inflation, last move, projection meeting. */
+            drivers: Record<string, never> | null;
+        };
+        NowcastHistoryPointDto: {
+            /** @example 2026-09 */
+            period: string;
+            /** @example 4.5 */
+            point: number | null;
+            /** @example 3.9 */
+            lo80: number | null;
+            /** @example 5.1 */
+            hi80: number | null;
+            probabilities: components["schemas"]["NowcastProbabilitiesDto"] | null;
+            /** @example 4.1 */
+            actual: number | null;
+            /** @enum {string|null} */
+            actualOutcome: "cut" | "hold" | "hike" | null;
+            /**
+             * @description Naive benchmark (previous reading)
+             * @example 3.4
+             */
+            naive: number | null;
+            /**
+             * @description backtest = rolling-origin simulation on historical data; live = forecast frozen before publication
+             * @enum {string}
+             */
+            source: "backtest" | "live";
+        };
+        NowcastScoresDto: {
+            /** @enum {string} */
+            kind: "numeric" | "rpp";
+            /** @example 93 */
+            n: number | null;
+            /** @example 2019-01 */
+            from: string | null;
+            /** @example 2026-09 */
+            to: string | null;
+            /**
+             * @description numeric: mean absolute error, pp
+             * @example 0.318
+             */
+            mae?: number | null;
+            /**
+             * @description numeric: MAE of the naive benchmark
+             * @example 0.609
+             */
+            naiveMae?: number | null;
+            /**
+             * @description numeric: share of errors up to 0.1 pp
+             * @example 0.355
+             */
+            within01?: number | null;
+            /**
+             * @description numeric: share of readings inside the 80% interval
+             * @example 0.849
+             */
+            coverage80?: number | null;
+            /**
+             * @description numeric: share of correct direction of change
+             * @example 0.72
+             */
+            direction?: number | null;
+            /**
+             * @description rpp: Brier score (0 = perfect)
+             * @example 0.181
+             */
+            brier?: number | null;
+            /**
+             * @description rpp: Brier score of always "hold"
+             * @example 0.466
+             */
+            holdBrier?: number | null;
+            /**
+             * @description rpp: share of meetings where the most likely outcome happened
+             * @example 0.902
+             */
+            accuracy?: number | null;
+            /**
+             * @description rpp: number of rate changes in the sample
+             * @example 38
+             */
+            moves?: number | null;
+            /**
+             * @description rpp: share of rate changes the model ranked most likely
+             * @example 0.789
+             */
+            movesHit?: number | null;
+        };
+        NowcastIndicatorDto: {
+            /** @enum {string} */
+            indicator: "cpi" | "core" | "rpp";
+            /** @example CPI inflation, year over year */
+            label: string;
+            /** @example % y/y */
+            unit: string;
+            /**
+             * @description Official reading the forecast is settled against
+             * @example GUS flash estimate
+             */
+            actualSource: string;
+            /** @example cpi-1.0 */
+            modelVersion: string | null;
+            /** @description Forecast for the next publication */
+            current: components["schemas"]["NowcastForecastDto"] | null;
+            /** @description Latest settled live forecast */
+            lastSettled: components["schemas"]["NowcastForecastDto"] | null;
+            /** @description Backtest and settled live forecasts, ascending */
+            history: components["schemas"]["NowcastHistoryPointDto"][];
+            backtestScores: components["schemas"]["NowcastScoresDto"] | null;
+            liveScores: components["schemas"]["NowcastScoresDto"] | null;
+        };
+        NowcastDataDto: {
+            /** @example 2026-10-29 */
+            asOf: string | null;
+            /**
+             * @description Last change of any forecast or settlement
+             * @example 2026-10-29T19:23:12.949Z
+             */
+            updatedAt: string | null;
+            indicators: components["schemas"]["NowcastIndicatorDto"][];
+        };
+        NowcastResponseDto: {
+            data: components["schemas"]["NowcastDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EnergyUnitDto: {
+            /** @example PLN per kWh, net of VAT (electricity: also net of excise) */
+            energy: string;
+            /** @example PLN per month, net of VAT */
+            fixed: string;
+        };
+        ElectricitySellerDto: {
+            /**
+             * @description URE decision number
+             * @example DRE.WRE.4211.55.10.2025.JTr
+             */
+            decision: string | null;
+            /** @example 2025-12-17 */
+            decisionDate: string | null;
+            /** @example 2026-01-01 */
+            validFrom: string | null;
+            /** @example 2026-12-31 */
+            validTo: string | null;
+            /**
+             * @description Tariff PDF in the URE Public Information Bulletin
+             * @example https://bip.ure.gov.pl/download/3/20342/PGEObrot.pdf
+             */
+            sourceUrl: string | null;
+            /**
+             * @description Where in the PDF the rates are
+             * @example pkt 5 taryfy, s. 6 (PDF s. 8)
+             */
+            sourcePage: string | null;
+            /** @example pge-obrot */
+            key: string;
+            /** @example PGE Obrót S.A. */
+            company: string;
+            /** @example PGE Obrót */
+            name: string;
+            /**
+             * @description Key of the distribution operator where this is the default seller
+             * @example pge
+             */
+            distributionArea: string;
+            /**
+             * @description Trade names of the tariff groups
+             * @example {
+             *       "G11": "Komfortowa",
+             *       "G12": "Elastyczna"
+             *     }
+             */
+            tradeNames: Record<string, never>;
+            /**
+             * @description Energy price, PLN per kWh net
+             * @example {
+             *       "G11": {
+             *         "all": 0.4982
+             *       },
+             *       "G12": {
+             *         "day": 0.5656,
+             *         "night": 0.3718
+             *       },
+             *       "G12w": {
+             *         "peak": 0.5821,
+             *         "offpeak": 0.4235
+             *       }
+             *     }
+             */
+            energy: Record<string, never>;
+        };
+        ElectricityDistributionDto: {
+            /**
+             * @description URE decision number
+             * @example DRE.WRE.4211.55.10.2025.JTr
+             */
+            decision: string | null;
+            /** @example 2025-12-17 */
+            decisionDate: string | null;
+            /** @example 2026-01-01 */
+            validFrom: string | null;
+            /** @example 2026-12-31 */
+            validTo: string | null;
+            /**
+             * @description Tariff PDF in the URE Public Information Bulletin
+             * @example https://bip.ure.gov.pl/download/3/20342/PGEObrot.pdf
+             */
+            sourceUrl: string | null;
+            /**
+             * @description Where in the PDF the rates are
+             * @example pkt 5 taryfy, s. 6 (PDF s. 8)
+             */
+            sourcePage: string | null;
+            /** @example pge */
+            key: string;
+            /** @example PGE Dystrybucja S.A. */
+            company: string;
+            /** @example PGE Dystrybucja */
+            name: string;
+            /** @example wschodnia i centralna Polska (m.in. Lublin, Łódź, Białystok, Rzeszów) */
+            area: string;
+            /**
+             * @description null = no approved default-seller tariff in this area
+             * @example pge-obrot
+             */
+            defaultSeller: string | null;
+            /**
+             * @description Variable distribution rate PLN per kWh and fixed rate PLN per month (single and three phase) per group
+             * @example {
+             *       "G11": {
+             *         "variable": {
+             *           "all": 0.3469
+             *         },
+             *         "fixed1f": 5.5,
+             *         "fixed3f": 9.98
+             *       }
+             *     }
+             */
+            groups: Record<string, never>;
+            /**
+             * @description Quality rate, PLN per kWh
+             * @example 0.0331
+             */
+            quality: number | null;
+            /**
+             * @description Subscription fee PLN per month by billing period in months
+             * @example {
+             *       "1": 4.5,
+             *       "2": 2.25,
+             *       "6": 0.75
+             *     }
+             */
+            subscription: Record<string, never>;
+            /** @description Cheaper-zone hours on working days, winter time (e.g. "22:00-06:00"), by season for G12 and G12w; weekends and holidays are all cheaper in G12w */
+            cheapZones: Record<string, never>;
+        };
+        ElectricityTariffsDto: {
+            /**
+             * @description False when the latest tariff in the data has expired and no newer one is known yet
+             * @example true
+             */
+            inForce: boolean;
+            /** @example 2026 */
+            year: number | null;
+            /** @example 2026-01-01 */
+            validFrom: string | null;
+            /** @example 2026-12-31 */
+            validTo: string | null;
+            /**
+             * @description Last time the entries were checked against the decisions
+             * @example 2026-10-25
+             */
+            checkedOn: string | null;
+            legalBasis: string | null;
+            /** @description URE list of tariff decisions for the period */
+            periodSourceUrl: string | null;
+            /** @example 2027-01-01 */
+            nextChangeExpected: string | null;
+            /**
+             * @description URE average energy price in default-seller tariffs, PLN per kWh net
+             * @example 0.49516
+             */
+            ureAvgEnergyPrice: number | null;
+            /**
+             * @description URE typical annual consumption in G11, kWh
+             * @example 1800
+             */
+            ureTypicalG11Kwh: number | null;
+            ureAnnouncementUrl: string | null;
+            /** @description Default sellers (sprzedawcy z urzędu) */
+            sellers: components["schemas"]["ElectricitySellerDto"][];
+            /** @description Distribution system operators (OSD) */
+            distribution: components["schemas"]["ElectricityDistributionDto"][];
+            /** @description RES (OZE), cogeneration and excise fees PLN per kWh, VAT rate, capacity fee bands PLN per month, legal bases */
+            surcharges: Record<string, never>;
+        };
+        GasTariffsDto: {
+            /** @example true */
+            inForce: boolean;
+            /** @example 2026 */
+            year: number | null;
+            validFrom: string | null;
+            validTo: string | null;
+            checkedOn: string | null;
+            legalBasis: string | null;
+            periodSourceUrl: string | null;
+            nextChangeExpected: string | null;
+            /** @example 0.23 */
+            vatRate: number | null;
+            /**
+             * @description Tariff groups by annual consumption in m3
+             * @example [
+             *       {
+             *         "key": "W-1.1",
+             *         "fromM3": 0,
+             *         "toM3": 300
+             *       }
+             *     ]
+             */
+            groups: Record<string, never>[];
+            /** @description Default seller: tariff, decisions, fuel price PLN per kWh net, subscription fee PLN per month by group, sourceUrl */
+            seller: Record<string, never>;
+            /** @description PSG distribution tariff: decision, sourceUrl and rates per tariff area (variable PLN per kWh, fixed PLN per month) by group */
+            distribution: Record<string, never>;
+        };
+        EnergyPricesDataDto: {
+            /**
+             * @description Day for which the tariffs in force were selected
+             * @example 2026-10-29
+             */
+            date: string | null;
+            /** @example 2026-10-25 */
+            asOf: string | null;
+            unit: components["schemas"]["EnergyUnitDto"];
+            electricity: components["schemas"]["ElectricityTariffsDto"];
+            gas: components["schemas"]["GasTariffsDto"];
+        };
+        EnergyPricesResponseDto: {
+            data: components["schemas"]["EnergyPricesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         LegalTopicDto: {
             /** @example kredyty */
             key: string;
@@ -3913,6 +4539,25 @@ export interface operations {
             };
         };
     };
+    ReferenceController_brokers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BrokerFeesResponseDto"];
+                };
+            };
+        };
+    };
     IndicesController_list: {
         parameters: {
             query?: never;
@@ -4441,6 +5086,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FuelPricesResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_nowcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NowcastResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_energyPrices: {
+        parameters: {
+            query?: {
+                /** @description YYYY-MM-DD, default today (Polish time) */
+                date?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnergyPricesResponseDto"];
                 };
             };
         };
