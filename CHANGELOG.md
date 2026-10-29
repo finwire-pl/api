@@ -3,6 +3,19 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-10-29
+
+### Added
+
+- MCP server 1.2.0: 14 new tools over the `/v1` datasets, with the same source whitelist (no WIBOR/POLSTR, no single bank offers): `get_interest_rates`, `get_currency_rates` (incl. gold), `get_fuel_prices`, `get_housing_prices` (RCN cities and districts, or GUS), `get_rents` (with rental yield), `get_housing_costs`, `get_credit_market`, `get_bank_rates` (offer aggregates and retail bonds), `get_legal_limits` (incl. local tax limits), `get_legal_changes`, `get_regional_data`, `get_europe_data`, `search_datasets` and `get_dataset` (any dataset by id). Each result has `outputSchema`, Polish-formatted values, `license`, `citation` and `url` to the finwire.pl page (`utm_source=mcp&utm_medium=assistant&utm_campaign=<tool>`).
+- MCP resources `finwire://datasets` and `finwire://dataset/{id}`; prompts `city_housing_report` and `personal_finance_limits`.
+- MCP protocol version `2025-11-25` accepted in `initialize`.
+- Discovery: `GET /mcp/server-card` (MCP Server Card, `application/mcp-server-card+json`), `GET /.well-known/ai-catalog.json`, `GET /.well-known/mcp.json` and `/.well-known/mcp/server-card.json` (same card). `server.json` manifest for the MCP Registry in this repository.
+
+### Changed
+
+- Text results of the macro tools end with a "Zobacz na finwire.pl" link. `structuredContent` of existing tools is unchanged.
+
 ## 2026-10-28
 
 ### Added

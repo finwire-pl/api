@@ -35,6 +35,7 @@ curl "https://public-api.finwire.pl/v1/series/interest-rate/stopa-referencyjna?d
 - [Data coverage](#data-coverage)
 - [Use cases](#use-cases)
 - [Quick start](#quick-start)
+- [MCP server for AI assistants](#mcp-server-for-ai-assistants)
 - [Response format and citation](#response-format-and-citation)
 - [Endpoints](#endpoints)
 - [FAQ](#faq)
@@ -97,7 +98,7 @@ Aggregates never expose single offers, deeds or listings - only medians, percent
 - **Real estate analysis** - transaction prices per district, rents, rental yield and housing supply for 17 cities.
 - **Labour market and HR** - wages by occupation with deciles and the gender pay gap, unemployment by county.
 - **Personal finance apps** - IKE/IKZE limits, retail bond rates, deposit and savings rate medians.
-- **AI assistants and agents** - an [MCP server](https://public-api.finwire.pl/mcp) (Streamable HTTP, no key) serves live macro indicators and the release calendar to Claude, ChatGPT and other MCP clients; [llms.txt](https://public-api.finwire.pl/llms.txt) and the OpenAPI spec describe every dataset in machine-readable form.
+- **AI assistants and agents** - an [MCP server](#mcp-server-for-ai-assistants) (Streamable HTTP, no key) serves rates, FX, housing prices, rents, the credit market, legal limits, law changes and macro data to Claude, ChatGPT, Cursor, VS Code and other MCP clients; [llms.txt](https://public-api.finwire.pl/llms.txt) and the OpenAPI spec describe every dataset in machine-readable form.
 
 ---
 
@@ -135,6 +136,34 @@ for row in payload["data"]["entries"]:
     print(row["period"], row["yoy"])
 print(payload["meta"]["citation"])
 ```
+
+---
+
+## MCP server for AI assistants
+
+`https://public-api.finwire.pl/mcp` - Model Context Protocol over Streamable HTTP, stateless, no key, read-only. The same data, whitelist and licenses as `/v1`.
+
+| Client | How to connect |
+|---|---|
+| Claude (claude.ai, Desktop) | Settings - Connectors - Add custom connector - URL `https://public-api.finwire.pl/mcp` |
+| Claude Code | `claude mcp add --transport http finwire https://public-api.finwire.pl/mcp` |
+| ChatGPT | Connectors in developer mode - create a connector with the URL above, no authentication |
+| Cursor | `~/.cursor/mcp.json`: `{"mcpServers": {"finwire": {"url": "https://public-api.finwire.pl/mcp"}}}` |
+| VS Code | `.vscode/mcp.json`: `{"servers": {"finwire": {"type": "http", "url": "https://public-api.finwire.pl/mcp"}}}` |
+
+Tools (all read-only, each with `outputSchema`):
+
+- Macro: `get_macro_snapshot`, `list_macro_indicators`, `get_macro_indicator`, `compare_macro_indicators`, `get_macro_changes`, `get_macro_calendar`
+- Rates and prices: `get_interest_rates` (NBP), `get_currency_rates` (NBP FX, gold), `get_fuel_prices`
+- Housing: `get_housing_prices` (notarial deeds, cities and districts), `get_rents` (rents, rental yield), `get_housing_costs`
+- Credit and savings: `get_credit_market`, `get_bank_rates` (aggregates only, no single offers; retail bonds)
+- Law: `get_legal_limits` (IKE/IKZE, PIT, minimum wage, local tax limits), `get_legal_changes`
+- Regions and Europe: `get_regional_data`, `get_europe_data`
+- Any dataset: `search_datasets`, `get_dataset`
+
+Every result carries the period of the data, the original source, `license`, a ready `citation` and `url` - the finwire.pl page with the full table, chart and calculator (with `utm_source=mcp`). Resources: `macro://catalog`, `finwire://datasets`, `finwire://dataset/{id}`; prompts: `macro_briefing`, `explain_indicator`, `city_housing_report`, `personal_finance_limits`.
+
+Discovery: [server card](https://public-api.finwire.pl/mcp/server-card) (`application/mcp-server-card+json`), [/.well-known/ai-catalog.json](https://public-api.finwire.pl/.well-known/ai-catalog.json), registry manifest [server.json](server.json).
 
 ---
 
