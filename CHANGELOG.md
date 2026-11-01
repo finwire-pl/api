@@ -3,6 +3,27 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-01
+
+### Added
+
+- `GET /v1/finwire-index` - registry of all indices computed by finwire.pl, each under a stable id `finwire_*` (also the CSV `series_id` and JSON-LD `identifier` on finwire.pl): latest and previous reading with periods, change and change kind (`pp`, `pct`, `abs`), method version, sources, `stale` flag (last valid reading shown when the source did not respond), `pageUrl`, `methodologyUrl` and a ready `citation`. Indices in preparation are listed with `status: "planned"` and no reading. CC BY 4.0, attribution finwire.pl.
+- `GET /v1/finwire-index/{id}` (optional `limit=1-600`, default 120, and `from=YYYY-MM`) - one index with history. Old dataset ids (`credit-market-index`, `credit-stress`, `entry-threshold`, `borrowing-power`, `credit-cost`, `housing-affordability`, `real-deposit-rate`, `purchasing-power`, `nowcast`) are accepted as aliases; `requestedId` echoes the id used. Indices computed from WIBOR publish only the result.
+- Field `seriesId` (the `finwire_*` id) in `/v1/index`, `/v1/index/{slug}`, `/v1/index/credit-stress`, `/v1/index/entry-threshold` and `/v1/index/credit-market`.
+- MCP server 1.4.0: tools `list_finwire_indices` and `get_finwire_index`; dataset `finwire-index` in `search_datasets` and `get_dataset`. Descriptions of `get_credit_market` and `get_nowcast` name the `finwire_*` id they return.
+- `GET /v1/legal-calendar` (optional `kategorie`, `od`, `do`) - legal calendar for personal finance, series `finwire_legal_calendar`: PIT, ZUS and VAT deadlines, year end for IKE and IKZE contributions, changes of statutory values, acts entering into force, RPP meetings and retail bond sales, with the number of changes in acts and values in the next 30 days. ICS subscription: `https://finwire.pl/kalendarz-zmian.ics`. CC BY 4.0, attribution "finwire.pl".
+- MCP `get_legal_changes` returns `calendar` (next 30 days of `finwire_legal_calendar`); dataset `legal-calendar` in `search_datasets` and `get_dataset`.
+- New indices in `/v1/finwire-index`: `finwire_mortgage_barometer` (lowest, typical and list mortgage margin, rate and APRC, twice a day), `finwire_credit_capacity_index` (median mortgage amount for 5 model households, monthly), `finwire_deposit_rate_index` and `finwire_savings_rate_index` (average of the best term deposits and savings accounts, monthly with a daily reading), `finwire_account_cost_index` (average yearly cost of the cheapest personal account with a card in each bank, monthly), `finwire_rcn_price_index` (transaction prices from notarial deeds, quarterly), `finwire_price_gap_index` (developer list price vs deed price on the primary market, quarterly), `finwire_offer_ticker` (daily count of offer changes), `finwire_demand_index` (median loan amount and flat price entered in finwire.pl calculators, monthly, published above a sample threshold), `finwire_legal_calendar`.
+- Existing indicators under `finwire_*` ids: `finwire_credit_market_index`, `finwire_credit_stress_index`, `finwire_entry_threshold_index`, `finwire_nowcast`, `finwire_borrowing_power_barometer`, `finwire_mortgage_cost_barometer`, `finwire_housing_affordability_barometer`, `finwire_real_deposit_rate_barometer`, `finwire_purchasing_power_barometer`.
+- `/v1/index/entry-threshold`: `methodVersion` and per city `pricePerM2`, `priceSource` (`rcn` or `gus`), `priceDeeds`, `priceFrom`, `priceTo`, `m2ForMedianWage` (flat size financed by the median wage); `/v1/index/entry-threshold/history`: `methodVersion` and `m2ForMedianWage` per point.
+- Docs home and `llms.txt`: section "finwire indices" with every `finwire_*` id, its cadence and aliases, read from the live registry.
+
+### Changed
+
+- Entry threshold (`finwire_entry_threshold_index`) method 2: price per m² from notarial deeds in the Real Estate Price Register (4-quarter window weighted by deeds), GUS RCiWN median only as a flagged fallback for small samples; history recomputed with method 2.
+- MCP server instructions point to `list_finwire_indices` and `get_finwire_index` for finwire indices; descriptions of `get_bank_rates`, `get_housing_prices` and `get_legal_changes` name the `finwire_*` ids available through `get_finwire_index`.
+- `GET /v1/legal-calendar` documented in OpenAPI (`LegalCalendarResponseDto`).
+
 ## 2026-10-29
 
 ### Added

@@ -1438,6 +1438,59 @@
         ]
       }
     },
+    "/v1/legal-calendar": {
+      "get": {
+        "operationId": "LegalCalendarController_calendar",
+        "parameters": [
+          {
+            "name": "kategorie",
+            "required": false,
+            "in": "query",
+            "description": "Comma-separated: przepisy, wartosci, podatki, firma, oszczednosci, obligacje, stopy",
+            "schema": {
+              "example": "przepisy,wartosci",
+              "type": "string"
+            }
+          },
+          {
+            "name": "od",
+            "required": false,
+            "in": "query",
+            "description": "From date (YYYY-MM-DD), default today - 31 days",
+            "schema": {
+              "example": "2026-11-01",
+              "type": "string"
+            }
+          },
+          {
+            "name": "do",
+            "required": false,
+            "in": "query",
+            "description": "To date (YYYY-MM-DD), default today + 400 days",
+            "schema": {
+              "example": "2027-03-31",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalCalendarResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Legal calendar (finwire_legal_calendar): deadlines, value changes, acts entering into force, RPP meetings, bond sales",
+        "tags": [
+          "Calendar"
+        ]
+      }
+    },
     "/v1/income/municipalities": {
       "get": {
         "operationId": "RegionalController_incomeMunicipalities",
@@ -1783,6 +1836,80 @@
         "summary": "ECB MIR: monthly history of the average rate on new loans for selected countries",
         "tags": [
           "Credit market"
+        ]
+      }
+    },
+    "/v1/finwire-index": {
+      "get": {
+        "operationId": "FinwireIndexController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinwireIndexListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "All finwire indices (finwire_* ids): latest reading, previous reading, change, method version and citation",
+        "tags": [
+          "finwire indicators"
+        ]
+      }
+    },
+    "/v1/finwire-index/{id}": {
+      "get": {
+        "operationId": "FinwireIndexController_one",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "finwire_credit_market_index",
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "History points, 1-600, default 120",
+            "schema": {
+              "example": 120,
+              "type": "number"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "History from month YYYY-MM",
+            "schema": {
+              "example": "2024-01",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinwireIndexDetailResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "One finwire index with history. Accepts the finwire_* id or an old dataset id as alias (e.g. credit-market-index).",
+        "tags": [
+          "finwire indicators"
         ]
       }
     }
@@ -3877,6 +4004,12 @@
       "BarometrListItemDto": {
         "type": "object",
         "properties": {
+          "seriesId": {
+            "type": "string",
+            "nullable": true,
+            "example": "finwire_borrowing_power_barometer",
+            "description": "Series id in /v1/finwire-index"
+          },
           "id": {
             "type": "string",
             "example": "real-deposit-rate",
@@ -3957,6 +4090,7 @@
           }
         },
         "required": [
+          "seriesId",
           "id",
           "ref",
           "title",
@@ -4261,6 +4395,11 @@
       "CreditStressDataDto": {
         "type": "object",
         "properties": {
+          "seriesId": {
+            "type": "string",
+            "example": "finwire_credit_stress_index",
+            "description": "Series id in /v1/finwire-index"
+          },
           "generatedAt": {
             "type": "string",
             "example": "2026-06-06T06:00:00.000Z"
@@ -4291,6 +4430,7 @@
           }
         },
         "required": [
+          "seriesId",
           "generatedAt",
           "params",
           "sources",
@@ -4368,6 +4508,40 @@
             "type": "number",
             "example": 6,
             "description": "Share of employees earning at least the required wage, %"
+          },
+          "pricePerM2": {
+            "type": "object",
+            "example": 16420,
+            "nullable": true,
+            "description": "Price per sqm used, PLN (secondary market)"
+          },
+          "priceSource": {
+            "type": "object",
+            "example": "rcn",
+            "nullable": true,
+            "description": "rcn = notarial deeds, Real Estate Price Register (4-quarter window); gus = GUS RCiWN median (fallback for small samples)"
+          },
+          "priceDeeds": {
+            "type": "object",
+            "example": 14620,
+            "nullable": true,
+            "description": "Deeds in the RCN window"
+          },
+          "priceFrom": {
+            "type": "object",
+            "example": "2025-Q3",
+            "nullable": true
+          },
+          "priceTo": {
+            "type": "object",
+            "example": "2026-Q2",
+            "nullable": true
+          },
+          "m2ForMedianWage": {
+            "type": "object",
+            "example": 38.5,
+            "nullable": true,
+            "description": "Flat size (sqm) financed by the median wage in the city"
           }
         },
         "required": [
@@ -4375,15 +4549,32 @@
           "city",
           "requiredGrossMonthly",
           "installment",
-          "employeesAbovePct"
+          "employeesAbovePct",
+          "pricePerM2",
+          "priceSource",
+          "priceDeeds",
+          "priceFrom",
+          "priceTo",
+          "m2ForMedianWage"
         ]
       },
       "EntryThresholdDataDto": {
         "type": "object",
         "properties": {
+          "seriesId": {
+            "type": "string",
+            "example": "finwire_entry_threshold_index",
+            "description": "Series id in /v1/finwire-index"
+          },
           "asOf": {
             "type": "string",
             "example": "2026-10-15"
+          },
+          "methodVersion": {
+            "type": "object",
+            "example": 2,
+            "nullable": true,
+            "description": "Method version (2 = prices from notarial deeds)"
           },
           "household": {
             "type": "string",
@@ -4414,7 +4605,9 @@
           }
         },
         "required": [
+          "seriesId",
           "asOf",
+          "methodVersion",
           "household",
           "params",
           "count",
@@ -4451,12 +4644,18 @@
           "employeesAbovePct": {
             "type": "number",
             "example": 6
+          },
+          "m2ForMedianWage": {
+            "type": "object",
+            "example": 38.5,
+            "nullable": true
           }
         },
         "required": [
           "date",
           "requiredGrossMonthly",
-          "employeesAbovePct"
+          "employeesAbovePct",
+          "m2ForMedianWage"
         ]
       },
       "EntryThresholdHistoryCityDto": {
@@ -4609,6 +4808,12 @@
       "BarometrDetailDataDto": {
         "type": "object",
         "properties": {
+          "seriesId": {
+            "type": "string",
+            "nullable": true,
+            "example": "finwire_borrowing_power_barometer",
+            "description": "Series id in /v1/finwire-index"
+          },
           "id": {
             "type": "string",
             "example": "real-deposit-rate",
@@ -4717,6 +4922,7 @@
           }
         },
         "required": [
+          "seriesId",
           "id",
           "ref",
           "title",
@@ -8823,6 +9029,206 @@
           "meta"
         ]
       },
+      "LegalCalendarIndexDto": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "example": 4,
+            "description": "Changes in acts and statutory values (categories przepisy, wartosci) in the next 30 days"
+          },
+          "date": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-01",
+            "description": "Day the count was computed for"
+          }
+        },
+        "required": [
+          "value",
+          "date"
+        ]
+      },
+      "LegalCalendarCategoryDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true,
+            "example": "podatki"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true,
+            "example": "PIT",
+            "description": "Label in Polish"
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "LegalCalendarEventDto": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "nullable": true,
+            "example": "pit-2026-filingTo",
+            "description": "Stable event id (also the ICS UID)"
+          },
+          "date": {
+            "type": "string",
+            "nullable": true,
+            "example": "2027-04-30"
+          },
+          "endDate": {
+            "type": "string",
+            "nullable": true,
+            "example": null,
+            "description": "Last day of a multi-day event (e.g. bond sale window)"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "przepisy",
+              "wartosci",
+              "podatki",
+              "firma",
+              "oszczednosci",
+              "obligacje",
+              "stopy"
+            ],
+            "example": "podatki",
+            "description": "przepisy = act entering into force, wartosci = statutory value change, podatki = PIT, firma = business and ZUS, oszczednosci = IKE/IKZE, obligacje = retail bonds, stopy = RPP meeting"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "example": "Termin z\u0142o\u017cenia zeznania PIT za 2026 r.",
+            "description": "Title in Polish"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Description in Polish"
+          },
+          "basis": {
+            "type": "string",
+            "nullable": true,
+            "example": "art. 47 ustawy o systemie ubezpiecze\u0144 spo\u0142ecznych",
+            "description": "Legal basis (Polish)"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://eli.gov.pl/eli/DU/2025/1413/ogl",
+            "description": "Act or source page"
+          },
+          "pageUrl": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://finwire.pl/rozliczenie-pit",
+            "description": "finwire.pl page with the related tool"
+          }
+        },
+        "required": [
+          "uid",
+          "date",
+          "endDate",
+          "category",
+          "title",
+          "description",
+          "basis",
+          "sourceUrl",
+          "pageUrl"
+        ]
+      },
+      "LegalCalendarDataDto": {
+        "type": "object",
+        "properties": {
+          "seriesId": {
+            "type": "string",
+            "example": "finwire_legal_calendar",
+            "description": "Series id in /v1/finwire-index"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-01",
+            "description": "Day the calendar was computed for"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "methodVersion": {
+            "type": "number",
+            "nullable": true,
+            "example": 1
+          },
+          "from": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-01"
+          },
+          "to": {
+            "type": "string",
+            "nullable": true,
+            "example": "2027-12-06"
+          },
+          "upcomingChanges30d": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LegalCalendarIndexDto"
+              }
+            ]
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LegalCalendarCategoryDto"
+            }
+          },
+          "events": {
+            "description": "Sorted by date",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LegalCalendarEventDto"
+            }
+          }
+        },
+        "required": [
+          "seriesId",
+          "asOf",
+          "updatedAt",
+          "methodVersion",
+          "from",
+          "to",
+          "upcomingChanges30d",
+          "categories",
+          "events"
+        ]
+      },
+      "LegalCalendarResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LegalCalendarDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "IncomeSourceDto": {
         "type": "object",
         "properties": {
@@ -10171,6 +10577,539 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/EcbRatesSeriesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "FinwireIndexGroupDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true,
+            "example": "kredyt"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true,
+            "example": "Kredyty"
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "FinwireIndexLatestDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "periodLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "wrzesie\u0144 2026"
+          },
+          "value": {
+            "type": "number",
+            "example": 60.9
+          }
+        },
+        "required": [
+          "period",
+          "periodLabel",
+          "value"
+        ]
+      },
+      "FinwireIndexPreviousDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08"
+          },
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "example": 60.8
+          }
+        },
+        "required": [
+          "period",
+          "value"
+        ]
+      },
+      "FinwireIndexDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_credit_market_index",
+            "description": "Stable series id (also CSV series_id and JSON-LD identifier)"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Wska\u017anik rynku kredyt\u00f3w hipotecznych finwire"
+          },
+          "shortName": {
+            "type": "string",
+            "nullable": true,
+            "example": "Rynek kredyt\u00f3w"
+          },
+          "group": {
+            "type": "string",
+            "nullable": true,
+            "example": "kredyt"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "live",
+              "planned"
+            ],
+            "description": "planned = id reserved, no reading yet"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true,
+            "example": "points"
+          },
+          "unitLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "z\u0142/mies."
+          },
+          "precision": {
+            "type": "number",
+            "nullable": true,
+            "example": 1
+          },
+          "periodType": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "quarter"
+            ]
+          },
+          "methodVersion": {
+            "type": "number",
+            "nullable": true,
+            "example": 2
+          },
+          "latest": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FinwireIndexLatestDto"
+              }
+            ]
+          },
+          "previous": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FinwireIndexPreviousDto"
+              }
+            ]
+          },
+          "change": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.1
+          },
+          "changeKind": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "pp",
+              "pct",
+              "abs"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "up",
+              "down",
+              "flat"
+            ]
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "stale": {
+            "type": "boolean",
+            "description": "true = the source did not respond, last valid reading shown"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aliases": {
+            "example": [
+              "credit-market-index",
+              "credit-market"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "usesBenchmarkRate": {
+            "type": "boolean",
+            "description": "Computed from a benchmark rate (WIBOR): only the result is published"
+          },
+          "ref": {
+            "type": "string",
+            "example": "https://public-api.finwire.pl/v1/finwire-index/finwire_credit_market_index"
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/wskaznik-rynku-kredytow"
+          },
+          "methodologyUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "citation": {
+            "type": "string",
+            "description": "Ready-to-paste attribution with id and method version"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "shortName",
+          "group",
+          "status",
+          "unit",
+          "unitLabel",
+          "precision",
+          "periodType",
+          "methodVersion",
+          "latest",
+          "previous",
+          "change",
+          "changeKind",
+          "direction",
+          "updatedAt",
+          "stale",
+          "description",
+          "sources",
+          "aliases",
+          "usesBenchmarkRate",
+          "ref",
+          "pageUrl",
+          "methodologyUrl",
+          "citation"
+        ]
+      },
+      "FinwireIndexListDataDto": {
+        "type": "object",
+        "properties": {
+          "generatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataUntil": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-01"
+          },
+          "count": {
+            "type": "number",
+            "example": 19
+          },
+          "live": {
+            "type": "number",
+            "example": 11
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinwireIndexGroupDto"
+            }
+          },
+          "indices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinwireIndexDto"
+            }
+          },
+          "license": {
+            "type": "string",
+            "example": "CC BY 4.0 - attribution finwire.pl required"
+          }
+        },
+        "required": [
+          "generatedAt",
+          "dataUntil",
+          "count",
+          "live",
+          "groups",
+          "indices",
+          "license"
+        ]
+      },
+      "FinwireIndexListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FinwireIndexListDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "FinwireIndexHistoryPointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "periodLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "wrzesie\u0144 2026"
+          },
+          "value": {
+            "type": "number",
+            "example": 60.9
+          }
+        },
+        "required": [
+          "period",
+          "periodLabel",
+          "value"
+        ]
+      },
+      "FinwireIndexDetailDataDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_credit_market_index",
+            "description": "Stable series id (also CSV series_id and JSON-LD identifier)"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Wska\u017anik rynku kredyt\u00f3w hipotecznych finwire"
+          },
+          "shortName": {
+            "type": "string",
+            "nullable": true,
+            "example": "Rynek kredyt\u00f3w"
+          },
+          "group": {
+            "type": "string",
+            "nullable": true,
+            "example": "kredyt"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "live",
+              "planned"
+            ],
+            "description": "planned = id reserved, no reading yet"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true,
+            "example": "points"
+          },
+          "unitLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "z\u0142/mies."
+          },
+          "precision": {
+            "type": "number",
+            "nullable": true,
+            "example": 1
+          },
+          "periodType": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "quarter"
+            ]
+          },
+          "methodVersion": {
+            "type": "number",
+            "nullable": true,
+            "example": 2
+          },
+          "latest": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FinwireIndexLatestDto"
+              }
+            ]
+          },
+          "previous": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FinwireIndexPreviousDto"
+              }
+            ]
+          },
+          "change": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.1
+          },
+          "changeKind": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "pp",
+              "pct",
+              "abs"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "up",
+              "down",
+              "flat"
+            ]
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "stale": {
+            "type": "boolean",
+            "description": "true = the source did not respond, last valid reading shown"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aliases": {
+            "example": [
+              "credit-market-index",
+              "credit-market"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "usesBenchmarkRate": {
+            "type": "boolean",
+            "description": "Computed from a benchmark rate (WIBOR): only the result is published"
+          },
+          "ref": {
+            "type": "string",
+            "example": "https://public-api.finwire.pl/v1/finwire-index/finwire_credit_market_index"
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/wskaznik-rynku-kredytow"
+          },
+          "methodologyUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "citation": {
+            "type": "string",
+            "description": "Ready-to-paste attribution with id and method version"
+          },
+          "requestedId": {
+            "type": "string",
+            "example": "credit-market-index",
+            "description": "The id or alias used in the request"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinwireIndexHistoryPointDto"
+            }
+          },
+          "license": {
+            "type": "string",
+            "example": "CC BY 4.0 - attribution finwire.pl required"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "shortName",
+          "group",
+          "status",
+          "unit",
+          "unitLabel",
+          "precision",
+          "periodType",
+          "methodVersion",
+          "latest",
+          "previous",
+          "change",
+          "changeKind",
+          "direction",
+          "updatedAt",
+          "stale",
+          "description",
+          "sources",
+          "aliases",
+          "usesBenchmarkRate",
+          "ref",
+          "pageUrl",
+          "methodologyUrl",
+          "citation",
+          "requestedId",
+          "history",
+          "license"
+        ]
+      },
+      "FinwireIndexDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FinwireIndexDetailDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

@@ -837,6 +837,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/legal-calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Legal calendar (finwire_legal_calendar): deadlines, value changes, acts entering into force, RPP meetings, bond sales */
+        get: operations["LegalCalendarController_calendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/income/municipalities": {
         parameters: {
             query?: never;
@@ -1016,6 +1033,40 @@ export interface paths {
         };
         /** ECB MIR: monthly history of the average rate on new loans for selected countries */
         get: operations["CreditMarketController_ecbRatesSeries"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/finwire-index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** All finwire indices (finwire_* ids): latest reading, previous reading, change, method version and citation */
+        get: operations["FinwireIndexController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/finwire-index/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One finwire index with history. Accepts the finwire_* id or an old dataset id as alias (e.g. credit-market-index). */
+        get: operations["FinwireIndexController_one"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1803,6 +1854,11 @@ export interface components {
         };
         BarometrListItemDto: {
             /**
+             * @description Series id in /v1/finwire-index
+             * @example finwire_borrowing_power_barometer
+             */
+            seriesId: string | null;
+            /**
              * @description Public indicator id
              * @example real-deposit-rate
              */
@@ -1952,6 +2008,11 @@ export interface components {
             rank: number;
         };
         CreditStressDataDto: {
+            /**
+             * @description Series id in /v1/finwire-index
+             * @example finwire_credit_stress_index
+             */
+            seriesId: string;
             /** @example 2026-06-06T06:00:00.000Z */
             generatedAt: string;
             params: components["schemas"]["StressParamsDto"];
@@ -1998,10 +2059,44 @@ export interface components {
              * @example 6
              */
             employeesAbovePct: number;
+            /**
+             * @description Price per sqm used, PLN (secondary market)
+             * @example 16420
+             */
+            pricePerM2: Record<string, never> | null;
+            /**
+             * @description rcn = notarial deeds, Real Estate Price Register (4-quarter window); gus = GUS RCiWN median (fallback for small samples)
+             * @example rcn
+             */
+            priceSource: Record<string, never> | null;
+            /**
+             * @description Deeds in the RCN window
+             * @example 14620
+             */
+            priceDeeds: Record<string, never> | null;
+            /** @example 2025-Q3 */
+            priceFrom: Record<string, never> | null;
+            /** @example 2026-Q2 */
+            priceTo: Record<string, never> | null;
+            /**
+             * @description Flat size (sqm) financed by the median wage in the city
+             * @example 38.5
+             */
+            m2ForMedianWage: Record<string, never> | null;
         };
         EntryThresholdDataDto: {
+            /**
+             * @description Series id in /v1/finwire-index
+             * @example finwire_entry_threshold_index
+             */
+            seriesId: string;
             /** @example 2026-10-15 */
             asOf: string;
+            /**
+             * @description Method version (2 = prices from notarial deeds)
+             * @example 2
+             */
+            methodVersion: Record<string, never> | null;
             /** @example single */
             household: string;
             params: components["schemas"]["EntryThresholdParamsDto"] | null;
@@ -2023,6 +2118,8 @@ export interface components {
             requiredGrossMonthly: number;
             /** @example 6 */
             employeesAbovePct: number;
+            /** @example 38.5 */
+            m2ForMedianWage: Record<string, never> | null;
         };
         EntryThresholdHistoryCityDto: {
             /** @example warszawa */
@@ -2072,6 +2169,11 @@ export interface components {
             definition: string;
         };
         BarometrDetailDataDto: {
+            /**
+             * @description Series id in /v1/finwire-index
+             * @example finwire_borrowing_power_barometer
+             */
+            seriesId: string | null;
             /**
              * @description Public indicator id
              * @example real-deposit-rate
@@ -3670,6 +3772,96 @@ export interface components {
             data: components["schemas"]["LegalProcessDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        LegalCalendarIndexDto: {
+            /**
+             * @description Changes in acts and statutory values (categories przepisy, wartosci) in the next 30 days
+             * @example 4
+             */
+            value: number | null;
+            /**
+             * @description Day the count was computed for
+             * @example 2026-11-01
+             */
+            date: string | null;
+        };
+        LegalCalendarCategoryDto: {
+            /** @example podatki */
+            key: string | null;
+            /**
+             * @description Label in Polish
+             * @example PIT
+             */
+            label: string | null;
+        };
+        LegalCalendarEventDto: {
+            /**
+             * @description Stable event id (also the ICS UID)
+             * @example pit-2026-filingTo
+             */
+            uid: string | null;
+            /** @example 2027-04-30 */
+            date: string | null;
+            /**
+             * @description Last day of a multi-day event (e.g. bond sale window)
+             * @example null
+             */
+            endDate: string | null;
+            /**
+             * @description przepisy = act entering into force, wartosci = statutory value change, podatki = PIT, firma = business and ZUS, oszczednosci = IKE/IKZE, obligacje = retail bonds, stopy = RPP meeting
+             * @example podatki
+             * @enum {string|null}
+             */
+            category: "przepisy" | "wartosci" | "podatki" | "firma" | "oszczednosci" | "obligacje" | "stopy" | null;
+            /**
+             * @description Title in Polish
+             * @example Termin złożenia zeznania PIT za 2026 r.
+             */
+            title: string | null;
+            /** @description Description in Polish */
+            description: string | null;
+            /**
+             * @description Legal basis (Polish)
+             * @example art. 47 ustawy o systemie ubezpieczeń społecznych
+             */
+            basis: string | null;
+            /**
+             * @description Act or source page
+             * @example https://eli.gov.pl/eli/DU/2025/1413/ogl
+             */
+            sourceUrl: string | null;
+            /**
+             * @description finwire.pl page with the related tool
+             * @example https://finwire.pl/rozliczenie-pit
+             */
+            pageUrl: string | null;
+        };
+        LegalCalendarDataDto: {
+            /**
+             * @description Series id in /v1/finwire-index
+             * @example finwire_legal_calendar
+             */
+            seriesId: string;
+            /**
+             * @description Day the calendar was computed for
+             * @example 2026-11-01
+             */
+            asOf: string | null;
+            updatedAt: string | null;
+            /** @example 1 */
+            methodVersion: number | null;
+            /** @example 2026-10-01 */
+            from: string | null;
+            /** @example 2027-12-06 */
+            to: string | null;
+            upcomingChanges30d: components["schemas"]["LegalCalendarIndexDto"] | null;
+            categories: components["schemas"]["LegalCalendarCategoryDto"][];
+            /** @description Sorted by date */
+            events: components["schemas"]["LegalCalendarEventDto"][];
+        };
+        LegalCalendarResponseDto: {
+            data: components["schemas"]["LegalCalendarDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         IncomeSourceDto: {
             /** @example Ministerstwo Finansów, sprawozdania budżetowe JST (Rb-27S) */
             name: string;
@@ -4157,6 +4349,177 @@ export interface components {
         };
         EcbRatesSeriesResponseDto: {
             data: components["schemas"]["EcbRatesSeriesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        FinwireIndexGroupDto: {
+            /** @example kredyt */
+            key: string | null;
+            /** @example Kredyty */
+            label: string | null;
+        };
+        FinwireIndexLatestDto: {
+            /** @example 2026-09 */
+            period: string;
+            /** @example wrzesień 2026 */
+            periodLabel: string | null;
+            /** @example 60.9 */
+            value: number;
+        };
+        FinwireIndexPreviousDto: {
+            /** @example 2026-08 */
+            period: string | null;
+            /** @example 60.8 */
+            value: number | null;
+        };
+        FinwireIndexDto: {
+            /**
+             * @description Stable series id (also CSV series_id and JSON-LD identifier)
+             * @example finwire_credit_market_index
+             */
+            id: string;
+            /** @example Wskaźnik rynku kredytów hipotecznych finwire */
+            name: string | null;
+            /** @example Rynek kredytów */
+            shortName: string | null;
+            /** @example kredyt */
+            group: string | null;
+            /**
+             * @description planned = id reserved, no reading yet
+             * @enum {string}
+             */
+            status: "live" | "planned";
+            /** @example points */
+            unit: string | null;
+            /** @example zł/mies. */
+            unitLabel: string | null;
+            /** @example 1 */
+            precision: number | null;
+            /** @enum {string|null} */
+            periodType: "day" | "week" | "month" | "quarter" | null;
+            /** @example 2 */
+            methodVersion: number | null;
+            latest: components["schemas"]["FinwireIndexLatestDto"] | null;
+            previous: components["schemas"]["FinwireIndexPreviousDto"] | null;
+            /** @example 0.1 */
+            change: number | null;
+            /** @enum {string|null} */
+            changeKind: "pp" | "pct" | "abs" | null;
+            /** @enum {string|null} */
+            direction: "up" | "down" | "flat" | null;
+            updatedAt: string | null;
+            /** @description true = the source did not respond, last valid reading shown */
+            stale: boolean;
+            description: string | null;
+            sources: string[];
+            /**
+             * @example [
+             *       "credit-market-index",
+             *       "credit-market"
+             *     ]
+             */
+            aliases: string[];
+            /** @description Computed from a benchmark rate (WIBOR): only the result is published */
+            usesBenchmarkRate: boolean;
+            /** @example https://public-api.finwire.pl/v1/finwire-index/finwire_credit_market_index */
+            ref: string;
+            /** @example https://finwire.pl/wskaznik-rynku-kredytow */
+            pageUrl: string;
+            methodologyUrl: string | null;
+            /** @description Ready-to-paste attribution with id and method version */
+            citation: string;
+        };
+        FinwireIndexListDataDto: {
+            generatedAt: string | null;
+            /** @example 2026-11-01 */
+            dataUntil: string | null;
+            /** @example 19 */
+            count: number;
+            /** @example 11 */
+            live: number;
+            groups: components["schemas"]["FinwireIndexGroupDto"][];
+            indices: components["schemas"]["FinwireIndexDto"][];
+            /** @example CC BY 4.0 - attribution finwire.pl required */
+            license: string;
+        };
+        FinwireIndexListResponseDto: {
+            data: components["schemas"]["FinwireIndexListDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        FinwireIndexHistoryPointDto: {
+            /** @example 2026-09 */
+            period: string;
+            /** @example wrzesień 2026 */
+            periodLabel: string | null;
+            /** @example 60.9 */
+            value: number;
+        };
+        FinwireIndexDetailDataDto: {
+            /**
+             * @description Stable series id (also CSV series_id and JSON-LD identifier)
+             * @example finwire_credit_market_index
+             */
+            id: string;
+            /** @example Wskaźnik rynku kredytów hipotecznych finwire */
+            name: string | null;
+            /** @example Rynek kredytów */
+            shortName: string | null;
+            /** @example kredyt */
+            group: string | null;
+            /**
+             * @description planned = id reserved, no reading yet
+             * @enum {string}
+             */
+            status: "live" | "planned";
+            /** @example points */
+            unit: string | null;
+            /** @example zł/mies. */
+            unitLabel: string | null;
+            /** @example 1 */
+            precision: number | null;
+            /** @enum {string|null} */
+            periodType: "day" | "week" | "month" | "quarter" | null;
+            /** @example 2 */
+            methodVersion: number | null;
+            latest: components["schemas"]["FinwireIndexLatestDto"] | null;
+            previous: components["schemas"]["FinwireIndexPreviousDto"] | null;
+            /** @example 0.1 */
+            change: number | null;
+            /** @enum {string|null} */
+            changeKind: "pp" | "pct" | "abs" | null;
+            /** @enum {string|null} */
+            direction: "up" | "down" | "flat" | null;
+            updatedAt: string | null;
+            /** @description true = the source did not respond, last valid reading shown */
+            stale: boolean;
+            description: string | null;
+            sources: string[];
+            /**
+             * @example [
+             *       "credit-market-index",
+             *       "credit-market"
+             *     ]
+             */
+            aliases: string[];
+            /** @description Computed from a benchmark rate (WIBOR): only the result is published */
+            usesBenchmarkRate: boolean;
+            /** @example https://public-api.finwire.pl/v1/finwire-index/finwire_credit_market_index */
+            ref: string;
+            /** @example https://finwire.pl/wskaznik-rynku-kredytow */
+            pageUrl: string;
+            methodologyUrl: string | null;
+            /** @description Ready-to-paste attribution with id and method version */
+            citation: string;
+            /**
+             * @description The id or alias used in the request
+             * @example credit-market-index
+             */
+            requestedId: string;
+            history: components["schemas"]["FinwireIndexHistoryPointDto"][];
+            /** @example CC BY 4.0 - attribution finwire.pl required */
+            license: string;
+        };
+        FinwireIndexDetailResponseDto: {
+            data: components["schemas"]["FinwireIndexDetailDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
     };
@@ -5177,6 +5540,32 @@ export interface operations {
             };
         };
     };
+    LegalCalendarController_calendar: {
+        parameters: {
+            query?: {
+                /** @description Comma-separated: przepisy, wartosci, podatki, firma, oszczednosci, obligacje, stopy */
+                kategorie?: string;
+                /** @description From date (YYYY-MM-DD), default today - 31 days */
+                od?: string;
+                /** @description To date (YYYY-MM-DD), default today + 400 days */
+                do?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalCalendarResponseDto"];
+                };
+            };
+        };
+    };
     RegionalController_incomeMunicipalities: {
         parameters: {
             query?: {
@@ -5408,6 +5797,51 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EcbRatesSeriesResponseDto"];
+                };
+            };
+        };
+    };
+    FinwireIndexController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinwireIndexListResponseDto"];
+                };
+            };
+        };
+    };
+    FinwireIndexController_one: {
+        parameters: {
+            query?: {
+                /** @description History points, 1-600, default 120 */
+                limit?: number;
+                /** @description History from month YYYY-MM */
+                from?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinwireIndexDetailResponseDto"];
                 };
             };
         };

@@ -86,7 +86,9 @@ Each dataset name links to its documentation page with fields, source and citati
 | [IKE / IKZE contribution limits](https://public-api.finwire.pl/datasets/legal-limits) | `/v1/legal-limits` | Ministry of Family announcements | yearly | current year |
 | [Property tax upper limits](https://public-api.finwire.pl/datasets/local-tax) | `/v1/legal-limits/local-tax` | Minister of Finance ([Monitor Polski](https://eli.gov.pl)) | yearly | announced tax years |
 | [Deposit](https://public-api.finwire.pl/datasets/deposit-rates), [savings](https://public-api.finwire.pl/datasets/savings-rates), [mortgage](https://public-api.finwire.pl/datasets/mortgage-rates) and [cash loan](https://public-api.finwire.pl/datasets/cash-loan-rates) rate aggregates | `/v1/market/*` | finwire.pl (aggregate of offers on the market) | daily | current |
-| [Entry threshold](https://public-api.finwire.pl/datasets/entry-threshold): wage needed for a mortgage on a model flat, 17 cities | `/v1/index/entry-threshold` | finwire.pl (GUS prices, mortgage offers, GUS wage distribution) | daily | since September 2026 |
+| [finwire index registry](https://public-api.finwire.pl/datasets/finwire-index): every index computed by finwire.pl under a stable `finwire_*` id ([list](#finwire-indices-finwire_-ids)) | `/v1/finwire-index/{id}` | finwire.pl (method and sources per index) | daily, monthly or quarterly per index | per index |
+| [Legal calendar](https://public-api.finwire.pl/datasets/legal-calendar) (`finwire_legal_calendar`): PIT, ZUS and VAT deadlines, IKE/IKZE year end, changes of statutory values, acts entering into force, RPP meetings, retail bond sales | `/v1/legal-calendar` | [Sejm ELI API](https://api.sejm.gov.pl/eli.html), NBP, Ministry of Finance, statutory deadlines, compiled by finwire.pl | daily | upcoming events, ICS at [finwire.pl/kalendarz-zmian.ics](https://finwire.pl/kalendarz-zmian.ics) |
+| [Entry threshold](https://public-api.finwire.pl/datasets/entry-threshold): wage needed for a mortgage on a model flat, 17 cities | `/v1/index/entry-threshold` | finwire.pl (prices from notarial deeds in RCN, GUS RCiWN fallback, mortgage offers, GUS wage distribution) | daily | since September 2026 |
 | [Finwire Nowcast](https://public-api.finwire.pl/datasets/nowcast): forecasts of CPI and core inflation and the RPP decision | `/v1/macro/nowcast` | finwire.pl model (inputs: GUS, NBP, EC Oil Bulletin) | daily, frozen 3 working days before publication | backtest since 2019 (CPI, core), 2012 (RPP) |
 | finwire indicators: [credit stress map](https://public-api.finwire.pl/datasets/credit-stress), barometers | `/v1/index/*` | finwire.pl (computed from the above) | daily (credit stress), monthly (barometers) | barometers since 2015 |
 
@@ -158,10 +160,11 @@ Tools (all read-only, each with `outputSchema`):
 
 - Macro: `get_macro_snapshot`, `list_macro_indicators`, `get_macro_indicator`, `compare_macro_indicators`, `get_macro_changes`, `get_macro_calendar`
 - Rates and prices: `get_interest_rates` (NBP), `get_currency_rates` (NBP FX, gold), `get_fuel_prices`, `get_energy_prices` (URE electricity and gas tariffs)
+- finwire indices: `list_finwire_indices` (all `finwire_*` ids with the latest reading), `get_finwire_index` (one index by id or alias, with history and citation)
 - Forecasts: `get_nowcast` (Finwire Nowcast: CPI and core inflation, RPP decision probabilities, accuracy)
 - Housing: `get_housing_prices` (notarial deeds, cities and districts), `get_rents` (rents, rental yield), `get_housing_costs`
 - Credit, savings and investing: `get_credit_market`, `get_bank_rates` (aggregates only, no single offers; retail bonds), `get_broker_fees` (brokerage fee tables)
-- Law: `get_legal_limits` (IKE/IKZE, PIT, minimum wage, local tax limits), `get_legal_changes`
+- Law: `get_legal_limits` (IKE/IKZE, PIT, minimum wage, local tax limits), `get_legal_changes` (acts, bills in the Sejm and the next 30 days of `finwire_legal_calendar`)
 - Regions and Europe: `get_regional_data`, `get_europe_data`
 - Any dataset: `search_datasets`, `get_dataset`
 
@@ -257,6 +260,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/brokers` | Broker fee tables: commissions by market, account and FX fees, IKE/IKZE, active promotions, fee table URL and weekly check status |
 | `GET /v1/legal-changes?days=90` | Acts entering into force soon and recently, open bills in the Sejm |
 | `GET /v1/legal-changes/process/{term}/{number}` | One bill: last stage, passage, published act |
+| `GET /v1/legal-calendar?kategorie=przepisy,wartosci&od=2026-11-01&do=2027-03-31` | Legal calendar `finwire_legal_calendar`: dated events with category, legal basis, source and finwire.pl page, the number of changes in acts and values in the next 30 days. `kategorie`: `przepisy`, `wartosci`, `podatki`, `firma`, `oszczednosci`, `obligacje`, `stopy` |
 | `GET /v1/income/municipalities?year=2025` | Residents income per capita by municipality: rank, ratio to the national average, change |
 | `GET /v1/income/counties?year=2025` | The same by county |
 | `GET /v1/housing/upkeep/{city}` | Monthly running costs of a flat in a city (list: `/v1/housing/upkeep`) |
@@ -276,6 +280,8 @@ Every response uses the same envelope. Values below are illustrative - call the 
 
 | Endpoint | Returns |
 |---|---|
+| `GET /v1/finwire-index` | All finwire indices: id `finwire_*`, name, group, status, latest and previous reading with periods, change and its kind (`pp`, `pct`, `abs`), method version, sources, `stale`, `pageUrl`, `methodologyUrl`, `citation` |
+| `GET /v1/finwire-index/{id}?limit=120&from=2024-01` | One index by `finwire_*` id or alias, with history (`limit` 1-600, default 120; `from` YYYY-MM); `requestedId` echoes the id used |
 | `GET /v1/macro/nowcast` | Finwire Nowcast: next CPI and core inflation reading (point, 80% interval) and RPP decision probabilities, freeze date and status, settled history vs actual readings, backtest and live accuracy |
 | `GET /v1/index/entry-threshold` | Gross monthly wage per person needed for a mortgage on a model flat (parameters in `params`) within KNF DSTI limits in 17 cities, the installment, and the share of employees earning at least that |
 | `GET /v1/index/entry-threshold/history?household=single` | Daily change points per city, `household`: `single` or `couple` |
@@ -285,6 +291,40 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/snapshot` | Rates, inflation, FX, credit stress and barometers in one call |
 
 Full field-level schemas: [openapi.json](https://public-api.finwire.pl/openapi.json).
+
+### finwire indices (`finwire_*` ids)
+
+Every index computed by finwire.pl has one stable id, the same in this API, in MCP, in CSV files on finwire.pl (column `series_id`) and in the page JSON-LD (`identifier`). Old dataset ids are accepted as aliases by `/v1/finwire-index/{id}`. The live list with readings: [`/v1/finwire-index`](https://public-api.finwire.pl/v1/finwire-index); hub with charts: [finwire.pl/indeksy](https://finwire.pl/indeksy).
+
+| id | Index | Group | Reading | Aliases |
+|---|---|---|---|---|
+| `finwire_mortgage_barometer` | [Barometr kredytu hipotecznego finwire](https://finwire.pl/barometr-kredytu-hipotecznego) | credit | daily | - |
+| `finwire_credit_capacity_index` | [Indeks zdolności kredytowej finwire](https://finwire.pl/indeksy/zdolnosc-kredytowa) | credit | monthly | - |
+| `finwire_borrowing_power_barometer` ¹ | [Barometr zdolności kredytowej finwire](https://finwire.pl/barometr-zdolnosci-kredytowej) | credit | monthly | `borrowing-power` |
+| `finwire_mortgage_cost_barometer` ¹ | [Barometr kosztu kredytu finwire](https://finwire.pl/barometr-kosztu-kredytu-hipotecznego) | credit | monthly | `credit-cost` |
+| `finwire_credit_market_index` ¹ | [Wskaźnik rynku kredytów hipotecznych finwire](https://finwire.pl/wskaznik-rynku-kredytow) | credit | monthly | `credit-market-index`, `credit-market` |
+| `finwire_credit_stress_index` ¹ | [Mapa stresu kredytowego finwire](https://finwire.pl/mapa-stresu-kredytowego) | credit | daily | `credit-stress` |
+| `finwire_deposit_rate_index` | [Indeks lokat finwire](https://finwire.pl/indeksy/lokaty) | savings | monthly | `deposit-rate-index`, `deposit_rate_index` |
+| `finwire_savings_rate_index` | [Indeks kont oszczędnościowych finwire](https://finwire.pl/indeksy/konta-oszczednosciowe) | savings | monthly | - |
+| `finwire_real_deposit_rate_barometer` | [Barometr opłacalności lokat finwire](https://finwire.pl/barometr-oplacalnosci-lokat) | savings | monthly | `real-deposit-rate` |
+| `finwire_purchasing_power_barometer` | [Barometr siły nabywczej złotówki finwire](https://finwire.pl/barometr-sily-nabywczej-zlotowki) | savings | monthly | `purchasing-power` |
+| `finwire_account_cost_index` | [Koszt konta osobistego wg finwire](https://finwire.pl/rankingi/konta-osobiste) | savings | monthly | - |
+| `finwire_rcn_price_index` | [Indeks cen transakcyjnych finwire](https://finwire.pl/raporty/indeks-cen-transakcyjnych) | housing | quarterly | - |
+| `finwire_price_gap_index` | [Indeks luki cenowej finwire](https://finwire.pl/indeksy/luka-cenowa) | housing | quarterly | - |
+| `finwire_entry_threshold_index` ¹ | [Próg wejścia finwire](https://finwire.pl/prog-wejscia) | housing | daily | `entry-threshold` |
+| `finwire_housing_affordability_barometer` ¹ | [Barometr dostępności mieszkania finwire](https://finwire.pl/barometr-dostepnosci-mieszkania) | housing | monthly | `housing-affordability` |
+| `finwire_offer_ticker` | [Ticker zmian ofert finwire](https://finwire.pl/zmiany-ofert) | market | daily | `offer-changes` |
+| `finwire_demand_index` | [Indeks popytu finwire](https://finwire.pl/indeksy/popyt) | market | monthly | - |
+| `finwire_nowcast` | [Finwire Nowcast](https://finwire.pl/nowcast) | market | monthly | `nowcast` |
+| `finwire_legal_calendar` | [Kalendarz zmian w finansach finwire](https://finwire.pl/kalendarz-zmian) | law | daily | - |
+
+¹ Computed from WIBOR (GPW Benchmark): only the result is published, never WIBOR or POLSTR (`usesBenchmarkRate: true`).
+
+License CC BY 4.0, attribution finwire.pl. Each index carries a ready `citation` with the id and method version, e.g.:
+
+> Source: Indeks zdolności kredytowej finwire (finwire_credit_capacity_index, method v1), finwire.pl, https://finwire.pl/indeksy/zdolnosc-kredytowa, CC BY 4.0
+
+`methodVersion` changes with every change of the definition; history is recomputed or marked.
 
 ---
 
@@ -315,8 +355,22 @@ Nieruchomości) for 17 cities, with a quarterly trend for the last 12 quarters a
 `/v1/index/entry-threshold` returns, for 17 Polish cities, the gross monthly wage one person
 needs to get a mortgage on a model 50 m² secondary-market flat (20% down payment, 25 years)
 within the KNF DSTI limits, the monthly installment and the share of employees who earn at
-least that. It is recomputed every night from GUS prices, current mortgage offers and the GUS
-wage distribution; `/history` shows how it changed.
+least that. It is recomputed every night from prices per m² in notarial deeds (Real Estate
+Price Register, GUS RCiWN as a fallback for small samples), current mortgage offers and the GUS
+wage distribution; `/history` shows how it changed. Index id: `finwire_entry_threshold_index`.
+
+### How do I cite a finwire index?
+
+Use the `citation` field of `/v1/finwire-index/{id}`: index name, `finwire_*` id, method
+version, finwire.pl and the page URL, CC BY 4.0. The id stays the same when the name or the
+method changes, so it is the safe key for your own database.
+
+### Is there an API for Polish tax and ZUS deadlines?
+
+`/v1/legal-calendar` returns PIT, ZUS and VAT deadlines (moved to the next working day per
+art. 12 § 5 of the Tax Ordinance), the year end for IKE and IKZE contributions, changes of
+statutory values, acts entering into force, RPP meetings and retail bond sales. The same
+calendar is available as an ICS subscription at https://finwire.pl/kalendarz-zmian.ics.
 
 ### Where can I get unemployment data by county (powiat)?
 
@@ -374,6 +428,7 @@ issue recommendations within the meaning of the EU Market Abuse Regulation (MAR)
 - **BDL** (Bank Danych Lokalnych) - GUS Local Data Bank with statistics for provinces, counties and municipalities.
 - **TERYT** - official Polish territorial code of provinces, counties and municipalities.
 - **Entry threshold** (próg wejścia) - finwire indicator: the wage needed to qualify for a mortgage on a model flat.
+- **finwire_\*** - stable id of an index computed by finwire.pl, the key in `/v1/finwire-index`, MCP and CSV `series_id`.
 - **Property tax upper limit** - the maximum local property tax rate set yearly by the Minister of Finance; municipalities choose their rate up to it.
 
 ---
