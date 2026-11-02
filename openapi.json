@@ -1084,6 +1084,75 @@
         ]
       }
     },
+    "/v1/housing/nbp-gap": {
+      "get": {
+        "operationId": "RealEstateController_nbpHousingGap",
+        "parameters": [
+          {
+            "name": "market",
+            "required": false,
+            "in": "query",
+            "description": "Primary (default) or secondary market",
+            "schema": {
+              "enum": [
+                "pierwotny",
+                "wtorny"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NbpHousingGapResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Offer vs transaction price gap by city according to NBP BaRN, quarterly since 2006",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/nbp/{city}": {
+      "get": {
+        "operationId": "RealEstateController_nbpHousingCity",
+        "parameters": [
+          {
+            "name": "city",
+            "required": true,
+            "in": "path",
+            "description": "One of 17 city slugs (16 voivodeship capitals and Gdynia)",
+            "schema": {
+              "example": "warszawa",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NbpHousingCityResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Average offer and transaction prices per sqm in a city according to NBP BaRN, quarterly since 2006",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
     "/v1/calendar": {
       "get": {
         "operationId": "CalendarController_upcoming",
@@ -6769,6 +6838,270 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/HousingSupplyCityDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "NbpSourceDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "NBP, Baza cen nieruchomo\u015bci mieszkaniowych BaRN"
+          },
+          "fileUrl": {
+            "type": "string",
+            "example": "https://static.nbp.pl/dane/rynek-nieruchomosci/ceny_mieszkan.xlsx"
+          }
+        },
+        "required": [
+          "name",
+          "fileUrl"
+        ]
+      },
+      "NbpGapCityDto": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "example": "warszawa"
+          },
+          "name": {
+            "type": "string",
+            "example": "Warszawa"
+          },
+          "offerPricePerM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 18488
+          },
+          "transactionPricePerM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 16783
+          },
+          "gapPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 9.2
+          },
+          "methodBreak": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "city",
+          "name",
+          "offerPricePerM2",
+          "transactionPricePerM2",
+          "gapPct",
+          "methodBreak"
+        ]
+      },
+      "NbpGapPointDto": {
+        "type": "object",
+        "properties": {
+          "quarter": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "tenCitiesGapPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 9.1,
+            "description": "Gap for the NBP 10-city average"
+          },
+          "cities": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "nullable": true
+            },
+            "example": {
+              "warszawa": 9.2
+            }
+          }
+        },
+        "required": [
+          "quarter",
+          "tenCitiesGapPct",
+          "cities"
+        ]
+      },
+      "NbpHousingGapDataDto": {
+        "type": "object",
+        "properties": {
+          "market": {
+            "type": "string",
+            "example": "pierwotny",
+            "enum": [
+              "pierwotny",
+              "wtorny"
+            ]
+          },
+          "latestQuarter": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "definition": {
+            "type": "string",
+            "example": "(offer price - transaction price) / offer price x 100, NBP averages"
+          },
+          "source": {
+            "$ref": "#/components/schemas/NbpSourceDto"
+          },
+          "sourceModifiedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/indeksy/luka-cenowa#nbp"
+          },
+          "latest": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NbpGapCityDto"
+            }
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NbpGapPointDto"
+            }
+          }
+        },
+        "required": [
+          "market",
+          "latestQuarter",
+          "definition",
+          "source",
+          "sourceModifiedAt",
+          "pageUrl",
+          "latest",
+          "history"
+        ]
+      },
+      "NbpHousingGapResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NbpHousingGapDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "NbpHousingPointDto": {
+        "type": "object",
+        "properties": {
+          "quarter": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "primaryOffer": {
+            "type": "number",
+            "nullable": true,
+            "example": 18488,
+            "description": "PLN per sqm"
+          },
+          "primaryTransaction": {
+            "type": "number",
+            "nullable": true,
+            "example": 16783
+          },
+          "secondaryOffer": {
+            "type": "number",
+            "nullable": true,
+            "example": 19059
+          },
+          "secondaryTransaction": {
+            "type": "number",
+            "nullable": true,
+            "example": 16500
+          },
+          "primaryMethodBreak": {
+            "type": "boolean",
+            "example": false,
+            "description": "Primary market value after an NBP method change (footnote in the source file)"
+          }
+        },
+        "required": [
+          "quarter",
+          "primaryOffer",
+          "primaryTransaction",
+          "secondaryOffer",
+          "secondaryTransaction",
+          "primaryMethodBreak"
+        ]
+      },
+      "NbpHousingCityDataDto": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "example": "warszawa"
+          },
+          "name": {
+            "type": "string",
+            "example": "Warszawa"
+          },
+          "latestQuarter": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "primaryMethodBreakFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": null
+          },
+          "source": {
+            "$ref": "#/components/schemas/NbpSourceDto"
+          },
+          "sourceModifiedAt": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-07T10:50:28.000Z"
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/ceny-mieszkan/warszawa"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NbpHousingPointDto"
+            }
+          }
+        },
+        "required": [
+          "city",
+          "name",
+          "latestQuarter",
+          "primaryMethodBreakFrom",
+          "source",
+          "sourceModifiedAt",
+          "pageUrl",
+          "points"
+        ]
+      },
+      "NbpHousingCityResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NbpHousingCityDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

@@ -633,6 +633,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/housing/nbp-gap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Offer vs transaction price gap by city according to NBP BaRN, quarterly since 2006 */
+        get: operations["RealEstateController_nbpHousingGap"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/nbp/{city}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Average offer and transaction prices per sqm in a city according to NBP BaRN, quarterly since 2006 */
+        get: operations["RealEstateController_nbpHousingCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/calendar": {
         parameters: {
             query?: never;
@@ -2829,6 +2863,104 @@ export interface components {
         };
         HousingSupplyCityResponseDto: {
             data: components["schemas"]["HousingSupplyCityDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        NbpSourceDto: {
+            /** @example NBP, Baza cen nieruchomości mieszkaniowych BaRN */
+            name: string;
+            /** @example https://static.nbp.pl/dane/rynek-nieruchomosci/ceny_mieszkan.xlsx */
+            fileUrl: string;
+        };
+        NbpGapCityDto: {
+            /** @example warszawa */
+            city: string;
+            /** @example Warszawa */
+            name: string;
+            /** @example 18488 */
+            offerPricePerM2: number | null;
+            /** @example 16783 */
+            transactionPricePerM2: number | null;
+            /** @example 9.2 */
+            gapPct: number | null;
+            /** @example false */
+            methodBreak: boolean;
+        };
+        NbpGapPointDto: {
+            /** @example 2026-Q2 */
+            quarter: string;
+            /**
+             * @description Gap for the NBP 10-city average
+             * @example 9.1
+             */
+            tenCitiesGapPct: number | null;
+            /**
+             * @example {
+             *       "warszawa": 9.2
+             *     }
+             */
+            cities: {
+                [key: string]: number | null;
+            };
+        };
+        NbpHousingGapDataDto: {
+            /**
+             * @example pierwotny
+             * @enum {string}
+             */
+            market: "pierwotny" | "wtorny";
+            /** @example 2026-Q2 */
+            latestQuarter: string;
+            /** @example (offer price - transaction price) / offer price x 100, NBP averages */
+            definition: string;
+            source: components["schemas"]["NbpSourceDto"];
+            sourceModifiedAt: string | null;
+            /** @example https://finwire.pl/indeksy/luka-cenowa#nbp */
+            pageUrl: string;
+            latest: components["schemas"]["NbpGapCityDto"][];
+            history: components["schemas"]["NbpGapPointDto"][];
+        };
+        NbpHousingGapResponseDto: {
+            data: components["schemas"]["NbpHousingGapDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        NbpHousingPointDto: {
+            /** @example 2026-Q2 */
+            quarter: string;
+            /**
+             * @description PLN per sqm
+             * @example 18488
+             */
+            primaryOffer: number | null;
+            /** @example 16783 */
+            primaryTransaction: number | null;
+            /** @example 19059 */
+            secondaryOffer: number | null;
+            /** @example 16500 */
+            secondaryTransaction: number | null;
+            /**
+             * @description Primary market value after an NBP method change (footnote in the source file)
+             * @example false
+             */
+            primaryMethodBreak: boolean;
+        };
+        NbpHousingCityDataDto: {
+            /** @example warszawa */
+            city: string;
+            /** @example Warszawa */
+            name: string;
+            /** @example 2026-Q2 */
+            latestQuarter: string;
+            /** @example null */
+            primaryMethodBreakFrom: string | null;
+            source: components["schemas"]["NbpSourceDto"];
+            /** @example 2026-08-07T10:50:28.000Z */
+            sourceModifiedAt: string | null;
+            /** @example https://finwire.pl/ceny-mieszkan/warszawa */
+            pageUrl: string;
+            points: components["schemas"]["NbpHousingPointDto"][];
+        };
+        NbpHousingCityResponseDto: {
+            data: components["schemas"]["NbpHousingCityDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         CalendarEventDto: {
@@ -5286,6 +5418,50 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HousingSupplyCityResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_nbpHousingGap: {
+        parameters: {
+            query?: {
+                /** @description Primary (default) or secondary market */
+                market?: "pierwotny" | "wtorny";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NbpHousingGapResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_nbpHousingCity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description One of 17 city slugs (16 voivodeship capitals and Gdynia) */
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NbpHousingCityResponseDto"];
                 };
             };
         };
