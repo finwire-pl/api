@@ -3,6 +3,17 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-02
+
+### Added
+
+- `GET /v1/prices/retail` (optional `product=<GUS position id>`) - average retail prices of 30 goods and services in Poland from GUS (food, energy, fuel, transport, services), monthly since 2018, with month and year changes, minutes of work at the average net wage and the finwire shopping basket. Dataset `retail-prices`; GUS data CC BY 4.0, attribution "GUS".
+- `GET /v1/pensions` - average ZUS old-age pension gross and net, disability, survivor, bridging and social pensions, recipients, payouts, sickness and maternity allowances, pension to wage ratio and monthly history. Dataset `zus-benefits`; preliminary ZUS data, attribution "ZUS".
+- `GET /v1/credit-market/demand` (optional `months`) - BIK housing loan demand index (value of inquiries y/y per working day), applicants, average requested amount, granted loans by product, next to NBP new mortgage lending and the NBP lending survey. Dataset `bik-credit-demand`; attribution "BIK" with a link to each press release.
+- `GET /v1/knf-warnings` and `GET /v1/knf-warnings/search?q=` - KNF public warnings list (entities reported by KNF for suspected offences), verbatim KNF columns, statistics by legal basis and prosecutor, new entries per week. Dataset `knf-warnings`; attribution "KNF, lista ostrzeżeń publicznych".
+- New indices in `/v1/finwire-index`: `finwire_shopping_basket_index` (cost of a 10-item basket of basic food from GUS prices, monthly), `finwire_pension_wage_ratio` (average ZUS pension as % of the average enterprise sector wage, monthly), `finwire_knf_warnings_monitor` (new entries on the KNF warnings list per full week, from 9 November 2026).
+- MCP server 1.5.0: tools `get_retail_prices`, `get_pension_stats` and `check_knf_warnings`; `get_credit_market` accepts `topic: "demand"` (BIK). Datasets `retail-prices`, `zus-benefits`, `bik-credit-demand` and `knf-warnings` in `search_datasets` and `get_dataset`.
+
 ## 2026-11-01
 
 ### Added

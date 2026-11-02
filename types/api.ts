@@ -803,6 +803,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/prices/retail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Average retail prices of 30 goods and services in Poland (GUS): latest month, month and year changes, minutes of work at the average net wage, finwire shopping basket (finwire_shopping_basket_index) with history */
+        get: operations["MacroController_retailPrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pensions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Average ZUS old-age pension (gross and net), disability and survivor pensions, recipients, sickness and maternity allowances, pension to wage ratio (finwire_pension_wage_ratio), CPI, indexations and monthly history */
+        get: operations["MacroController_pensions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/macro/nowcast": {
         parameters: {
             query?: never;
@@ -1041,6 +1075,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/credit-market/demand": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Housing loan demand (BIK Demand Index), average requested vs granted amount, granted loans (BIK) and new housing loans (NBP), monthly */
+        get: operations["CreditMarketController_demand"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/credit-market/ecb-rates": {
         parameters: {
             query?: never;
@@ -1101,6 +1152,40 @@ export interface paths {
         };
         /** One finwire index with history. Accepts the finwire_* id or an old dataset id as alias (e.g. credit-market-index). */
         get: operations["FinwireIndexController_one"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/knf-warnings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** KNF public warnings list: entries by legal basis, prosecutors, new entries per week (finwire_knf_warnings_monitor), newest entries */
+        get: operations["KnfWarningsController_summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/knf-warnings/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Look up an entity on the KNF public warnings list by name, website domain, KRS, NIP or REGON */
+        get: operations["KnfWarningsController_search"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3333,6 +3418,206 @@ export interface components {
             data: components["schemas"]["FuelPricesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        RetailPriceItemDto: {
+            /**
+             * @description GUS DBW position id
+             * @example 5967467
+             */
+            id: number | null;
+            /** @example Masło świeże (ok. 82,5% tłuszczu) */
+            name: string | null;
+            /** @example masło */
+            short: string | null;
+            /** @example 200 g */
+            unit: string | null;
+            /** @enum {string|null} */
+            group: "food" | "energy" | "transport" | "services" | null;
+            /**
+             * @description Average price, PLN per unit
+             * @example 6.08
+             */
+            price: number | null;
+            previousMonth: number | null;
+            yearAgo: number | null;
+            /** @description Change vs the previous month, % */
+            momPct: number | null;
+            /** @description Change vs the same month a year earlier, % */
+            yoyPct: number | null;
+            /**
+             * @description Minutes of work at the average net wage in enterprises
+             * @example 9.2
+             */
+            workMinutes: number | null;
+            workMinutesYearAgo: number | null;
+        };
+        RetailBasketPartDto: {
+            id: number | null;
+            /** @example 2 */
+            quantity: number | null;
+            /** @example 2 l mleka */
+            label: string | null;
+        };
+        RetailPointDto: {
+            /** @example 2026-09 */
+            period: string;
+            /** @example 85.92 */
+            value: number;
+        };
+        RetailBasketDto: {
+            /** @example finwire_shopping_basket_index */
+            seriesId: string;
+            /** @example Koszyk zakupowy finwire */
+            name: string;
+            /**
+             * @description PLN
+             * @example 85.92
+             */
+            value: number | null;
+            previousMonth: number | null;
+            yearAgo: number | null;
+            momPct: number | null;
+            yoyPct: number | null;
+            workMinutes: number | null;
+            workMinutesYearAgo: number | null;
+            parts: components["schemas"]["RetailBasketPartDto"][];
+            /** @description Months with all basket prices, ascending */
+            history: components["schemas"]["RetailPointDto"][];
+        };
+        RetailWageDto: {
+            /** @example 2026-09 */
+            period: string | null;
+            /** @description Average gross monthly wage in enterprises (GUS), PLN */
+            grossPln: number | null;
+            /** @description Net of a standard employment contract, PLN */
+            netPln: number | null;
+            /** @description Average monthly working time norm of the year (Labour Code art. 130), hours */
+            hoursPerMonth: number | null;
+        };
+        RetailProductHistoryDto: {
+            id: number | null;
+            name: string | null;
+            unit: string | null;
+            history: components["schemas"]["RetailPointDto"][];
+        };
+        RetailSourceDto: {
+            prices: string | null;
+            pricesUrl: string | null;
+            wages: string | null;
+            wagesUrl: string | null;
+        };
+        RetailPricesDataDto: {
+            /** @example 2026-09 */
+            period: string | null;
+            /** @example 2026-09 */
+            asOf: string | null;
+            unit: string;
+            /** @example https://finwire.pl/ceny-w-sklepach */
+            pageUrl: string;
+            items: components["schemas"]["RetailPriceItemDto"][];
+            basket: components["schemas"]["RetailBasketDto"];
+            wage: components["schemas"]["RetailWageDto"] | null;
+            /** @description Price history of the product given in ?product */
+            product: components["schemas"]["RetailProductHistoryDto"] | null;
+            source: components["schemas"]["RetailSourceDto"];
+            methodVersion: number | null;
+        };
+        RetailPricesResponseDto: {
+            data: components["schemas"]["RetailPricesDataDto"];
+        };
+        ZusPensionDto: {
+            /** @example 2026-08 */
+            period: string;
+            /**
+             * @description Average old-age pension paid by ZUS, PLN gross per month
+             * @example 4535.94
+             */
+            grossPln: number;
+            /**
+             * @description Net amount after health contribution and PIT advance (tax rules of the year)
+             * @example 3888.94
+             */
+            netPln: number;
+            /** @example 408.23 */
+            healthContributionPln: number;
+            /** @example 238 */
+            pitAdvancePln: number;
+            /** @example 2026 */
+            taxYear: number;
+            previousPln: number | null;
+            /** @description Change vs previous month, % */
+            momPct: number | null;
+            yearAgoPln: number | null;
+            /** @description Change vs the same month a year earlier, % */
+            yoyPct: number | null;
+            /** @description Year-over-year change deflated by CPI of the same month, % */
+            realYoyPct: number | null;
+            /** @example 6430.5 */
+            recipientsThousand: number | null;
+            payoutThousandPln: number | null;
+        };
+        ZusBenefitRowDto: {
+            /** @example disability */
+            key: string;
+            /** @example Renta z tytułu niezdolności do pracy */
+            label: string;
+            /**
+             * @description PLN gross per month
+             * @example 3612.5
+             */
+            averageGrossPln: number;
+            yoyPct: number | null;
+            recipientsThousand: number | null;
+            payoutThousandPln: number | null;
+        };
+        PensionWageRatioDto: {
+            /** @example finwire_pension_wage_ratio */
+            id: string;
+            /** @example Emerytura do płacy finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2026-08 */
+            period: string;
+            /**
+             * @description Average ZUS pension as % of the average gross wage in the enterprise sector (GUS) in the same month
+             * @example 52.3
+             */
+            valuePct: number;
+            previousPct: number | null;
+            yearAgoPct: number | null;
+            wagePln: number | null;
+        };
+        ZusBenefitsDataDto: {
+            /** @example 2026-08 */
+            asOf: string | null;
+            /** @example 2023-12 */
+            firstPeriod: string;
+            updatedAt: string | null;
+            /** @example preliminary data (ZUS) */
+            status: string;
+            /** @description Units of the ZUS tables */
+            units: Record<string, never>;
+            sourcePdfUrl: string | null;
+            pension: components["schemas"]["ZusPensionDto"];
+            benefits: components["schemas"]["ZusBenefitRowDto"][];
+            /** @description Sickness and maternity allowances, health insured */
+            allowances: Record<string, never>;
+            pensionWageRatio: components["schemas"]["PensionWageRatioDto"] | null;
+            /** @description CPI y/y of the same month (GUS) */
+            cpi: Record<string, never> | null;
+            /** @description Statutory minimum pension in force in that month and the multiple */
+            minimumPension: Record<string, never> | null;
+            /** @description Indexations from 1 March (ministerial announcements) */
+            indexations: unknown[][];
+            /** @description How many units of basic products (GUS average retail prices) the average net pension buys, with a year and two years earlier; null when prices are missing */
+            purchasingPower: Record<string, never> | null;
+            /** @description Monthly history: pension, disability and survivor pensions, recipients, wage, ratio, growth and CPI */
+            history: unknown[][];
+        };
+        ZusBenefitsResponseDto: {
+            data: components["schemas"]["ZusBenefitsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         NowcastProbabilitiesDto: {
             /**
              * @description Probability of a rate cut
@@ -4400,6 +4685,111 @@ export interface components {
             data: components["schemas"]["NbpMonetaryDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        CreditDemandBikDto: {
+            /**
+             * @description BIK Demand Index: value of housing loan inquiries per working day, % change y/y
+             * @example 17.2
+             */
+            indexYoyPct: number | null;
+            /** @example 9.7 */
+            applicantsYoyPct: number | null;
+            /** @example 10.1 */
+            applicantsMomPct: number | null;
+            /**
+             * @description Number of applicants (not in every release)
+             * @example null
+             */
+            applicants: number | null;
+            /**
+             * @description Average requested amount, PLN
+             * @example 522400
+             */
+            avgAmountPln: number | null;
+            /** @example 6.9 */
+            avgAmountYoyPct: number | null;
+            /** @example -0.6 */
+            avgAmountMomPct: number | null;
+            /** @description BIK press release */
+            releaseUrl: string | null;
+            publishedAt: string | null;
+        };
+        CreditDemandMortgageDto: {
+            /** @example 20.6 */
+            countYoyPct: number | null;
+            /** @example 30.6 */
+            valueYoyPct: number | null;
+            /**
+             * @description Year to date, % change y/y
+             * @example 41.7
+             */
+            countYtdPct: number | null;
+            /** @example 53 */
+            valueYtdPct: number | null;
+            /**
+             * @description Average granted housing loan, PLN
+             * @example 486500
+             */
+            avgAmountPln: number | null;
+            /** @example 8.3 */
+            avgAmountYoyPct: number | null;
+        };
+        CreditDemandProductDto: {
+            /** @example 20.6 */
+            countYoyPct: number | null;
+            /** @example 30.6 */
+            valueYoyPct: number | null;
+        };
+        CreditDemandGrantedDto: {
+            mortgage: components["schemas"]["CreditDemandMortgageDto"];
+            cash: components["schemas"]["CreditDemandProductDto"] | null;
+            installment: components["schemas"]["CreditDemandProductDto"] | null;
+            card: components["schemas"]["CreditDemandProductDto"] | null;
+            releaseUrl: string | null;
+            publishedAt: string | null;
+        };
+        CreditDemandNbpDto: {
+            /**
+             * @description New housing loans in PLN, PLN million (NBP)
+             * @example 11548
+             */
+            valueMlnPln: number | null;
+            /** @example 38.9 */
+            yoyPct: number | null;
+        };
+        CreditDemandMonthDto: {
+            /** @example 2026-09 */
+            period: string;
+            demand: components["schemas"]["CreditDemandBikDto"] | null;
+            /** @description null for June and December (BIK publishes half-year and full-year summaries instead) */
+            granted: components["schemas"]["CreditDemandGrantedDto"] | null;
+            nbpNewHousingLoans: components["schemas"]["CreditDemandNbpDto"] | null;
+            /**
+             * @description Average requested amount vs average granted loan in the same month, %
+             * @example 7.4
+             */
+            askVsGrantedPct: number | null;
+        };
+        CreditDemandDataDto: {
+            /** @example 2026-09 */
+            asOf: string | null;
+            /** @example 2026-09 */
+            demandPeriod: string | null;
+            /** @example 2026-09 */
+            grantedPeriod: string | null;
+            /** @example 2026-09 */
+            nbpPeriod: string | null;
+            updatedAt: string | null;
+            /** @description Ascending by period */
+            months: components["schemas"]["CreditDemandMonthDto"][];
+            /** @description NBP bank lending survey: housing loan demand net balance (positive = rising) */
+            survey: Record<string, never> | null;
+            /** @description finwire_credit_market_index, latest reading */
+            creditMarketIndex: Record<string, never> | null;
+        };
+        CreditDemandResponseDto: {
+            data: components["schemas"]["CreditDemandDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         EcbProductDto: {
             /** @example mortgage_total */
             id: string;
@@ -4653,6 +5043,155 @@ export interface components {
         FinwireIndexDetailResponseDto: {
             data: components["schemas"]["FinwireIndexDetailDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
+        };
+        KnfWarningSectionDto: {
+            /** @example art. 178 ustawy o obrocie instrumentami finansowymi */
+            legalBasis: string;
+            /** @example art. 178 */
+            article: string;
+            /** @description Full KNF section header */
+            title: string;
+            /** @example 436 */
+            count: number;
+        };
+        KnfProsecutorCountDto: {
+            /** @example Prokuratura Okręgowa w Warszawie */
+            name: string;
+            /** @example 420 */
+            count: number;
+        };
+        KnfWarningEntryDto: {
+            /**
+             * @description Entity name, verbatim from the KNF list
+             * @example Noble Brothers Sp. z o.o. z siedzibą w Warszawie - www.tradereu.com
+             */
+            name: string;
+            /**
+             * @description KRS, NIP or REGON as written by KNF ("brak danych" when none)
+             * @example KRS 0000603971
+             */
+            identifiers: string;
+            /**
+             * @description Legal basis of the notification (KNF list section)
+             * @example art. 178 ustawy o obrocie instrumentami finansowymi
+             */
+            legalBasis: string;
+            /** @example Prokuratura Okręgowa w Warszawie */
+            prosecutor: string | null;
+            /** @description Mentions of final rulings (refusal, discontinuance, court ruling), verbatim */
+            rulings: string | null;
+            /** @description Column "Informacje istotne", verbatim */
+            info: string | null;
+            /**
+             * @description Day the entry first appeared on the list (null = listed before tracking started)
+             * @example 2026-11-10
+             */
+            firstSeen: string | null;
+            /**
+             * @description true = listed before tracking started; KNF publishes no entry date
+             * @example false
+             */
+            historical: boolean;
+        };
+        KnfWarningsWeekEntriesDto: {
+            /** @example 2026-11-16 */
+            weekStart: string;
+            /** @example 1 */
+            count: number;
+            entries: components["schemas"]["KnfWarningEntryDto"][];
+        };
+        KnfWarningsWeekDto: {
+            /** @example 2026-11-09 */
+            weekStart: string;
+            /** @example 2026-11-15 */
+            weekEnd: string;
+            /** @example 3 */
+            count: number;
+        };
+        KnfWarningsDataDto: {
+            /**
+             * @description Day of the last successful read of the KNF list
+             * @example 2026-11-02
+             */
+            asOf: string | null;
+            checkedAt: string | null;
+            /** @example 2026-11-02 */
+            trackedSince: string | null;
+            /** @example 671 */
+            total: number;
+            sections: components["schemas"]["KnfWarningSectionDto"][];
+            /**
+             * @description Entries with a mention of a final ruling
+             * @example 160
+             */
+            withRulings: number;
+            /**
+             * @description Entries where KNF/UKNF filed the notification
+             * @example 600
+             */
+            filedByKnf: number;
+            /**
+             * @description Entries where the KNF chair joined proceedings started by another party
+             * @example 40
+             */
+            joinedByKnfChair: number;
+            /**
+             * @description Entries naming a website
+             * @example 420
+             */
+            withWebsite: number;
+            /**
+             * @description Entries with identifier "podmiot nie jest zarejestrowany w Polsce"
+             * @example 300
+             */
+            notRegisteredInPoland: number;
+            prosecutors: components["schemas"]["KnfProsecutorCountDto"][];
+            /** @example 2 */
+            new7: number;
+            /** @example 9 */
+            new30: number;
+            thisWeek: components["schemas"]["KnfWarningsWeekEntriesDto"] | null;
+            /** @description New entries per full week of tracking (finwire_knf_warnings_monitor) */
+            weekly: components["schemas"]["KnfWarningsWeekDto"][];
+            /** @example finwire_knf_warnings_monitor */
+            seriesId: string;
+            latest: components["schemas"]["KnfWarningEntryDto"][];
+            /** @example https://www.knf.gov.pl/dla_konsumenta/ostrzezenia_publiczne */
+            sourceUrl: string;
+            /** @example https://finwire.pl/ostrzezenia-knf */
+            pageUrl: string;
+        };
+        KnfWarningsResponseDto: {
+            data: components["schemas"]["KnfWarningsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        KnfWarningsSearchDataDto: {
+            /** @example tradereu.com */
+            query: string;
+            /**
+             * @example domain
+             * @enum {string}
+             */
+            queryType: "name" | "domain" | "krs_or_nip" | "regon" | "number";
+            /** @example 2026-11-02 */
+            asOf: string | null;
+            /** @example 671 */
+            listTotal: number;
+            /**
+             * @description At least one entry matches. false does NOT mean the firm is licensed or safe
+             * @example true
+             */
+            onList: boolean;
+            /** @example 1 */
+            count: number;
+            hits: components["schemas"]["KnfWarningEntryDto"][];
+            /** @example https://www.knf.gov.pl/dla_konsumenta/ostrzezenia_publiczne */
+            sourceUrl: string;
+            /** @example https://finwire.pl/ostrzezenia-knf */
+            pageUrl: string;
+        };
+        KnfWarningsSearchResponseDto: {
+            data: components["schemas"]["KnfWarningsSearchDataDto"];
         };
     };
     responses: never;
@@ -5629,6 +6168,47 @@ export interface operations {
             };
         };
     };
+    MacroController_retailPrices: {
+        parameters: {
+            query?: {
+                /** @description GUS position id (items[].id) to include its monthly price history */
+                product?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailPricesResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_pensions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZusBenefitsResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_nowcast: {
         parameters: {
             query?: never;
@@ -5928,6 +6508,28 @@ export interface operations {
             };
         };
     };
+    CreditMarketController_demand: {
+        parameters: {
+            query?: {
+                /** @description Last N months, 1-120, default all */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreditDemandResponseDto"];
+                };
+            };
+        };
+    };
     CreditMarketController_ecbRates: {
         parameters: {
             query?: {
@@ -6018,6 +6620,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FinwireIndexDetailResponseDto"];
+                };
+            };
+        };
+    };
+    KnfWarningsController_summary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KnfWarningsResponseDto"];
+                };
+            };
+        };
+    };
+    KnfWarningsController_search: {
+        parameters: {
+            query: {
+                /** @description Name (min. 3 characters), website, or KRS/NIP/REGON number (min. 5 digits) */
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KnfWarningsSearchResponseDto"];
                 };
             };
         };

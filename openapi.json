@@ -1376,6 +1376,61 @@
         ]
       }
     },
+    "/v1/prices/retail": {
+      "get": {
+        "operationId": "MacroController_retailPrices",
+        "parameters": [
+          {
+            "name": "product",
+            "required": false,
+            "in": "query",
+            "description": "GUS position id (items[].id) to include its monthly price history",
+            "schema": {
+              "example": "5967467",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetailPricesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Average retail prices of 30 goods and services in Poland (GUS): latest month, month and year changes, minutes of work at the average net wage, finwire shopping basket (finwire_shopping_basket_index) with history",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/pensions": {
+      "get": {
+        "operationId": "MacroController_pensions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZusBenefitsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Average ZUS old-age pension (gross and net), disability and survivor pensions, recipients, sickness and maternity allowances, pension to wage ratio (finwire_pension_wage_ratio), CPI, indexations and monthly history",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/macro/nowcast": {
       "get": {
         "operationId": "MacroController_nowcast",
@@ -1813,6 +1868,39 @@
         ]
       }
     },
+    "/v1/credit-market/demand": {
+      "get": {
+        "operationId": "CreditMarketController_demand",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N months, 1-120, default all",
+            "schema": {
+              "example": 12,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditDemandResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Housing loan demand (BIK Demand Index), average requested vs granted amount, granted loans (BIK) and new housing loans (NBP), monthly",
+        "tags": [
+          "Credit market"
+        ]
+      }
+    },
     "/v1/credit-market/ecb-rates": {
       "get": {
         "operationId": "CreditMarketController_ecbRates",
@@ -1979,6 +2067,61 @@
         "summary": "One finwire index with history. Accepts the finwire_* id or an old dataset id as alias (e.g. credit-market-index).",
         "tags": [
           "finwire indicators"
+        ]
+      }
+    },
+    "/v1/knf-warnings": {
+      "get": {
+        "operationId": "KnfWarningsController_summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnfWarningsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "KNF public warnings list: entries by legal basis, prosecutors, new entries per week (finwire_knf_warnings_monitor), newest entries",
+        "tags": [
+          "Calendar"
+        ]
+      }
+    },
+    "/v1/knf-warnings/search": {
+      "get": {
+        "operationId": "KnfWarningsController_search",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "description": "Name (min. 3 characters), website, or KRS/NIP/REGON number (min. 5 digits)",
+            "schema": {
+              "example": "tradereu.com",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnfWarningsSearchResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Look up an entity on the KNF public warnings list by name, website domain, KRS, NIP or REGON",
+        "tags": [
+          "Calendar"
         ]
       }
     }
@@ -8111,6 +8254,641 @@
           "meta"
         ]
       },
+      "RetailPriceItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "nullable": true,
+            "example": 5967467,
+            "description": "GUS DBW position id"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Mas\u0142o \u015bwie\u017ce (ok. 82,5% t\u0142uszczu)"
+          },
+          "short": {
+            "type": "string",
+            "nullable": true,
+            "example": "mas\u0142o"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true,
+            "example": "200 g"
+          },
+          "group": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "food",
+              "energy",
+              "transport",
+              "services"
+            ]
+          },
+          "price": {
+            "type": "number",
+            "nullable": true,
+            "example": 6.08,
+            "description": "Average price, PLN per unit"
+          },
+          "previousMonth": {
+            "type": "number",
+            "nullable": true
+          },
+          "yearAgo": {
+            "type": "number",
+            "nullable": true
+          },
+          "momPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Change vs the previous month, %"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Change vs the same month a year earlier, %"
+          },
+          "workMinutes": {
+            "type": "number",
+            "nullable": true,
+            "example": 9.2,
+            "description": "Minutes of work at the average net wage in enterprises"
+          },
+          "workMinutesYearAgo": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "short",
+          "unit",
+          "group",
+          "price",
+          "previousMonth",
+          "yearAgo",
+          "momPct",
+          "yoyPct",
+          "workMinutes",
+          "workMinutesYearAgo"
+        ]
+      },
+      "RetailBasketPartDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "nullable": true,
+            "example": 2
+          },
+          "label": {
+            "type": "string",
+            "nullable": true,
+            "example": "2 l mleka"
+          }
+        },
+        "required": [
+          "id",
+          "quantity",
+          "label"
+        ]
+      },
+      "RetailPointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "value": {
+            "type": "number",
+            "example": 85.92
+          }
+        },
+        "required": [
+          "period",
+          "value"
+        ]
+      },
+      "RetailBasketDto": {
+        "type": "object",
+        "properties": {
+          "seriesId": {
+            "type": "string",
+            "example": "finwire_shopping_basket_index"
+          },
+          "name": {
+            "type": "string",
+            "example": "Koszyk zakupowy finwire"
+          },
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "example": 85.92,
+            "description": "PLN"
+          },
+          "previousMonth": {
+            "type": "number",
+            "nullable": true
+          },
+          "yearAgo": {
+            "type": "number",
+            "nullable": true
+          },
+          "momPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "workMinutes": {
+            "type": "number",
+            "nullable": true
+          },
+          "workMinutesYearAgo": {
+            "type": "number",
+            "nullable": true
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RetailBasketPartDto"
+            }
+          },
+          "history": {
+            "description": "Months with all basket prices, ascending",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RetailPointDto"
+            }
+          }
+        },
+        "required": [
+          "seriesId",
+          "name",
+          "value",
+          "previousMonth",
+          "yearAgo",
+          "momPct",
+          "yoyPct",
+          "workMinutes",
+          "workMinutesYearAgo",
+          "parts",
+          "history"
+        ]
+      },
+      "RetailWageDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "grossPln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Average gross monthly wage in enterprises (GUS), PLN"
+          },
+          "netPln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net of a standard employment contract, PLN"
+          },
+          "hoursPerMonth": {
+            "type": "number",
+            "nullable": true,
+            "description": "Average monthly working time norm of the year (Labour Code art. 130), hours"
+          }
+        },
+        "required": [
+          "period",
+          "grossPln",
+          "netPln",
+          "hoursPerMonth"
+        ]
+      },
+      "RetailProductHistoryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RetailPointDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "unit",
+          "history"
+        ]
+      },
+      "RetailSourceDto": {
+        "type": "object",
+        "properties": {
+          "prices": {
+            "type": "string",
+            "nullable": true
+          },
+          "pricesUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "wages": {
+            "type": "string",
+            "nullable": true
+          },
+          "wagesUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "prices",
+          "pricesUrl",
+          "wages",
+          "wagesUrl"
+        ]
+      },
+      "RetailPricesDataDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/ceny-w-sklepach"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RetailPriceItemDto"
+            }
+          },
+          "basket": {
+            "$ref": "#/components/schemas/RetailBasketDto"
+          },
+          "wage": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RetailWageDto"
+              }
+            ]
+          },
+          "product": {
+            "nullable": true,
+            "description": "Price history of the product given in ?product",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RetailProductHistoryDto"
+              }
+            ]
+          },
+          "source": {
+            "$ref": "#/components/schemas/RetailSourceDto"
+          },
+          "methodVersion": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "period",
+          "asOf",
+          "unit",
+          "pageUrl",
+          "items",
+          "basket",
+          "wage",
+          "product",
+          "source",
+          "methodVersion"
+        ]
+      },
+      "RetailPricesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/RetailPricesDataDto"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ZusPensionDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-08"
+          },
+          "grossPln": {
+            "type": "number",
+            "example": 4535.94,
+            "description": "Average old-age pension paid by ZUS, PLN gross per month"
+          },
+          "netPln": {
+            "type": "number",
+            "example": 3888.94,
+            "description": "Net amount after health contribution and PIT advance (tax rules of the year)"
+          },
+          "healthContributionPln": {
+            "type": "number",
+            "example": 408.23
+          },
+          "pitAdvancePln": {
+            "type": "number",
+            "example": 238
+          },
+          "taxYear": {
+            "type": "number",
+            "example": 2026
+          },
+          "previousPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "momPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Change vs previous month, %"
+          },
+          "yearAgoPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Change vs the same month a year earlier, %"
+          },
+          "realYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Year-over-year change deflated by CPI of the same month, %"
+          },
+          "recipientsThousand": {
+            "type": "number",
+            "nullable": true,
+            "example": 6430.5
+          },
+          "payoutThousandPln": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "period",
+          "grossPln",
+          "netPln",
+          "healthContributionPln",
+          "pitAdvancePln",
+          "taxYear",
+          "previousPln",
+          "momPct",
+          "yearAgoPln",
+          "yoyPct",
+          "realYoyPct",
+          "recipientsThousand",
+          "payoutThousandPln"
+        ]
+      },
+      "ZusBenefitRowDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "disability"
+          },
+          "label": {
+            "type": "string",
+            "example": "Renta z tytu\u0142u niezdolno\u015bci do pracy"
+          },
+          "averageGrossPln": {
+            "type": "number",
+            "example": 3612.5,
+            "description": "PLN gross per month"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "recipientsThousand": {
+            "type": "number",
+            "nullable": true
+          },
+          "payoutThousandPln": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "averageGrossPln",
+          "yoyPct",
+          "recipientsThousand",
+          "payoutThousandPln"
+        ]
+      },
+      "PensionWageRatioDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_pension_wage_ratio"
+          },
+          "name": {
+            "type": "string",
+            "example": "Emerytura do p\u0142acy finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-08"
+          },
+          "valuePct": {
+            "type": "number",
+            "example": 52.3,
+            "description": "Average ZUS pension as % of the average gross wage in the enterprise sector (GUS) in the same month"
+          },
+          "previousPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "yearAgoPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "wagePln": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "period",
+          "valuePct",
+          "previousPct",
+          "yearAgoPct",
+          "wagePln"
+        ]
+      },
+      "ZusBenefitsDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08"
+          },
+          "firstPeriod": {
+            "type": "string",
+            "example": "2023-12"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "example": "preliminary data (ZUS)"
+          },
+          "units": {
+            "type": "object",
+            "description": "Units of the ZUS tables"
+          },
+          "sourcePdfUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "pension": {
+            "$ref": "#/components/schemas/ZusPensionDto"
+          },
+          "benefits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ZusBenefitRowDto"
+            }
+          },
+          "allowances": {
+            "type": "object",
+            "description": "Sickness and maternity allowances, health insured"
+          },
+          "pensionWageRatio": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PensionWageRatioDto"
+              }
+            ]
+          },
+          "cpi": {
+            "type": "object",
+            "nullable": true,
+            "description": "CPI y/y of the same month (GUS)"
+          },
+          "minimumPension": {
+            "type": "object",
+            "nullable": true,
+            "description": "Statutory minimum pension in force in that month and the multiple"
+          },
+          "indexations": {
+            "description": "Indexations from 1 March (ministerial announcements)",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "purchasingPower": {
+            "type": "object",
+            "nullable": true,
+            "description": "How many units of basic products (GUS average retail prices) the average net pension buys, with a year and two years earlier; null when prices are missing"
+          },
+          "history": {
+            "description": "Monthly history: pension, disability and survivor pensions, recipients, wage, ratio, growth and CPI",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "firstPeriod",
+          "updatedAt",
+          "status",
+          "units",
+          "sourcePdfUrl",
+          "pension",
+          "benefits",
+          "allowances",
+          "pensionWageRatio",
+          "cpi",
+          "minimumPension",
+          "indexations",
+          "purchasingPower",
+          "history"
+        ]
+      },
+      "ZusBenefitsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ZusBenefitsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "NowcastProbabilitiesDto": {
         "type": "object",
         "properties": {
@@ -10664,6 +11442,319 @@
           "meta"
         ]
       },
+      "CreditDemandBikDto": {
+        "type": "object",
+        "properties": {
+          "indexYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 17.2,
+            "description": "BIK Demand Index: value of housing loan inquiries per working day, % change y/y"
+          },
+          "applicantsYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 9.7
+          },
+          "applicantsMomPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 10.1
+          },
+          "applicants": {
+            "type": "number",
+            "nullable": true,
+            "example": null,
+            "description": "Number of applicants (not in every release)"
+          },
+          "avgAmountPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 522400,
+            "description": "Average requested amount, PLN"
+          },
+          "avgAmountYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 6.9
+          },
+          "avgAmountMomPct": {
+            "type": "number",
+            "nullable": true,
+            "example": -0.6
+          },
+          "releaseUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "BIK press release"
+          },
+          "publishedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "indexYoyPct",
+          "applicantsYoyPct",
+          "applicantsMomPct",
+          "applicants",
+          "avgAmountPln",
+          "avgAmountYoyPct",
+          "avgAmountMomPct",
+          "releaseUrl",
+          "publishedAt"
+        ]
+      },
+      "CreditDemandMortgageDto": {
+        "type": "object",
+        "properties": {
+          "countYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 20.6
+          },
+          "valueYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 30.6
+          },
+          "countYtdPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 41.7,
+            "description": "Year to date, % change y/y"
+          },
+          "valueYtdPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 53
+          },
+          "avgAmountPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 486500,
+            "description": "Average granted housing loan, PLN"
+          },
+          "avgAmountYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 8.3
+          }
+        },
+        "required": [
+          "countYoyPct",
+          "valueYoyPct",
+          "countYtdPct",
+          "valueYtdPct",
+          "avgAmountPln",
+          "avgAmountYoyPct"
+        ]
+      },
+      "CreditDemandProductDto": {
+        "type": "object",
+        "properties": {
+          "countYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 20.6
+          },
+          "valueYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 30.6
+          }
+        },
+        "required": [
+          "countYoyPct",
+          "valueYoyPct"
+        ]
+      },
+      "CreditDemandGrantedDto": {
+        "type": "object",
+        "properties": {
+          "mortgage": {
+            "$ref": "#/components/schemas/CreditDemandMortgageDto"
+          },
+          "cash": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreditDemandProductDto"
+              }
+            ]
+          },
+          "installment": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreditDemandProductDto"
+              }
+            ]
+          },
+          "card": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreditDemandProductDto"
+              }
+            ]
+          },
+          "releaseUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "publishedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "mortgage",
+          "cash",
+          "installment",
+          "card",
+          "releaseUrl",
+          "publishedAt"
+        ]
+      },
+      "CreditDemandNbpDto": {
+        "type": "object",
+        "properties": {
+          "valueMlnPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 11548,
+            "description": "New housing loans in PLN, PLN million (NBP)"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 38.9
+          }
+        },
+        "required": [
+          "valueMlnPln",
+          "yoyPct"
+        ]
+      },
+      "CreditDemandMonthDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "demand": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreditDemandBikDto"
+              }
+            ]
+          },
+          "granted": {
+            "nullable": true,
+            "description": "null for June and December (BIK publishes half-year and full-year summaries instead)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreditDemandGrantedDto"
+              }
+            ]
+          },
+          "nbpNewHousingLoans": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreditDemandNbpDto"
+              }
+            ]
+          },
+          "askVsGrantedPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 7.4,
+            "description": "Average requested amount vs average granted loan in the same month, %"
+          }
+        },
+        "required": [
+          "period",
+          "demand",
+          "granted",
+          "nbpNewHousingLoans",
+          "askVsGrantedPct"
+        ]
+      },
+      "CreditDemandDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "demandPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "grantedPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "nbpPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "months": {
+            "description": "Ascending by period",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditDemandMonthDto"
+            }
+          },
+          "survey": {
+            "type": "object",
+            "nullable": true,
+            "description": "NBP bank lending survey: housing loan demand net balance (positive = rising)"
+          },
+          "creditMarketIndex": {
+            "type": "object",
+            "nullable": true,
+            "description": "finwire_credit_market_index, latest reading"
+          }
+        },
+        "required": [
+          "asOf",
+          "demandPeriod",
+          "grantedPeriod",
+          "nbpPeriod",
+          "updatedAt",
+          "months",
+          "survey",
+          "creditMarketIndex"
+        ]
+      },
+      "CreditDemandResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CreditDemandDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "EcbProductDto": {
         "type": "object",
         "properties": {
@@ -11451,6 +12542,364 @@
         "required": [
           "data",
           "meta"
+        ]
+      },
+      "KnfWarningSectionDto": {
+        "type": "object",
+        "properties": {
+          "legalBasis": {
+            "type": "string",
+            "example": "art. 178 ustawy o obrocie instrumentami finansowymi"
+          },
+          "article": {
+            "type": "string",
+            "example": "art. 178"
+          },
+          "title": {
+            "type": "string",
+            "description": "Full KNF section header"
+          },
+          "count": {
+            "type": "number",
+            "example": 436
+          }
+        },
+        "required": [
+          "legalBasis",
+          "article",
+          "title",
+          "count"
+        ]
+      },
+      "KnfProsecutorCountDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Prokuratura Okr\u0119gowa w Warszawie"
+          },
+          "count": {
+            "type": "number",
+            "example": 420
+          }
+        },
+        "required": [
+          "name",
+          "count"
+        ]
+      },
+      "KnfWarningEntryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Noble Brothers Sp. z o.o. z siedzib\u0105 w Warszawie - www.tradereu.com",
+            "description": "Entity name, verbatim from the KNF list"
+          },
+          "identifiers": {
+            "type": "string",
+            "example": "KRS 0000603971",
+            "description": "KRS, NIP or REGON as written by KNF (\"brak danych\" when none)"
+          },
+          "legalBasis": {
+            "type": "string",
+            "example": "art. 178 ustawy o obrocie instrumentami finansowymi",
+            "description": "Legal basis of the notification (KNF list section)"
+          },
+          "prosecutor": {
+            "type": "string",
+            "nullable": true,
+            "example": "Prokuratura Okr\u0119gowa w Warszawie"
+          },
+          "rulings": {
+            "type": "string",
+            "nullable": true,
+            "description": "Mentions of final rulings (refusal, discontinuance, court ruling), verbatim"
+          },
+          "info": {
+            "type": "string",
+            "nullable": true,
+            "description": "Column \"Informacje istotne\", verbatim"
+          },
+          "firstSeen": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-10",
+            "description": "Day the entry first appeared on the list (null = listed before tracking started)"
+          },
+          "historical": {
+            "type": "boolean",
+            "example": false,
+            "description": "true = listed before tracking started; KNF publishes no entry date"
+          }
+        },
+        "required": [
+          "name",
+          "identifiers",
+          "legalBasis",
+          "prosecutor",
+          "rulings",
+          "info",
+          "firstSeen",
+          "historical"
+        ]
+      },
+      "KnfWarningsWeekEntriesDto": {
+        "type": "object",
+        "properties": {
+          "weekStart": {
+            "type": "string",
+            "example": "2026-11-16"
+          },
+          "count": {
+            "type": "number",
+            "example": 1
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KnfWarningEntryDto"
+            }
+          }
+        },
+        "required": [
+          "weekStart",
+          "count",
+          "entries"
+        ]
+      },
+      "KnfWarningsWeekDto": {
+        "type": "object",
+        "properties": {
+          "weekStart": {
+            "type": "string",
+            "example": "2026-11-09"
+          },
+          "weekEnd": {
+            "type": "string",
+            "example": "2026-11-15"
+          },
+          "count": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "required": [
+          "weekStart",
+          "weekEnd",
+          "count"
+        ]
+      },
+      "KnfWarningsDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-02",
+            "description": "Day of the last successful read of the KNF list"
+          },
+          "checkedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "trackedSince": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-02"
+          },
+          "total": {
+            "type": "number",
+            "example": 671
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KnfWarningSectionDto"
+            }
+          },
+          "withRulings": {
+            "type": "number",
+            "example": 160,
+            "description": "Entries with a mention of a final ruling"
+          },
+          "filedByKnf": {
+            "type": "number",
+            "example": 600,
+            "description": "Entries where KNF/UKNF filed the notification"
+          },
+          "joinedByKnfChair": {
+            "type": "number",
+            "example": 40,
+            "description": "Entries where the KNF chair joined proceedings started by another party"
+          },
+          "withWebsite": {
+            "type": "number",
+            "example": 420,
+            "description": "Entries naming a website"
+          },
+          "notRegisteredInPoland": {
+            "type": "number",
+            "example": 300,
+            "description": "Entries with identifier \"podmiot nie jest zarejestrowany w Polsce\""
+          },
+          "prosecutors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KnfProsecutorCountDto"
+            }
+          },
+          "new7": {
+            "type": "number",
+            "example": 2
+          },
+          "new30": {
+            "type": "number",
+            "example": 9
+          },
+          "thisWeek": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/KnfWarningsWeekEntriesDto"
+              }
+            ]
+          },
+          "weekly": {
+            "description": "New entries per full week of tracking (finwire_knf_warnings_monitor)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KnfWarningsWeekDto"
+            }
+          },
+          "seriesId": {
+            "type": "string",
+            "example": "finwire_knf_warnings_monitor"
+          },
+          "latest": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KnfWarningEntryDto"
+            }
+          },
+          "sourceUrl": {
+            "type": "string",
+            "example": "https://www.knf.gov.pl/dla_konsumenta/ostrzezenia_publiczne"
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/ostrzezenia-knf"
+          }
+        },
+        "required": [
+          "asOf",
+          "checkedAt",
+          "trackedSince",
+          "total",
+          "sections",
+          "withRulings",
+          "filedByKnf",
+          "joinedByKnfChair",
+          "withWebsite",
+          "notRegisteredInPoland",
+          "prosecutors",
+          "new7",
+          "new30",
+          "thisWeek",
+          "weekly",
+          "seriesId",
+          "latest",
+          "sourceUrl",
+          "pageUrl"
+        ]
+      },
+      "KnfWarningsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/KnfWarningsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "KnfWarningsSearchDataDto": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "example": "tradereu.com"
+          },
+          "queryType": {
+            "type": "string",
+            "example": "domain",
+            "enum": [
+              "name",
+              "domain",
+              "krs_or_nip",
+              "regon",
+              "number"
+            ]
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-02"
+          },
+          "listTotal": {
+            "type": "number",
+            "example": 671
+          },
+          "onList": {
+            "type": "boolean",
+            "example": true,
+            "description": "At least one entry matches. false does NOT mean the firm is licensed or safe"
+          },
+          "count": {
+            "type": "number",
+            "example": 1
+          },
+          "hits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KnfWarningEntryDto"
+            }
+          },
+          "sourceUrl": {
+            "type": "string",
+            "example": "https://www.knf.gov.pl/dla_konsumenta/ostrzezenia_publiczne"
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/ostrzezenia-knf"
+          }
+        },
+        "required": [
+          "query",
+          "queryType",
+          "asOf",
+          "listTotal",
+          "onList",
+          "count",
+          "hits",
+          "sourceUrl",
+          "pageUrl"
+        ]
+      },
+      "KnfWarningsSearchResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/KnfWarningsSearchDataDto"
+          }
+        },
+        "required": [
+          "data"
         ]
       }
     }
