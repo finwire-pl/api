@@ -1431,6 +1431,94 @@
         ]
       }
     },
+    "/v1/investment-funds": {
+      "get": {
+        "operationId": "MacroController_investmentFunds",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N months of history and groupHistory, 1-400, default all",
+            "schema": {
+              "example": 24,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvestmentFundsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Investment funds in Poland (IZFiA): assets, purchases, redemptions and net flows of the market, fund groups (equity, mixed, bond, short-term bond, PPK, target date, commodity, crypto, private market) and IZFiA profiles, bond funds by type, equity funds by region, Indeks nap\u0142yw\u00f3w do funduszy finwire (finwire_fund_flows_index) and monthly history; PLN million, informational data, not investment advice",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/subsidies/clean-air": {
+      "get": {
+        "operationId": "MacroController_cleanAir",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CleanAirResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Czyste Powietrze (Clean Air) home heating subsidy programme, NFO\u015aiGW: applications, contracts and payouts cumulative, Modernisation Fund edition, last week, payout queue and pace, requested heat sources, payout rate (finwire_clean_air_payout_rate) and reading history",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/public-debt": {
+      "get": {
+        "operationId": "MacroController_publicDebt",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Months of history, 0-400, default 24",
+            "schema": {
+              "example": "24",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicDebtResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Polish State Treasury debt (Ministry of Finance) monthly since 2001: amount, per resident (finwire_public_debt_per_capita), growth per second, structure; national public debt and general government debt % of GDP quarterly; state budget deficit cumulative with the plan",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/macro/nowcast": {
       "get": {
         "operationId": "MacroController_nowcast",
@@ -1797,6 +1885,85 @@
           }
         },
         "summary": "Overcrowding rate by country (Eurostat)",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/europe/energy-prices": {
+      "get": {
+        "operationId": "RegionalController_energyPrices",
+        "parameters": [
+          {
+            "name": "product",
+            "required": false,
+            "in": "query",
+            "description": "Default electricity",
+            "schema": {
+              "enum": [
+                "electricity",
+                "gas"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "compare",
+            "required": false,
+            "in": "query",
+            "description": "EU country code (Eurostat, Greece = EL) added to the history, default DE",
+            "schema": {
+              "example": "DE",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EuEnergyPricesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Household electricity or gas prices in EU countries (Eurostat, half-yearly): latest ranking in EUR and PPS with and without taxes, Poland (also PLN), EU and euro area, history since 2007; electricity adds finwire_eu_power_price_gap and kWh per monthly minimum wage",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/europe/minimum-wages": {
+      "get": {
+        "operationId": "RegionalController_minimumWages",
+        "parameters": [
+          {
+            "name": "compare",
+            "required": false,
+            "in": "query",
+            "description": "EU country code added to the history, default DE",
+            "schema": {
+              "example": "DE",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EuMinimumWagesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Monthly statutory minimum wages in EU countries (Eurostat, half-yearly): latest ranking in EUR and PPS with the national amount, medians, countries without a statutory minimum wage, history of Poland and a comparison country",
         "tags": [
           "Real estate"
         ]
@@ -8889,6 +9056,672 @@
           "meta"
         ]
       },
+      "FundSegmentDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true,
+            "example": "equity"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true,
+            "example": "Fundusze akcyjne"
+          },
+          "assetsMln": {
+            "type": "number",
+            "nullable": true,
+            "example": 65698.4,
+            "description": "Assets at the end of the month, PLN million"
+          },
+          "inflowsMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Purchases of units (inflows), PLN million"
+          },
+          "outflowsMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Redemptions (outflows), PLN million"
+          },
+          "netFlowsMln": {
+            "type": "number",
+            "nullable": true,
+            "example": 420.4,
+            "description": "Net flows = inflows - outflows, PLN million"
+          },
+          "previousNetMln": {
+            "type": "number",
+            "nullable": true
+          },
+          "ytdNetMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net flows since January of the same year"
+          },
+          "net12mMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net flows over the last 12 months"
+          },
+          "sharePct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Share in assets of all funds, %"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "assetsMln",
+          "inflowsMln",
+          "outflowsMln",
+          "netFlowsMln",
+          "previousNetMln",
+          "ytdNetMln",
+          "net12mMln",
+          "sharePct"
+        ]
+      },
+      "FundGroupDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true,
+            "example": "equity"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true,
+            "example": "Fundusze akcyjne"
+          },
+          "assetsMln": {
+            "type": "number",
+            "nullable": true,
+            "example": 65698.4,
+            "description": "Assets at the end of the month, PLN million"
+          },
+          "inflowsMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Purchases of units (inflows), PLN million"
+          },
+          "outflowsMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Redemptions (outflows), PLN million"
+          },
+          "netFlowsMln": {
+            "type": "number",
+            "nullable": true,
+            "example": 420.4,
+            "description": "Net flows = inflows - outflows, PLN million"
+          },
+          "previousNetMln": {
+            "type": "number",
+            "nullable": true
+          },
+          "ytdNetMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net flows since January of the same year"
+          },
+          "net12mMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net flows over the last 12 months"
+          },
+          "sharePct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Share in assets of all funds, %"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "What the group invests in (Polish)"
+          },
+          "profiles": {
+            "description": "IZFiA investment profiles within the group",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FundSegmentDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "assetsMln",
+          "inflowsMln",
+          "outflowsMln",
+          "netFlowsMln",
+          "previousNetMln",
+          "ytdNetMln",
+          "net12mMln",
+          "sharePct",
+          "description",
+          "profiles"
+        ]
+      },
+      "FundFlowsIndexDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_fund_flows_index"
+          },
+          "name": {
+            "type": "string",
+            "example": "Indeks nap\u0142yw\u00f3w do funduszy finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "valuePct": {
+            "type": "number",
+            "example": 11.7,
+            "description": "Net flows of the last 12 months as % of fund assets 12 months earlier"
+          },
+          "net12mMln": {
+            "type": "number",
+            "nullable": true
+          },
+          "assetsBaseMln": {
+            "type": "number",
+            "nullable": true
+          },
+          "previousPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "yearAgoPct": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "period",
+          "valuePct",
+          "net12mMln",
+          "assetsBaseMln",
+          "previousPct",
+          "yearAgoPct"
+        ]
+      },
+      "InvestmentFundsDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "firstPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2020-02",
+            "description": "First month of the market series"
+          },
+          "groupsFirstPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2022-02",
+            "description": "First month with the split by fund group"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "units": {
+            "type": "object",
+            "description": "Units"
+          },
+          "sourceFileUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "IZFiA XLSX file of the latest month"
+          },
+          "market": {
+            "type": "object",
+            "description": "All investment funds: assets, inflows, outflows, net flows, change of assets split into net flows and market effect, year-to-date and 12-month net flows, record months"
+          },
+          "nonDedicated": {
+            "nullable": true,
+            "description": "Funds open to all investors (without dedicated funds)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FundSegmentDto"
+              }
+            ]
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FundGroupDto"
+            }
+          },
+          "bondTypes": {
+            "description": "Bond funds by type: treasury, corporate, universal, short-term",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FundSegmentDto"
+            }
+          },
+          "equityRegions": {
+            "description": "Equity funds by region",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FundSegmentDto"
+            }
+          },
+          "fundFlowsIndex": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FundFlowsIndexDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "Monthly market history: assets, inflows, outflows, net flows, fund flows index",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "groupHistory": {
+            "description": "Monthly net flows by fund group (keys as in groups[].key), PLN million",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "firstPeriod",
+          "groupsFirstPeriod",
+          "updatedAt",
+          "units",
+          "sourceFileUrl",
+          "market",
+          "nonDedicated",
+          "groups",
+          "bondTypes",
+          "equityRegions",
+          "fundFlowsIndex",
+          "history",
+          "groupHistory"
+        ]
+      },
+      "InvestmentFundsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/InvestmentFundsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "CleanAirTotalsDto": {
+        "type": "object",
+        "properties": {
+          "periodStart": {
+            "type": "string",
+            "example": "2018-09-19"
+          },
+          "periodEnd": {
+            "type": "string",
+            "example": "2026-10-16"
+          },
+          "applications": {
+            "type": "number",
+            "nullable": true,
+            "example": 1117718,
+            "description": "Applications filed, including rejected and withdrawn"
+          },
+          "requestedPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 43402621092
+          },
+          "contracts": {
+            "type": "number",
+            "nullable": true,
+            "example": 981336
+          },
+          "contractedPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 36339387115
+          },
+          "paidPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 23184286995
+          }
+        },
+        "required": [
+          "periodStart",
+          "periodEnd",
+          "applications",
+          "requestedPln",
+          "contracts",
+          "contractedPln",
+          "paidPln"
+        ]
+      },
+      "CleanAirPayoutRateDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_clean_air_payout_rate"
+          },
+          "name": {
+            "type": "string",
+            "example": "Wska\u017anik wyp\u0142at Czystego Powietrza finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "periodEnd": {
+            "type": "string",
+            "example": "2026-10-16"
+          },
+          "valuePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 63.8,
+            "description": "Paid subsidies as % of subsidies in signed contracts, all editions, cumulative"
+          },
+          "previousPct": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "periodEnd",
+          "valuePct",
+          "previousPct"
+        ]
+      },
+      "CleanAirDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-16",
+            "description": "End of the period of the latest NFO\u015aiGW reading"
+          },
+          "firstPeriodEnd": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceUpdated": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-22",
+            "description": "\"Last update\" date of the NFO\u015aiGW page"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "units": {
+            "type": "object"
+          },
+          "allEditions": {
+            "description": "All editions since the start of the programme, cumulative",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CleanAirTotalsDto"
+              }
+            ]
+          },
+          "allEditionsMonthAgo": {
+            "nullable": true,
+            "description": "Latest reading at least 28 days earlier",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CleanAirTotalsDto"
+              }
+            ]
+          },
+          "allEditionsYearAgo": {
+            "nullable": true,
+            "description": "Reading closest to 365 days earlier (+/- 45 days)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CleanAirTotalsDto"
+              }
+            ]
+          },
+          "modernisationFundEdition": {
+            "nullable": true,
+            "description": "Edition financed from the Modernisation Fund, cumulative since its start",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CleanAirTotalsDto"
+              }
+            ]
+          },
+          "lastWeek": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CleanAirTotalsDto"
+              }
+            ]
+          },
+          "lastWeekModernisationFund": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CleanAirTotalsDto"
+              }
+            ]
+          },
+          "completedContracts": {
+            "type": "object",
+            "nullable": true,
+            "description": "Completed contracts, cumulative (monthly)"
+          },
+          "operatorApplications": {
+            "type": "object",
+            "nullable": true,
+            "description": "Applications filed through operators (municipalities and regional funds)"
+          },
+          "bankLoanGrants": {
+            "type": "object",
+            "nullable": true,
+            "description": "Grants for partial repayment of bank loans, filed through banks (monthly)"
+          },
+          "payoutQueue": {
+            "type": "object",
+            "nullable": true,
+            "description": "Subsidies in signed contracts not yet paid, with the average weekly payout pace from consecutive readings"
+          },
+          "heatSources": {
+            "type": "object",
+            "nullable": true,
+            "description": "Requested heat sources by type, % of all (quarterly)"
+          },
+          "payoutRate": {
+            "$ref": "#/components/schemas/CleanAirPayoutRateDto"
+          },
+          "history": {
+            "description": "All readings, all editions cumulative, with payoutRatePct",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "modernisationFundHistory": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "firstPeriodEnd",
+          "sourceUpdated",
+          "updatedAt",
+          "units",
+          "allEditions",
+          "allEditionsMonthAgo",
+          "allEditionsYearAgo",
+          "modernisationFundEdition",
+          "lastWeek",
+          "lastWeekModernisationFund",
+          "completedContracts",
+          "operatorApplications",
+          "bankLoanGrants",
+          "payoutQueue",
+          "heatSources",
+          "payoutRate",
+          "history",
+          "modernisationFundHistory"
+        ]
+      },
+      "CleanAirResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CleanAirDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "PublicDebtDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08"
+          },
+          "firstPeriod": {
+            "type": "string",
+            "example": "2001-01"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "units": {
+            "type": "object",
+            "description": "Units"
+          },
+          "stateTreasuryDebt": {
+            "type": "object",
+            "description": "State Treasury debt at the end of the month (Ministry of Finance), million PLN, with m/m, y/y and year-to-date change"
+          },
+          "perCapita": {
+            "type": "object",
+            "nullable": true,
+            "description": "finwire_public_debt_per_capita: State Treasury debt per resident in PLN (population from GUS as of 31 December of the previous year)"
+          },
+          "growth": {
+            "type": "object",
+            "nullable": true,
+            "description": "Average debt growth over the last 12 months: PLN per second and per day"
+          },
+          "structure": {
+            "type": "object",
+            "description": "Domestic/foreign, retail savings bonds, currencies, holders (million PLN)"
+          },
+          "publicDebt": {
+            "type": "object",
+            "nullable": true,
+            "description": "Latest quarter: national public debt (PDP) and general government debt (EDP), million PLN and % of GDP (Ministry of Finance)"
+          },
+          "generalGovernmentDebtEurostat": {
+            "type": "object",
+            "nullable": true,
+            "description": "General government debt % of GDP (Eurostat gov_10q_ggdebt)"
+          },
+          "budget": {
+            "type": "object",
+            "nullable": true,
+            "description": "State budget execution estimate (Ministry of Finance), cumulative from January, with the annual plan from the budget act"
+          },
+          "history": {
+            "description": "Monthly history of the State Treasury debt",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "quarterlyHistory": {
+            "description": "Quarterly national public debt and general government debt",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "firstPeriod",
+          "updatedAt",
+          "units",
+          "stateTreasuryDebt",
+          "perCapita",
+          "growth",
+          "structure",
+          "publicDebt",
+          "generalGovernmentDebtEurostat",
+          "budget",
+          "history",
+          "quarterlyHistory"
+        ]
+      },
+      "PublicDebtResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PublicDebtDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "NowcastProbabilitiesDto": {
         "type": "object",
         "properties": {
@@ -11108,6 +11941,681 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/EuRateDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EuEnergyPolandDto": {
+        "type": "object",
+        "properties": {
+          "rankEur": {
+            "type": "number",
+            "nullable": true,
+            "example": 2,
+            "description": "Position by EUR price with all taxes, 1 = most expensive"
+          },
+          "rankPps": {
+            "type": "number",
+            "nullable": true,
+            "example": 2,
+            "description": "Position by price in purchasing power standards (PPS), 1 = most expensive"
+          },
+          "geo": {
+            "type": "string",
+            "example": "PL",
+            "description": "Eurostat country code (Greece = EL)"
+          },
+          "name": {
+            "type": "string",
+            "example": "Poland"
+          },
+          "eurPerKwh": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.2999,
+            "description": "EUR per kWh, all taxes and levies"
+          },
+          "ppsPerKwh": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.4112,
+            "description": "PPS per kWh, all taxes and levies"
+          },
+          "eurPerKwhExclVat": {
+            "type": "number",
+            "nullable": true,
+            "description": "EUR per kWh without VAT and other recoverable taxes"
+          },
+          "eurPerKwhExclTaxes": {
+            "type": "number",
+            "nullable": true,
+            "description": "EUR per kWh without taxes and levies"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "example": "p",
+            "description": "Eurostat status: p provisional, e estimated"
+          },
+          "plnPerKwh": {
+            "type": "number",
+            "nullable": true,
+            "example": 1.2724,
+            "description": "PLN per kWh, all taxes and levies"
+          },
+          "countriesRanked": {
+            "type": "number",
+            "example": 27,
+            "description": "Countries with a price in the ranking"
+          }
+        },
+        "required": [
+          "rankEur",
+          "rankPps",
+          "geo",
+          "name",
+          "eurPerKwh",
+          "ppsPerKwh",
+          "eurPerKwhExclVat",
+          "eurPerKwhExclTaxes",
+          "status",
+          "plnPerKwh",
+          "countriesRanked"
+        ]
+      },
+      "EuEnergyPriceRowDto": {
+        "type": "object",
+        "properties": {
+          "rankEur": {
+            "type": "number",
+            "nullable": true,
+            "example": 2,
+            "description": "Position by EUR price with all taxes, 1 = most expensive"
+          },
+          "rankPps": {
+            "type": "number",
+            "nullable": true,
+            "example": 2,
+            "description": "Position by price in purchasing power standards (PPS), 1 = most expensive"
+          },
+          "geo": {
+            "type": "string",
+            "example": "PL",
+            "description": "Eurostat country code (Greece = EL)"
+          },
+          "name": {
+            "type": "string",
+            "example": "Poland"
+          },
+          "eurPerKwh": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.2999,
+            "description": "EUR per kWh, all taxes and levies"
+          },
+          "ppsPerKwh": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.4112,
+            "description": "PPS per kWh, all taxes and levies"
+          },
+          "eurPerKwhExclVat": {
+            "type": "number",
+            "nullable": true,
+            "description": "EUR per kWh without VAT and other recoverable taxes"
+          },
+          "eurPerKwhExclTaxes": {
+            "type": "number",
+            "nullable": true,
+            "description": "EUR per kWh without taxes and levies"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "example": "p",
+            "description": "Eurostat status: p provisional, e estimated"
+          }
+        },
+        "required": [
+          "rankEur",
+          "rankPps",
+          "geo",
+          "name",
+          "eurPerKwh",
+          "ppsPerKwh",
+          "eurPerKwhExclVat",
+          "eurPerKwhExclTaxes",
+          "status"
+        ]
+      },
+      "EuEnergyHistoryPointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-S1"
+          },
+          "eurPerKwh": {
+            "type": "number",
+            "nullable": true
+          },
+          "ppsPerKwh": {
+            "type": "number",
+            "nullable": true
+          },
+          "plnPerKwh": {
+            "type": "number",
+            "nullable": true,
+            "description": "Poland only"
+          }
+        },
+        "required": [
+          "period",
+          "eurPerKwh",
+          "ppsPerKwh"
+        ]
+      },
+      "EuEnergyHistoryDto": {
+        "type": "object",
+        "properties": {
+          "geo": {
+            "type": "string",
+            "example": "PL"
+          },
+          "name": {
+            "type": "string",
+            "example": "Poland"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuEnergyHistoryPointDto"
+            }
+          }
+        },
+        "required": [
+          "geo",
+          "name",
+          "points"
+        ]
+      },
+      "EuPowerPriceGapPointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-S1"
+          },
+          "valuePct": {
+            "type": "number",
+            "example": 145,
+            "description": "Electricity price in Poland as % of the EU average (PPS)"
+          },
+          "polandPps": {
+            "type": "number",
+            "example": 0.4112
+          },
+          "euPps": {
+            "type": "number",
+            "example": 0.2836
+          }
+        },
+        "required": [
+          "period",
+          "valuePct",
+          "polandPps",
+          "euPps"
+        ]
+      },
+      "EuPowerPriceGapDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_eu_power_price_gap"
+          },
+          "name": {
+            "type": "string",
+            "example": "Luka cen pr\u0105du Polska-UE finwire"
+          },
+          "unit": {
+            "type": "string",
+            "example": "% of the EU average"
+          },
+          "basis": {
+            "type": "string"
+          },
+          "latest": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuPowerPriceGapPointDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "Half-yearly, from 2017-S1 (first EU average in PPS)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuPowerPriceGapPointDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "unit",
+          "basis",
+          "latest",
+          "history"
+        ]
+      },
+      "EuMinimumWagePowerRowDto": {
+        "type": "object",
+        "properties": {
+          "geo": {
+            "type": "string",
+            "example": "PL"
+          },
+          "name": {
+            "type": "string",
+            "example": "Poland"
+          },
+          "kwhPerMinimumWage": {
+            "type": "number",
+            "example": 3777,
+            "description": "kWh of electricity a monthly statutory minimum wage buys"
+          },
+          "costOf100KwhPctOfMinimumWage": {
+            "type": "number",
+            "example": 2.65,
+            "description": "Cost of 100 kWh as % of the monthly minimum wage"
+          },
+          "minimumWageNational": {
+            "type": "number",
+            "description": "Monthly minimum wage, national currency"
+          },
+          "pricePerKwhNational": {
+            "type": "number",
+            "description": "Price per kWh with all taxes, national currency"
+          },
+          "minimumWageEur": {
+            "type": "number",
+            "nullable": true
+          },
+          "pricePerKwhEur": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "geo",
+          "name",
+          "kwhPerMinimumWage",
+          "costOf100KwhPctOfMinimumWage",
+          "minimumWageNational",
+          "pricePerKwhNational",
+          "minimumWageEur",
+          "pricePerKwhEur"
+        ]
+      },
+      "EuMinimumWagePowerDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-S1",
+            "description": "Half-year of electricity prices"
+          },
+          "wagePeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-S1",
+            "description": "Half-year of minimum wages (same or the latest earlier)"
+          },
+          "basis": {
+            "type": "string"
+          },
+          "countries": {
+            "description": "Countries with a statutory minimum wage, most kWh first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuMinimumWagePowerRowDto"
+            }
+          }
+        },
+        "required": [
+          "period",
+          "wagePeriod",
+          "basis",
+          "countries"
+        ]
+      },
+      "EuEnergyPricesDataDto": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "type": "string",
+            "enum": [
+              "electricity",
+              "gas"
+            ]
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-S1",
+            "description": "Latest half-year (S1 = January-June, S2 = July-December)"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "example": "price per kWh"
+          },
+          "band": {
+            "type": "object",
+            "description": "Consumption band of the ranking: electricity DC 2500-4999 kWh a year, gas D2 20-199 GJ a year"
+          },
+          "taxes": {
+            "type": "string"
+          },
+          "statusCodes": {
+            "type": "object"
+          },
+          "poland": {
+            "nullable": true,
+            "description": "Null when Eurostat does not publish Poland (gas from 2024-S1: confidential)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuEnergyPolandDto"
+              }
+            ]
+          },
+          "polandLatestPeriod": {
+            "type": "string",
+            "nullable": true,
+            "description": "Latest half-year with a price for Poland"
+          },
+          "eu": {
+            "nullable": true,
+            "description": "EU average (EU27_2020)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuEnergyPriceRowDto"
+              }
+            ]
+          },
+          "euroArea": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuEnergyPriceRowDto"
+              }
+            ]
+          },
+          "countries": {
+            "description": "EU countries in the latest half-year, most expensive (EUR) first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuEnergyPriceRowDto"
+            }
+          },
+          "history": {
+            "description": "Half-yearly history since 2007 of Poland, the EU, the euro area and the ?compare= country",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuEnergyHistoryDto"
+            }
+          },
+          "powerPriceGap": {
+            "description": "Electricity only",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuPowerPriceGapDto"
+              }
+            ]
+          },
+          "minimumWagePower": {
+            "description": "Electricity only",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuMinimumWagePowerDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "product",
+          "asOf",
+          "updatedAt",
+          "unit",
+          "band",
+          "taxes",
+          "statusCodes",
+          "poland",
+          "polandLatestPeriod",
+          "eu",
+          "euroArea",
+          "countries",
+          "history"
+        ]
+      },
+      "EuEnergyPricesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EuEnergyPricesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EuMinimumWageRowDto": {
+        "type": "object",
+        "properties": {
+          "rankEur": {
+            "type": "number",
+            "nullable": true,
+            "example": 14,
+            "description": "1 = highest in EUR"
+          },
+          "rankPps": {
+            "type": "number",
+            "nullable": true,
+            "example": 9,
+            "description": "1 = highest in purchasing power standards"
+          },
+          "geo": {
+            "type": "string",
+            "example": "PL"
+          },
+          "name": {
+            "type": "string",
+            "example": "Poland"
+          },
+          "eur": {
+            "type": "number",
+            "nullable": true,
+            "example": 1139,
+            "description": "EUR per month"
+          },
+          "pps": {
+            "type": "number",
+            "nullable": true,
+            "example": 1547,
+            "description": "PPS per month"
+          },
+          "national": {
+            "type": "number",
+            "nullable": true,
+            "description": "National currency per month (PLN for Poland)"
+          },
+          "ppsStatus": {
+            "type": "string",
+            "nullable": true,
+            "example": "e",
+            "description": "Eurostat status of the PPS value: e estimated"
+          }
+        },
+        "required": [
+          "rankEur",
+          "rankPps",
+          "geo",
+          "name",
+          "eur",
+          "pps",
+          "national",
+          "ppsStatus"
+        ]
+      },
+      "EuMinimumWageHistoryPointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-S1"
+          },
+          "eur": {
+            "type": "number",
+            "nullable": true
+          },
+          "pps": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "period",
+          "eur",
+          "pps"
+        ]
+      },
+      "EuMinimumWageHistoryDto": {
+        "type": "object",
+        "properties": {
+          "geo": {
+            "type": "string",
+            "example": "PL"
+          },
+          "name": {
+            "type": "string",
+            "example": "Poland"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuMinimumWageHistoryPointDto"
+            }
+          }
+        },
+        "required": [
+          "geo",
+          "name",
+          "points"
+        ]
+      },
+      "EuMinimumWagesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-S2"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "example": "monthly gross statutory minimum wage"
+          },
+          "periods": {
+            "type": "string",
+            "example": "S1 = as of 1 January, S2 = as of 1 July"
+          },
+          "statusCodes": {
+            "type": "object"
+          },
+          "poland": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuMinimumWageRowDto"
+              }
+            ]
+          },
+          "countriesWithMinimumWage": {
+            "type": "number",
+            "example": 22
+          },
+          "medianEur": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median of EU countries with a statutory minimum wage, EUR"
+          },
+          "medianPps": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median, PPS"
+          },
+          "countries": {
+            "description": "Highest (EUR) first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuMinimumWageRowDto"
+            }
+          },
+          "withoutStatutoryMinimumWage": {
+            "description": "EU countries without a statutory minimum wage",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "history": {
+            "description": "Half-yearly history of Poland and the ?compare= country",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuMinimumWageHistoryDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "updatedAt",
+          "unit",
+          "periods",
+          "statusCodes",
+          "poland",
+          "countriesWithMinimumWage",
+          "medianEur",
+          "medianPps",
+          "countries",
+          "withoutStatutoryMinimumWage",
+          "history"
+        ]
+      },
+      "EuMinimumWagesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EuMinimumWagesDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

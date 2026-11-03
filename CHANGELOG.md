@@ -3,6 +3,16 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-03
+
+### Added
+
+- `GET /v1/investment-funds` - Polish investment funds market from IZFiA monthly data: assets, purchases, redemptions and net flows by fund group (equity, bond, mixed, money market, PPK), monthly since 2020. Dataset `investment-funds`; attribution "IZFiA". Index `finwire_fund_flows_index` (12-month net flows as % of assets a year earlier).
+- `GET /v1/subsidies/clean-air` - Czyste Powietrze programme statistics from NFOŚiGW: applications, contracts and payouts (count and amount), payouts as % of contracted, heat source shares. Dataset `clean-air`; attribution "NFOŚiGW". Index `finwire_clean_air_payout_rate`.
+- `GET /v1/public-debt` - State Treasury debt (monthly, domestic and foreign), public debt and EDP general government debt (quarterly, % of GDP), debt per person and the state budget execution estimate (revenue, expenditure, balance vs plan) from the Ministry of Finance. Dataset `public-debt`; attribution "Ministerstwo Finansów". Index `finwire_public_debt_per_capita`.
+- `GET /v1/europe/energy-prices` and `GET /v1/europe/minimum-wages` - household electricity and gas prices in EU countries (EUR, PPS, national currency, with and without taxes, half-yearly) and statutory minimum wages (half-yearly) from Eurostat. Index `finwire_eu_power_price_gap` (price in Poland as % of the EU average in PPS).
+- MCP server 1.6.0: tools `get_investment_funds`, `get_subsidy_stats`, `get_public_debt`; EU energy prices and minimum wages in `get_europe_data`. New datasets in `search_datasets` and `get_dataset`.
+
 ## 2026-11-02
 
 ### Added
