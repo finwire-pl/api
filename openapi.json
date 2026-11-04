@@ -450,6 +450,39 @@
         ]
       }
     },
+    "/v1/legal-limits/next-year": {
+      "get": {
+        "operationId": "ReferenceController_nextYearLimits",
+        "parameters": [
+          {
+            "name": "path",
+            "required": false,
+            "in": "query",
+            "description": "Include the estimate path per item (default true)",
+            "schema": {
+              "example": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NextYearLimitsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Limity na przysz\u0142y rok finwire (finwire_next_year_limits): next-year statutory values computed from the formulas in Polish law before the official act - pension indexation and minimum pension, minimum wage and hourly rate, projected average wage with IKE and IKZE limits, the 30x ZUS cap and ZUS contribution bases, flat-rate tax and small CIT taxpayer limits in PLN. Each item has a stage (projekcja, projekt, obwieszczenie, obowiazuje), an 80% interval, the calculation, inputs with periods, the estimate path and a backtest on past years",
+        "tags": [
+          "Reference data"
+        ]
+      }
+    },
     "/v1/wages/occupations": {
       "get": {
         "operationId": "ReferenceController_occupations",
@@ -952,6 +985,61 @@
         ]
       }
     },
+    "/v1/housing/location-premium": {
+      "get": {
+        "operationId": "RealEstateController_locationPremium",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationPremiumSummaryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Location premium (finwire_location_premium): how far district flat prices from notarial deeds deviate from the price expected from neighbourhood quality, per city: model status, R2, mean absolute premium, highest and lowest premium",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/location-premium/{city}": {
+      "get": {
+        "operationId": "RealEstateController_locationPremiumCity",
+        "parameters": [
+          {
+            "name": "city",
+            "required": true,
+            "in": "path",
+            "description": "City slug from /v1/housing/transactions",
+            "schema": {
+              "example": "warszawa",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationPremiumCityResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Location premium by district of one city: actual and expected price per m2, quality percentile, premium %, model fit and leave-one-out accuracy",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
     "/v1/rent": {
       "get": {
         "operationId": "RealEstateController_rentList",
@@ -991,6 +1079,28 @@
           }
         },
         "summary": "Gross and net rental yield per city (rents vs transaction prices)",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/carry": {
+      "get": {
+        "operationId": "RealEstateController_housingCarry",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HousingCarryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Carry nieruchomo\u015bci finwire (finwire_housing_carry): net rental yield of a flat minus the mortgage interest rate per city, percentage points, monthly with history; negative = interest on a loan for the whole price exceeds net rent. Informational data, not investment advice",
         "tags": [
           "Real estate"
         ]
@@ -1079,6 +1189,39 @@
           }
         },
         "summary": "Housing supply in a city vs its province and Poland, with yearly history",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/balance": {
+      "get": {
+        "operationId": "RealEstateController_housingBalance",
+        "parameters": [
+          {
+            "name": "city",
+            "required": false,
+            "in": "query",
+            "description": "City slug (one of 17 cities); omit for all",
+            "schema": {
+              "example": "krakow",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HousingBalanceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "finwire housing balance: demographic pressure (finwire_housing_pressure, new residents per 1 new dwelling), completions forecast from building permits (finwire_housing_pipeline, 80% interval, backtest accuracy) and 6-month rent forecast (finwire_rent_forecast, published only above the accuracy threshold)",
         "tags": [
           "Real estate"
         ]
@@ -1574,6 +1717,82 @@
         ]
       }
     },
+    "/v1/retail-bond-premium": {
+      "get": {
+        "operationId": "MacroController_retailBondPremium",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N months of history, 1-400, default all",
+            "schema": {
+              "example": 24,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetailBondPremiumResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Premia obligacji skarbowych finwire (finwire_retail_bond_premium): first-year rate of Polish retail savings bonds (OTS, ROR, DOR, TOS, COI, EDO, family ROS and ROD) minus the finwire deposit and savings account indices and the average new household term deposit rate (NBP MIR), after the 19% capital gains tax on both sides, in percentage points; monthly change of retail bond debt (Ministry of Finance) and household term deposits (NBP); correlation test of the premium with bond sales",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/fixed-cost-burden": {
+      "get": {
+        "operationId": "MacroController_fixedCostBurden",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N months of history per region, 1-400, default all",
+            "schema": {
+              "example": 12,
+              "type": "number"
+            }
+          },
+          {
+            "name": "region",
+            "required": false,
+            "in": "query",
+            "description": "Region: 'polska' or province slug (dolnoslaskie, kujawsko_pomorskie, ..., zachodniopomorskie)",
+            "schema": {
+              "example": "mazowieckie",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FixedCostBurdenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Sztywne koszty gospodarstwa finwire (finwire_fixed_cost_burden): share of household net income (two earners on the regional median wage, net from the employment contract calculator) taken by the mortgage payment on a 50 m2 flat, administrative fee, heating, water, waste, electricity and TV licence; Poland and 16 provinces, monthly",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/public-debt": {
       "get": {
         "operationId": "MacroController_publicDebt",
@@ -1624,6 +1843,42 @@
           }
         },
         "summary": "Finwire Nowcast: finwire.pl model forecasts of CPI and core inflation (point and 80% interval) and RPP decision probabilities, frozen 3 working days before publication, with backtest and settled history",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/macro/lead-forecasts": {
+      "get": {
+        "operationId": "MacroController_leadForecasts",
+        "parameters": [
+          {
+            "name": "index",
+            "required": false,
+            "in": "query",
+            "description": "One index; default both",
+            "schema": {
+              "enum": [
+                "cost-pressure",
+                "npl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadForecastsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "finwire lead forecasts: Presja kosztowa finwire (finwire_cost_pressure, NBP core inflation in 6 and 12 months from unit labour cost, producer prices and EUR/PLN) and Stres kredytowy wyprzedzaj\u0105cy finwire (finwire_npl_forecast, share of impaired housing and consumer loans in 2 and 4 quarters), 80% intervals, rolling backtest; published only above the accuracy threshold",
         "tags": [
           "Macro and prices"
         ]
@@ -1956,6 +2211,82 @@
         ]
       }
     },
+    "/v1/local-tax-squeeze": {
+      "get": {
+        "operationId": "RegionalController_localTaxSqueeze",
+        "parameters": [
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Budget year, default latest",
+            "schema": {
+              "example": 2026,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalTaxSqueezeResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Fiscal squeeze of municipalities (finwire_local_tax_squeeze): property tax as % of property tax + PIT share in the budget plans (Ministry of Finance Rb-27S), provinces, cities with county rights, municipalities in the squeeze, history and the upper limit of the property tax rate for flats",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/local-tax-squeeze/municipalities": {
+      "get": {
+        "operationId": "RegionalController_localTaxSqueezeMunicipalities",
+        "parameters": [
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Budget year, default latest",
+            "schema": {
+              "example": 2026,
+              "type": "number"
+            }
+          },
+          {
+            "name": "voivodeship",
+            "required": false,
+            "in": "query",
+            "description": "2-digit TERYT province code",
+            "schema": {
+              "example": "14",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalTaxSqueezeMunicipalitiesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Every municipality (gmina): property tax reliance, property tax and PIT share per resident, PIT share change, squeeze flag",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
     "/v1/housing/upkeep": {
       "get": {
         "operationId": "RegionalController_upkeepCities",
@@ -2250,6 +2581,39 @@
           }
         },
         "summary": "Housing loan demand (BIK Demand Index), average requested vs granted amount, granted loans (BIK) and new housing loans (NBP), monthly",
+        "tags": [
+          "Credit market"
+        ]
+      }
+    },
+    "/v1/credit-market/rate-risk": {
+      "get": {
+        "operationId": "CreditMarketController_rateRisk",
+        "parameters": [
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "description": "Last N readings of both daily histories, 1-6000, default all",
+            "schema": {
+              "example": 30,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateRiskResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Ryzyko raty finwire (finwire_rate_risk_gauge): chance a variable-rate mortgage payment rises by more than 5% or 10% in 3, 6 and 12 months with payment percentiles, and Premia za sta\u0142\u0105 stop\u0119 finwire (finwire_fixed_rate_premium): 5-year fixed rate minus expected variable cost, daily and monthly (ECB MIR), with backtest accuracy",
         "tags": [
           "Credit market"
         ]
@@ -3889,6 +4253,213 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/LegalLimitsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "NextYearLimitOfficialDto": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "example": 4950
+          },
+          "act": {
+            "type": "string",
+            "nullable": true,
+            "example": "rozporz\u0105dzenie Rady Ministr\u00f3w (Dz.U. 2026 poz. 1213)"
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "value",
+          "act",
+          "url"
+        ]
+      },
+      "NextYearLimitInputDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true,
+            "description": "Formatted value (Polish locale)"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true,
+            "description": "Period and source of the input"
+          }
+        },
+        "required": [
+          "label",
+          "value",
+          "note"
+        ]
+      },
+      "NextYearLimitItemDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "pension_indexation",
+            "description": "pension_indexation, min_pension, min_wage, min_hourly, zus_preferential_base, prognosed_wage, ike, ikze, ikze_self_employed, pension_base_cap_30x, zus_full_base, ryczalt_limit, cit_small_taxpayer"
+          },
+          "targetYear": {
+            "type": "number",
+            "example": 2027
+          },
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "description": "Official value when announced, otherwise the formula estimate. pension_indexation is an index in % (104.9 = +4.9%), other items in PLN"
+          },
+          "low80": {
+            "type": "number",
+            "nullable": true,
+            "description": "80% interval (equal to value once official)"
+          },
+          "high80": {
+            "type": "number",
+            "nullable": true
+          },
+          "stage": {
+            "type": "string",
+            "example": "projekcja",
+            "description": "projekcja (formula estimate), projekt (government draft), obwieszczenie (announced), obowiazuje (in force)"
+          },
+          "stageLabel": {
+            "type": "string",
+            "nullable": true
+          },
+          "projection": {
+            "type": "number",
+            "nullable": true,
+            "description": "Formula estimate, also kept after the announcement"
+          },
+          "official": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NextYearLimitOfficialDto"
+              }
+            ]
+          },
+          "equation": {
+            "type": "string",
+            "nullable": true,
+            "description": "The calculation in one line"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NextYearLimitInputDto"
+            }
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "example": "2027-03-01"
+          }
+        },
+        "required": [
+          "key",
+          "targetYear",
+          "value",
+          "low80",
+          "high80",
+          "stage",
+          "stageLabel",
+          "projection",
+          "official",
+          "equation",
+          "inputs",
+          "note",
+          "effectiveFrom"
+        ]
+      },
+      "NextYearLimitsDataDto": {
+        "type": "object",
+        "properties": {
+          "indexId": {
+            "type": "string",
+            "example": "finwire_next_year_limits"
+          },
+          "indexName": {
+            "type": "string",
+            "example": "Limity na przysz\u0142y rok finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "asOf": {
+            "type": "string",
+            "example": "2026-11-04"
+          },
+          "targetYear": {
+            "type": "number",
+            "example": 2027
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "stages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NextYearLimitItemDto"
+            }
+          },
+          "path": {
+            "type": "object",
+            "description": "Estimate path per item key: [{asOf, value, low80, high80, stage}]"
+          },
+          "backtest": {
+            "type": "object",
+            "description": "Backtest on past years with an official act: summary and rows"
+          }
+        },
+        "required": [
+          "indexId",
+          "indexName",
+          "methodVersion",
+          "asOf",
+          "targetYear",
+          "updatedAt",
+          "stages",
+          "items",
+          "backtest"
+        ]
+      },
+      "NextYearLimitsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NextYearLimitsDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -6451,6 +7022,347 @@
           "meta"
         ]
       },
+      "FinwireIndexRefLiteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "example": "finwire_local_tax_squeeze"
+          },
+          "methodVersion": {
+            "type": "number",
+            "nullable": true,
+            "example": 1
+          }
+        },
+        "required": [
+          "id",
+          "methodVersion"
+        ]
+      },
+      "LocationPremiumPickDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "premiumPct": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "premiumPct"
+        ]
+      },
+      "LocationPremiumCityRowDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "nullable": true,
+            "example": "warszawa"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "ok",
+              "too_few",
+              "weak_fit",
+              "not_covered"
+            ]
+          },
+          "eligibleDistricts": {
+            "type": "number",
+            "nullable": true
+          },
+          "r2": {
+            "type": "number",
+            "nullable": true
+          },
+          "meanAbsPremiumPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "highestPremium": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocationPremiumPickDto"
+              }
+            ]
+          },
+          "lowestPremium": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocationPremiumPickDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "status",
+          "eligibleDistricts",
+          "r2",
+          "meanAbsPremiumPct",
+          "highestPremium",
+          "lowestPremium"
+        ]
+      },
+      "LocationPremiumSummaryDataDto": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "$ref": "#/components/schemas/FinwireIndexRefLiteDto"
+          },
+          "anchorQuarter": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-Q2"
+          },
+          "meanAbsPremiumPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Mean absolute premium of districts in cities with status ok, % (finwire_location_premium)"
+          },
+          "districts": {
+            "type": "number",
+            "nullable": true
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocationPremiumCityRowDto"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "index",
+          "anchorQuarter",
+          "meanAbsPremiumPct",
+          "districts",
+          "cities",
+          "updatedAt"
+        ]
+      },
+      "LocationPremiumSummaryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LocationPremiumSummaryDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LocationPremiumAccuracyDto": {
+        "type": "object",
+        "properties": {
+          "leaveOneOutMaePct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Mean absolute error of the price of a district predicted without that district, %"
+          },
+          "naiveMaePct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Same for the median of the other districts, %"
+          }
+        },
+        "required": [
+          "leaveOneOutMaePct",
+          "naiveMaePct"
+        ]
+      },
+      "LocationPremiumDistrictDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "medianM2": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median price per m2 from notarial deeds, last 12 months"
+          },
+          "transactions": {
+            "type": "number",
+            "nullable": true
+          },
+          "qualityScore": {
+            "type": "number",
+            "nullable": true,
+            "description": "Neighbourhood quality 0-100 without price components"
+          },
+          "qualityPercentile": {
+            "type": "number",
+            "nullable": true,
+            "description": "Percentile of quality among districts of the city"
+          },
+          "expectedM2": {
+            "type": "number",
+            "nullable": true,
+            "description": "Price per m2 expected from quality"
+          },
+          "premiumPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Actual / expected - 1, %"
+          },
+          "rank": {
+            "type": "number",
+            "nullable": true
+          },
+          "pageUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "medianM2",
+          "transactions",
+          "qualityScore",
+          "qualityPercentile",
+          "expectedM2",
+          "premiumPct",
+          "rank",
+          "pageUrl"
+        ]
+      },
+      "LocationPremiumCityDataDto": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "$ref": "#/components/schemas/FinwireIndexRefLiteDto"
+          },
+          "city": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "ok",
+              "too_few",
+              "weak_fit",
+              "not_covered"
+            ]
+          },
+          "window": {
+            "type": "object"
+          },
+          "anchorQuarter": {
+            "type": "string",
+            "nullable": true
+          },
+          "qualityComputedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "eligibleDistricts": {
+            "type": "number",
+            "nullable": true
+          },
+          "units": {
+            "type": "number",
+            "nullable": true
+          },
+          "r2": {
+            "type": "number",
+            "nullable": true
+          },
+          "pricePer10QualityPercentilesPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "meanAbsPremiumPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "accuracy": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocationPremiumAccuracyDto"
+              }
+            ]
+          },
+          "districts": {
+            "description": "By premium descending; empty unless status is ok",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocationPremiumDistrictDto"
+            }
+          },
+          "sectionUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "index",
+          "city",
+          "status",
+          "window",
+          "anchorQuarter",
+          "qualityComputedAt",
+          "eligibleDistricts",
+          "units",
+          "r2",
+          "pricePer10QualityPercentilesPct",
+          "meanAbsPremiumPct",
+          "accuracy",
+          "districts",
+          "sectionUrl"
+        ]
+      },
+      "LocationPremiumCityResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LocationPremiumCityDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "RentSourceDto": {
         "type": "object",
         "properties": {
@@ -6740,6 +7652,201 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/RentYieldDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "HousingCarryCityDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "lodz"
+          },
+          "name": {
+            "type": "string",
+            "example": "\u0141\u00f3d\u017a"
+          },
+          "carryPp": {
+            "type": "number",
+            "example": 0.24,
+            "description": "Net rental yield minus mortgage rate, percentage points"
+          },
+          "netYieldPct": {
+            "type": "number",
+            "example": 6.12,
+            "description": "Net rental yield after vacancy, flat-rate rental tax, admin fee in vacant months and property tax, %"
+          },
+          "grossYieldPct": {
+            "type": "number",
+            "example": 7.33,
+            "description": "Gross rental yield (rent x 12 / purchase price), %"
+          },
+          "mortgageRatePct": {
+            "type": "number",
+            "example": 5.88,
+            "description": "Mortgage interest rate used (variable, typical market margin), %"
+          },
+          "monthlyCarryPln": {
+            "type": "number",
+            "example": 66,
+            "description": "Net rent minus first-year interest on a loan for the whole price, PLN per month"
+          },
+          "medianRent": {
+            "type": "number",
+            "example": 2100
+          },
+          "rentBasis": {
+            "type": "string",
+            "example": "2 pokoje"
+          },
+          "rentAreaM2": {
+            "type": "number",
+            "example": 43
+          },
+          "rentOffers": {
+            "type": "number",
+            "example": 4064
+          },
+          "pricePerM2": {
+            "type": "number",
+            "example": 7819
+          },
+          "priceQuarter": {
+            "type": "string",
+            "example": "Q2 2026"
+          },
+          "priceSource": {
+            "type": "string",
+            "example": "rcn",
+            "description": "rcn = notarial deeds (RCN), gus = GUS RCiWN"
+          },
+          "priceTransactions": {
+            "type": "object",
+            "example": 1193,
+            "nullable": true
+          },
+          "purchaseCost": {
+            "type": "number",
+            "example": 336217
+          },
+          "ownerCostsYear": {
+            "type": "object",
+            "description": "Owner costs per year, PLN: admin fee in vacant months, property tax (upper statutory rate)"
+          },
+          "history": {
+            "description": "Monthly carry of the city",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "carryPp",
+          "netYieldPct",
+          "grossYieldPct",
+          "mortgageRatePct",
+          "monthlyCarryPln",
+          "medianRent",
+          "rentBasis",
+          "rentAreaM2",
+          "rentOffers",
+          "pricePerM2",
+          "priceQuarter",
+          "priceSource",
+          "priceTransactions",
+          "purchaseCost",
+          "ownerCostsYear",
+          "history"
+        ]
+      },
+      "HousingCarryDataDto": {
+        "type": "object",
+        "properties": {
+          "seriesId": {
+            "type": "string",
+            "example": "finwire_housing_carry"
+          },
+          "name": {
+            "type": "string",
+            "example": "Carry nieruchomo\u015bci finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-11"
+          },
+          "periodLabel": {
+            "type": "string",
+            "example": "listopad 2026"
+          },
+          "asOf": {
+            "type": "string",
+            "example": "2026-11-04",
+            "description": "Day of the last computation"
+          },
+          "stale": {
+            "type": "boolean",
+            "description": "true = the last valid reading is older than 3 days"
+          },
+          "summary": {
+            "type": "object",
+            "description": "Median carry of cities, cities with positive carry, best and worst city, change vs previous month"
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HousingCarryCityDto"
+            }
+          },
+          "history": {
+            "description": "Monthly median carry",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "assumptions": {
+            "type": "object",
+            "nullable": true
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/indeksy/carry-nieruchomosci"
+          }
+        },
+        "required": [
+          "seriesId",
+          "name",
+          "methodVersion",
+          "period",
+          "periodLabel",
+          "asOf",
+          "stale",
+          "summary",
+          "cities",
+          "history",
+          "assumptions",
+          "pageUrl"
+        ]
+      },
+      "HousingCarryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/HousingCarryDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -7442,6 +8549,508 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/HousingSupplyCityDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "HousingPressureUnitDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "warszawa",
+            "description": "'polska', province TERYT or city slug"
+          },
+          "level": {
+            "type": "string",
+            "example": "miasto"
+          },
+          "name": {
+            "type": "string",
+            "example": "Warszawa"
+          },
+          "year": {
+            "type": "number",
+            "nullable": true,
+            "example": 2025
+          },
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.188,
+            "description": "New residents per 1 dwelling completed"
+          },
+          "previousValue": {
+            "type": "number",
+            "nullable": true
+          },
+          "avg5": {
+            "type": "number",
+            "nullable": true,
+            "description": "Average of the last 5 years"
+          },
+          "newResidents": {
+            "type": "number",
+            "nullable": true,
+            "example": 3732
+          },
+          "internalNet": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net internal migration (permanent residence)"
+          },
+          "foreignNet": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net foreign migration (permanent residence)"
+          },
+          "zusDelta": {
+            "type": "number",
+            "nullable": true,
+            "description": "Growth of foreigners insured in ZUS assigned to the unit (null before ZUS data)"
+          },
+          "completed": {
+            "type": "number",
+            "nullable": true,
+            "example": 19844
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "level",
+          "name",
+          "year",
+          "value",
+          "previousValue",
+          "avg5",
+          "newResidents",
+          "internalNet",
+          "foreignNet",
+          "zusDelta",
+          "completed",
+          "history"
+        ]
+      },
+      "HousingPressureDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_housing_pressure"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "year": {
+            "type": "number",
+            "example": 2025
+          },
+          "unit": {
+            "type": "string"
+          },
+          "zusIncluded": {
+            "type": "boolean"
+          },
+          "zusPeriod": {
+            "type": "string",
+            "nullable": true
+          },
+          "poland": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HousingPressureUnitDto"
+              }
+            ]
+          },
+          "provinces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HousingPressureUnitDto"
+            }
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HousingPressureUnitDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "methodVersion",
+          "year",
+          "unit",
+          "zusIncluded",
+          "zusPeriod",
+          "poland",
+          "provinces",
+          "cities"
+        ]
+      },
+      "HousingBalanceAccuracyDto": {
+        "type": "object",
+        "properties": {
+          "n": {
+            "type": "number",
+            "nullable": true,
+            "example": 126,
+            "description": "Out-of-sample forecasts in the backtest"
+          },
+          "origins": {
+            "type": "number",
+            "nullable": true,
+            "example": 7,
+            "description": "Forecast origins (quarters or months)"
+          },
+          "coverage80": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.889,
+            "description": "Share of outcomes inside the 80% interval"
+          },
+          "mapePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 24.55,
+            "description": "Mean absolute percentage error of the model"
+          },
+          "naiveMapePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 31.9,
+            "description": "Same for the no-change forecast"
+          },
+          "from": {
+            "type": "string",
+            "nullable": true,
+            "example": "2023-Q1"
+          },
+          "to": {
+            "type": "string",
+            "nullable": true,
+            "example": "2024-Q3"
+          }
+        },
+        "required": [
+          "n",
+          "origins",
+          "coverage80",
+          "mapePct",
+          "naiveMapePct",
+          "from",
+          "to"
+        ]
+      },
+      "HousingPipelineUnitDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "polska"
+          },
+          "level": {
+            "type": "string",
+            "example": "kraj"
+          },
+          "name": {
+            "type": "string",
+            "example": "Polska"
+          },
+          "lastQuarter": {
+            "type": "string",
+            "example": "2026-Q3"
+          },
+          "completedLast4q": {
+            "type": "number",
+            "example": 212786,
+            "description": "Dwellings completed in the last 4 quarters"
+          },
+          "forecast2y": {
+            "type": "object",
+            "nullable": true,
+            "description": "Forecast for 4 quarters ending 2 years ahead with 80% interval; null when not published"
+          },
+          "path": {
+            "description": "Published forecast horizons only",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "level",
+          "name",
+          "lastQuarter",
+          "completedLast4q",
+          "forecast2y",
+          "path",
+          "history"
+        ]
+      },
+      "HousingPipelineDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_housing_pipeline"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "published": {
+            "type": "boolean",
+            "description": "false = backtest below the accuracy threshold, forecasts withheld"
+          },
+          "lastQuarter": {
+            "type": "string",
+            "example": "2026-Q3"
+          },
+          "permitsQuarter": {
+            "type": "string",
+            "example": "2026-Q3"
+          },
+          "lagQuarters": {
+            "type": "number",
+            "example": 8,
+            "description": "Permit-to-completion lag chosen by cross-correlation"
+          },
+          "lagCorrelation": {
+            "type": "number",
+            "example": 0.159
+          },
+          "unit": {
+            "type": "string"
+          },
+          "accuracy": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HousingBalanceAccuracyDto"
+            }
+          },
+          "poland": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HousingPipelineUnitDto"
+              }
+            ]
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HousingPipelineUnitDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "methodVersion",
+          "published",
+          "lastQuarter",
+          "permitsQuarter",
+          "lagQuarters",
+          "lagCorrelation",
+          "unit",
+          "accuracy",
+          "poland",
+          "cities"
+        ]
+      },
+      "RentForecastCityDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "krakow"
+          },
+          "name": {
+            "type": "string",
+            "example": "Krak\u00f3w"
+          },
+          "baseMonth": {
+            "type": "string",
+            "example": "2028-01"
+          },
+          "rentPerM2": {
+            "type": "number",
+            "example": 78.4,
+            "description": "Average asking rent per m2 in the base month, PLN"
+          },
+          "targetMonth": {
+            "type": "string",
+            "example": "2028-07"
+          },
+          "changePct": {
+            "type": "number",
+            "example": 1.8
+          },
+          "lo80Pct": {
+            "type": "number",
+            "example": -1.2
+          },
+          "hi80Pct": {
+            "type": "number",
+            "example": 4.9
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "baseMonth",
+          "rentPerM2",
+          "targetMonth",
+          "changePct",
+          "lo80Pct",
+          "hi80Pct"
+        ]
+      },
+      "RentForecastDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_rent_forecast"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "example": "insufficient_history",
+            "enum": [
+              "published",
+              "below_threshold",
+              "insufficient_history"
+            ]
+          },
+          "published": {
+            "type": "boolean"
+          },
+          "baseMonth": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstMonth": {
+            "type": "string",
+            "nullable": true
+          },
+          "monthsOfHistory": {
+            "type": "number",
+            "example": 8
+          },
+          "monthsNeeded": {
+            "type": "number",
+            "example": 23
+          },
+          "horizonMonths": {
+            "type": "number",
+            "example": 6
+          },
+          "accuracy": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HousingBalanceAccuracyDto"
+              }
+            ]
+          },
+          "cities": {
+            "description": "Empty until the forecast passes the accuracy threshold",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RentForecastCityDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "methodVersion",
+          "status",
+          "published",
+          "baseMonth",
+          "firstMonth",
+          "monthsOfHistory",
+          "monthsNeeded",
+          "horizonMonths",
+          "accuracy",
+          "cities"
+        ]
+      },
+      "HousingBalanceDataDto": {
+        "type": "object",
+        "properties": {
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "pressure": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HousingPressureDto"
+              }
+            ]
+          },
+          "pipeline": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HousingPipelineDto"
+              }
+            ]
+          },
+          "rent": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RentForecastDto"
+              }
+            ]
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "updatedAt",
+          "pressure",
+          "pipeline",
+          "rent",
+          "sources"
+        ]
+      },
+      "HousingBalanceResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/HousingBalanceDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -10529,6 +12138,164 @@
           "meta"
         ]
       },
+      "RetailBondPremiumDataDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_retail_bond_premium"
+          },
+          "name": {
+            "type": "string",
+            "example": "Premia obligacji skarbowych finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11",
+            "description": "Latest month of bond issue with a reading"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "units": {
+            "type": "object"
+          },
+          "latest": {
+            "type": "object",
+            "nullable": true,
+            "description": "Latest month: ROR premium over finwire_deposit_rate_index and over the average new household term deposit (MIR), per-series premiums, retail bond stock change"
+          },
+          "previous": {
+            "type": "object",
+            "nullable": true
+          },
+          "salesResponse": {
+            "type": "object",
+            "description": "Correlation of the premium with the monthly change of retail bond stock, computed on our series; published=false until the series is long enough"
+          },
+          "history": {
+            "description": "Monthly readings, ascending",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "asOf",
+          "updatedAt",
+          "units",
+          "latest",
+          "previous",
+          "salesResponse",
+          "history"
+        ]
+      },
+      "RetailBondPremiumResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/RetailBondPremiumDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "FixedCostBurdenDataDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_fixed_cost_burden"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sztywne koszty gospodarstwa finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "model": {
+            "type": "object",
+            "nullable": true,
+            "description": "Model household: two earners on the regional median wage, 50 m2 flat, 80% mortgage over 30 years"
+          },
+          "units": {
+            "type": "object"
+          },
+          "latest": {
+            "description": "Poland first, then provinces by share, descending",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "previous": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "history": {
+            "description": "Per region monthly points, ascending",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "asOf",
+          "updatedAt",
+          "model",
+          "units",
+          "latest",
+          "previous",
+          "history"
+        ]
+      },
+      "FixedCostBurdenResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FixedCostBurdenDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "PublicDebtDataDto": {
         "type": "object",
         "properties": {
@@ -11050,6 +12817,295 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/NowcastDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LeadDriverDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "unitLabourCost"
+          },
+          "label": {
+            "type": "string",
+            "example": "Koszt pracy na jednostk\u0119 produkcji, r/r"
+          },
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "description": "Value of the factor in the data month; null for WIBOR-based factors (GPW Benchmark licence)"
+          },
+          "unit": {
+            "type": "string",
+            "example": "%"
+          },
+          "contributionPp": {
+            "type": "number",
+            "nullable": true,
+            "description": "Contribution to the forecast change, pp; null when the forecast is not published"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "value",
+          "unit",
+          "contributionPp"
+        ]
+      },
+      "LeadBacktestStatsDto": {
+        "type": "object",
+        "properties": {
+          "n": {
+            "type": "number",
+            "nullable": true
+          },
+          "coverage80Pct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Share of actual readings inside the 80% interval, %"
+          },
+          "maePp": {
+            "type": "number",
+            "nullable": true
+          },
+          "naiveMaePp": {
+            "type": "number",
+            "nullable": true,
+            "description": "Mean absolute error of the no-change benchmark, pp"
+          },
+          "directionHitPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "from": {
+            "type": "string",
+            "nullable": true
+          },
+          "to": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "n",
+          "coverage80Pct",
+          "maePp",
+          "naiveMaePp",
+          "directionHitPct",
+          "from",
+          "to"
+        ]
+      },
+      "LeadBacktestPointDto": {
+        "type": "object",
+        "properties": {
+          "dataMonth": {
+            "type": "string"
+          },
+          "targetMonth": {
+            "type": "string"
+          },
+          "point": {
+            "type": "number"
+          },
+          "lo80": {
+            "type": "number"
+          },
+          "hi80": {
+            "type": "number"
+          },
+          "actual": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "dataMonth",
+          "targetMonth",
+          "point",
+          "lo80",
+          "hi80",
+          "actual"
+        ]
+      },
+      "LeadForecastDto": {
+        "type": "object",
+        "properties": {
+          "series": {
+            "type": "string",
+            "example": "core_nbp"
+          },
+          "seriesLabel": {
+            "type": "string",
+            "nullable": true
+          },
+          "horizonMonths": {
+            "type": "number",
+            "example": 6
+          },
+          "dataMonth": {
+            "type": "string",
+            "example": "2026-09",
+            "description": "Month of the latest data used"
+          },
+          "targetMonth": {
+            "type": "string",
+            "example": "2027-03"
+          },
+          "lastReading": {
+            "type": "number",
+            "nullable": true,
+            "description": "Latest actual reading (data month)"
+          },
+          "published": {
+            "type": "boolean",
+            "description": "false = below the accuracy threshold; numbers withheld"
+          },
+          "point": {
+            "type": "number",
+            "nullable": true
+          },
+          "lo80": {
+            "type": "number",
+            "nullable": true
+          },
+          "hi80": {
+            "type": "number",
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "up",
+              "down",
+              "flat"
+            ]
+          },
+          "drivers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeadDriverDto"
+            }
+          },
+          "backtest": {
+            "$ref": "#/components/schemas/LeadBacktestStatsDto"
+          },
+          "backtestPoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeadBacktestPointDto"
+            }
+          },
+          "modelVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "computedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "series",
+          "seriesLabel",
+          "horizonMonths",
+          "dataMonth",
+          "targetMonth",
+          "lastReading",
+          "published",
+          "point",
+          "lo80",
+          "hi80",
+          "direction",
+          "drivers",
+          "backtest",
+          "backtestPoints",
+          "modelVersion",
+          "computedAt"
+        ]
+      },
+      "LeadIndexDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_cost_pressure"
+          },
+          "slug": {
+            "type": "string",
+            "example": "cost-pressure"
+          },
+          "published": {
+            "type": "boolean"
+          },
+          "publicationRule": {
+            "type": "object"
+          },
+          "forecasts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeadForecastDto"
+            }
+          },
+          "history": {
+            "description": "Monthly actual readings of the forecast series",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "computedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "published",
+          "publicationRule",
+          "forecasts",
+          "history",
+          "computedAt"
+        ]
+      },
+      "LeadForecastsDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true
+          },
+          "note": {
+            "type": "string"
+          },
+          "indices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeadIndexDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "note",
+          "indices"
+        ]
+      },
+      "LeadForecastsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LeadForecastsDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -13253,6 +15309,429 @@
           "meta"
         ]
       },
+      "LocalTaxSqueezeThresholdsDto": {
+        "type": "object",
+        "properties": {
+          "propertyTaxReliancePct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Reliance at the 75th percentile of municipalities, %"
+          },
+          "pitSharePerCapitaPln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median PIT share per resident, PLN"
+          }
+        },
+        "required": [
+          "propertyTaxReliancePct",
+          "pitSharePerCapitaPln"
+        ]
+      },
+      "LocalTaxSqueezeAreaDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true,
+            "example": "14",
+            "description": "TERYT province code, PL = Poland"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "mazowieckie"
+          },
+          "municipalities": {
+            "type": "number",
+            "nullable": true
+          },
+          "propertyTaxReliancePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 19.6,
+            "description": "Property tax / (property tax + PIT share) in the budget plans, % (finwire_local_tax_squeeze for Poland)"
+          },
+          "propertyTaxPerCapitaPln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Planned property tax per resident, PLN"
+          },
+          "propertyTaxHouseholdsPerCapitaPln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Part paid by individuals (homes, flats, plots), PLN per resident"
+          },
+          "pitSharePerCapitaPln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Planned PIT share per resident, PLN"
+          },
+          "pitShareChangePct": {
+            "type": "number",
+            "nullable": true,
+            "description": "PIT share vs previous budget year, %"
+          },
+          "squeezedMunicipalities": {
+            "type": "number",
+            "nullable": true,
+            "description": "Municipalities in the squeeze (top quarter of reliance and PIT share per resident below the median)"
+          },
+          "squeezedSharePct": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "municipalities",
+          "propertyTaxReliancePct",
+          "propertyTaxPerCapitaPln",
+          "propertyTaxHouseholdsPerCapitaPln",
+          "pitSharePerCapitaPln",
+          "pitShareChangePct",
+          "squeezedMunicipalities",
+          "squeezedSharePct"
+        ]
+      },
+      "LocalTaxSqueezeMunicipalityDto": {
+        "type": "object",
+        "properties": {
+          "teryt": {
+            "type": "string",
+            "nullable": true,
+            "example": "1465011"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "example": "miasto na prawach powiatu"
+          },
+          "voivodeship": {
+            "type": "string",
+            "nullable": true,
+            "example": "14",
+            "description": "TERYT province code"
+          },
+          "population": {
+            "type": "number",
+            "nullable": true
+          },
+          "propertyTaxReliancePct": {
+            "type": "number",
+            "nullable": true
+          },
+          "rank": {
+            "type": "number",
+            "nullable": true,
+            "description": "1 = highest reliance"
+          },
+          "propertyTaxPerCapitaPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "propertyTaxHouseholdsPerCapitaPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "pitSharePerCapitaPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "pitShareChangePct": {
+            "type": "number",
+            "nullable": true
+          },
+          "squeezed": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "teryt",
+          "name",
+          "type",
+          "voivodeship",
+          "population",
+          "propertyTaxReliancePct",
+          "rank",
+          "propertyTaxPerCapitaPln",
+          "propertyTaxHouseholdsPerCapitaPln",
+          "pitSharePerCapitaPln",
+          "pitShareChangePct",
+          "squeezed"
+        ]
+      },
+      "LocalTaxSqueezeYearDto": {
+        "type": "object",
+        "properties": {
+          "budgetYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "propertyTaxReliancePct": {
+            "type": "number",
+            "nullable": true
+          },
+          "squeezedMunicipalities": {
+            "type": "number",
+            "nullable": true
+          },
+          "municipalities": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "budgetYear",
+          "propertyTaxReliancePct",
+          "squeezedMunicipalities",
+          "municipalities"
+        ]
+      },
+      "LocalTaxUpperLimitDto": {
+        "type": "object",
+        "properties": {
+          "taxYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "flatRatePerM2Pln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Upper limit of the property tax rate for flats and houses, PLN per m2 (Ministry of Finance notice)"
+          },
+          "previousTaxYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "previousFlatRatePerM2Pln": {
+            "type": "number",
+            "nullable": true
+          },
+          "changePct": {
+            "type": "number",
+            "nullable": true
+          },
+          "flat50m2TaxPln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Maximum yearly tax for a 50 m2 flat, PLN"
+          },
+          "flat50m2DeltaPln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Change of the maximum for a 50 m2 flat vs previous year, PLN"
+          },
+          "sourceTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "taxYear",
+          "flatRatePerM2Pln",
+          "previousTaxYear",
+          "previousFlatRatePerM2Pln",
+          "changePct",
+          "flat50m2TaxPln",
+          "flat50m2DeltaPln",
+          "sourceTitle",
+          "sourceUrl"
+        ]
+      },
+      "LocalTaxSqueezeDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-06-30"
+          },
+          "available": {
+            "type": "boolean",
+            "example": true
+          },
+          "index": {
+            "$ref": "#/components/schemas/FinwireIndexRefLiteDto"
+          },
+          "budgetYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2026
+          },
+          "quarter": {
+            "type": "number",
+            "nullable": true
+          },
+          "previousYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "populationYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "thresholds": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalTaxSqueezeThresholdsDto"
+              }
+            ]
+          },
+          "national": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalTaxSqueezeAreaDto"
+              }
+            ]
+          },
+          "voivodeships": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalTaxSqueezeAreaDto"
+            }
+          },
+          "cities": {
+            "description": "Cities with county rights, by reliance descending",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalTaxSqueezeMunicipalityDto"
+            }
+          },
+          "topSqueezed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalTaxSqueezeMunicipalityDto"
+            }
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalTaxSqueezeYearDto"
+            }
+          },
+          "upperLimit": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalTaxUpperLimitDto"
+              }
+            ]
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "asOf",
+          "available",
+          "index",
+          "budgetYear",
+          "quarter",
+          "previousYear",
+          "populationYear",
+          "thresholds",
+          "national",
+          "voivodeships",
+          "cities",
+          "topSqueezed",
+          "history",
+          "upperLimit",
+          "updatedAt"
+        ]
+      },
+      "LocalTaxSqueezeResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LocalTaxSqueezeDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LocalTaxSqueezeMunicipalitiesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true
+          },
+          "available": {
+            "type": "boolean",
+            "example": true
+          },
+          "budgetYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "thresholds": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalTaxSqueezeThresholdsDto"
+              }
+            ]
+          },
+          "count": {
+            "type": "number",
+            "example": 2477
+          },
+          "entries": {
+            "description": "By reliance descending",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalTaxSqueezeMunicipalityDto"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "asOf",
+          "available",
+          "budgetYear",
+          "thresholds",
+          "count",
+          "entries",
+          "updatedAt"
+        ]
+      },
+      "LocalTaxSqueezeMunicipalitiesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LocalTaxSqueezeMunicipalitiesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "UpkeepCityDto": {
         "type": "object",
         "properties": {
@@ -15007,6 +17486,266 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/CreditDemandDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "RateRiskHorizonDto": {
+        "type": "object",
+        "properties": {
+          "months": {
+            "type": "number",
+            "example": 12,
+            "description": "Horizon in months (3, 6, 12)"
+          },
+          "paymentQ10Pln": {
+            "type": "number",
+            "nullable": true,
+            "example": 2001,
+            "description": "10th percentile of the monthly payment, PLN"
+          },
+          "paymentQ50Pln": {
+            "type": "number",
+            "nullable": true,
+            "example": 2332
+          },
+          "paymentQ90Pln": {
+            "type": "number",
+            "nullable": true,
+            "example": 3124
+          },
+          "probUp5Pct": {
+            "type": "number",
+            "nullable": true,
+            "example": 17.4,
+            "description": "Chance the payment rises by more than 5%, %"
+          },
+          "probUp10Pct": {
+            "type": "number",
+            "nullable": true,
+            "example": 14
+          },
+          "probDown5Pct": {
+            "type": "number",
+            "nullable": true,
+            "example": 31.4,
+            "description": "Chance the payment falls by more than 5%, %"
+          }
+        },
+        "required": [
+          "months",
+          "paymentQ10Pln",
+          "paymentQ50Pln",
+          "paymentQ90Pln",
+          "probUp5Pct",
+          "probUp10Pct",
+          "probDown5Pct"
+        ]
+      },
+      "RateRiskHistoryPointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-11-03"
+          },
+          "value": {
+            "type": "number",
+            "nullable": true,
+            "example": 17.4
+          }
+        },
+        "required": [
+          "period",
+          "value"
+        ]
+      },
+      "RateRiskGaugeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_rate_risk_gauge"
+          },
+          "name": {
+            "type": "string",
+            "example": "Ryzyko raty finwire"
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-11-03",
+            "description": "WIBOR fixing day the reading is computed from"
+          },
+          "probabilityUp5Pct12m": {
+            "type": "number",
+            "nullable": true,
+            "example": 17.4,
+            "description": "Index value: chance the payment rises by more than 5% within 12 months, %"
+          },
+          "scenario": {
+            "type": "object",
+            "nullable": true
+          },
+          "paymentNowPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 2360
+          },
+          "paymentUp5Pln": {
+            "type": "number",
+            "nullable": true,
+            "example": 2478
+          },
+          "paymentUp10Pln": {
+            "type": "number",
+            "nullable": true,
+            "example": 2596
+          },
+          "horizons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RateRiskHorizonDto"
+            }
+          },
+          "history": {
+            "description": "Month ends since 2008, then every fixing day",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RateRiskHistoryPointDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "period",
+          "probabilityUp5Pct12m",
+          "scenario",
+          "paymentNowPln",
+          "paymentUp5Pln",
+          "paymentUp10Pln",
+          "horizons",
+          "history"
+        ]
+      },
+      "FixedRatePremiumDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_fixed_rate_premium"
+          },
+          "name": {
+            "type": "string",
+            "example": "Premia za sta\u0142\u0105 stop\u0119 finwire"
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-11-04"
+          },
+          "premiumPp": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.69,
+            "description": "5-year fixed rate minus expected cost of the variable rate over 5 years, pp"
+          },
+          "spreadTodayPp": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.73,
+            "description": "Fixed minus variable rate today, without expectations, pp"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RateRiskHistoryPointDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "period",
+          "premiumPp",
+          "spreadTodayPp",
+          "history"
+        ]
+      },
+      "RateRiskDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-03"
+          },
+          "methodVersion": {
+            "type": "number",
+            "nullable": true,
+            "example": 1
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "rateRisk": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RateRiskGaugeDto"
+              }
+            ]
+          },
+          "fixedRatePremium": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FixedRatePremiumDto"
+              }
+            ]
+          },
+          "fixedRatePremiumMonthlyMir": {
+            "description": "Monthly premium from ECB MIR (new housing loans in Poland: fixed 1-5 years vs variable)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "negativePremiumWindows": {
+            "description": "Continuous months with a negative monthly premium",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "accuracy": {
+            "type": "object",
+            "nullable": true,
+            "description": "Walk-forward backtest since 2008: 80% interval coverage, median error vs no-change forecast, Brier score"
+          }
+        },
+        "required": [
+          "asOf",
+          "methodVersion",
+          "updatedAt",
+          "rateRisk",
+          "fixedRatePremium",
+          "fixedRatePremiumMonthlyMir",
+          "negativePremiumWindows",
+          "accuracy"
+        ]
+      },
+      "RateRiskResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/RateRiskDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

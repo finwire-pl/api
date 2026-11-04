@@ -259,6 +259,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/legal-limits/next-year": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Limity na przyszły rok finwire (finwire_next_year_limits): next-year statutory values computed from the formulas in Polish law before the official act - pension indexation and minimum pension, minimum wage and hourly rate, projected average wage with IKE and IKZE limits, the 30x ZUS cap and ZUS contribution bases, flat-rate tax and small CIT taxpayer limits in PLN. Each item has a stage (projekcja, projekt, obwieszczenie, obowiazuje), an 80% interval, the calculation, inputs with periods, the estimate path and a backtest on past years */
+        get: operations["ReferenceController_nextYearLimits"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/wages/occupations": {
         parameters: {
             query?: never;
@@ -548,6 +565,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/housing/location-premium": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Location premium (finwire_location_premium): how far district flat prices from notarial deeds deviate from the price expected from neighbourhood quality, per city: model status, R2, mean absolute premium, highest and lowest premium */
+        get: operations["RealEstateController_locationPremium"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/location-premium/{city}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Location premium by district of one city: actual and expected price per m2, quality percentile, premium %, model fit and leave-one-out accuracy */
+        get: operations["RealEstateController_locationPremiumCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/rent": {
         parameters: {
             query?: never;
@@ -574,6 +625,23 @@ export interface paths {
         };
         /** Gross and net rental yield per city (rents vs transaction prices) */
         get: operations["RealEstateController_rentYield"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/carry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Carry nieruchomości finwire (finwire_housing_carry): net rental yield of a flat minus the mortgage interest rate per city, percentage points, monthly with history; negative = interest on a loan for the whole price exceeds net rent. Informational data, not investment advice */
+        get: operations["RealEstateController_housingCarry"];
         put?: never;
         post?: never;
         delete?: never;
@@ -625,6 +693,23 @@ export interface paths {
         };
         /** Housing supply in a city vs its province and Poland, with yearly history */
         get: operations["RealEstateController_housingSupplyCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** finwire housing balance: demographic pressure (finwire_housing_pressure, new residents per 1 new dwelling), completions forecast from building permits (finwire_housing_pipeline, 80% interval, backtest accuracy) and 6-month rent forecast (finwire_rent_forecast, published only above the accuracy threshold) */
+        get: operations["RealEstateController_housingBalance"];
         put?: never;
         post?: never;
         delete?: never;
@@ -922,6 +1007,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/retail-bond-premium": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Premia obligacji skarbowych finwire (finwire_retail_bond_premium): first-year rate of Polish retail savings bonds (OTS, ROR, DOR, TOS, COI, EDO, family ROS and ROD) minus the finwire deposit and savings account indices and the average new household term deposit rate (NBP MIR), after the 19% capital gains tax on both sides, in percentage points; monthly change of retail bond debt (Ministry of Finance) and household term deposits (NBP); correlation test of the premium with bond sales */
+        get: operations["MacroController_retailBondPremium"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/fixed-cost-burden": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Sztywne koszty gospodarstwa finwire (finwire_fixed_cost_burden): share of household net income (two earners on the regional median wage, net from the employment contract calculator) taken by the mortgage payment on a 50 m2 flat, administrative fee, heating, water, waste, electricity and TV licence; Poland and 16 provinces, monthly */
+        get: operations["MacroController_fixedCostBurden"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public-debt": {
         parameters: {
             query?: never;
@@ -948,6 +1067,23 @@ export interface paths {
         };
         /** Finwire Nowcast: finwire.pl model forecasts of CPI and core inflation (point and 80% interval) and RPP decision probabilities, frozen 3 working days before publication, with backtest and settled history */
         get: operations["MacroController_nowcast"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/macro/lead-forecasts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** finwire lead forecasts: Presja kosztowa finwire (finwire_cost_pressure, NBP core inflation in 6 and 12 months from unit labour cost, producer prices and EUR/PLN) and Stres kredytowy wyprzedzający finwire (finwire_npl_forecast, share of impaired housing and consumer loans in 2 and 4 quarters), 80% intervals, rolling backtest; published only above the accuracy threshold */
+        get: operations["MacroController_leadForecasts"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1101,6 +1237,40 @@ export interface paths {
         };
         /** One municipality year by year: PIT per resident, rank, breakdown by type of return and the national figures for the same years */
         get: operations["RegionalController_pitMunicipality"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/local-tax-squeeze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fiscal squeeze of municipalities (finwire_local_tax_squeeze): property tax as % of property tax + PIT share in the budget plans (Ministry of Finance Rb-27S), provinces, cities with county rights, municipalities in the squeeze, history and the upper limit of the property tax rate for flats */
+        get: operations["RegionalController_localTaxSqueeze"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/local-tax-squeeze/municipalities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Every municipality (gmina): property tax reliance, property tax and PIT share per resident, PIT share change, squeeze flag */
+        get: operations["RegionalController_localTaxSqueezeMunicipalities"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1271,6 +1441,23 @@ export interface paths {
         };
         /** Housing loan demand (BIK Demand Index), average requested vs granted amount, granted loans (BIK) and new housing loans (NBP), monthly */
         get: operations["CreditMarketController_demand"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/credit-market/rate-risk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ryzyko raty finwire (finwire_rate_risk_gauge): chance a variable-rate mortgage payment rises by more than 5% or 10% in 3, 6 and 12 months with payment percentiles, and Premia za stałą stopę finwire (finwire_fixed_rate_premium): 5-year fixed rate minus expected variable cost, daily and monthly (ECB MIR), with backtest accuracy */
+        get: operations["CreditMarketController_rateRisk"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1906,6 +2093,72 @@ export interface components {
         };
         LegalLimitsResponseDto: {
             data: components["schemas"]["LegalLimitsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        NextYearLimitOfficialDto: {
+            /** @example 4950 */
+            value: number | null;
+            /** @example rozporządzenie Rady Ministrów (Dz.U. 2026 poz. 1213) */
+            act: string | null;
+            url: string | null;
+        };
+        NextYearLimitInputDto: {
+            label: string | null;
+            /** @description Formatted value (Polish locale) */
+            value: string | null;
+            /** @description Period and source of the input */
+            note: string | null;
+        };
+        NextYearLimitItemDto: {
+            /**
+             * @description pension_indexation, min_pension, min_wage, min_hourly, zus_preferential_base, prognosed_wage, ike, ikze, ikze_self_employed, pension_base_cap_30x, zus_full_base, ryczalt_limit, cit_small_taxpayer
+             * @example pension_indexation
+             */
+            key: string;
+            /** @example 2027 */
+            targetYear: number;
+            /** @description Official value when announced, otherwise the formula estimate. pension_indexation is an index in % (104.9 = +4.9%), other items in PLN */
+            value: number | null;
+            /** @description 80% interval (equal to value once official) */
+            low80: number | null;
+            high80: number | null;
+            /**
+             * @description projekcja (formula estimate), projekt (government draft), obwieszczenie (announced), obowiazuje (in force)
+             * @example projekcja
+             */
+            stage: string;
+            stageLabel: string | null;
+            /** @description Formula estimate, also kept after the announcement */
+            projection: number | null;
+            official: components["schemas"]["NextYearLimitOfficialDto"] | null;
+            /** @description The calculation in one line */
+            equation: string | null;
+            inputs: components["schemas"]["NextYearLimitInputDto"][];
+            note: string | null;
+            /** @example 2027-03-01 */
+            effectiveFrom: string;
+        };
+        NextYearLimitsDataDto: {
+            /** @example finwire_next_year_limits */
+            indexId: string;
+            /** @example Limity na przyszły rok finwire */
+            indexName: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2026-11-04 */
+            asOf: string;
+            /** @example 2027 */
+            targetYear: number;
+            updatedAt: string | null;
+            stages: string[];
+            items: components["schemas"]["NextYearLimitItemDto"][];
+            /** @description Estimate path per item key: [{asOf, value, low80, high80, stage}] */
+            path?: Record<string, never>;
+            /** @description Backtest on past years with an official act: summary and rows */
+            backtest: Record<string, never>;
+        };
+        NextYearLimitsResponseDto: {
+            data: components["schemas"]["NextYearLimitsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         OccupationDto: {
@@ -2871,6 +3124,88 @@ export interface components {
             data: components["schemas"]["TransactionDistrictsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        FinwireIndexRefLiteDto: {
+            /** @example finwire_local_tax_squeeze */
+            id: string | null;
+            /** @example 1 */
+            methodVersion: number | null;
+        };
+        LocationPremiumPickDto: {
+            slug: string | null;
+            name: string | null;
+            premiumPct: number | null;
+        };
+        LocationPremiumCityRowDto: {
+            /** @example warszawa */
+            slug: string | null;
+            name: string | null;
+            /** @enum {string|null} */
+            status: "ok" | "too_few" | "weak_fit" | "not_covered" | null;
+            eligibleDistricts: number | null;
+            r2: number | null;
+            meanAbsPremiumPct: number | null;
+            highestPremium: components["schemas"]["LocationPremiumPickDto"] | null;
+            lowestPremium: components["schemas"]["LocationPremiumPickDto"] | null;
+        };
+        LocationPremiumSummaryDataDto: {
+            index: components["schemas"]["FinwireIndexRefLiteDto"];
+            /** @example 2026-Q2 */
+            anchorQuarter: string | null;
+            /** @description Mean absolute premium of districts in cities with status ok, % (finwire_location_premium) */
+            meanAbsPremiumPct: number | null;
+            districts: number | null;
+            cities: components["schemas"]["LocationPremiumCityRowDto"][];
+            updatedAt: string | null;
+        };
+        LocationPremiumSummaryResponseDto: {
+            data: components["schemas"]["LocationPremiumSummaryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LocationPremiumAccuracyDto: {
+            /** @description Mean absolute error of the price of a district predicted without that district, % */
+            leaveOneOutMaePct: number | null;
+            /** @description Same for the median of the other districts, % */
+            naiveMaePct: number | null;
+        };
+        LocationPremiumDistrictDto: {
+            slug: string | null;
+            name: string | null;
+            /** @description Median price per m2 from notarial deeds, last 12 months */
+            medianM2: number | null;
+            transactions: number | null;
+            /** @description Neighbourhood quality 0-100 without price components */
+            qualityScore: number | null;
+            /** @description Percentile of quality among districts of the city */
+            qualityPercentile: number | null;
+            /** @description Price per m2 expected from quality */
+            expectedM2: number | null;
+            /** @description Actual / expected - 1, % */
+            premiumPct: number | null;
+            rank: number | null;
+            pageUrl: string | null;
+        };
+        LocationPremiumCityDataDto: {
+            index: components["schemas"]["FinwireIndexRefLiteDto"];
+            city: Record<string, never>;
+            /** @enum {string|null} */
+            status: "ok" | "too_few" | "weak_fit" | "not_covered" | null;
+            window: Record<string, never>;
+            anchorQuarter: string | null;
+            qualityComputedAt: string | null;
+            eligibleDistricts: number | null;
+            units: number | null;
+            r2: number | null;
+            pricePer10QualityPercentilesPct: number | null;
+            meanAbsPremiumPct: number | null;
+            accuracy: components["schemas"]["LocationPremiumAccuracyDto"] | null;
+            /** @description By premium descending; empty unless status is ok */
+            districts: components["schemas"]["LocationPremiumDistrictDto"][];
+            sectionUrl: string | null;
+        };
+        LocationPremiumCityResponseDto: {
+            data: components["schemas"]["LocationPremiumCityDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         RentSourceDto: {
             /** @example znajdznajem.pl */
             name: string;
@@ -2995,6 +3330,93 @@ export interface components {
         };
         RentYieldResponseDto: {
             data: components["schemas"]["RentYieldDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        HousingCarryCityDto: {
+            /** @example lodz */
+            slug: string;
+            /** @example Łódź */
+            name: string;
+            /**
+             * @description Net rental yield minus mortgage rate, percentage points
+             * @example 0.24
+             */
+            carryPp: number;
+            /**
+             * @description Net rental yield after vacancy, flat-rate rental tax, admin fee in vacant months and property tax, %
+             * @example 6.12
+             */
+            netYieldPct: number;
+            /**
+             * @description Gross rental yield (rent x 12 / purchase price), %
+             * @example 7.33
+             */
+            grossYieldPct: number;
+            /**
+             * @description Mortgage interest rate used (variable, typical market margin), %
+             * @example 5.88
+             */
+            mortgageRatePct: number;
+            /**
+             * @description Net rent minus first-year interest on a loan for the whole price, PLN per month
+             * @example 66
+             */
+            monthlyCarryPln: number;
+            /** @example 2100 */
+            medianRent: number;
+            /** @example 2 pokoje */
+            rentBasis: string;
+            /** @example 43 */
+            rentAreaM2: number;
+            /** @example 4064 */
+            rentOffers: number;
+            /** @example 7819 */
+            pricePerM2: number;
+            /** @example Q2 2026 */
+            priceQuarter: string;
+            /**
+             * @description rcn = notarial deeds (RCN), gus = GUS RCiWN
+             * @example rcn
+             */
+            priceSource: string;
+            /** @example 1193 */
+            priceTransactions: Record<string, never> | null;
+            /** @example 336217 */
+            purchaseCost: number;
+            /** @description Owner costs per year, PLN: admin fee in vacant months, property tax (upper statutory rate) */
+            ownerCostsYear: Record<string, never>;
+            /** @description Monthly carry of the city */
+            history: unknown[][];
+        };
+        HousingCarryDataDto: {
+            /** @example finwire_housing_carry */
+            seriesId: string;
+            /** @example Carry nieruchomości finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2026-11 */
+            period: string;
+            /** @example listopad 2026 */
+            periodLabel: string;
+            /**
+             * @description Day of the last computation
+             * @example 2026-11-04
+             */
+            asOf: string;
+            /** @description true = the last valid reading is older than 3 days */
+            stale: boolean;
+            /** @description Median carry of cities, cities with positive carry, best and worst city, change vs previous month */
+            summary: Record<string, never>;
+            cities: components["schemas"]["HousingCarryCityDto"][];
+            /** @description Monthly median carry */
+            history: unknown[][];
+            assumptions: Record<string, never> | null;
+            /** @example https://finwire.pl/indeksy/carry-nieruchomosci */
+            pageUrl: string;
+        };
+        HousingCarryResponseDto: {
+            data: components["schemas"]["HousingCarryDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         RentDistrictDto: {
@@ -3186,6 +3608,181 @@ export interface components {
         };
         HousingSupplyCityResponseDto: {
             data: components["schemas"]["HousingSupplyCityDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        HousingPressureUnitDto: {
+            /**
+             * @description 'polska', province TERYT or city slug
+             * @example warszawa
+             */
+            code: string;
+            /** @example miasto */
+            level: string;
+            /** @example Warszawa */
+            name: string;
+            /** @example 2025 */
+            year: number | null;
+            /**
+             * @description New residents per 1 dwelling completed
+             * @example 0.188
+             */
+            value: number | null;
+            previousValue: number | null;
+            /** @description Average of the last 5 years */
+            avg5: number | null;
+            /** @example 3732 */
+            newResidents: number | null;
+            /** @description Net internal migration (permanent residence) */
+            internalNet: number | null;
+            /** @description Net foreign migration (permanent residence) */
+            foreignNet: number | null;
+            /** @description Growth of foreigners insured in ZUS assigned to the unit (null before ZUS data) */
+            zusDelta: number | null;
+            /** @example 19844 */
+            completed: number | null;
+            history: Record<string, never>[];
+        };
+        HousingPressureDto: {
+            /** @example finwire_housing_pressure */
+            id: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2025 */
+            year: number;
+            unit: string;
+            zusIncluded: boolean;
+            zusPeriod: string | null;
+            poland: components["schemas"]["HousingPressureUnitDto"] | null;
+            provinces: components["schemas"]["HousingPressureUnitDto"][];
+            cities: components["schemas"]["HousingPressureUnitDto"][];
+        };
+        HousingBalanceAccuracyDto: {
+            /**
+             * @description Out-of-sample forecasts in the backtest
+             * @example 126
+             */
+            n: number | null;
+            /**
+             * @description Forecast origins (quarters or months)
+             * @example 7
+             */
+            origins: number | null;
+            /**
+             * @description Share of outcomes inside the 80% interval
+             * @example 0.889
+             */
+            coverage80: number | null;
+            /**
+             * @description Mean absolute percentage error of the model
+             * @example 24.55
+             */
+            mapePct: number | null;
+            /**
+             * @description Same for the no-change forecast
+             * @example 31.9
+             */
+            naiveMapePct: number | null;
+            /** @example 2023-Q1 */
+            from: string | null;
+            /** @example 2024-Q3 */
+            to: string | null;
+        };
+        HousingPipelineUnitDto: {
+            /** @example polska */
+            code: string;
+            /** @example kraj */
+            level: string;
+            /** @example Polska */
+            name: string;
+            /** @example 2026-Q3 */
+            lastQuarter: string;
+            /**
+             * @description Dwellings completed in the last 4 quarters
+             * @example 212786
+             */
+            completedLast4q: number;
+            /** @description Forecast for 4 quarters ending 2 years ahead with 80% interval; null when not published */
+            forecast2y: Record<string, never> | null;
+            /** @description Published forecast horizons only */
+            path: Record<string, never>[];
+            history: Record<string, never>[];
+        };
+        HousingPipelineDto: {
+            /** @example finwire_housing_pipeline */
+            id: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @description false = backtest below the accuracy threshold, forecasts withheld */
+            published: boolean;
+            /** @example 2026-Q3 */
+            lastQuarter: string;
+            /** @example 2026-Q3 */
+            permitsQuarter: string;
+            /**
+             * @description Permit-to-completion lag chosen by cross-correlation
+             * @example 8
+             */
+            lagQuarters: number;
+            /** @example 0.159 */
+            lagCorrelation: number;
+            unit: string;
+            accuracy: components["schemas"]["HousingBalanceAccuracyDto"][];
+            poland: components["schemas"]["HousingPipelineUnitDto"] | null;
+            cities: components["schemas"]["HousingPipelineUnitDto"][];
+        };
+        RentForecastCityDto: {
+            /** @example krakow */
+            code: string;
+            /** @example Kraków */
+            name: string;
+            /** @example 2028-01 */
+            baseMonth: string;
+            /**
+             * @description Average asking rent per m2 in the base month, PLN
+             * @example 78.4
+             */
+            rentPerM2: number;
+            /** @example 2028-07 */
+            targetMonth: string;
+            /** @example 1.8 */
+            changePct: number;
+            /** @example -1.2 */
+            lo80Pct: number;
+            /** @example 4.9 */
+            hi80Pct: number;
+        };
+        RentForecastDto: {
+            /** @example finwire_rent_forecast */
+            id: string;
+            /** @example 1 */
+            methodVersion: number;
+            /**
+             * @example insufficient_history
+             * @enum {string}
+             */
+            status: "published" | "below_threshold" | "insufficient_history";
+            published: boolean;
+            baseMonth: string | null;
+            firstMonth: string | null;
+            /** @example 8 */
+            monthsOfHistory: number;
+            /** @example 23 */
+            monthsNeeded: number;
+            /** @example 6 */
+            horizonMonths: number;
+            accuracy: components["schemas"]["HousingBalanceAccuracyDto"] | null;
+            /** @description Empty until the forecast passes the accuracy threshold */
+            cities: components["schemas"]["RentForecastCityDto"][];
+        };
+        HousingBalanceDataDto: {
+            updatedAt: string | null;
+            pressure: components["schemas"]["HousingPressureDto"] | null;
+            pipeline: components["schemas"]["HousingPipelineDto"] | null;
+            rent: components["schemas"]["RentForecastDto"] | null;
+            sources: Record<string, never>[];
+        };
+        HousingBalanceResponseDto: {
+            data: components["schemas"]["HousingBalanceDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         NbpSourceDto: {
@@ -4266,6 +4863,55 @@ export interface components {
             data: components["schemas"]["PpkDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        RetailBondPremiumDataDto: {
+            /** @example finwire_retail_bond_premium */
+            id: string;
+            /** @example Premia obligacji skarbowych finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /**
+             * @description Latest month of bond issue with a reading
+             * @example 2026-11
+             */
+            asOf: string | null;
+            updatedAt: string | null;
+            units: Record<string, never>;
+            /** @description Latest month: ROR premium over finwire_deposit_rate_index and over the average new household term deposit (MIR), per-series premiums, retail bond stock change */
+            latest: Record<string, never> | null;
+            previous: Record<string, never> | null;
+            /** @description Correlation of the premium with the monthly change of retail bond stock, computed on our series; published=false until the series is long enough */
+            salesResponse: Record<string, never>;
+            /** @description Monthly readings, ascending */
+            history: Record<string, never>[];
+        };
+        RetailBondPremiumResponseDto: {
+            data: components["schemas"]["RetailBondPremiumDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        FixedCostBurdenDataDto: {
+            /** @example finwire_fixed_cost_burden */
+            id: string;
+            /** @example Sztywne koszty gospodarstwa finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2026-10 */
+            asOf: string | null;
+            updatedAt: string | null;
+            /** @description Model household: two earners on the regional median wage, 50 m2 flat, 80% mortgage over 30 years */
+            model: Record<string, never> | null;
+            units: Record<string, never>;
+            /** @description Poland first, then provinces by share, descending */
+            latest: Record<string, never>[];
+            previous: Record<string, never>[];
+            /** @description Per region monthly points, ascending */
+            history: Record<string, never>[];
+        };
+        FixedCostBurdenResponseDto: {
+            data: components["schemas"]["FixedCostBurdenDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         PublicDebtDataDto: {
             /** @example 2026-08 */
             asOf: string | null;
@@ -4500,6 +5146,86 @@ export interface components {
         };
         NowcastResponseDto: {
             data: components["schemas"]["NowcastDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LeadDriverDto: {
+            /** @example unitLabourCost */
+            key: string;
+            /** @example Koszt pracy na jednostkę produkcji, r/r */
+            label: string;
+            /** @description Value of the factor in the data month; null for WIBOR-based factors (GPW Benchmark licence) */
+            value: number | null;
+            /** @example % */
+            unit: string;
+            /** @description Contribution to the forecast change, pp; null when the forecast is not published */
+            contributionPp: number | null;
+        };
+        LeadBacktestStatsDto: {
+            n: number | null;
+            /** @description Share of actual readings inside the 80% interval, % */
+            coverage80Pct: number | null;
+            maePp: number | null;
+            /** @description Mean absolute error of the no-change benchmark, pp */
+            naiveMaePp: number | null;
+            directionHitPct: number | null;
+            from: string | null;
+            to: string | null;
+        };
+        LeadBacktestPointDto: {
+            dataMonth: string;
+            targetMonth: string;
+            point: number;
+            lo80: number;
+            hi80: number;
+            actual: number;
+        };
+        LeadForecastDto: {
+            /** @example core_nbp */
+            series: string;
+            seriesLabel: string | null;
+            /** @example 6 */
+            horizonMonths: number;
+            /**
+             * @description Month of the latest data used
+             * @example 2026-09
+             */
+            dataMonth: string;
+            /** @example 2027-03 */
+            targetMonth: string;
+            /** @description Latest actual reading (data month) */
+            lastReading: number | null;
+            /** @description false = below the accuracy threshold; numbers withheld */
+            published: boolean;
+            point: number | null;
+            lo80: number | null;
+            hi80: number | null;
+            /** @enum {string|null} */
+            direction: "up" | "down" | "flat" | null;
+            drivers: components["schemas"]["LeadDriverDto"][];
+            backtest: components["schemas"]["LeadBacktestStatsDto"];
+            backtestPoints: components["schemas"]["LeadBacktestPointDto"][];
+            modelVersion: string | null;
+            computedAt: string | null;
+        };
+        LeadIndexDto: {
+            /** @example finwire_cost_pressure */
+            id: string;
+            /** @example cost-pressure */
+            slug: string;
+            published: boolean;
+            publicationRule: Record<string, never>;
+            forecasts: components["schemas"]["LeadForecastDto"][];
+            /** @description Monthly actual readings of the forecast series */
+            history: string[];
+            computedAt: string | null;
+        };
+        LeadForecastsDataDto: {
+            asOf: string | null;
+            note: string;
+            indices: components["schemas"]["LeadIndexDto"][];
+        };
+        LeadForecastsResponseDto: {
+            data: components["schemas"]["LeadForecastsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         EnergyUnitDto: {
@@ -5445,6 +6171,121 @@ export interface components {
             data: components["schemas"]["PitMunicipalityDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        LocalTaxSqueezeThresholdsDto: {
+            /** @description Reliance at the 75th percentile of municipalities, % */
+            propertyTaxReliancePct: number | null;
+            /** @description Median PIT share per resident, PLN */
+            pitSharePerCapitaPln: number | null;
+        };
+        LocalTaxSqueezeAreaDto: {
+            /**
+             * @description TERYT province code, PL = Poland
+             * @example 14
+             */
+            code: string | null;
+            /** @example mazowieckie */
+            name: string | null;
+            municipalities: number | null;
+            /**
+             * @description Property tax / (property tax + PIT share) in the budget plans, % (finwire_local_tax_squeeze for Poland)
+             * @example 19.6
+             */
+            propertyTaxReliancePct: number | null;
+            /** @description Planned property tax per resident, PLN */
+            propertyTaxPerCapitaPln: number | null;
+            /** @description Part paid by individuals (homes, flats, plots), PLN per resident */
+            propertyTaxHouseholdsPerCapitaPln: number | null;
+            /** @description Planned PIT share per resident, PLN */
+            pitSharePerCapitaPln: number | null;
+            /** @description PIT share vs previous budget year, % */
+            pitShareChangePct: number | null;
+            /** @description Municipalities in the squeeze (top quarter of reliance and PIT share per resident below the median) */
+            squeezedMunicipalities: number | null;
+            squeezedSharePct: number | null;
+        };
+        LocalTaxSqueezeMunicipalityDto: {
+            /** @example 1465011 */
+            teryt: string | null;
+            name: string | null;
+            /** @example miasto na prawach powiatu */
+            type: string | null;
+            /**
+             * @description TERYT province code
+             * @example 14
+             */
+            voivodeship: string | null;
+            population: number | null;
+            propertyTaxReliancePct: number | null;
+            /** @description 1 = highest reliance */
+            rank: number | null;
+            propertyTaxPerCapitaPln: number | null;
+            propertyTaxHouseholdsPerCapitaPln: number | null;
+            pitSharePerCapitaPln: number | null;
+            pitShareChangePct: number | null;
+            /** @example false */
+            squeezed: boolean;
+        };
+        LocalTaxSqueezeYearDto: {
+            budgetYear: number | null;
+            propertyTaxReliancePct: number | null;
+            squeezedMunicipalities: number | null;
+            municipalities: number | null;
+        };
+        LocalTaxUpperLimitDto: {
+            taxYear: number | null;
+            /** @description Upper limit of the property tax rate for flats and houses, PLN per m2 (Ministry of Finance notice) */
+            flatRatePerM2Pln: number | null;
+            previousTaxYear: number | null;
+            previousFlatRatePerM2Pln: number | null;
+            changePct: number | null;
+            /** @description Maximum yearly tax for a 50 m2 flat, PLN */
+            flat50m2TaxPln: number | null;
+            /** @description Change of the maximum for a 50 m2 flat vs previous year, PLN */
+            flat50m2DeltaPln: number | null;
+            sourceTitle: string | null;
+            sourceUrl: string | null;
+        };
+        LocalTaxSqueezeDataDto: {
+            /** @example 2026-06-30 */
+            asOf: string | null;
+            /** @example true */
+            available: boolean;
+            index: components["schemas"]["FinwireIndexRefLiteDto"];
+            /** @example 2026 */
+            budgetYear: number | null;
+            quarter: number | null;
+            previousYear: number | null;
+            populationYear: number | null;
+            thresholds: components["schemas"]["LocalTaxSqueezeThresholdsDto"] | null;
+            national: components["schemas"]["LocalTaxSqueezeAreaDto"] | null;
+            voivodeships: components["schemas"]["LocalTaxSqueezeAreaDto"][];
+            /** @description Cities with county rights, by reliance descending */
+            cities: components["schemas"]["LocalTaxSqueezeMunicipalityDto"][];
+            topSqueezed: components["schemas"]["LocalTaxSqueezeMunicipalityDto"][];
+            history: components["schemas"]["LocalTaxSqueezeYearDto"][];
+            upperLimit: components["schemas"]["LocalTaxUpperLimitDto"] | null;
+            updatedAt: string | null;
+        };
+        LocalTaxSqueezeResponseDto: {
+            data: components["schemas"]["LocalTaxSqueezeDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LocalTaxSqueezeMunicipalitiesDataDto: {
+            asOf: string | null;
+            /** @example true */
+            available: boolean;
+            budgetYear: number | null;
+            thresholds: components["schemas"]["LocalTaxSqueezeThresholdsDto"] | null;
+            /** @example 2477 */
+            count: number;
+            /** @description By reliance descending */
+            entries: components["schemas"]["LocalTaxSqueezeMunicipalityDto"][];
+            updatedAt: string | null;
+        };
+        LocalTaxSqueezeMunicipalitiesResponseDto: {
+            data: components["schemas"]["LocalTaxSqueezeMunicipalitiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         UpkeepCityDto: {
             /** @example warszawa */
             slug: string;
@@ -6088,6 +6929,104 @@ export interface components {
         };
         CreditDemandResponseDto: {
             data: components["schemas"]["CreditDemandDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        RateRiskHorizonDto: {
+            /**
+             * @description Horizon in months (3, 6, 12)
+             * @example 12
+             */
+            months: number;
+            /**
+             * @description 10th percentile of the monthly payment, PLN
+             * @example 2001
+             */
+            paymentQ10Pln: number | null;
+            /** @example 2332 */
+            paymentQ50Pln: number | null;
+            /** @example 3124 */
+            paymentQ90Pln: number | null;
+            /**
+             * @description Chance the payment rises by more than 5%, %
+             * @example 17.4
+             */
+            probUp5Pct: number | null;
+            /** @example 14 */
+            probUp10Pct: number | null;
+            /**
+             * @description Chance the payment falls by more than 5%, %
+             * @example 31.4
+             */
+            probDown5Pct: number | null;
+        };
+        RateRiskHistoryPointDto: {
+            /** @example 2026-11-03 */
+            period: string;
+            /** @example 17.4 */
+            value: number | null;
+        };
+        RateRiskGaugeDto: {
+            /** @example finwire_rate_risk_gauge */
+            id: string;
+            /** @example Ryzyko raty finwire */
+            name: string;
+            /**
+             * @description WIBOR fixing day the reading is computed from
+             * @example 2026-11-03
+             */
+            period: string;
+            /**
+             * @description Index value: chance the payment rises by more than 5% within 12 months, %
+             * @example 17.4
+             */
+            probabilityUp5Pct12m: number | null;
+            scenario: Record<string, never> | null;
+            /** @example 2360 */
+            paymentNowPln: number | null;
+            /** @example 2478 */
+            paymentUp5Pln: number | null;
+            /** @example 2596 */
+            paymentUp10Pln: number | null;
+            horizons: components["schemas"]["RateRiskHorizonDto"][];
+            /** @description Month ends since 2008, then every fixing day */
+            history: components["schemas"]["RateRiskHistoryPointDto"][];
+        };
+        FixedRatePremiumDto: {
+            /** @example finwire_fixed_rate_premium */
+            id: string;
+            /** @example Premia za stałą stopę finwire */
+            name: string;
+            /** @example 2026-11-04 */
+            period: string;
+            /**
+             * @description 5-year fixed rate minus expected cost of the variable rate over 5 years, pp
+             * @example 0.69
+             */
+            premiumPp: number | null;
+            /**
+             * @description Fixed minus variable rate today, without expectations, pp
+             * @example 0.73
+             */
+            spreadTodayPp: number | null;
+            history: components["schemas"]["RateRiskHistoryPointDto"][];
+        };
+        RateRiskDataDto: {
+            /** @example 2026-11-03 */
+            asOf: string | null;
+            /** @example 1 */
+            methodVersion: number | null;
+            updatedAt: string | null;
+            rateRisk: components["schemas"]["RateRiskGaugeDto"] | null;
+            fixedRatePremium: components["schemas"]["FixedRatePremiumDto"] | null;
+            /** @description Monthly premium from ECB MIR (new housing loans in Poland: fixed 1-5 years vs variable) */
+            fixedRatePremiumMonthlyMir: string[];
+            /** @description Continuous months with a negative monthly premium */
+            negativePremiumWindows: string[];
+            /** @description Walk-forward backtest since 2008: 80% interval coverage, median error vs no-change forecast, Brier score */
+            accuracy: Record<string, never> | null;
+        };
+        RateRiskResponseDto: {
+            data: components["schemas"]["RateRiskDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         EcbProductDto: {
@@ -7032,6 +7971,28 @@ export interface operations {
             };
         };
     };
+    ReferenceController_nextYearLimits: {
+        parameters: {
+            query?: {
+                /** @description Include the estimate path per item (default true) */
+                path?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NextYearLimitsResponseDto"];
+                };
+            };
+        };
+    };
     ReferenceController_occupations: {
         parameters: {
             query?: never;
@@ -7379,6 +8340,47 @@ export interface operations {
             };
         };
     };
+    RealEstateController_locationPremium: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocationPremiumSummaryResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_locationPremiumCity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description City slug from /v1/housing/transactions */
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocationPremiumCityResponseDto"];
+                };
+            };
+        };
+    };
     RealEstateController_rentList: {
         parameters: {
             query?: never;
@@ -7413,6 +8415,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RentYieldResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_housingCarry: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HousingCarryResponseDto"];
                 };
             };
         };
@@ -7476,6 +8497,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HousingSupplyCityResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_housingBalance: {
+        parameters: {
+            query?: {
+                /** @description City slug (one of 17 cities); omit for all */
+                city?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HousingBalanceResponseDto"];
                 };
             };
         };
@@ -7832,6 +8875,52 @@ export interface operations {
             };
         };
     };
+    MacroController_retailBondPremium: {
+        parameters: {
+            query?: {
+                /** @description Last N months of history, 1-400, default all */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailBondPremiumResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_fixedCostBurden: {
+        parameters: {
+            query?: {
+                /** @description Last N months of history per region, 1-400, default all */
+                months?: number;
+                /** @description Region: 'polska' or province slug (dolnoslaskie, kujawsko_pomorskie, ..., zachodniopomorskie) */
+                region?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FixedCostBurdenResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_publicDebt: {
         parameters: {
             query?: {
@@ -7869,6 +8958,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["NowcastResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_leadForecasts: {
+        parameters: {
+            query?: {
+                /** @description One index; default both */
+                index?: "cost-pressure" | "npl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadForecastsResponseDto"];
                 };
             };
         };
@@ -8073,6 +9184,52 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PitMunicipalityResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_localTaxSqueeze: {
+        parameters: {
+            query?: {
+                /** @description Budget year, default latest */
+                year?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocalTaxSqueezeResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_localTaxSqueezeMunicipalities: {
+        parameters: {
+            query?: {
+                /** @description Budget year, default latest */
+                year?: number;
+                /** @description 2-digit TERYT province code */
+                voivodeship?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocalTaxSqueezeMunicipalitiesResponseDto"];
                 };
             };
         };
@@ -8283,6 +9440,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreditDemandResponseDto"];
+                };
+            };
+        };
+    };
+    CreditMarketController_rateRisk: {
+        parameters: {
+            query?: {
+                /** @description Last N readings of both daily histories, 1-6000, default all */
+                days?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RateRiskResponseDto"];
                 };
             };
         };
