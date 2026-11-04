@@ -3,6 +3,21 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-04
+
+### Added
+
+- `GET /v1/pit/summary`, `GET /v1/pit/municipalities` and `GET /v1/pit/municipalities/{teryt}` (optional `year`) - PIT returns by municipality from the yearly Ministry of Finance release on dane.gov.pl (dataset 3497): PIT due, taxpayers and revenue by type of return, PIT due per resident with GUS population, rank of all municipalities, provinces, revenue per PIT-37 taxpayer and PIT-38 returns per 1000 residents, all tax years since 2022. Dataset `pit-returns`; attribution "Ministerstwo Finansów". Index `finwire_pit_per_capita` (national PIT due per resident, yearly).
+- MCP: `get_regional_data` accepts `topic: "pit"` (national summary, or one municipality year by year with `name`).
+- `GET /v1/bfg-guarantee` and `GET /v1/bfg-guarantee/search?q=` - banks and credit unions covered by the BFG deposit guarantee: counts of commercial banks, cooperative banks, credit unions and entities in bankruptcy for every change of the list since 2019, latest additions, removals, moves to bankruptcy and renames, EUR limit with its PLN equivalent at the latest NBP rate, lookup by name or website. Dataset `bfg-guarantee`; attribution "BFG, lista podmiotów objętych gwarancjami". Index `finwire_bfg_guarantee_monitor`.
+- MCP tool `check_bfg_guarantee`.
+- `GET /v1/tax-rulings` (optional `topic`, `limit`) - individual tax rulings of KIS, changes of rulings and municipal rulings from the EUREKA database of the Ministry of Finance by personal finance topic: weekly counts, most cited provisions in the last 52 weeks, newest rulings with signature, authority, dates, shortened thesis and a link to EUREKA. Dataset `tax-rulings`; attribution "Ministerstwo Finansów, EUREKA". Index `finwire_tax_rulings_pulse` (rulings on personal finance topics per full week).
+- MCP: tool `get_tax_rulings`; dataset `tax-rulings` in `search_datasets` and `get_dataset`.
+- `GET /v1/ppk` (optional `months`) - PPK (Employee Capital Plans) from the monthly PFR Portal PPK bulletin: net assets of target date funds, active accounts, participants, employers, participation rate, average management fee and number of institutions, monthly since October 2021. Dataset `ppk`; attribution "PFR Portal PPK". Index `finwire_ppk_avg_account` (net assets per active account, PLN). MCP tool `get_ppk_stats`.
+- `GET /v1/business-registrations` (optional `months`) - applications filed in CEIDG (Ministry of Development and Technology, dane.gov.pl dataset 745): registrations, closures, suspensions, resumptions and changes of sole proprietorships, registrations minus closures, same month in earlier years, share of women, monthly since November 2019. Dataset `business-registrations`; attribution "MRiT". Index `finwire_new_business_ratio` (registrations per 100 closures, sum of 12 months). MCP tool `get_business_registrations`.
+- `GET /v1/ike-ikze` - IKE and IKZE (individual retirement accounts) market from KNF half-yearly data: accounts, assets, opened accounts, contributions and withdrawals by institution type, women and men, age groups, since June 2020. Dataset `ike-ikze`; attribution "KNF". Index `finwire_ike_ikze_avg_balance` (assets per account, half-yearly). MCP tool `get_ike_ikze_stats`.
+- MCP server 1.7.0: tools `get_business_registrations`, `check_bfg_guarantee`, `get_tax_rulings`, `get_ppk_stats`, `get_ike_ikze_stats`; `get_regional_data` topic `pit`. New datasets in `search_datasets` and `get_dataset`.
+
 ## 2026-11-03
 
 ### Added

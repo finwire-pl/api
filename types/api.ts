@@ -854,6 +854,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/business-registrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Business registrations in Poland (CEIDG, Ministry of Development and Technology): monthly applications to register, close, suspend and resume a sole proprietorship, registrations minus closures, same-month comparison with earlier years, share of women among founders, Wskaźnik nowych firm finwire (finwire_new_business_ratio) and monthly history; counts of applications, not of firms */
+        get: operations["MacroController_businessRegistrations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ike-ikze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** IKE and IKZE (Polish individual retirement accounts) market, KNF half-yearly data: accounts and assets by institution type (insurers, investment funds, brokers, banks, voluntary pension funds), contributions, withdrawals and returns since January, account holders by sex and age, average annual contribution vs the statutory limit, Średnie saldo IKE i IKZE finwire (finwire_ike_ikze_avg_balance) and half-yearly history; PLN, informational data, not investment advice */
+        get: operations["MacroController_ikeIkze"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/subsidies/clean-air": {
         parameters: {
             query?: never;
@@ -863,6 +897,23 @@ export interface paths {
         };
         /** Czyste Powietrze (Clean Air) home heating subsidy programme, NFOŚiGW: applications, contracts and payouts cumulative, Modernisation Fund edition, last week, payout queue and pace, requested heat sources, payout rate (finwire_clean_air_payout_rate) and reading history */
         get: operations["MacroController_cleanAir"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ppk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** PPK (Pracownicze Plany Kapitałowe, Employee Capital Plans) from the monthly PFR Portal PPK bulletin: net assets of target date funds, active accounts, participants, employers, participation rate, average management fee, Średnie konto PPK finwire (finwire_ppk_avg_account: net assets per active account) and monthly history */
+        get: operations["MacroController_ppk"];
         put?: never;
         post?: never;
         delete?: never;
@@ -999,6 +1050,57 @@ export interface paths {
         };
         /** Residents income per capita by county (powiat): sum of its municipalities */
         get: operations["RegionalController_incomeCounties"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pit/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** PIT returns by municipality (Ministry of Finance, yearly): national PIT due per resident (finwire_pit_per_capita), by type of return, provinces, top and bottom municipalities, PIT-38 returns per 1000 residents and history */
+        get: operations["RegionalController_pitSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pit/municipalities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** PIT due per resident in every municipality (gmina) for a tax year, rank, change vs previous year, PIT-37 revenue per taxpayer, PIT-38 returns per 1000 residents */
+        get: operations["RegionalController_pitMunicipalities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pit/municipalities/{teryt}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One municipality year by year: PIT per resident, rank, breakdown by type of return and the national figures for the same years */
+        get: operations["RegionalController_pitMunicipality"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1271,6 +1373,57 @@ export interface paths {
         };
         /** Look up an entity on the KNF public warnings list by name, website domain, KRS, NIP or REGON */
         get: operations["KnfWarningsController_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/bfg-guarantee": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Banks and credit unions covered by the BFG deposit guarantee: counts by group with history (finwire_bfg_guarantee_monitor), latest changes, EUR limit and its PLN equivalent */
+        get: operations["BfgGuaranteeController_summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/bfg-guarantee/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Look up a bank or credit union on the BFG list by name or website */
+        get: operations["BfgGuaranteeController_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tax-rulings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Individual tax rulings (KIS and municipalities) on personal finance topics: weekly counts (finwire_tax_rulings_pulse), most cited provisions, newest rulings with links to EUREKA */
+        get: operations["TaxRulingsController_rulings"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3817,6 +3970,138 @@ export interface components {
             data: components["schemas"]["InvestmentFundsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        CeidgMonthDto: {
+            /** @example 2026-09 */
+            period: string | null;
+            /**
+             * @description Applications to register a sole proprietorship
+             * @example 21020
+             */
+            registrations: number | null;
+            /**
+             * @description Applications to close (deregister) a sole proprietorship
+             * @example 13078
+             */
+            closures: number | null;
+            /**
+             * @description registrations - closures
+             * @example 7942
+             */
+            net: number | null;
+            /** @description Applications to suspend business activity */
+            suspensions: number | null;
+            /** @description Applications to resume suspended activity */
+            resumptions: number | null;
+            /** @description Applications to change the entry */
+            changes: number | null;
+            /**
+             * @description Share of women among registration applications with gender, %
+             * @example 38.9
+             */
+            womenSharePct: number | null;
+        };
+        CeidgNewBusinessRatioDto: {
+            /** @example finwire_new_business_ratio */
+            id: string;
+            /** @example Wskaźnik nowych firm finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2026-09 */
+            period: string;
+            /**
+             * @description Registration applications per 100 closure applications, sum of the last 12 months
+             * @example 133.3
+             */
+            value: number;
+            registrations12m: number | null;
+            closures12m: number | null;
+            previous: number | null;
+            yearAgo: number | null;
+        };
+        CeidgDataDto: {
+            /** @example 2026-09 */
+            asOf: string | null;
+            /**
+             * @description First month of the continuous series
+             * @example 2019-11
+             */
+            firstPeriod: string | null;
+            updatedAt: string | null;
+            /** @description MRiT XLSX file of the latest month on dane.gov.pl */
+            sourceFileUrl: string | null;
+            /** @description Units */
+            units: Record<string, never>;
+            latest: components["schemas"]["CeidgMonthDto"] | null;
+            previous: components["schemas"]["CeidgMonthDto"] | null;
+            /** @description Same month a year earlier */
+            yearAgo: components["schemas"]["CeidgMonthDto"] | null;
+            /** @description Sums since January */
+            yearToDate: Record<string, never> | null;
+            /** @description Same period a year earlier */
+            yearToDatePreviousYear: Record<string, never> | null;
+            last12Months: Record<string, never> | null;
+            previous12Months: Record<string, never> | null;
+            highestNet: Record<string, never> | null;
+            lowestNet: Record<string, never> | null;
+            /** @description Last 12 months against the same month in earlier years (min, max, rank of net) */
+            seasonal: unknown[][];
+            newBusinessRatio: components["schemas"]["CeidgNewBusinessRatioDto"] | null;
+            /** @description Monthly history with newBusinessRatio */
+            history: unknown[][];
+        };
+        CeidgResponseDto: {
+            data: components["schemas"]["CeidgDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        IkeIkzeIndexDto: {
+            /** @example finwire_ike_ikze_avg_balance */
+            id: string;
+            /** @example Średnie saldo IKE i IKZE finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2026-S1 */
+            period: string;
+            /** @example 2026-06-30 */
+            periodEnd: string;
+            /**
+             * @description Assets on IKE and IKZE together divided by the number of accounts, PLN
+             * @example 27727
+             */
+            valuePln: number;
+            accounts: number | null;
+            assetsPln: number | null;
+            previousPln: number | null;
+            yearAgoPln: number | null;
+        };
+        IkeIkzeDataDto: {
+            /**
+             * @description Latest state with both products
+             * @example 2026-06-30
+             */
+            asOf: string | null;
+            /** @example 2026-S1 */
+            period: string | null;
+            /** @example 2020-06-30 */
+            firstPeriodEnd: string | null;
+            updatedAt: string | null;
+            /** @description Units */
+            units: Record<string, never>;
+            /** @description KNF article with the latest IKE data */
+            sourceUrl: string | null;
+            /** @description IKE and IKZE at the latest state: accounts, assets, average per account, change vs previous half-year and year, contributions, withdrawals and returns since January, sex and age, institution types */
+            products: unknown[][];
+            /** @description Average annual contribution vs the statutory annual limit (31 December states only) */
+            limitUsage: unknown[][];
+            avgBalanceIndex: components["schemas"]["IkeIkzeIndexDto"] | null;
+            /** @description Half-yearly history: IKE and IKZE accounts and assets, finwire average balance */
+            history: unknown[][];
+        };
+        IkeIkzeResponseDto: {
+            data: components["schemas"]["IkeIkzeDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         CleanAirTotalsDto: {
             /** @example 2018-09-19 */
             periodStart: string;
@@ -3893,6 +4178,92 @@ export interface components {
         };
         CleanAirResponseDto: {
             data: components["schemas"]["CleanAirDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        PpkPointDto: {
+            /**
+             * @description Month whose end the reading describes
+             * @example 2026-09
+             */
+            period: string;
+            /**
+             * @description Date of the PPK Register snapshot
+             * @example 2026-09-30
+             */
+            asOfDate: string;
+            /**
+             * @description Net assets of target date funds, PLN
+             * @example 58700000000
+             */
+            netAssetsPln: number | null;
+            /** @example 5670000 */
+            activeAccounts: number | null;
+            /**
+             * @description Persons saving in PPK (one person can hold several accounts)
+             * @example 4520000
+             */
+            participants: number | null;
+            /**
+             * @description Employers running PPK
+             * @example 346890
+             */
+            employers: number | null;
+            /**
+             * @description Active accounts / employees of employers running PPK, %
+             * @example 63.14
+             */
+            participationPct: number | null;
+            /**
+             * @description Average management fee, % of net assets per year
+             * @example 0.362
+             */
+            avgFeePct: number | null;
+            /** @example 16 */
+            institutions: number | null;
+            /**
+             * @description finwire_ppk_avg_account: net assets per active account, PLN, rounded to 10
+             * @example 10350
+             */
+            avgAccountPln: number | null;
+            bulletinPdfUrl: string | null;
+        };
+        PpkAvgAccountDto: {
+            /** @example finwire_ppk_avg_account */
+            id: string;
+            /** @example Średnie konto PPK finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2026-09 */
+            period: string;
+            /** @example 10350 */
+            valuePln: number | null;
+            previousPln: number | null;
+            yearAgoPln: number | null;
+        };
+        PpkDataDto: {
+            /**
+             * @description Latest month in the data
+             * @example 2026-09
+             */
+            asOf: string | null;
+            /** @example 2026-09-30 */
+            asOfDate: string | null;
+            /** @example 2021-10 */
+            firstPeriod: string | null;
+            updatedAt: string | null;
+            /** @description PDF of the latest bulletin */
+            bulletinPdfUrl: string | null;
+            units: Record<string, never>;
+            latest: components["schemas"]["PpkPointDto"];
+            previous: components["schemas"]["PpkPointDto"] | null;
+            yearAgo: components["schemas"]["PpkPointDto"] | null;
+            avgAccount: components["schemas"]["PpkAvgAccountDto"] | null;
+            /** @description Monthly readings, ascending */
+            history: components["schemas"]["PpkPointDto"][];
+        };
+        PpkResponseDto: {
+            data: components["schemas"]["PpkDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         PublicDebtDataDto: {
@@ -4722,6 +5093,356 @@ export interface components {
         };
         IncomeCountiesResponseDto: {
             data: components["schemas"]["IncomeCountiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        PitSourceDto: {
+            name: string | null;
+            /** @example https://dane.gov.pl/pl/dataset/3497 */
+            url: string | null;
+        };
+        PitIndexRefDto: {
+            /** @example finwire_pit_per_capita */
+            id: string | null;
+            /** @example PIT na mieszkańca finwire */
+            name: string | null;
+            /** @example 1 */
+            methodVersion: number | null;
+        };
+        PitGroupDto: {
+            /**
+             * @description etat = PIT-37+PIT-40A, skala = PIT-36, liniowy = PIT-36L, ryczalt = PIT-28, kapital = PIT-38, nieruchomosci = PIT-39
+             * @enum {string|null}
+             */
+            group: "etat" | "skala" | "liniowy" | "ryczalt" | "kapital" | "nieruchomosci" | null;
+            taxpayers: number | null;
+            taxDuePln: number | null;
+            perCapitaPln: number | null;
+            /**
+             * @description Share of PIT due, 0-1
+             * @example 0.566
+             */
+            share: number | null;
+        };
+        PitNationalDto: {
+            /**
+             * @description TERYT code (2 digits = province, PL = Poland)
+             * @example 14
+             */
+            code: string | null;
+            /** @example mazowieckie */
+            name: string | null;
+            population: number | null;
+            /** @description PIT due from all returns, PLN */
+            taxDuePln: number | null;
+            /**
+             * @description PIT due per resident, PLN (finwire_pit_per_capita for Poland)
+             * @example 4578
+             */
+            taxPerCapitaPln: number | null;
+            /**
+             * @description Change of PIT per resident vs previous tax year, %
+             * @example 19
+             */
+            changePct: number | null;
+            /** @description Taxpayers filing PIT-37 */
+            pit37Taxpayers: number | null;
+            /**
+             * @description Revenue per PIT-37 taxpayer, PLN a year
+             * @example 66923
+             */
+            revenuePerPit37Pln: number | null;
+            /**
+             * @description PIT-38 (capital gains) returns per 1000 residents
+             * @example 25.7
+             */
+            pit38Per1000: number | null;
+            groups: components["schemas"]["PitGroupDto"][];
+        };
+        PitHistoryPointDto: {
+            /** @example 2024 */
+            taxYear: number | null;
+            taxDuePln: number | null;
+            taxPerCapitaPln: number | null;
+            populationYear: number | null;
+        };
+        PitAreaDto: {
+            /**
+             * @description TERYT code (2 digits = province, PL = Poland)
+             * @example 14
+             */
+            code: string | null;
+            /** @example mazowieckie */
+            name: string | null;
+            population: number | null;
+            /** @description PIT due from all returns, PLN */
+            taxDuePln: number | null;
+            /**
+             * @description PIT due per resident, PLN (finwire_pit_per_capita for Poland)
+             * @example 4578
+             */
+            taxPerCapitaPln: number | null;
+            /**
+             * @description Change of PIT per resident vs previous tax year, %
+             * @example 19
+             */
+            changePct: number | null;
+            /** @description Taxpayers filing PIT-37 */
+            pit37Taxpayers: number | null;
+            /**
+             * @description Revenue per PIT-37 taxpayer, PLN a year
+             * @example 66923
+             */
+            revenuePerPit37Pln: number | null;
+            /**
+             * @description PIT-38 (capital gains) returns per 1000 residents
+             * @example 25.7
+             */
+            pit38Per1000: number | null;
+        };
+        PitMunicipalityDto: {
+            /**
+             * @description TERYT code (2 digits = province, PL = Poland)
+             * @example 14
+             */
+            code: string | null;
+            /** @example mazowieckie */
+            name: string | null;
+            population: number | null;
+            /** @description PIT due from all returns, PLN */
+            taxDuePln: number | null;
+            /**
+             * @description PIT due per resident, PLN (finwire_pit_per_capita for Poland)
+             * @example 4578
+             */
+            taxPerCapitaPln: number | null;
+            /**
+             * @description Change of PIT per resident vs previous tax year, %
+             * @example 19
+             */
+            changePct: number | null;
+            /** @description Taxpayers filing PIT-37 */
+            pit37Taxpayers: number | null;
+            /**
+             * @description Revenue per PIT-37 taxpayer, PLN a year
+             * @example 66923
+             */
+            revenuePerPit37Pln: number | null;
+            /**
+             * @description PIT-38 (capital gains) returns per 1000 residents
+             * @example 25.7
+             */
+            pit38Per1000: number | null;
+            /** @example 1465011 */
+            teryt: string | null;
+            /** @example miasto na prawach powiatu */
+            type: string | null;
+            /** @example mazowieckie */
+            voivodeship: string | null;
+            /** @description Rank by PIT per resident (1 = highest) */
+            rank: number | null;
+            /**
+             * @description Ministry of Finance and GUS boundaries differ (e.g. new municipality): excluded from the rank
+             * @example false
+             */
+            partial: boolean;
+        };
+        PitSummaryDataDto: {
+            /**
+             * @description End of the tax year
+             * @example 2024-12-31
+             */
+            asOf: string | null;
+            /** @example true */
+            available: boolean;
+            /**
+             * @description Tax year of the returns
+             * @example 2024
+             */
+            taxYear: number | null;
+            /**
+             * @example [
+             *       2022,
+             *       2023,
+             *       2024
+             *     ]
+             */
+            years: number[];
+            /** @example 2023 */
+            previousYear: number | null;
+            /**
+             * @description GUS population year (31 December) used per capita
+             * @example 2024
+             */
+            populationYear: number | null;
+            /**
+             * @description Ministry of Finance file release date
+             * @example 2025-12-19
+             */
+            publishedAt: string | null;
+            sourceFileUrl: string | null;
+            source: components["schemas"]["PitSourceDto"];
+            index: components["schemas"]["PitIndexRefDto"];
+            national: components["schemas"]["PitNationalDto"] | null;
+            history: components["schemas"]["PitHistoryPointDto"][];
+            voivodeships: components["schemas"]["PitAreaDto"][];
+            topMunicipalities: components["schemas"]["PitMunicipalityDto"][];
+            bottomMunicipalities: components["schemas"]["PitMunicipalityDto"][];
+            topPit38Per1000: components["schemas"]["PitMunicipalityDto"][];
+            municipalities: number | null;
+            /** @description PIT due from returns without a municipality, PLN */
+            unassignedTaxDuePln: number | null;
+        };
+        PitSummaryResponseDto: {
+            data: components["schemas"]["PitSummaryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        PitMunicipalitiesDataDto: {
+            /**
+             * @description End of the tax year
+             * @example 2024-12-31
+             */
+            asOf: string | null;
+            /** @example true */
+            available: boolean;
+            /**
+             * @description Tax year of the returns
+             * @example 2024
+             */
+            taxYear: number | null;
+            /**
+             * @example [
+             *       2022,
+             *       2023,
+             *       2024
+             *     ]
+             */
+            years: number[];
+            /** @example 2023 */
+            previousYear: number | null;
+            /**
+             * @description GUS population year (31 December) used per capita
+             * @example 2024
+             */
+            populationYear: number | null;
+            /**
+             * @description Ministry of Finance file release date
+             * @example 2025-12-19
+             */
+            publishedAt: string | null;
+            sourceFileUrl: string | null;
+            source: components["schemas"]["PitSourceDto"];
+            index: components["schemas"]["PitIndexRefDto"];
+            /** @example 2477 */
+            count: number;
+            /** @description Ranked by PIT per resident, descending */
+            entries: components["schemas"]["PitMunicipalityDto"][];
+        };
+        PitMunicipalitiesResponseDto: {
+            data: components["schemas"]["PitMunicipalitiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        PitMunicipalityYearDto: {
+            /**
+             * @description TERYT code (2 digits = province, PL = Poland)
+             * @example 14
+             */
+            code: string | null;
+            /** @example mazowieckie */
+            name: string | null;
+            population: number | null;
+            /** @description PIT due from all returns, PLN */
+            taxDuePln: number | null;
+            /**
+             * @description PIT due per resident, PLN (finwire_pit_per_capita for Poland)
+             * @example 4578
+             */
+            taxPerCapitaPln: number | null;
+            /**
+             * @description Change of PIT per resident vs previous tax year, %
+             * @example 19
+             */
+            changePct: number | null;
+            /** @description Taxpayers filing PIT-37 */
+            pit37Taxpayers: number | null;
+            /**
+             * @description Revenue per PIT-37 taxpayer, PLN a year
+             * @example 66923
+             */
+            revenuePerPit37Pln: number | null;
+            /**
+             * @description PIT-38 (capital gains) returns per 1000 residents
+             * @example 25.7
+             */
+            pit38Per1000: number | null;
+            /** @example 1465011 */
+            teryt: string | null;
+            /** @example miasto na prawach powiatu */
+            type: string | null;
+            /** @example mazowieckie */
+            voivodeship: string | null;
+            /** @description Rank by PIT per resident (1 = highest) */
+            rank: number | null;
+            /**
+             * @description Ministry of Finance and GUS boundaries differ (e.g. new municipality): excluded from the rank
+             * @example false
+             */
+            partial: boolean;
+            taxYear: number | null;
+            populationYear: number | null;
+            /** @description Ranked municipalities that year */
+            municipalities: number | null;
+            groups: components["schemas"]["PitGroupDto"][];
+        };
+        PitNationalYearDto: {
+            taxYear: number | null;
+            taxPerCapitaPln: number | null;
+            groups: components["schemas"]["PitGroupDto"][];
+        };
+        PitMunicipalityDataDto: {
+            /**
+             * @description End of the tax year
+             * @example 2024-12-31
+             */
+            asOf: string | null;
+            /** @example true */
+            available: boolean;
+            /**
+             * @description Tax year of the returns
+             * @example 2024
+             */
+            taxYear: number | null;
+            /**
+             * @example [
+             *       2022,
+             *       2023,
+             *       2024
+             *     ]
+             */
+            years: number[];
+            /** @example 2023 */
+            previousYear: number | null;
+            /**
+             * @description GUS population year (31 December) used per capita
+             * @example 2024
+             */
+            populationYear: number | null;
+            /**
+             * @description Ministry of Finance file release date
+             * @example 2025-12-19
+             */
+            publishedAt: string | null;
+            sourceFileUrl: string | null;
+            source: components["schemas"]["PitSourceDto"];
+            index: components["schemas"]["PitIndexRefDto"];
+            teryt: string | null;
+            name: string | null;
+            type: string | null;
+            voivodeship: string | null;
+            history: components["schemas"]["PitMunicipalityYearDto"][];
+            national: components["schemas"]["PitNationalYearDto"][];
+        };
+        PitMunicipalityResponseDto: {
+            data: components["schemas"]["PitMunicipalityDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         UpkeepCityDto: {
@@ -5772,6 +6493,225 @@ export interface components {
         KnfWarningsSearchResponseDto: {
             data: components["schemas"]["KnfWarningsSearchDataDto"];
         };
+        BfgCountsDto: {
+            /**
+             * @description Commercial and cooperative banks, credit unions (SKOK) and foreign branches covered by the BFG guarantee
+             * @example 528
+             */
+            guaranteed: number | null;
+            /** @example 24 */
+            commercialBanks: number | null;
+            /** @example 488 */
+            cooperativeBanks: number | null;
+            /** @example 16 */
+            creditUnions: number | null;
+            /** @example 0 */
+            foreignBranches: number | null;
+            /** @example 18 */
+            inBankruptcy: number | null;
+        };
+        BfgGuaranteeDataDto: {
+            /** @example finwire_bfg_guarantee_monitor */
+            seriesId: string;
+            /**
+             * @description Date of the BFG list ("Ostatnia aktualizacja")
+             * @example 2026-10-19
+             */
+            listDate: string | null;
+            /** @example 2026-11-04T08:42:00Z */
+            checkedAt: string | null;
+            /** @example 2018-12-14 */
+            trackedSince: string | null;
+            /**
+             * @description true = the last successful read is older than 3 days (last good state shown)
+             * @example false
+             */
+            stale: boolean;
+            counts: components["schemas"]["BfgCountsDto"] | null;
+            /** @description Versions of the list that changed numbers or composition, oldest first */
+            history: string[];
+            /** @description Latest changes: added, removed, moved to bankruptcy, renamed */
+            changes: string[];
+            /** @description EUR limit and its PLN equivalent at the latest NBP average rate */
+            guaranteeLimit: Record<string, never>;
+            sourceUrl: string | null;
+            /** @example https://finwire.pl/rankingi/lokaty#gwarancja-bfg */
+            pageUrl: string;
+        };
+        BfgGuaranteeResponseDto: {
+            data: components["schemas"]["BfgGuaranteeDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        BfgEntityDto: {
+            /** @example Powszechna Kasa Oszczędności Bank Polski SA (posługujący się nazwą handlową PKO BP oraz Inteligo) */
+            name: string | null;
+            /** @enum {string|null} */
+            group: "commercial" | "cooperative" | "skok" | "foreign_branch" | "bankrupt" | null;
+            /** @example http://www.pkobp.pl/ */
+            website: string | null;
+            note: string | null;
+            /** @description First BFG list with the entity; null = listed before tracking started */
+            firstSeen: string | null;
+        };
+        BfgGuaranteeSearchDataDto: {
+            /** @example Inteligo */
+            query: string;
+            /** @example 2026-10-19 */
+            listDate: string | null;
+            /**
+             * @description At least one match in a guaranteed group (not in bankruptcy)
+             * @example true
+             */
+            onList: boolean;
+            /** @example 1 */
+            count: number;
+            hits: components["schemas"]["BfgEntityDto"][];
+            sourceUrl: string | null;
+            /** @example https://finwire.pl/rankingi/lokaty#gwarancja-bfg */
+            pageUrl: string;
+        };
+        BfgGuaranteeSearchResponseDto: {
+            data: components["schemas"]["BfgGuaranteeSearchDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        TaxRulingsWeekDto: {
+            /** @example 2026-10-26 */
+            weekStart: string;
+            /** @example 2026-11-01 */
+            weekEnd: string;
+            /**
+             * @description Rulings on finwire personal finance topics (finwire_tax_rulings_pulse)
+             * @example 312
+             */
+            count: number;
+            /**
+             * @description All individual rulings published in the week
+             * @example 640
+             */
+            total: number;
+            /**
+             * @example {
+             *       "najem_prywatny": 14
+             *     }
+             */
+            byTopic: Record<string, never>;
+        };
+        TaxRulingProvisionDto: {
+            /** @example PIT|art. 10 ust. 1 */
+            key: string;
+            /** @example art. 10 ust. 1 ustawy o PIT */
+            label: string;
+            /** @example 120 */
+            count: number;
+        };
+        TaxRulingItemDto: {
+            /**
+             * @description EUREKA information id
+             * @example 716996
+             */
+            id: number;
+            /** @example 0112-KDIL2-2.4011.777.2026.3.KP */
+            signature: string;
+            /**
+             * @description KIS individual ruling, change of a ruling (Head of KAS) or municipal ruling
+             * @example individual
+             * @enum {string}
+             */
+            kind: "individual" | "change" | "local";
+            /** @example 2026-10-26 */
+            issuedOn: string | null;
+            /**
+             * @description Publication day in EUREKA
+             * @example 2026-11-03
+             */
+            publishedOn: string;
+            /** @example Dyrektor Krajowej Informacji Skarbowej */
+            authority: string;
+            /**
+             * @description Thesis from EUREKA, shortened; full text at url
+             * @example Przychody z najmu prywatnego.
+             */
+            thesis: string;
+            /**
+             * @example [
+             *       "najem_prywatny"
+             *     ]
+             */
+            topics: string[];
+            /**
+             * @description Provision keys: act code|article
+             * @example [
+             *       "PIT|art. 10 ust. 1 pkt 6"
+             *     ]
+             */
+            provisions: string[];
+            /** @example https://eureka.mf.gov.pl/informacje/podglad/716996 */
+            url: string;
+        };
+        TaxRulingTopicDto: {
+            /** @example najem_prywatny */
+            id: string;
+            /** @example Najem prywatny */
+            label: string;
+            description: string | null;
+            /**
+             * @description Rulings in the last 52 full weeks
+             * @example 610
+             */
+            count12m: number;
+            /** @example 48 */
+            count4w: number;
+            /**
+             * @description Of which municipal rulings
+             * @example 0
+             */
+            local12m: number;
+            lastPublishedOn: string | null;
+            provisions: components["schemas"]["TaxRulingProvisionDto"][];
+            items: components["schemas"]["TaxRulingItemDto"][];
+            /**
+             * @example [
+             *       {
+             *         "weekStart": "2026-10-26",
+             *         "count": 14
+             *       }
+             *     ]
+             */
+            weekly: Record<string, never>[];
+            /** @example https://finwire.pl/kalkulatory/podatek-od-najmu */
+            toolUrl: string | null;
+        };
+        TaxRulingsDataDto: {
+            /**
+             * @description Newest publication day with a ruling on a finwire topic
+             * @example 2026-11-04
+             */
+            asOf: string | null;
+            checkedAt: string | null;
+            /** @example 2025-11-03 */
+            coverageFrom: string | null;
+            /** @example 2026-11-01 */
+            coverageTo: string | null;
+            /** @example false */
+            stale: boolean;
+            /** @example finwire_tax_rulings_pulse */
+            seriesId: string;
+            weekly: components["schemas"]["TaxRulingsWeekDto"][];
+            /** @example 30000 */
+            total12m: number;
+            /** @example 12000 */
+            matched12m: number;
+            topics: components["schemas"]["TaxRulingTopicDto"][];
+            latest: components["schemas"]["TaxRulingItemDto"][];
+            /** @example https://eureka.mf.gov.pl */
+            sourceUrl: string;
+            /** @example https://finwire.pl/rozliczenie-pit#interpretacje */
+            pageUrl: string;
+        };
+        TaxRulingsResponseDto: {
+            data: components["schemas"]["TaxRulingsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
     };
     responses: never;
     parameters: never;
@@ -6810,6 +7750,47 @@ export interface operations {
             };
         };
     };
+    MacroController_businessRegistrations: {
+        parameters: {
+            query?: {
+                /** @description Last N months of history, 1-400, default all */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CeidgResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_ikeIkze: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IkeIkzeResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_cleanAir: {
         parameters: {
             query?: never;
@@ -6825,6 +7806,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CleanAirResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_ppk: {
+        parameters: {
+            query?: {
+                /** @description Last N readings of history, 1-400, default all */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PpkResponseDto"];
                 };
             };
         };
@@ -7004,6 +8007,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["IncomeCountiesResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_pitSummary: {
+        parameters: {
+            query?: {
+                /** @description Tax year, default latest */
+                year?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PitSummaryResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_pitMunicipalities: {
+        parameters: {
+            query?: {
+                /** @description Tax year, default latest */
+                year?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PitMunicipalitiesResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_pitMunicipality: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 7-digit TERYT code of the municipality (from /v1/pit/municipalities) */
+                teryt: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PitMunicipalityResponseDto"];
                 };
             };
         };
@@ -7349,6 +8418,71 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["KnfWarningsSearchResponseDto"];
+                };
+            };
+        };
+    };
+    BfgGuaranteeController_summary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BfgGuaranteeResponseDto"];
+                };
+            };
+        };
+    };
+    BfgGuaranteeController_search: {
+        parameters: {
+            query: {
+                /** @description Name (min. 3 characters) or website */
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BfgGuaranteeSearchResponseDto"];
+                };
+            };
+        };
+    };
+    TaxRulingsController_rulings: {
+        parameters: {
+            query?: {
+                /** @description finwire topic; omit for all topics */
+                topic?: "najem_prywatny" | "sprzedaz_nieruchomosci" | "ike_ikze" | "kryptowaluty" | "inwestycje_pit38" | "jdg_ryczalt" | "ulgi_pit" | "podatek_od_nieruchomosci";
+                /** @description Rulings per topic, 1-40 */
+                limit?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaxRulingsResponseDto"];
                 };
             };
         };

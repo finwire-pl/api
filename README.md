@@ -74,10 +74,14 @@ Each dataset name links to its documentation page with fields, source and citati
 | [Gold price](https://public-api.finwire.pl/datasets/gold) (1 g, fineness 1000) | `/v1/series/gold` | [NBP](https://nbp.pl/statystyka-i-sprawozdawczosc/kursy/cena-zlota/) | daily (business days) | since 2013 |
 | [Maximum fuel prices](https://public-api.finwire.pl/datasets/fuel-max-prices): Pb95, Pb98, diesel | `/v1/fuel-prices` | Minister of Energy ([Monitor Polski](https://eli.gov.pl)) | on announcement | all announcements |
 | [Retail prices in shops](https://public-api.finwire.pl/datasets/retail-prices): 30 goods and services, finwire shopping basket, minutes of work | `/v1/prices/retail` | GUS ([Dziedzinowa Baza Wiedzy](https://dbw.stat.gov.pl/)) | monthly | from 2018 |
+| [Business registrations](https://public-api.finwire.pl/datasets/business-registrations): new, closed, suspended and resumed sole proprietorships in CEIDG, share of women, `finwire_new_business_ratio` | `/v1/business-registrations` | [MRiT](https://dane.gov.pl/pl/dataset/745) (dane.gov.pl) | monthly | from November 2019 |
+| [IKE and IKZE retirement accounts](https://public-api.finwire.pl/datasets/ike-ikze): accounts, assets and contributions by institution type, limit usage, `finwire_ike_ikze_avg_balance` | `/v1/ike-ikze` | [KNF](https://www.knf.gov.pl/wyniki_wyszukiwania?searchText=Informacje+o+rynku+IKE) | half-yearly | from June 2020 |
 | [Investment funds](https://public-api.finwire.pl/datasets/investment-funds): assets and net flows of the market, fund groups, PPK, bond types, equity regions, `finwire_fund_flows_index` | `/v1/investment-funds` | [IZFiA](https://www.izfa.pl/raporty) | monthly | market from February 2020, groups from February 2022 |
 | [Czyste Powietrze subsidy programme](https://public-api.finwire.pl/datasets/clean-air): applications, contracts, payouts, payout queue, heat sources, `finwire_clean_air_payout_rate` | `/v1/subsidies/clean-air` | [NFOŚiGW](https://czystepowietrze.gov.pl/efekty-programu/czyste-powietrze-w-liczbach) | weekly | from February 2024 (archived readings) |
 | [Average ZUS pension](https://public-api.finwire.pl/datasets/zus-benefits): gross and net, other pensions, allowances, `finwire_pension_wage_ratio` | `/v1/pensions` | [ZUS](https://www.zus.pl/baza-wiedzy/statystyka/miesieczna-informacja-o-wybranych-swiadczeniach-pienieznych), GUS | monthly (preliminary data) | from December 2023 |
+| [PPK (Employee Capital Plans)](https://public-api.finwire.pl/datasets/ppk): net assets, active accounts, participants, participation rate, average fee, `finwire_ppk_avg_account` | `/v1/ppk` | [PFR Portal PPK](https://www.mojeppk.pl/pliki-do-pobrania.html) (monthly bulletin) | monthly | from October 2021 |
 | [Polish public debt and state budget](https://public-api.finwire.pl/datasets/public-debt): State Treasury debt, debt per resident `finwire_public_debt_per_capita`, public debt % of GDP, budget deficit | `/v1/public-debt` | [Ministry of Finance](https://www.gov.pl/web/finanse/szeregiczasowe), GUS, Eurostat | monthly (debt), quarterly (% of GDP), monthly (budget estimate) | debt from January 2001, budget from 2018 |
+| [PIT returns by municipality](https://public-api.finwire.pl/datasets/pit-returns): PIT due per resident `finwire_pit_per_capita`, by type of return (PIT-37, PIT-36L, PIT-28, PIT-38), every municipality and province | `/v1/pit/summary`, `/v1/pit/municipalities`, `/v1/pit/municipalities/{teryt}` | [Ministry of Finance](https://dane.gov.pl/pl/dataset/3497), GUS | yearly | tax years from 2022 |
 | [Regulated electricity and gas prices](https://public-api.finwire.pl/datasets/energy-tariffs): household tariffs G11, G12, G12w and W-1.1 to W-4 | `/v1/energy/regulated-prices` | [President of URE](https://bip.ure.gov.pl/bip/taryfy-i-inne-decyzje-b) (tariff decisions) | on new decision | tariff years in force |
 | [Brokerage account fees](https://public-api.finwire.pl/datasets/broker-fees): commissions on GPW, US and German stocks, account and FX fees | `/v1/brokers` | brokers' official fee tables, compiled by finwire.pl | weekly check | current fee tables |
 | [Legal changes radar](https://public-api.finwire.pl/datasets/legal-changes): acts entering into force, bills in the Sejm | `/v1/legal-changes` | [Sejm ELI API](https://api.sejm.gov.pl/eli.html) | daily | upcoming and recent |
@@ -97,6 +101,8 @@ Each dataset name links to its documentation page with fields, source and citati
 | [finwire index registry](https://public-api.finwire.pl/datasets/finwire-index): every index computed by finwire.pl under a stable `finwire_*` id ([list](#finwire-indices-finwire_-ids)) | `/v1/finwire-index/{id}` | finwire.pl (method and sources per index) | daily, monthly or quarterly per index | per index |
 | [Legal calendar](https://public-api.finwire.pl/datasets/legal-calendar) (`finwire_legal_calendar`): PIT, ZUS and VAT deadlines, IKE/IKZE year end, changes of statutory values, acts entering into force, RPP meetings, retail bond sales | `/v1/legal-calendar` | [Sejm ELI API](https://api.sejm.gov.pl/eli.html), NBP, Ministry of Finance, statutory deadlines, compiled by finwire.pl | daily | upcoming events, ICS at [finwire.pl/kalendarz-zmian.ics](https://finwire.pl/kalendarz-zmian.ics) |
 | [KNF public warnings](https://public-api.finwire.pl/datasets/knf-warnings): entries verbatim from KNF, counts by legal basis, entity lookup, weekly new entries (`finwire_knf_warnings_monitor`) | `/v1/knf-warnings` | [KNF, lista ostrzeżeń publicznych](https://www.knf.gov.pl/dla_konsumenta/ostrzezenia_publiczne) | 3 times a day | current list, weekly series since November 2026 |
+| [BFG deposit guarantee list](https://public-api.finwire.pl/datasets/bfg-guarantee): banks and credit unions covered by the BFG guarantee, counts by group with history (`finwire_bfg_guarantee_monitor`), latest changes, lookup by name or website | `/v1/bfg-guarantee` | [BFG, lista podmiotów objętych gwarancjami](https://bfg.pl/gwarantowanie-depozytow/podmioty-objete-gwarancjami/) | twice a day | every change of the list since 2019 |
+| [Tax rulings](https://public-api.finwire.pl/datasets/tax-rulings): KIS and municipal individual rulings by personal finance topic, weekly counts (`finwire_tax_rulings_pulse`), most cited provisions, newest rulings with links | `/v1/tax-rulings` | [Ministry of Finance, EUREKA](https://eureka.mf.gov.pl) | daily | last 53 weeks, growing |
 | [Entry threshold](https://public-api.finwire.pl/datasets/entry-threshold): wage needed for a mortgage on a model flat, 17 cities | `/v1/index/entry-threshold` | finwire.pl (prices from notarial deeds in RCN, GUS RCiWN fallback, mortgage offers, GUS wage distribution) | daily | since September 2026 |
 | [Finwire Nowcast](https://public-api.finwire.pl/datasets/nowcast): forecasts of CPI and core inflation and the RPP decision | `/v1/macro/nowcast` | finwire.pl model (inputs: GUS, NBP, EC Oil Bulletin) | daily, frozen 3 working days before publication | backtest since 2019 (CPI, core), 2012 (RPP) |
 | finwire indicators: [credit stress map](https://public-api.finwire.pl/datasets/credit-stress), barometers | `/v1/index/*` | finwire.pl (computed from the above) | daily (credit stress), monthly (barometers) | barometers since 2015 |
@@ -171,14 +177,17 @@ Tools (all read-only, each with `outputSchema`):
 - Rates and prices: `get_interest_rates` (NBP), `get_currency_rates` (NBP FX, gold), `get_fuel_prices`, `get_energy_prices` (URE electricity and gas tariffs), `get_retail_prices` (GUS shop prices, finwire shopping basket)
 - Subsidies: `get_subsidy_stats` (Czyste Powietrze heating subsidy programme: applications, contracts, payouts, payout queue, `finwire_clean_air_payout_rate`)
 - Pensions: `get_pension_stats` (average ZUS pension gross and net, other pensions, allowances, `finwire_pension_wage_ratio`)
+- Businesses: `get_business_registrations` (applications in CEIDG to register, close, suspend and resume a sole proprietorship, `finwire_new_business_ratio`)
+- PPK: `get_ppk_stats` (Employee Capital Plans from the PFR Portal PPK bulletin: net assets, active accounts, participants, participation rate, average fee, `finwire_ppk_avg_account`)
 - Investment funds: `get_investment_funds` (IZFiA assets, inflows, outflows and net flows by fund group, PPK, `finwire_fund_flows_index`)
+- IKE and IKZE: `get_ike_ikze_stats` (KNF half-yearly accounts, assets and contributions by institution type, limit usage, `finwire_ike_ikze_avg_balance`)
 - Public debt: `get_public_debt` (State Treasury debt, debt per resident `finwire_public_debt_per_capita`, public debt % of GDP, state budget deficit)
 - finwire indices: `list_finwire_indices` (all `finwire_*` ids with the latest reading), `get_finwire_index` (one index by id or alias, with history and citation)
 - Forecasts: `get_nowcast` (Finwire Nowcast: CPI and core inflation, RPP decision probabilities, accuracy)
 - Housing: `get_housing_prices` (notarial deeds, cities and districts), `get_rents` (rents, rental yield), `get_housing_costs`
 - Credit, savings and investing: `get_credit_market`, `get_bank_rates` (aggregates only, no single offers; retail bonds), `get_broker_fees` (brokerage fee tables)
-- Law: `get_legal_limits` (IKE/IKZE, PIT, minimum wage, local tax limits), `get_legal_changes` (acts, bills in the Sejm and the next 30 days of `finwire_legal_calendar`), `check_knf_warnings` (a firm or website on the KNF public warnings list)
-- Regions and Europe: `get_regional_data`, `get_europe_data` (house prices, mortgage rates, bond yields, household electricity and gas prices, minimum wages in the EU)
+- Law: `get_legal_limits` (IKE/IKZE, PIT, minimum wage, local tax limits), `get_legal_changes` (acts, bills in the Sejm and the next 30 days of `finwire_legal_calendar`), `get_tax_rulings` (tax rulings by personal finance topic), `check_knf_warnings` (a firm or website on the KNF public warnings list), `check_bfg_guarantee` (a bank or credit union on the BFG deposit guarantee list)
+- Regions and Europe: `get_regional_data` (income and PIT per resident by municipality, unemployment, wages), `get_europe_data` (house prices, mortgage rates, bond yields, household electricity and gas prices, minimum wages in the EU)
 - Any dataset: `search_datasets`, `get_dataset`
 
 Every result carries the period of the data, the original source, `license`, a ready `citation` and `url` - the finwire.pl page with the full table, chart and calculator (with `utm_source=mcp`). Resources: `macro://catalog`, `finwire://datasets`, `finwire://dataset/{id}`; prompts: `macro_briefing`, `explain_indicator`, `city_housing_report`, `personal_finance_limits`.
@@ -272,6 +281,9 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/prices/retail` | Average retail prices of 30 goods and services (GUS), changes, minutes of work, finwire shopping basket; `?product=` for one price history |
 | `GET /v1/subsidies/clean-air` | Czyste Powietrze programme (NFOŚiGW): applications, contracts and payouts cumulative, Modernisation Fund edition, last week, payout queue and pace, heat sources, reading history |
 | `GET /v1/pensions` | Average ZUS pension gross and net, other pensions, allowances, pension to wage ratio, monthly history |
+| `GET /v1/business-registrations?months=24` | Applications filed in CEIDG (MRiT): registrations, closures, suspensions and resumptions of sole proprietorships, net, same month in earlier years, share of women, `finwire_new_business_ratio`, monthly history |
+| `GET /v1/ppk?months=12` | PPK (Employee Capital Plans) from the monthly PFR Portal PPK bulletin: net assets, active accounts, participants, employers, participation rate, average fee, `finwire_ppk_avg_account`, monthly history |
+| `GET /v1/ike-ikze` | IKE and IKZE (KNF, half-yearly): accounts, assets, contributions, withdrawals and returns by institution type, holders by sex and age, average contribution vs annual limit, `finwire_ike_ikze_avg_balance`, history in PLN |
 | `GET /v1/investment-funds?months=24` | Investment funds (IZFiA): assets, purchases, redemptions and net flows of the market and fund groups, bond types, equity regions, `finwire_fund_flows_index`, monthly history in PLN million |
 | `GET /v1/public-debt` | State Treasury debt monthly since 2001, debt per resident, growth per second, structure, public debt % of GDP, budget deficit with plan |
 | `GET /v1/energy/regulated-prices?date=2026-10-29` | Household electricity and gas tariffs approved by URE in force on a day (default today): energy and distribution rates, fees, cheaper-zone hours, decision and PDF per row; net amounts |
@@ -280,6 +292,8 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/legal-changes/process/{term}/{number}` | One bill: last stage, passage, published act |
 | `GET /v1/legal-calendar?kategorie=przepisy,wartosci&od=2026-11-01&do=2027-03-31` | Legal calendar `finwire_legal_calendar`: dated events with category, legal basis, source and finwire.pl page, the number of changes in acts and values in the next 30 days. `kategorie`: `przepisy`, `wartosci`, `podatki`, `firma`, `oszczednosci`, `obligacje`, `stopy` |
 | `GET /v1/knf-warnings` | KNF public warnings list: entries by legal basis, prosecutors, new entries per full week (`finwire_knf_warnings_monitor`), newest entries verbatim from KNF |
+| `GET /v1/bfg-guarantee` | BFG deposit guarantee list: counts of banks and credit unions with history (`finwire_bfg_guarantee_monitor`), latest changes, EUR limit and its PLN equivalent; `/search?q=` looks up an entity |
+| `GET /v1/tax-rulings?topic=najem_prywatny` | Tax rulings on a personal finance topic: weekly counts (`finwire_tax_rulings_pulse`), most cited provisions, newest rulings with signature, authority, shortened thesis and EUREKA link |
 | `GET /v1/knf-warnings/search?q=tradereu.com` | Look up a firm by name, website, KRS, NIP or REGON; `onList: false` does not mean the firm holds a KNF licence |
 | `GET /v1/income/municipalities?year=2025` | Residents income per capita by municipality: rank, ratio to the national average, change |
 | `GET /v1/income/counties?year=2025` | The same by county |
@@ -335,8 +349,12 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_household_inflation_index` | [Inflacja gospodarstw domowych finwire](https://finwire.pl/indeksy/inflacja-gospodarstw-domowych) | savings | monthly | - |
 | `finwire_pension_wage_ratio` | [Emerytura do płacy finwire](https://finwire.pl/przecietna-emerytura) | savings | monthly | - |
 | `finwire_fund_flows_index` | [Indeks napływów do funduszy finwire](https://finwire.pl/fundusze-inwestycyjne) | savings | monthly | - |
+| `finwire_new_business_ratio` | [Wskaźnik nowych firm finwire](https://finwire.pl/finanse-firmy) | market | monthly | - |
+| `finwire_ppk_avg_account` | [Średnie konto PPK finwire](https://finwire.pl/kalkulatory/ppk) | savings | monthly | - |
+| `finwire_ike_ikze_avg_balance` | [Średnie saldo IKE i IKZE finwire](https://finwire.pl/kalkulatory/ike-ikze) | savings | half-yearly | - |
 | `finwire_clean_air_payout_rate` | [Wskaźnik wypłat Czystego Powietrza finwire](https://finwire.pl/czyste-powietrze) | housing | weekly | - |
 | `finwire_public_debt_per_capita` | [Dług na osobę finwire](https://finwire.pl/dlug-publiczny) | market | monthly | - |
+| `finwire_pit_per_capita` | [PIT na mieszkańca finwire](https://finwire.pl/najbogatsze-gminy#podatek-pit) | market | yearly | - |
 | `finwire_rcn_price_index` | [Indeks cen transakcyjnych finwire](https://finwire.pl/raporty/indeks-cen-transakcyjnych) | housing | quarterly | - |
 | `finwire_price_gap_index` | [Indeks luki cenowej finwire](https://finwire.pl/indeksy/luka-cenowa) | housing | quarterly | - |
 | `finwire_entry_threshold_index` ¹ | [Próg wejścia finwire](https://finwire.pl/prog-wejscia) | housing | daily | `entry-threshold` |
@@ -350,6 +368,8 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_nowcast` | [Finwire Nowcast](https://finwire.pl/nowcast) | market | monthly | `nowcast` |
 | `finwire_legal_calendar` | [Kalendarz zmian w finansach finwire](https://finwire.pl/kalendarz-zmian) | law | daily | - |
 | `finwire_knf_warnings_monitor` | [Monitor ostrzeżeń KNF finwire](https://finwire.pl/ostrzezenia-knf) | law | weekly | `knf-warnings` |
+| `finwire_bfg_guarantee_monitor` | [Licznik instytucji z gwarancją BFG finwire](https://finwire.pl/rankingi/lokaty#gwarancja-bfg) | savings | on every list change | `bfg-guarantee` |
+| `finwire_tax_rulings_pulse` | [Puls interpretacji podatkowych finwire](https://finwire.pl/rozliczenie-pit) | law | weekly | `tax-rulings` |
 
 ¹ Computed from WIBOR (GPW Benchmark): only the result is published, never WIBOR or POLSTR (`usesBenchmarkRate: true`).
 
