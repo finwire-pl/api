@@ -1640,6 +1640,125 @@
         ]
       }
     },
+    "/v1/vehicle-registrations": {
+      "get": {
+        "operationId": "MacroController_vehicleRegistrations",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N months of history, 1-400, default all",
+            "schema": {
+              "example": 24,
+              "type": "number"
+            }
+          },
+          {
+            "name": "period",
+            "required": false,
+            "in": "query",
+            "description": "Month of the brand ranking (YYYY-MM), default latest",
+            "schema": {
+              "example": "2026-09",
+              "type": "string"
+            }
+          },
+          {
+            "name": "province",
+            "required": false,
+            "in": "query",
+            "description": "Province TERYT code (02-32) for the brand ranking, default Poland",
+            "schema": {
+              "example": "14",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleRegistrationsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "First registrations of vehicles in Poland (Ministry of Digital Affairs, CEPiK data on dane.gov.pl): monthly passenger cars and all vehicles since 2014, 17 vehicle types, provinces per 1000 residents, months held back by the consistency check, Puls rejestracji aut finwire (finwire_car_registrations_pulse), passenger-car brands with the share of brands from China (finwire_chinese_brands_share); new and used imported vehicles",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/electric-vehicles": {
+      "get": {
+        "operationId": "MacroController_electricVehicles",
+        "parameters": [
+          {
+            "name": "counties",
+            "required": false,
+            "in": "query",
+            "description": "'all' adds every county and the correlation points",
+            "schema": {
+              "example": "all",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ElectricVehiclesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Electric cars in Poland: battery electric (BEV) and plug-in hybrid (PHEV) passenger cars in the fleet and among new cars by year (Eurostat), fuel mix of new cars, provinces and counties per 1000 passenger cars (GUS BDL, when available), ranking, correlation of charging infrastructure (UDT EIPA) with EV adoption including a version controlling the median wage, Udzia\u0142 elektryk\u00f3w w nowych autach finwire (finwire_ev_share_new_cars)",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/ev-charging": {
+      "get": {
+        "operationId": "MacroController_evCharging",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N month ends of history, 1-400, default all",
+            "schema": {
+              "example": 24,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvChargingResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Public EV charging in Poland (UDT, EIPA register): locations, stations and charging points today and at each month end since December 2019, charging sites and fast sites (>= 50 kW) by province and county, Nasycenie \u0142adowarkami finwire (finwire_ev_charging_coverage, points per 1000 BEV+PHEV cars)",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/ike-ikze": {
       "get": {
         "operationId": "MacroController_ikeIkze",
@@ -1788,6 +1907,82 @@
           }
         },
         "summary": "Sztywne koszty gospodarstwa finwire (finwire_fixed_cost_burden): share of household net income (two earners on the regional median wage, net from the employment contract calculator) taken by the mortgage payment on a 50 m2 flat, administrative fee, heating, water, waste, electricity and TV licence; Poland and 16 provinces, monthly",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/heating-season": {
+      "get": {
+        "operationId": "MacroController_heatingSeason",
+        "parameters": [
+          {
+            "name": "city",
+            "required": false,
+            "in": "query",
+            "description": "Area: 'polska' or city slug (warszawa, krakow, wroclaw, gdansk, poznan, lodz, katowice, torun, lublin, bialystok, szczecin, rzeszow, olsztyn, kielce, opole, zielona-gora, gorzow-wielkopolski); omit for the overview",
+            "schema": {
+              "example": "krakow",
+              "type": "string"
+            }
+          },
+          {
+            "name": "history",
+            "required": false,
+            "in": "query",
+            "description": "With city: last N days of the cold index and forecast series, 1-400",
+            "schema": {
+              "example": 30,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeatingSeasonResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Indeks ch\u0142odu sezonu finwire (finwire_heating_season_index) and Koszt sezonu grzewczego finwire (finwire_heating_season_cost): heating degree days since 1 July vs the 20-season norm from IMGW-PIB synoptic stations, Poland and 17 cities; season cost of a 100 m2 house with an 80% interval only when the backtest gate passes",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/heating-season/seasons": {
+      "get": {
+        "operationId": "MacroController_heatingSeasons",
+        "parameters": [
+          {
+            "name": "city",
+            "required": false,
+            "in": "query",
+            "description": "'polska' (default) or a city slug",
+            "schema": {
+              "example": "warszawa",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeatingSeasonsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Heating season totals since 1966/67 for Poland or a city (IMGW-PIB): degree days, mean October-April temperature, coldest day, frost days, records",
         "tags": [
           "Macro and prices"
         ]
@@ -2945,6 +3140,56 @@
           }
         },
         "summary": "Individual tax rulings (KIS and municipalities) on personal finance topics: weekly counts (finwire_tax_rulings_pulse), most cited provisions, newest rulings with links to EUREKA",
+        "tags": [
+          "Calendar"
+        ]
+      }
+    },
+    "/v1/credit-judgments": {
+      "get": {
+        "operationId": "CreditJudgmentsController_judgments",
+        "parameters": [
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "description": "Dispute category; omit for all categories",
+            "schema": {
+              "enum": [
+                "chf",
+                "waluta_inna",
+                "skd",
+                "wczesniejsza_splata",
+                "wibor",
+                "polisolokata"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Newest rulings to return, 1-40 (default 12)",
+            "schema": {
+              "example": 12,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditJudgmentsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Court rulings in consumer credit disputes: counts by publication month, share ruled for the borrower at least in part (finwire_borrower_win_share), first vs second instance, courts, newest rulings with links to the Court Rulings Portal",
         "tags": [
           "Calendar"
         ]
@@ -12099,6 +12344,390 @@
           "meta"
         ]
       },
+      "VehicleRegistrationsDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09",
+            "description": "Latest month of first registrations"
+          },
+          "firstPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2014-01"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "definition": {
+            "type": "string",
+            "nullable": true,
+            "description": "What a first registration in Poland is (new and used imported vehicles)"
+          },
+          "units": {
+            "type": "object",
+            "description": "Units"
+          },
+          "latest": {
+            "type": "object",
+            "description": "Latest month: passenger cars (from the type file, or the brand files when the type file is held back), all vehicles, year on year, rank among the same months"
+          },
+          "yearToDate": {
+            "type": "object",
+            "nullable": true
+          },
+          "last12Months": {
+            "type": "object",
+            "nullable": true
+          },
+          "byType": {
+            "description": "17 vehicle types: latest month, year ago, last 12 months, share",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "provinces": {
+            "type": "object",
+            "description": "Provinces in the latest month not held back by the consistency check, per 1000 residents"
+          },
+          "quarantine": {
+            "description": "Months held back by the consistency check (last 24 months): share_outlier, sum_mismatch, duplicate_of",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "carRegistrationsPulse": {
+            "type": "object",
+            "nullable": true,
+            "description": "Puls rejestracji aut finwire (finwire_car_registrations_pulse): 12-month sum of passenger-car first registrations, change year on year in %"
+          },
+          "brands": {
+            "type": "object",
+            "nullable": true,
+            "description": "Passenger-car brands: top 20 of the month and of 12 months, share of brands from China (finwire_chinese_brands_share) by province"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "history": {
+            "description": "Monthly history: passenger cars, all vehicles, held back flag, share of brands from China",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "firstPeriod",
+          "updatedAt",
+          "definition",
+          "units",
+          "latest",
+          "yearToDate",
+          "last12Months",
+          "byType",
+          "provinces",
+          "quarantine",
+          "carRegistrationsPulse",
+          "brands",
+          "records",
+          "history"
+        ]
+      },
+      "VehicleRegistrationsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/VehicleRegistrationsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "ElectricVehiclesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025"
+          },
+          "fleetYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2025,
+            "description": "Year of the latest fleet (Eurostat)"
+          },
+          "newCarsYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2025
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "countySource": {
+            "type": "string",
+            "nullable": true,
+            "example": "gus_bdl",
+            "description": "'gus_bdl' when county data exist (GUS BDL), 'eurostat' when only provinces from Eurostat NUTS 2 regions exist (BEV only), 'unavailable' otherwise"
+          },
+          "countyYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "monthlyProvinceSource": {
+            "type": "string",
+            "nullable": true,
+            "description": "'cepik' when monthly province data from the CEPiK API exist"
+          },
+          "definition": {
+            "type": "string",
+            "nullable": true
+          },
+          "fleet": {
+            "type": "object",
+            "nullable": true,
+            "description": "Passenger-car fleet at year end: BEV, PHEV, total, shares"
+          },
+          "newCars": {
+            "type": "object",
+            "nullable": true,
+            "description": "New passenger cars in the year: BEV, PHEV, HEV, shares"
+          },
+          "bevPer1000Cars": {
+            "type": "number",
+            "nullable": true
+          },
+          "fleetHistory": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "newCarsHistory": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "newCarsFuelMix": {
+            "description": "Fuel mix of new passenger cars by year (Eurostat)",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "provinces": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "counties": {
+            "description": "Every county, only with counties=all",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "ranking": {
+            "type": "object",
+            "description": "Top and bottom 10 by BEV per 1000 passenger cars"
+          },
+          "correlation": {
+            "type": "object",
+            "nullable": true,
+            "description": "Spearman correlation of charging sites per 10k residents and BEV per 1000 cars across counties, 95% bootstrap interval, partial correlation controlling the median wage, note on causality"
+          },
+          "monthlyProvinces": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "evShareNewCars": {
+            "type": "object",
+            "nullable": true,
+            "description": "Udzia\u0142 elektryk\u00f3w w nowych autach finwire (finwire_ev_share_new_cars)"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "fleetYear",
+          "newCarsYear",
+          "updatedAt",
+          "countySource",
+          "countyYear",
+          "monthlyProvinceSource",
+          "definition",
+          "fleet",
+          "newCars",
+          "bevPer1000Cars",
+          "fleetHistory",
+          "newCarsHistory",
+          "newCarsFuelMix",
+          "provinces",
+          "ranking",
+          "correlation",
+          "monthlyProvinces",
+          "evShareNewCars",
+          "records"
+        ]
+      },
+      "ElectricVehiclesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ElectricVehiclesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EvChargingDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-05"
+          },
+          "lastMonthEnd": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-31"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "fastChargerKw": {
+            "type": "number",
+            "nullable": true,
+            "example": 50,
+            "description": "Fast charging site = maximum power >= this many kW"
+          },
+          "definitions": {
+            "type": "string",
+            "nullable": true
+          },
+          "latest": {
+            "type": "object",
+            "description": "Locations, stations and charging points today"
+          },
+          "monthEnd": {
+            "type": "object",
+            "nullable": true
+          },
+          "yearAgo": {
+            "type": "object",
+            "nullable": true
+          },
+          "pointsYoyPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "sitesOnMap": {
+            "type": "object",
+            "nullable": true,
+            "description": "Charging sites on the EIPA map: total, fast, suspended"
+          },
+          "areasPeriod": {
+            "type": "string",
+            "nullable": true
+          },
+          "provinces": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "counties": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "chargingCoverage": {
+            "type": "object",
+            "nullable": true,
+            "description": "Nasycenie \u0142adowarkami finwire (finwire_ev_charging_coverage): charging points per 1000 BEV+PHEV cars"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "history": {
+            "description": "Month ends since December 2019 with chargingCoverage",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "lastMonthEnd",
+          "updatedAt",
+          "fastChargerKw",
+          "definitions",
+          "latest",
+          "monthEnd",
+          "yearAgo",
+          "pointsYoyPct",
+          "sitesOnMap",
+          "areasPeriod",
+          "provinces",
+          "counties",
+          "chargingCoverage",
+          "records",
+          "history"
+        ]
+      },
+      "EvChargingResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EvChargingDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "IkeIkzeIndexDto": {
         "type": "object",
         "properties": {
@@ -12854,6 +13483,123 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/FixedCostBurdenDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "HeatingSeasonDataDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_heating_season_index"
+          },
+          "season": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026/27"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-04",
+            "description": "Last day with a measurement"
+          },
+          "archiveUntil": {
+            "type": "string",
+            "nullable": true,
+            "description": "Last day from the verified IMGW-PIB archive; later days are provisional (24 hourly readings)"
+          },
+          "method": {
+            "type": "string"
+          },
+          "attribution": {
+            "description": "Mandatory IMGW-PIB attribution (Polish, verbatim)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "poland": {
+            "type": "object",
+            "nullable": true,
+            "description": "Poland (mean of 17 stations): degree days to date, norm, cold index (100 = norm), forecast with 80% interval only when the backtest gate passes"
+          },
+          "cities": {
+            "description": "17 cities with their IMGW-PIB synoptic station",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "monthly": {
+            "description": "Last 13 months: mean temperature, degree days and the 20-season norm",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "records": {
+            "type": "object",
+            "nullable": true
+          },
+          "costHouse100m2": {
+            "description": "Season heating cost of a 100 m2 house (100 kWh/m2 per year): gas, heat pump, coal, district heating",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "gasConsumptionTj": {
+            "description": "Eurostat nrg_cb_gasm: inland gas consumption in Poland, TJ (GCV)",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "season",
+          "asOf",
+          "archiveUntil",
+          "method",
+          "attribution",
+          "poland",
+          "cities",
+          "monthly",
+          "records",
+          "costHouse100m2",
+          "gasConsumptionTj"
+        ]
+      },
+      "HeatingSeasonResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/HeatingSeasonDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "HeatingSeasonsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Season totals since 1966/67 (degree days, mean Oct-Apr temperature, coldest day, frost days) and records"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -20010,6 +20756,278 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/TaxRulingsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "CreditJudgmentsCategoryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "chf"
+          },
+          "total": {
+            "type": "number",
+            "nullable": true
+          },
+          "last12m": {
+            "type": "object",
+            "description": "Outcome counts in 12 full publication months, decided count and shares (0-1)"
+          },
+          "firstInstanceShare": {
+            "type": "number",
+            "nullable": true
+          },
+          "secondInstanceShare": {
+            "type": "number",
+            "nullable": true
+          },
+          "medianDaysToJudgment": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median days from claim to first-instance judgment"
+          },
+          "publishedMonthly": {
+            "description": "Rulings by publication month",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pageUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "total",
+          "last12m",
+          "firstInstanceShare",
+          "secondInstanceShare",
+          "medianDaysToJudgment",
+          "publishedMonthly",
+          "pageUrl"
+        ]
+      },
+      "CreditJudgmentItemDto": {
+        "type": "object",
+        "properties": {
+          "caseNumber": {
+            "type": "string",
+            "nullable": true,
+            "example": "I C 1669/23"
+          },
+          "court": {
+            "type": "string",
+            "nullable": true,
+            "example": "S\u0105d Okr\u0119gowy w Kaliszu"
+          },
+          "judgmentDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-13"
+          },
+          "publishedOn": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-04",
+            "description": "Publication date in the Court Rulings Portal"
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "I",
+              "II",
+              "Z",
+              "?"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "chf",
+              "waluta_inna",
+              "skd",
+              "wczesniejsza_splata",
+              "wibor",
+              "polisolokata"
+            ]
+          },
+          "outcome": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "kredytobiorca",
+              "czesciowo",
+              "instytucja",
+              "umorzenie",
+              "uchylenie",
+              "nieustalone"
+            ],
+            "description": "Outcome for the borrower, classified by finwire.pl"
+          },
+          "borrowerSide": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "powod",
+              "pozwany"
+            ],
+            "description": "Borrower as claimant (powod) or defendant (pozwany, bank suing the borrower)"
+          },
+          "awardedPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "awardedChf": {
+            "type": "number",
+            "nullable": true
+          },
+          "excerpt": {
+            "type": "string",
+            "nullable": true,
+            "description": "Beginning of the operative part, anonymised by the court"
+          },
+          "url": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://orzeczenia.ms.gov.pl/content/$N/152505000000503_I_C_001669_2023_Uz_2026-09-28_002"
+          }
+        },
+        "required": [
+          "caseNumber",
+          "court",
+          "judgmentDate",
+          "publishedOn",
+          "instance",
+          "category",
+          "outcome",
+          "borrowerSide",
+          "awardedPln",
+          "awardedChf",
+          "excerpt",
+          "url"
+        ]
+      },
+      "CreditJudgmentsDataDto": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "seriesId": {
+            "type": "string",
+            "example": "finwire_borrower_win_share"
+          },
+          "checkedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "coverageFrom": {
+            "type": "string",
+            "nullable": true
+          },
+          "coverageTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "windowFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025-11"
+          },
+          "windowTo": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10"
+          },
+          "stale": {
+            "type": "boolean",
+            "example": false
+          },
+          "publicationLagMedianDays": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median days from judgment to publication (last 24 months)"
+          },
+          "total": {
+            "type": "number",
+            "nullable": true
+          },
+          "total12m": {
+            "type": "number",
+            "nullable": true
+          },
+          "decided12m": {
+            "type": "number",
+            "nullable": true
+          },
+          "index": {
+            "type": "object",
+            "description": "finwire_borrower_win_share in percent, previous month and per category"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditJudgmentsCategoryDto"
+            }
+          },
+          "latest": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditJudgmentItemDto"
+            }
+          },
+          "latestTotal": {
+            "type": "number",
+            "nullable": true
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/wyroki-kredytowe"
+          }
+        },
+        "required": [
+          "category",
+          "seriesId",
+          "checkedAt",
+          "coverageFrom",
+          "coverageTo",
+          "windowFrom",
+          "windowTo",
+          "stale",
+          "publicationLagMedianDays",
+          "total",
+          "total12m",
+          "decided12m",
+          "index",
+          "categories",
+          "latest",
+          "latestTotal",
+          "sourceUrl",
+          "pageUrl"
+        ]
+      },
+      "CreditJudgmentsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CreditJudgmentsDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
