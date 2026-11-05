@@ -201,7 +201,7 @@ Tools (all read-only, each with `outputSchema`):
 
 Every result carries the period of the data, the original source, `license`, a ready `citation` and `url` - the finwire.pl page with the full table, chart and calculator (with `utm_source=mcp`). Resources: `macro://catalog`, `finwire://datasets`, `finwire://dataset/{id}`; prompts: `macro_briefing`, `explain_indicator`, `city_housing_report`, `personal_finance_limits`.
 
-Discovery: [server card](https://public-api.finwire.pl/mcp/server-card) (`application/mcp-server-card+json`), [/.well-known/ai-catalog.json](https://public-api.finwire.pl/.well-known/ai-catalog.json), registry manifest [server.json](server.json).
+Discovery: [server card](https://public-api.finwire.pl/mcp/server-card) (`application/mcp-server-card+json`), [/.well-known/ard.json](https://public-api.finwire.pl/.well-known/ard.json), registry manifest [server.json](server.json).
 
 ---
 

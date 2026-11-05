@@ -7,6 +7,7 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ### Changed
 
+- Discovery manifest moved to `GET /.well-known/ard.json` (Agentic Resource Discovery) with `displayName`, `description`, `representativeQueries` and `capabilities` (tool names); `/.well-known/ai-catalog.json` returns the same manifest.
 - MCP server 1.9.1: website of the server is now [finwire.pl/mcp](https://finwire.pl/mcp) (English: [finwire.pl/en/mcp](https://finwire.pl/en/mcp)) with how to connect, a coverage table and example questions; tools unchanged.
 
 ### Added
