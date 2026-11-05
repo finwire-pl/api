@@ -3,6 +3,22 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-05
+
+### Added
+
+- Business in Poland, `GET /v1/business-poland/*` - calculations and verified legal facts for someone starting or running a business in Poland, also from abroad. Dataset `business-poland`; finwire.pl calculations from the PIT, CIT and social security acts (CC BY 4.0), facts with act, article, link to the official text (ELI) and verification date. Informational, not tax or legal advice.
+  - `net-income` (`form` uop, zlecenie, dzielo, b2b; `gross`; optional `costs`, `tax`, `lumpSumRate`, `zus`, `ppk`, `student`, `year`) - monthly take-home pay with ZUS, health contribution, PIT and the cost to the payer.
+  - `compare-forms` (`revenue`; optional `costs`, `lumpSumRate`, `zus`, `dividendTax`, `year`) - sole proprietorship (tax scale, flat tax, ryczałt) vs sp. z o.o. with one or many shareholders: yearly ZUS, health, PIT, CIT (small taxpayer test at the NBP EUR rate of the first working day of October of the previous year), dividend tax and net to the owner.
+  - `zus-schemes` - ZUS of a sole proprietor: start relief, preferential, full.
+  - `forms` (`status`) - every business form with available yes/no for the owner status (EU/EEA, Swiss, non-EU with a listed permit, other non-EU, foreign company), reason and legal basis.
+  - `treaty` (optional `country`) - withholding tax on dividends, interest and royalties: statutory rate, tax-treaty rate, MLI, EU parent-subsidiary exemption; without `country`: covered countries and the NBP ranking of direct investors.
+  - `compliance` (`form`; optional `vat`, `employees`, `year`) - yearly calendar of tax, ZUS, VAT and reporting deadlines computed from statutory rules with the working-day shift.
+  - `plan` (`status`, `revenue`; optional `country`, `costs`, `employees`, `vat`, `lumpSumRate`) - forms available to the owner, taxes and net per form with the treaty dividend rate of the owner country, setup steps, residence facts and the calendar.
+  - `net-income`, `compare-forms`, `zus-schemes` and `plan` return `basis`: whether the PIT scale comes from a bill that is not law yet, and for each driver (minimum wage, forecast average wage, average enterprise wage) whether it is official, a finwire estimate from `finwire_next_year_limits` with 80% interval and stage, or taken from the previous year until announced.
+  - `guide` (optional `topic`, `q`), `topics`, `glossary` - verified facts by topic (selling into Poland and VAT, residence, PESEL, documents, forms, setup, PKD and regulated activities, withholding tax, treaties, tax residence, health and A1, property for foreigners, contracts, labour law, hiring foreigners, deadlines, accounting, incentives, closing) and a Polish-English glossary. All accept `lang` (`en`, `pl`).
+- MCP server 1.9.0: tools `plan_business_entry`, `get_business_forms`, `calc_net_income`, `compare_business_forms`, `calc_employer_cost`, `calc_zus_contributions`, `get_tax_treaty`, `get_compliance_calendar`, `get_business_guide`, `get_business_glossary`; prompt `doing_business_in_poland`.
+
 ## 2026-11-04
 
 ### Added

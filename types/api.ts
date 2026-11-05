@@ -1619,6 +1619,176 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/business-poland/net-income": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Monthly take-home pay from an employment contract (uop), mandate contract (zlecenie), contract for specific work (dzielo) or B2B self-employment (skala, liniowy, ryczalt) with ZUS, health contribution, PIT and the cost to the payer */
+        get: operations["BusinessPolandController_netIncome"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/compare-forms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Sole proprietorship (JDG: skala, liniowy, ryczalt) vs limited company (sp. z o.o., one or many shareholders): yearly ZUS, health, PIT, CIT, dividend tax and net to the owner */
+        get: operations["BusinessPolandController_compareForms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/zus-schemes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Monthly social security (ZUS) of a sole proprietor: start relief (ulga na start), preferential and full scheme */
+        get: operations["BusinessPolandController_zusSchemes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/topics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Topics of the business-in-Poland knowledge base (with fact counts) and owner statuses */
+        get: operations["BusinessPolandController_topics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/guide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Facts about doing business in Poland with legal basis (act, article, ELI link) and verification date, by topic or search */
+        get: operations["BusinessPolandController_guide"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/forms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Which business forms a person or company from abroad may use in Poland: every form with available yes/no, the reason and the legal basis */
+        get: operations["BusinessPolandController_forms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/treaty": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Polish withholding tax on dividends, interest and royalties paid to a country: statutory rate, tax-treaty rate, MLI, EU parent-subsidiary exemption */
+        get: operations["BusinessPolandController_treaty"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/compliance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Yearly calendar of tax, ZUS, VAT and reporting deadlines of a business in Poland, dates computed from statutory rules with the working-day shift */
+        get: operations["BusinessPolandController_compliance"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Entering Poland with a business: forms available to the owner, yearly taxes and net to the owner per form (dividend at the treaty rate of the owner country), setup steps, residence requirements and the compliance calendar */
+        get: operations["BusinessPolandController_plan"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/glossary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Polish-English glossary of business, tax and ZUS terms */
+        get: operations["BusinessPolandController_glossary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -9663,6 +9833,247 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["TaxRulingsResponseDto"];
                 };
+            };
+        };
+    };
+    BusinessPolandController_netIncome: {
+        parameters: {
+            query: {
+                form: "uop" | "zlecenie" | "dzielo" | "b2b";
+                /** @description Monthly PLN: gross pay (uop, zlecenie), contract amount (dzielo), net revenue without VAT (b2b) */
+                gross: string;
+                /** @description b2b: monthly business costs, PLN net */
+                costs?: string;
+                /** @description b2b: tax form, default liniowy */
+                tax?: "skala" | "liniowy" | "ryczalt";
+                /** @description b2b ryczalt: rate in percent, 2-17 */
+                lumpSumRate?: string;
+                /** @description b2b: social security scheme, default pelny */
+                zus?: "ulgaNaStart" | "preferencyjny" | "pelny";
+                /** @description uop: employee in PPK (true/false) */
+                ppk?: string;
+                /** @description zlecenie: pupil or student under 26 (true/false) */
+                student?: string;
+                /** @description Tax year, default current */
+                year?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_compareForms: {
+        parameters: {
+            query: {
+                /** @description Yearly net revenue (without VAT), PLN */
+                revenue: string;
+                /** @description Yearly business costs, PLN net */
+                costs?: string;
+                /** @description Ryczalt rate for the activity, percent 2-17 */
+                lumpSumRate?: string;
+                /** @description JDG social security scheme, default pelny */
+                zus?: "ulgaNaStart" | "preferencyjny" | "pelny";
+                /** @description Dividend tax rate as a fraction (e.g. 0.05 from a tax treaty); default the Polish statutory rate */
+                dividendTax?: string;
+                /** @description Tax year, default current */
+                year?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_zusSchemes: {
+        parameters: {
+            query?: {
+                /** @description Tax year, default current */
+                year?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_topics: {
+        parameters: {
+            query?: {
+                lang?: "en" | "pl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_guide: {
+        parameters: {
+            query?: {
+                /** @description Topic key from /v1/business-poland/topics */
+                topic?: string;
+                /** @description Words to search, Polish or English */
+                q?: string;
+                lang?: "en" | "pl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_forms: {
+        parameters: {
+            query: {
+                status: "eu-eea" | "swiss" | "third-country-equal" | "third-country-other" | "foreign-company-eu-eea" | "foreign-company-other";
+                lang?: "en" | "pl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_treaty: {
+        parameters: {
+            query?: {
+                /** @description ISO2 country code; omit for the list of covered countries */
+                country?: string;
+                lang?: "en" | "pl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_compliance: {
+        parameters: {
+            query: {
+                form: "jdg-skala" | "jdg-liniowy" | "jdg-ryczalt" | "sp-zoo";
+                /** @description Active VAT payer, monthly (true/false) */
+                vat?: string;
+                /** @description Number of people employed */
+                employees?: string;
+                year?: string;
+                lang?: "en" | "pl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_plan: {
+        parameters: {
+            query: {
+                status: "eu-eea" | "swiss" | "third-country-equal" | "third-country-other" | "foreign-company-eu-eea" | "foreign-company-other";
+                /** @description Tax residence of the owner, ISO2 */
+                country?: string;
+                /** @description Yearly net revenue PLN */
+                revenue: string;
+                costs?: string;
+                employees?: string;
+                vat?: string;
+                lumpSumRate?: string;
+                year?: string;
+                lang?: "en" | "pl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_glossary: {
+        parameters: {
+            query?: {
+                lang?: "en" | "pl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

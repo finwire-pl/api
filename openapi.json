@@ -2949,6 +2949,574 @@
           "Calendar"
         ]
       }
+    },
+    "/v1/business-poland/net-income": {
+      "get": {
+        "operationId": "BusinessPolandController_netIncome",
+        "parameters": [
+          {
+            "name": "form",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "uop",
+                "zlecenie",
+                "dzielo",
+                "b2b"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "gross",
+            "required": true,
+            "in": "query",
+            "description": "Monthly PLN: gross pay (uop, zlecenie), contract amount (dzielo), net revenue without VAT (b2b)",
+            "schema": {
+              "example": 10000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "costs",
+            "required": false,
+            "in": "query",
+            "description": "b2b: monthly business costs, PLN net",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tax",
+            "required": false,
+            "in": "query",
+            "description": "b2b: tax form, default liniowy",
+            "schema": {
+              "enum": [
+                "skala",
+                "liniowy",
+                "ryczalt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "lumpSumRate",
+            "required": false,
+            "in": "query",
+            "description": "b2b ryczalt: rate in percent, 2-17",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "zus",
+            "required": false,
+            "in": "query",
+            "description": "b2b: social security scheme, default pelny",
+            "schema": {
+              "enum": [
+                "ulgaNaStart",
+                "preferencyjny",
+                "pelny"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "ppk",
+            "required": false,
+            "in": "query",
+            "description": "uop: employee in PPK (true/false)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "student",
+            "required": false,
+            "in": "query",
+            "description": "zlecenie: pupil or student under 26 (true/false)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Tax year, default current",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Monthly take-home pay from an employment contract (uop), mandate contract (zlecenie), contract for specific work (dzielo) or B2B self-employment (skala, liniowy, ryczalt) with ZUS, health contribution, PIT and the cost to the payer",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/compare-forms": {
+      "get": {
+        "operationId": "BusinessPolandController_compareForms",
+        "parameters": [
+          {
+            "name": "revenue",
+            "required": true,
+            "in": "query",
+            "description": "Yearly net revenue (without VAT), PLN",
+            "schema": {
+              "example": 300000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "costs",
+            "required": false,
+            "in": "query",
+            "description": "Yearly business costs, PLN net",
+            "schema": {
+              "example": 60000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "lumpSumRate",
+            "required": false,
+            "in": "query",
+            "description": "Ryczalt rate for the activity, percent 2-17",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "zus",
+            "required": false,
+            "in": "query",
+            "description": "JDG social security scheme, default pelny",
+            "schema": {
+              "enum": [
+                "ulgaNaStart",
+                "preferencyjny",
+                "pelny"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "dividendTax",
+            "required": false,
+            "in": "query",
+            "description": "Dividend tax rate as a fraction (e.g. 0.05 from a tax treaty); default the Polish statutory rate",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Tax year, default current",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Sole proprietorship (JDG: skala, liniowy, ryczalt) vs limited company (sp. z o.o., one or many shareholders): yearly ZUS, health, PIT, CIT, dividend tax and net to the owner",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/zus-schemes": {
+      "get": {
+        "operationId": "BusinessPolandController_zusSchemes",
+        "parameters": [
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Tax year, default current",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Monthly social security (ZUS) of a sole proprietor: start relief (ulga na start), preferential and full scheme",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/topics": {
+      "get": {
+        "operationId": "BusinessPolandController_topics",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "en",
+                "pl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Topics of the business-in-Poland knowledge base (with fact counts) and owner statuses",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/guide": {
+      "get": {
+        "operationId": "BusinessPolandController_guide",
+        "parameters": [
+          {
+            "name": "topic",
+            "required": false,
+            "in": "query",
+            "description": "Topic key from /v1/business-poland/topics",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Words to search, Polish or English",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "en",
+                "pl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Facts about doing business in Poland with legal basis (act, article, ELI link) and verification date, by topic or search",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/forms": {
+      "get": {
+        "operationId": "BusinessPolandController_forms",
+        "parameters": [
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "eu-eea",
+                "swiss",
+                "third-country-equal",
+                "third-country-other",
+                "foreign-company-eu-eea",
+                "foreign-company-other"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "en",
+                "pl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Which business forms a person or company from abroad may use in Poland: every form with available yes/no, the reason and the legal basis",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/treaty": {
+      "get": {
+        "operationId": "BusinessPolandController_treaty",
+        "parameters": [
+          {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "description": "ISO2 country code; omit for the list of covered countries",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "en",
+                "pl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Polish withholding tax on dividends, interest and royalties paid to a country: statutory rate, tax-treaty rate, MLI, EU parent-subsidiary exemption",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/compliance": {
+      "get": {
+        "operationId": "BusinessPolandController_compliance",
+        "parameters": [
+          {
+            "name": "form",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "jdg-skala",
+                "jdg-liniowy",
+                "jdg-ryczalt",
+                "sp-zoo"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "vat",
+            "required": false,
+            "in": "query",
+            "description": "Active VAT payer, monthly (true/false)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "employees",
+            "required": false,
+            "in": "query",
+            "description": "Number of people employed",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "en",
+                "pl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Yearly calendar of tax, ZUS, VAT and reporting deadlines of a business in Poland, dates computed from statutory rules with the working-day shift",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/plan": {
+      "get": {
+        "operationId": "BusinessPolandController_plan",
+        "parameters": [
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "eu-eea",
+                "swiss",
+                "third-country-equal",
+                "third-country-other",
+                "foreign-company-eu-eea",
+                "foreign-company-other"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "description": "Tax residence of the owner, ISO2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revenue",
+            "required": true,
+            "in": "query",
+            "description": "Yearly net revenue PLN",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "costs",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "employees",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vat",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lumpSumRate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "en",
+                "pl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Entering Poland with a business: forms available to the owner, yearly taxes and net to the owner per form (dividend at the treaty rate of the owner country), setup steps, residence requirements and the compliance calendar",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/glossary": {
+      "get": {
+        "operationId": "BusinessPolandController_glossary",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "en",
+                "pl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Polish-English glossary of business, tax and ZUS terms",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
     }
   },
   "info": {
