@@ -5,6 +5,10 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ## 2026-11-05
 
+### Changed
+
+- MCP server 1.9.1: website of the server is now [finwire.pl/mcp](https://finwire.pl/mcp) (English: [finwire.pl/en/mcp](https://finwire.pl/en/mcp)) with how to connect, a coverage table and example questions; tools unchanged.
+
 ### Added
 
 - Business in Poland, `GET /v1/business-poland/*` - calculations and verified legal facts for someone starting or running a business in Poland, also from abroad. Dataset `business-poland`; finwire.pl calculations from the PIT, CIT and social security acts (CC BY 4.0), facts with act, article, link to the official text (ELI) and verification date. Informational, not tax or legal advice.

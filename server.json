@@ -3,8 +3,8 @@
   "name": "pl.finwire/data",
   "title": "finwire.pl - Polish financial data",
   "description": "Live Polish rates, FX, housing prices, rents, credit market, legal limits and macro data.",
-  "version": "1.9.0",
-  "websiteUrl": "https://finwire.pl/otwarte-api",
+  "version": "1.9.1",
+  "websiteUrl": "https://finwire.pl/mcp",
   "repository": {
     "url": "https://github.com/finwire-pl/api",
     "source": "github"

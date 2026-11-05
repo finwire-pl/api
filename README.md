@@ -166,7 +166,7 @@ print(payload["meta"]["citation"])
 
 ## MCP server for AI assistants
 
-`https://public-api.finwire.pl/mcp` - Model Context Protocol over Streamable HTTP, stateless, no key, read-only. The same data, whitelist and licenses as `/v1`.
+`https://public-api.finwire.pl/mcp` - Model Context Protocol over Streamable HTTP, stateless, no key, read-only. The same data, whitelist and licenses as `/v1`. What it answers, with a coverage table and example questions: [finwire.pl/en/mcp](https://finwire.pl/en/mcp) (Polish: [finwire.pl/mcp](https://finwire.pl/mcp)).
 
 | Client | How to connect |
 |---|---|
