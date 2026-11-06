@@ -3,6 +3,18 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-06
+
+### Added
+
+- `GET /v1/ev-charging`: new field `powerClasses` - charging sites on the EIPA map by maximum power class (EU AFIR, Regulation (EU) 2023/1804: up to 22 kW, 23-49, 50-149, 150-349, 350+ kW) and connector family (CCS, Type 2, CHAdeMO), DC, fast (>= 50 kW) and ultra-fast (>= 150 kW) sites, top counties by ultra-fast sites, top networks by fast sites. Aggregates only.
+- `GET /v1/electric-vehicles`: field `tesla` - Tesla in first registrations of passenger cars (Ministry of Digital Affairs brand files, new and used imports): monthly counts and share of all passenger cars, brand rank, last 12 months, provinces, years with `newBevMaxSharePct` (Tesla registrations / brand-new BEV from Eurostat, an upper bound of Tesla's share of new electric cars). Months without a consistent brand file are `null` and listed in `gapPeriods`.
+- MCP server 1.11.0: `get_ev_charging` summarises power classes, counties with the most ultra-fast sites and the largest networks, with a link to the charging map [finwire.pl/mapa-ladowarek](https://finwire.pl/mapa-ladowarek); `get_electric_vehicles` reports Tesla.
+
+### Changed
+
+- Passenger-car brands (`/v1/vehicle-registrations`): "TESLA MOTORS" is counted as "TESLA".
+
 ## 2026-11-05
 
 ### Added

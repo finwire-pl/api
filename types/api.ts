@@ -997,7 +997,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Public EV charging in Poland (UDT, EIPA register): locations, stations and charging points today and at each month end since December 2019, charging sites and fast sites (>= 50 kW) by province and county, Nasycenie ładowarkami finwire (finwire_ev_charging_coverage, points per 1000 BEV+PHEV cars) */
+        /** Public EV charging in Poland (UDT, EIPA register): locations, stations and charging points today and at each month end since December 2019, charging sites and fast sites (>= 50 kW) by province and county, sites by power class (EU AFIR: up to 22 kW, 23-49, 50-149, 150-349, 350+ kW) and connector, top counties by ultra-fast sites and top networks, Nasycenie ładowarkami finwire (finwire_ev_charging_coverage, points per 1000 BEV+PHEV cars) */
         get: operations["MacroController_evCharging"];
         put?: never;
         post?: never;
@@ -4998,6 +4998,8 @@ export interface components {
             /** @description Udział elektryków w nowych autach finwire (finwire_ev_share_new_cars) */
             evShareNewCars: Record<string, never> | null;
             records: unknown[][];
+            /** @description Tesla in first registrations of passenger cars (Ministry of Digital Affairs brand files, new and used imports): monthly counts and share of all passenger cars, years with an upper bound of the share of brand-new BEV (Eurostat), provinces over the last 12 months; months without a consistent brand file are null and listed in gapPeriods */
+            tesla: Record<string, never> | null;
         };
         ElectricVehiclesResponseDto: {
             data: components["schemas"]["ElectricVehiclesDataDto"];
@@ -5028,6 +5030,8 @@ export interface components {
             /** @description Nasycenie ładowarkami finwire (finwire_ev_charging_coverage): charging points per 1000 BEV+PHEV cars */
             chargingCoverage: Record<string, never> | null;
             records: unknown[][];
+            /** @description Charging sites by power class (EU AFIR thresholds 22/50/150/350 kW) and connector family, top counties by ultra-fast sites (>= 150 kW), top networks by fast sites */
+            powerClasses: Record<string, never> | null;
             /** @description Month ends since December 2019 with chargingCoverage */
             history: unknown[][];
         };

@@ -1753,7 +1753,7 @@
             }
           }
         },
-        "summary": "Public EV charging in Poland (UDT, EIPA register): locations, stations and charging points today and at each month end since December 2019, charging sites and fast sites (>= 50 kW) by province and county, Nasycenie \u0142adowarkami finwire (finwire_ev_charging_coverage, points per 1000 BEV+PHEV cars)",
+        "summary": "Public EV charging in Poland (UDT, EIPA register): locations, stations and charging points today and at each month end since December 2019, charging sites and fast sites (>= 50 kW) by province and county, sites by power class (EU AFIR: up to 22 kW, 23-49, 50-149, 150-349, 350+ kW) and connector, top counties by ultra-fast sites and top networks, Nasycenie \u0142adowarkami finwire (finwire_ev_charging_coverage, points per 1000 BEV+PHEV cars)",
         "tags": [
           "Macro and prices"
         ]
@@ -12571,6 +12571,11 @@
             "items": {
               "type": "array"
             }
+          },
+          "tesla": {
+            "type": "object",
+            "nullable": true,
+            "description": "Tesla in first registrations of passenger cars (Ministry of Digital Affairs brand files, new and used imports): monthly counts and share of all passenger cars, years with an upper bound of the share of brand-new BEV (Eurostat), provinces over the last 12 months; months without a consistent brand file are null and listed in gapPeriods"
           }
         },
         "required": [
@@ -12593,7 +12598,8 @@
           "correlation",
           "monthlyProvinces",
           "evShareNewCars",
-          "records"
+          "records",
+          "tesla"
         ]
       },
       "ElectricVehiclesResponseDto": {
@@ -12686,6 +12692,11 @@
               "type": "array"
             }
           },
+          "powerClasses": {
+            "type": "object",
+            "nullable": true,
+            "description": "Charging sites by power class (EU AFIR thresholds 22/50/150/350 kW) and connector family, top counties by ultra-fast sites (>= 150 kW), top networks by fast sites"
+          },
           "history": {
             "description": "Month ends since December 2019 with chargingCoverage",
             "type": "array",
@@ -12710,6 +12721,7 @@
           "counties",
           "chargingCoverage",
           "records",
+          "powerClasses",
           "history"
         ]
       },
