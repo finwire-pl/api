@@ -922,6 +922,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/average-pole": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Average Pole (finwire_average_pole): a profile of the typical person in Poland built from the latest readings - median age (Eurostat), median gross and net wage (GUS), median price per m2 of a flat (GUS), average new mortgage (BIK), model mortgage payment, average ZUS pension, spending per person (GUS household budgets), car age classes (Eurostat) and the most registered car brand; each trait with its measure and data period */
+        get: operations["MacroController_averagePole"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/investment-funds": {
         parameters: {
             query?: never;
@@ -1356,6 +1373,57 @@ export interface paths {
         };
         /** Every municipality (gmina): property tax reliance, property tax and PIT share per resident, PIT share change, squeeze flag */
         get: operations["RegionalController_localTaxSqueezeMunicipalities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/jst-budget/municipalities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Municipal budgets (gmina): every municipality with spending, debt and EU 2021-2027 funding per resident (Ministry of Finance Rb-28S and Rb-Z, EU project lists), national figures (finwire_gmina_spending_per_capita) */
+        get: operations["RegionalController_jstBudgetList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/jst-budget/municipalities/{teryt}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One municipality: spending per resident by category (schools, social help, roads, waste and water, administration, culture, sport, interest on debt) vs neighbours, similar municipalities and Poland, investment share, debt per resident, EU funding with largest projects */
+        get: operations["RegionalController_jstBudgetMunicipality"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/jst-budget/ranking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ranking of municipalities or cities with county rights by spending per resident (total, investment or a category), debt or EU funding per resident */
+        get: operations["RegionalController_jstBudgetRanking"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4878,6 +4946,67 @@ export interface components {
             data: components["schemas"]["ZusBenefitsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        AveragePoleTraitDto: {
+            /**
+             * @example age
+             * @enum {string}
+             */
+            id: "age" | "wage" | "flat" | "mortgage" | "payment" | "pension" | "spending" | "car" | "brand";
+            /**
+             * @description Headline value of the trait in `unit`
+             * @example 43.4
+             */
+            value: number;
+            /**
+             * @example years
+             * @enum {string}
+             */
+            unit: "years" | "pln" | "pln_m2" | "percent" | "count";
+            /**
+             * @description Kind of measure; medians and means are never mixed without this label
+             * @example median
+             * @enum {string}
+             */
+            measure: "median" | "mean" | "model" | "distribution" | "mode";
+            /**
+             * @description Period of the data: YYYY, YYYY-Qn or YYYY-MM (last month of a 12-month window for months12)
+             * @example 2025
+             */
+            period: string;
+            /**
+             * @example year
+             * @enum {string}
+             */
+            periodKind: "year" | "quarter" | "month" | "months12";
+            /**
+             * @description Source status flag (Eurostat: p provisional, e estimated, b break; GUS: preliminary)
+             * @example ep
+             */
+            flag: string | null;
+            /** @description Primary source label and URL */
+            source: Record<string, never>;
+        };
+        AveragePoleDataDto: {
+            /**
+             * @description Last day of the newest period among traits
+             * @example 2026-09-30
+             */
+            asOf: string | null;
+            /** @example finwire_average_pole */
+            id: string;
+            /** @example Przeciętny Polak finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @description Meaning of the measure codes */
+            measures: Record<string, never>;
+            /** @description Traits in a fixed order; extra fields per trait: age.history, wage.netPln/netTaxYear/percentiles, payment.loanAmountPln/interestRatePct/termYears, spending.divisions, car.classes/medianClass, brand.brand/sharePct/fromPeriod/runnerUp */
+            traits: components["schemas"]["AveragePoleTraitDto"][];
+        };
+        AveragePoleResponseDto: {
+            data: components["schemas"]["AveragePoleDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         FundSegmentDto: {
             /** @example equity */
             key: string | null;
@@ -6861,6 +6990,27 @@ export interface components {
         };
         LocalTaxSqueezeMunicipalitiesResponseDto: {
             data: components["schemas"]["LocalTaxSqueezeMunicipalitiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        JstBudgetListResponseDto: {
+            /** @description national figures and every municipality: spending, debt and EU 2021-2027 funding per resident */
+            data: {
+                [key: string]: unknown;
+            };
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        JstBudgetMunicipalityResponseDto: {
+            /** @description municipality, lastFullYear and currentYearToDate (spending per resident by category with neighbours, similar municipalities and Poland medians), debt, debtHistory, euFunds (2021-2027 and 2014-2020 with largest projects), neighbours */
+            data: {
+                [key: string]: unknown;
+            };
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        JstBudgetRankingResponseDto: {
+            /** @description metric, family, budgetYear, quarter, polandMedianPerResidentPln, entries (rank, teryt, name, type, population, perResidentPln) */
+            data: {
+                [key: string]: unknown;
+            };
             meta: components["schemas"]["ResponseMetaDto"];
         };
         UpkeepCityDto: {
@@ -9426,6 +9576,25 @@ export interface operations {
             };
         };
     };
+    MacroController_averagePole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AveragePoleResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_investmentFunds: {
         parameters: {
             query?: {
@@ -10001,6 +10170,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LocalTaxSqueezeMunicipalitiesResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_jstBudgetList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JstBudgetListResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_jstBudgetMunicipality: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 7-digit TERYT code of the municipality; cities with county rights use the code WWPP011 */
+                teryt: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JstBudgetMunicipalityResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_jstBudgetRanking: {
+        parameters: {
+            query?: {
+                /** @description total (default), invest, debt, eu or category: oswiata, pomoc, rodzina, drogi, komunalne, administracja, kultura, sport, mieszkania, bezpieczenstwo, dlug, pozostale */
+                metric?: string;
+                /** @description gmina (default) or miasto_npp (cities with county rights, their budget includes county tasks) */
+                family?: string;
+                /** @description annual (last full year, default) or current (current year to date) */
+                period?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JstBudgetRankingResponseDto"];
                 };
             };
         };

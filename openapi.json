@@ -1574,6 +1574,28 @@
         ]
       }
     },
+    "/v1/average-pole": {
+      "get": {
+        "operationId": "MacroController_averagePole",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AveragePoleResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Average Pole (finwire_average_pole): a profile of the typical person in Poland built from the latest readings - median age (Eurostat), median gross and net wage (GUS), median price per m2 of a flat (GUS), average new mortgage (BIK), model mortgage payment, average ZUS pension, spending per person (GUS household budgets), car age classes (Eurostat) and the most registered car brand; each trait with its measure and data period",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/investment-funds": {
       "get": {
         "operationId": "MacroController_investmentFunds",
@@ -2477,6 +2499,114 @@
           }
         },
         "summary": "Every municipality (gmina): property tax reliance, property tax and PIT share per resident, PIT share change, squeeze flag",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/jst-budget/municipalities": {
+      "get": {
+        "operationId": "RegionalController_jstBudgetList",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JstBudgetListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Municipal budgets (gmina): every municipality with spending, debt and EU 2021-2027 funding per resident (Ministry of Finance Rb-28S and Rb-Z, EU project lists), national figures (finwire_gmina_spending_per_capita)",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/jst-budget/municipalities/{teryt}": {
+      "get": {
+        "operationId": "RegionalController_jstBudgetMunicipality",
+        "parameters": [
+          {
+            "name": "teryt",
+            "required": true,
+            "in": "path",
+            "description": "7-digit TERYT code of the municipality; cities with county rights use the code WWPP011",
+            "schema": {
+              "example": "1261011",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JstBudgetMunicipalityResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "One municipality: spending per resident by category (schools, social help, roads, waste and water, administration, culture, sport, interest on debt) vs neighbours, similar municipalities and Poland, investment share, debt per resident, EU funding with largest projects",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/jst-budget/ranking": {
+      "get": {
+        "operationId": "RegionalController_jstBudgetRanking",
+        "parameters": [
+          {
+            "name": "metric",
+            "required": false,
+            "in": "query",
+            "description": "total (default), invest, debt, eu or category: oswiata, pomoc, rodzina, drogi, komunalne, administracja, kultura, sport, mieszkania, bezpieczenstwo, dlug, pozostale",
+            "schema": {
+              "example": "oswiata",
+              "type": "string"
+            }
+          },
+          {
+            "name": "family",
+            "required": false,
+            "in": "query",
+            "description": "gmina (default) or miasto_npp (cities with county rights, their budget includes county tasks)",
+            "schema": {
+              "example": "gmina",
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "required": false,
+            "in": "query",
+            "description": "annual (last full year, default) or current (current year to date)",
+            "schema": {
+              "example": "annual",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JstBudgetRankingResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Ranking of municipalities or cities with county rights by spending per resident (total, investment or a category), debt or EU funding per resident",
         "tags": [
           "Real estate"
         ]
@@ -12065,6 +12195,146 @@
           "meta"
         ]
       },
+      "AveragePoleTraitDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "age",
+            "enum": [
+              "age",
+              "wage",
+              "flat",
+              "mortgage",
+              "payment",
+              "pension",
+              "spending",
+              "car",
+              "brand"
+            ]
+          },
+          "value": {
+            "type": "number",
+            "example": 43.4,
+            "description": "Headline value of the trait in `unit`"
+          },
+          "unit": {
+            "type": "string",
+            "example": "years",
+            "enum": [
+              "years",
+              "pln",
+              "pln_m2",
+              "percent",
+              "count"
+            ]
+          },
+          "measure": {
+            "type": "string",
+            "example": "median",
+            "enum": [
+              "median",
+              "mean",
+              "model",
+              "distribution",
+              "mode"
+            ],
+            "description": "Kind of measure; medians and means are never mixed without this label"
+          },
+          "period": {
+            "type": "string",
+            "example": "2025",
+            "description": "Period of the data: YYYY, YYYY-Qn or YYYY-MM (last month of a 12-month window for months12)"
+          },
+          "periodKind": {
+            "type": "string",
+            "example": "year",
+            "enum": [
+              "year",
+              "quarter",
+              "month",
+              "months12"
+            ]
+          },
+          "flag": {
+            "type": "string",
+            "nullable": true,
+            "example": "ep",
+            "description": "Source status flag (Eurostat: p provisional, e estimated, b break; GUS: preliminary)"
+          },
+          "source": {
+            "type": "object",
+            "description": "Primary source label and URL"
+          }
+        },
+        "required": [
+          "id",
+          "value",
+          "unit",
+          "measure",
+          "period",
+          "periodKind",
+          "flag",
+          "source"
+        ]
+      },
+      "AveragePoleDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09-30",
+            "description": "Last day of the newest period among traits"
+          },
+          "id": {
+            "type": "string",
+            "example": "finwire_average_pole"
+          },
+          "name": {
+            "type": "string",
+            "example": "Przeci\u0119tny Polak finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "measures": {
+            "type": "object",
+            "description": "Meaning of the measure codes"
+          },
+          "traits": {
+            "description": "Traits in a fixed order; extra fields per trait: age.history, wage.netPln/netTaxYear/percentiles, payment.loanAmountPln/interestRatePct/termYears, spending.divisions, car.classes/medianClass, brand.brand/sharePct/fromPeriod/runnerUp",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AveragePoleTraitDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "id",
+          "name",
+          "methodVersion",
+          "measures",
+          "traits"
+        ]
+      },
+      "AveragePoleResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AveragePoleDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "FundSegmentDto": {
         "type": "object",
         "properties": {
@@ -17341,6 +17611,57 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/LocalTaxSqueezeMunicipalitiesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "JstBudgetListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "national figures and every municipality: spending, debt and EU 2021-2027 funding per resident"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "JstBudgetMunicipalityResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "municipality, lastFullYear and currentYearToDate (spending per resident by category with neighbours, similar municipalities and Poland medians), debt, debtHistory, euFunds (2021-2027 and 2014-2020 with largest projects), neighbours"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "JstBudgetRankingResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "metric, family, budgetYear, quarter, polandMedianPerResidentPln, entries (rank, teryt, name, type, population, perResidentPln)"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
