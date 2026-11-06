@@ -3403,7 +3403,43 @@
             "description": "Charger occupancy"
           }
         },
-        "summary": "Charger occupancy: status now, weekday x hour heatmap, power classes, busiest sites and cities, Ob\u0142o\u017cenie \u0142adowarek finwire (finwire_ev_charger_occupancy); history published after 14 days of readings",
+        "summary": "Charger occupancy measured from the last known status of points whose network sent any status change in the last 24 hours: status now, weekly trend, weekday x hour heatmap, power classes, busiest sites, cities and networks, Ob\u0142o\u017cenie \u0142adowarek finwire (finwire_ev_charger_occupancy, full weeks); history published after 14 days of readings",
+        "tags": [
+          "EV charging"
+        ]
+      }
+    },
+    "/v1/ev-charging/growth": {
+      "get": {
+        "operationId": "EvChargingController_growth",
+        "parameters": [
+          {
+            "name": "network",
+            "required": false,
+            "in": "query",
+            "description": "Network slug from /v1/ev-charging/networks - daily growth of one network",
+            "schema": {
+              "example": "greenway",
+              "type": "string"
+            }
+          },
+          {
+            "name": "city",
+            "required": false,
+            "in": "query",
+            "description": "City slug - daily growth in one city",
+            "schema": {
+              "example": "warszawa",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charging infrastructure growth"
+          }
+        },
+        "summary": "Growth of EV charging infrastructure: EIPA month ends since December 2019 (points, stations, locations, CNG/LNG), monthly change, year on year, records; daily snapshots by power class, province and network; one network (network) or city (city). Przyrost \u0142adowarek finwire (finwire_ev_infrastructure_growth)",
         "tags": [
           "EV charging"
         ]

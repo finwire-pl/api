@@ -1813,8 +1813,25 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Charger occupancy: status now, weekday x hour heatmap, power classes, busiest sites and cities, Obłożenie ładowarek finwire (finwire_ev_charger_occupancy); history published after 14 days of readings */
+        /** Charger occupancy measured from the last known status of points whose network sent any status change in the last 24 hours: status now, weekly trend, weekday x hour heatmap, power classes, busiest sites, cities and networks, Obłożenie ładowarek finwire (finwire_ev_charger_occupancy, full weeks); history published after 14 days of readings */
         get: operations["EvChargingController_occupancy"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ev-charging/growth": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Growth of EV charging infrastructure: EIPA month ends since December 2019 (points, stations, locations, CNG/LNG), monthly change, year on year, records; daily snapshots by power class, province and network; one network (network) or city (city). Przyrost ładowarek finwire (finwire_ev_infrastructure_growth) */
+        get: operations["EvChargingController_growth"];
         put?: never;
         post?: never;
         delete?: never;
@@ -10563,6 +10580,29 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description Charger occupancy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EvChargingController_growth: {
+        parameters: {
+            query?: {
+                /** @description Network slug from /v1/ev-charging/networks - daily growth of one network */
+                network?: string;
+                /** @description City slug - daily growth in one city */
+                city?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Charging infrastructure growth */
             200: {
                 headers: {
                     [name: string]: unknown;

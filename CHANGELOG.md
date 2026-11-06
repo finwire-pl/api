@@ -7,6 +7,8 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ### Added
 
+- `GET /v1/ev-charging/growth` (optional `network` or `city`) - dataset `ev-charging-growth`: growth of public EV charging - EIPA month ends since December 2019 (locations, stations, points, CNG/LNG) with monthly change, year on year and records; daily snapshots since the start of measurement of sites and points by power class, province and network, or for one network or city. Index `finwire_ev_infrastructure_growth` (charging points year on year, monthly).
+- MCP server 1.13.0: `get_ev_charging` adds growth year on year (`finwire_ev_infrastructure_growth`), growth records and daily growth by power class; `ev-charging-growth` in `search_datasets` and `get_dataset`.
 - `GET /v1/ev-charging`: new field `powerClasses` - charging sites on the EIPA map by maximum power class (EU AFIR, Regulation (EU) 2023/1804: up to 22 kW, 23-49, 50-149, 150-349, 350+ kW) and connector family (CCS, Type 2, CHAdeMO), DC, fast (>= 50 kW) and ultra-fast (>= 150 kW) sites, top counties by ultra-fast sites, top networks by fast sites. Aggregates only.
 - `GET /v1/electric-vehicles`: field `tesla` - Tesla in first registrations of passenger cars (Ministry of Digital Affairs brand files, new and used imports): monthly counts and share of all passenger cars, brand rank, last 12 months, provinces, years with `newBevMaxSharePct` (Tesla registrations / brand-new BEV from Eurostat, an upper bound of Tesla's share of new electric cars). Months without a consistent brand file are `null` and listed in `gapPeriods`.
 - EV charging from the UDT register EIPA read with an end-user data account (attribution "Źródło: Ewidencja Infrastruktury Paliw Alternatywnych (UDT)"):
@@ -21,6 +23,7 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 ### Changed
 
 - Passenger-car brands (`/v1/vehicle-registrations`): "TESLA MOTORS" is counted as "TESLA".
+- `GET /v1/ev-charging/occupancy`: occupancy is measured from the last known status of points whose network sent any status change in the last 24 hours (a point occupied with no change for more than 7 days counts as no reading); new fields `method`, `measuredNow`, `weekly`, `byNetwork`, `index.previous`; `byCity` adds `averagePointsMeasured`. `finwire_ev_charger_occupancy` is now the value of the last full week (Monday to Sunday) instead of a rolling 7 days (method version 2). `now` keeps the 2-hour "free now" rule of the map.
 
 ## 2026-11-05
 
