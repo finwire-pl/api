@@ -3195,6 +3195,263 @@
         ]
       }
     },
+    "/v1/ev-charging/chargers": {
+      "get": {
+        "operationId": "EvChargingController_chargers",
+        "parameters": [
+          {
+            "name": "city",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "\u0141\u00f3d\u017a",
+              "type": "string"
+            }
+          },
+          {
+            "name": "lat",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 52.2297,
+              "type": "string"
+            }
+          },
+          {
+            "name": "lon",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 21.0122,
+              "type": "string"
+            }
+          },
+          {
+            "name": "radiusKm",
+            "required": false,
+            "in": "query",
+            "description": "0.1-100, default 10 (with lat/lon)",
+            "schema": {
+              "example": 10,
+              "type": "string"
+            }
+          },
+          {
+            "name": "minKw",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 150,
+              "type": "string"
+            }
+          },
+          {
+            "name": "free",
+            "required": false,
+            "in": "query",
+            "description": "1 = free charging only",
+            "schema": {
+              "enum": [
+                "1"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "available",
+            "required": false,
+            "in": "query",
+            "description": "1 = at least one point free now (status younger than 2 h)",
+            "schema": {
+              "enum": [
+                "1"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "network",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "greenway",
+              "type": "string"
+            }
+          },
+          {
+            "name": "connector",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ccs",
+                "chademo",
+                "type2",
+                "other"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "1-100, default 20",
+            "schema": {
+              "example": 20,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charging sites with network, power class, free now and lowest price per kWh"
+          }
+        },
+        "summary": "Find public EV charging sites by city or by point and radius, with filters: minimum power, free charging, free right now, network, connector. Each site: power class, maximum kW, points, free now, lowest ad hoc price per kWh",
+        "tags": [
+          "EV charging"
+        ]
+      }
+    },
+    "/v1/ev-charging/chargers/{id}": {
+      "get": {
+        "operationId": "EvChargingController_charger",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": 93700,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charging site card"
+          }
+        },
+        "summary": "One charging site: address, opening hours, network, stations and points with power, connectors, ad hoc price and current status with its age",
+        "tags": [
+          "EV charging"
+        ]
+      }
+    },
+    "/v1/ev-charging/prices": {
+      "get": {
+        "operationId": "EvChargingController_prices",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Charging prices"
+          }
+        },
+        "summary": "Ad hoc charging prices per kWh by power class (AFIR), AC vs DC, networks and cities (medians with point counts), Indeks cen \u0142adowania finwire (finwire_ev_charging_price_index) monthly, recent price changes",
+        "tags": [
+          "EV charging"
+        ]
+      }
+    },
+    "/v1/ev-charging/networks": {
+      "get": {
+        "operationId": "EvChargingController_networks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Charging networks"
+          }
+        },
+        "summary": "Charging networks with at least 10 stations: stations, points by power class, median AC and DC price, reliability, reach; ranking with published weights for networks with at least 100 stations",
+        "tags": [
+          "EV charging"
+        ]
+      }
+    },
+    "/v1/ev-charging/networks/{slug}": {
+      "get": {
+        "operationId": "EvChargingController_network",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "greenway",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charging network"
+          }
+        },
+        "summary": "One charging network: price list by power class, price changes, status now, provinces and cities",
+        "tags": [
+          "EV charging"
+        ]
+      }
+    },
+    "/v1/ev-charging/occupancy": {
+      "get": {
+        "operationId": "EvChargingController_occupancy",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Charger occupancy"
+          }
+        },
+        "summary": "Charger occupancy: status now, weekday x hour heatmap, power classes, busiest sites and cities, Ob\u0142o\u017cenie \u0142adowarek finwire (finwire_ev_charger_occupancy); history published after 14 days of readings",
+        "tags": [
+          "EV charging"
+        ]
+      }
+    },
+    "/v1/ev-charging/coverage": {
+      "get": {
+        "operationId": "EvChargingController_coverage",
+        "parameters": [
+          {
+            "name": "counties",
+            "required": false,
+            "in": "query",
+            "description": "'all' adds every county",
+            "schema": {
+              "enum": [
+                "all"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fast charger coverage"
+          }
+        },
+        "summary": "Coverage of ultra-fast chargers (from 150 kW): distance from each county to the nearest site, counties without one, Zasi\u0119g ultraszybkich \u0142adowarek finwire (finwire_ev_fast_coverage)",
+        "tags": [
+          "EV charging"
+        ]
+      }
+    },
+    "/v1/ev-charging/gas": {
+      "get": {
+        "operationId": "EvChargingController_gas",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "CNG, LNG and hydrogen stations"
+          }
+        },
+        "summary": "CNG, LNG and hydrogen stations from EIPA: prices per m3 or kg, opening hours, hydrogen pressure",
+        "tags": [
+          "EV charging"
+        ]
+      }
+    },
     "/v1/business-poland/net-income": {
       "get": {
         "operationId": "BusinessPolandController_netIncome",

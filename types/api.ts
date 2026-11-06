@@ -1721,6 +1721,142 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/ev-charging/chargers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Find public EV charging sites by city or by point and radius, with filters: minimum power, free charging, free right now, network, connector. Each site: power class, maximum kW, points, free now, lowest ad hoc price per kWh */
+        get: operations["EvChargingController_chargers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ev-charging/chargers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One charging site: address, opening hours, network, stations and points with power, connectors, ad hoc price and current status with its age */
+        get: operations["EvChargingController_charger"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ev-charging/prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ad hoc charging prices per kWh by power class (AFIR), AC vs DC, networks and cities (medians with point counts), Indeks cen ładowania finwire (finwire_ev_charging_price_index) monthly, recent price changes */
+        get: operations["EvChargingController_prices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ev-charging/networks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Charging networks with at least 10 stations: stations, points by power class, median AC and DC price, reliability, reach; ranking with published weights for networks with at least 100 stations */
+        get: operations["EvChargingController_networks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ev-charging/networks/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One charging network: price list by power class, price changes, status now, provinces and cities */
+        get: operations["EvChargingController_network"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ev-charging/occupancy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Charger occupancy: status now, weekday x hour heatmap, power classes, busiest sites and cities, Obłożenie ładowarek finwire (finwire_ev_charger_occupancy); history published after 14 days of readings */
+        get: operations["EvChargingController_occupancy"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ev-charging/coverage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Coverage of ultra-fast chargers (from 150 kW): distance from each county to the nearest site, counties without one, Zasięg ultraszybkich ładowarek finwire (finwire_ev_fast_coverage) */
+        get: operations["EvChargingController_coverage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ev-charging/gas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** CNG, LNG and hydrogen stations from EIPA: prices per m3 or kg, opening hours, hydrogen pressure */
+        get: operations["EvChargingController_gas"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/business-poland/net-income": {
         parameters: {
             query?: never;
@@ -10305,6 +10441,172 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["CreditJudgmentsResponseDto"];
                 };
+            };
+        };
+    };
+    EvChargingController_chargers: {
+        parameters: {
+            query?: {
+                city?: string;
+                lat?: string;
+                lon?: string;
+                /** @description 0.1-100, default 10 (with lat/lon) */
+                radiusKm?: string;
+                minKw?: string;
+                /** @description 1 = free charging only */
+                free?: "1";
+                /** @description 1 = at least one point free now (status younger than 2 h) */
+                available?: "1";
+                network?: string;
+                connector?: "ccs" | "chademo" | "type2" | "other";
+                /** @description 1-100, default 20 */
+                limit?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Charging sites with network, power class, free now and lowest price per kWh */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EvChargingController_charger: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Charging site card */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EvChargingController_prices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Charging prices */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EvChargingController_networks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Charging networks */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EvChargingController_network: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Charging network */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EvChargingController_occupancy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Charger occupancy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EvChargingController_coverage: {
+        parameters: {
+            query?: {
+                /** @description 'all' adds every county */
+                counties?: "all";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fast charger coverage */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EvChargingController_gas: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description CNG, LNG and hydrogen stations */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

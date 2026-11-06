@@ -9,7 +9,14 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 - `GET /v1/ev-charging`: new field `powerClasses` - charging sites on the EIPA map by maximum power class (EU AFIR, Regulation (EU) 2023/1804: up to 22 kW, 23-49, 50-149, 150-349, 350+ kW) and connector family (CCS, Type 2, CHAdeMO), DC, fast (>= 50 kW) and ultra-fast (>= 150 kW) sites, top counties by ultra-fast sites, top networks by fast sites. Aggregates only.
 - `GET /v1/electric-vehicles`: field `tesla` - Tesla in first registrations of passenger cars (Ministry of Digital Affairs brand files, new and used imports): monthly counts and share of all passenger cars, brand rank, last 12 months, provinces, years with `newBevMaxSharePct` (Tesla registrations / brand-new BEV from Eurostat, an upper bound of Tesla's share of new electric cars). Months without a consistent brand file are `null` and listed in `gapPeriods`.
-- MCP server 1.11.0: `get_ev_charging` summarises power classes, counties with the most ultra-fast sites and the largest networks, with a link to the charging map [finwire.pl/mapa-ladowarek](https://finwire.pl/mapa-ladowarek); `get_electric_vehicles` reports Tesla.
+- EV charging from the UDT register EIPA read with an end-user data account (attribution "Źródło: Ewidencja Infrastruktury Paliw Alternatywnych (UDT)"):
+  - `GET /v1/ev-charging/chargers` (`city` or `lat`+`lon` with `radiusKm`; `minKw`, `free`, `available`, `network`, `connector`, `limit`) and `GET /v1/ev-charging/chargers/{id}` - dataset `ev-chargers`: sites with AFIR power class, maximum kW, points, points free now (status younger than 2 hours), lowest ad hoc price per kWh; one site with stations, points, connectors, prices and status age. No operator contact details.
+  - `GET /v1/ev-charging/prices` - dataset `ev-charging-prices`: ad hoc price per kWh by power class, AC vs DC, networks and cities (medians with point counts), recent price changes. Index `finwire_ev_charging_price_index`.
+  - `GET /v1/ev-charging/networks` and `GET /v1/ev-charging/networks/{slug}` - dataset `ev-charging-networks`: networks with stations, points, median prices, reliability, reach and a weighted ranking; one network price list and price changes. Index `finwire_ev_charger_reliability`.
+  - `GET /v1/ev-charging/occupancy` - dataset `ev-charging-occupancy`: status now, weekday x hour heatmap, busiest sites and cities. Index `finwire_ev_charger_occupancy` (published after 14 days of readings).
+  - `GET /v1/ev-charging/coverage` (optional `counties=all`) - dataset `ev-charging-coverage`: nearest site from 150 kW per county. Index `finwire_ev_fast_coverage`.
+  - `GET /v1/ev-charging/gas` - dataset `alt-fuel-stations`: CNG, LNG and hydrogen stations with prices.
+- MCP server 1.12.0: tools `find_ev_chargers` and `get_ev_charging_prices`; `get_ev_charging` summarises power classes with median prices, counties with the most ultra-fast sites and the largest networks, with a link to the charging map [finwire.pl/mapa-ladowarek](https://finwire.pl/mapa-ladowarek); `get_electric_vehicles` reports Tesla.
 
 ### Changed
 

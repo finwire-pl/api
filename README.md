@@ -188,7 +188,7 @@ Tools (all read-only, each with `outputSchema`):
 - Subsidies: `get_subsidy_stats` (Czyste Powietrze heating subsidy programme: applications, contracts, payouts, payout queue, `finwire_clean_air_payout_rate`)
 - Pensions: `get_pension_stats` (average ZUS pension gross and net, other pensions, allowances, `finwire_pension_wage_ratio`)
 - Businesses: `get_business_registrations` (applications in CEIDG to register, close, suspend and resume a sole proprietorship, `finwire_new_business_ratio`)
-- Cars: `get_vehicle_registrations` (first registrations by type, province and passenger-car brand, share of brands from China, `finwire_car_registrations_pulse`, `finwire_chinese_brands_share`), `get_electric_vehicles` (BEV and PHEV fleet and new cars, counties, charging vs EV correlation, `finwire_ev_share_new_cars`), `get_ev_charging` (EIPA charging points, fast sites, `finwire_ev_charging_coverage`)
+- Cars: `get_vehicle_registrations` (first registrations by type, province and passenger-car brand, share of brands from China, `finwire_car_registrations_pulse`, `finwire_chinese_brands_share`), `get_electric_vehicles` (BEV and PHEV fleet and new cars, counties, charging vs EV correlation, `finwire_ev_share_new_cars`), `get_ev_charging` (EIPA charging points, fast sites, `finwire_ev_charging_coverage`, AFIR power classes with median prices), `find_ev_chargers` (chargers near a city or point: power, free now, price per kWh, one site card), `get_ev_charging_prices` (price per kWh by power class and network, price changes, `finwire_ev_charging_price_index`)
 - PPK: `get_ppk_stats` (Employee Capital Plans from the PFR Portal PPK bulletin: net assets, active accounts, participants, participation rate, average fee, `finwire_ppk_avg_account`)
 - Retail bonds vs deposits: `get_retail_bond_premium` (first-year premium of each retail savings bond series over the best deposits, savings accounts and the average new deposit after tax, retail bond sales, `finwire_retail_bond_premium`)
 - Household budget: `get_fixed_cost_burden` (share of net income taken by mortgage, admin fee, utilities and TV licence, Poland and 16 provinces, `finwire_fixed_cost_burden`)
@@ -304,6 +304,12 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/business-registrations?months=24` | Applications filed in CEIDG (MRiT): registrations, closures, suspensions and resumptions of sole proprietorships, net, same month in earlier years, share of women, `finwire_new_business_ratio`, monthly history |
 | `GET /v1/vehicle-registrations?months=24&province=14` | First registrations in Poland (Ministry of Digital Affairs, CEPiK data): passenger cars and all vehicles, 17 types, provinces per 1000 residents, held-back months, brands of the month and 12 months, share of brands from China, `finwire_car_registrations_pulse`, `finwire_chinese_brands_share` |
 | `GET /v1/electric-vehicles?counties=all` | BEV and PHEV passenger cars: fleet and new cars by year (Eurostat), fuel mix of new cars, provinces and counties per 1000 cars (GUS BDL), top and bottom counties, correlation of charging sites and EVs with a version controlling wages, `finwire_ev_share_new_cars` |
+| `GET /v1/ev-charging/chargers?city=Łódź&minKw=150` | EV charging sites (UDT EIPA, end-user data account) by city or point and radius: power class, kW, points free now, lowest ad hoc price per kWh; `/v1/ev-charging/chargers/{id}` = one site with points, connectors, prices and status |
+| `GET /v1/ev-charging/prices` | Ad hoc charging prices per kWh by AFIR power class, AC vs DC, networks, cities, recent changes, `finwire_ev_charging_price_index` |
+| `GET /v1/ev-charging/networks` | Charging networks: stations, points, median prices, reliability, ranking with weights; `/v1/ev-charging/networks/{slug}` = one network price list, `finwire_ev_charger_reliability` |
+| `GET /v1/ev-charging/occupancy` | Charger occupancy now and by weekday x hour, busiest sites and cities, `finwire_ev_charger_occupancy` (after 14 days of readings) |
+| `GET /v1/ev-charging/coverage?counties=all` | Distance from each county to the nearest charging site from 150 kW, `finwire_ev_fast_coverage` |
+| `GET /v1/ev-charging/gas` | CNG, LNG and hydrogen stations with prices per m3 or kg |
 | `GET /v1/ev-charging?months=24` | Public EV charging (UDT EIPA): points, stations and locations today and at month ends since December 2019, sites and fast sites by province and county, `finwire_ev_charging_coverage` |
 | `GET /v1/ppk?months=12` | PPK (Employee Capital Plans) from the monthly PFR Portal PPK bulletin: net assets, active accounts, participants, employers, participation rate, average fee, `finwire_ppk_avg_account`, monthly history |
 | `GET /v1/retail-bond-premium?months=12` | Premia obligacji skarbowych finwire: retail savings bonds vs the finwire deposit and savings indices and the NBP average new deposit, after tax, per series, retail bond debt change, sales response test |
@@ -385,6 +391,10 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_chinese_brands_share` | [Udział marek z Chin finwire](https://finwire.pl/rejestracje-samochodow) | market | monthly | - |
 | `finwire_ev_share_new_cars` | [Udział elektryków w nowych autach finwire](https://finwire.pl/samochody-elektryczne) | market | yearly | - |
 | `finwire_ev_charging_coverage` | [Nasycenie ładowarkami finwire](https://finwire.pl/samochody-elektryczne) | market | monthly | - |
+| `finwire_ev_charging_price_index` | [Indeks cen ładowania finwire](https://finwire.pl/indeksy) | market | monthly | - |
+| `finwire_ev_charger_occupancy` | [Obłożenie ładowarek finwire](https://finwire.pl/indeksy) | market | weekly (7 days) | - |
+| `finwire_ev_charger_reliability` | [Sprawność ładowarek finwire](https://finwire.pl/indeksy) | market | daily | - |
+| `finwire_ev_fast_coverage` | [Zasięg ultraszybkich ładowarek finwire](https://finwire.pl/indeksy) | market | daily | - |
 | `finwire_ppk_avg_account` | [Średnie konto PPK finwire](https://finwire.pl/kalkulatory/ppk) | savings | monthly | - |
 | `finwire_retail_bond_premium` | [Premia obligacji skarbowych finwire](https://finwire.pl/indeksy/premia-obligacji-skarbowych) | savings | monthly | - |
 | `finwire_fixed_cost_burden` | [Sztywne koszty gospodarstwa finwire](https://finwire.pl/indeksy/sztywne-koszty-gospodarstwa) | housing | monthly | - |
