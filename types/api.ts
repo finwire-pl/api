@@ -939,6 +939,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/daily-price-index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Daily price index finwire (finwire_daily_price_index, experimental): online shelf prices of a fixed basket of food, household and personal care products in three Polish online shops, unit prices per kg, l or piece, Jevons within COICOP 2018 subclasses and GUS CPI weights; base month = 100. Daily series, monthly readings with m/m, categories, food part vs GUS CPI food, collection state and the basket list. No prices of single products or shops. */
+        get: operations["MacroController_dailyPriceIndex"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/investment-funds": {
         parameters: {
             query?: never;
@@ -5005,6 +5022,86 @@ export interface components {
         };
         AveragePoleResponseDto: {
             data: components["schemas"]["AveragePoleDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        DailyPriceIndexLatestDto: {
+            /** @example 2026-11-13 */
+            date: string;
+            /**
+             * @description Index value, base month = 100
+             * @example 100.42
+             */
+            value: number;
+            /**
+             * @example ok
+             * @enum {string}
+             */
+            status: "ok" | "low_coverage";
+            /** @example 0.42 */
+            changeSinceBasePct: number;
+            /** @example 0.1 */
+            changeDayPct: number | null;
+            previousDate: string | null;
+            /**
+             * @description Share of CPI weights of subclasses with quotes (0-1)
+             * @example 0.93
+             */
+            weightCoverage: number;
+            /** @example 312 */
+            quotes: number;
+            /**
+             * @description Quotes with the last price carried forward (max 28 days)
+             * @example 4
+             */
+            carriedQuotes: number;
+            /**
+             * @description Quotes replaced by a substitute from the same subclass
+             * @example 1
+             */
+            substitutedQuotes: number;
+        };
+        DailyPriceIndexDataDto: {
+            /** @example 2026-11-13 */
+            asOf: string | null;
+            /** @example finwire_daily_price_index */
+            id: string;
+            /** @example Dzienny indeks cen finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /**
+             * @description Experimental index (online shelf prices, not CPI)
+             * @example true
+             */
+            experimental: boolean;
+            /**
+             * @description collecting = prices of the base month are being collected, no value yet
+             * @example ok
+             * @enum {string}
+             */
+            status: "collecting" | "ok" | "low_coverage";
+            /** @description Base month (= 100) */
+            base: Record<string, never>;
+            /** @example 2026 */
+            weightsYear: number | null;
+            latest: components["schemas"]["DailyPriceIndexLatestDto"] | null;
+            /** @description Daily series: date, value, status, categories (category id -> index) */
+            series: unknown[][];
+            /** @description Monthly readings (geometric mean of prices in the month): value, foodValue, changeMomPct, foodChangeMomPct, days, complete */
+            months: unknown[][];
+            /** @description Basket categories (COICOP 2018 groups): label, food, weightShare, index, changeSinceBasePct, changeMomPct, products */
+            categories: unknown[][];
+            /** @description Categories with the largest rise and fall (month on month, or since the base month before the first m/m) */
+            movers: Record<string, never> | null;
+            /** @description Food part of the index vs GUS CPI food and non-alcoholic beverages, same completed month */
+            gusFoodComparison: Record<string, never> | null;
+            /** @description Collection state: since, days, products, stores (name, region, products), expectedFirstReading, lastDayCoverage */
+            collection: Record<string, never>;
+            /** @description Basket list per category: generic product name, pack size, number of products; no prices, brands or shop links */
+            basket: unknown[][];
+        };
+        DailyPriceIndexResponseDto: {
+            data: components["schemas"]["DailyPriceIndexDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         FundSegmentDto: {
@@ -9591,6 +9688,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AveragePoleResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_dailyPriceIndex: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DailyPriceIndexResponseDto"];
                 };
             };
         };

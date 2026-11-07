@@ -1596,6 +1596,28 @@
         ]
       }
     },
+    "/v1/daily-price-index": {
+      "get": {
+        "operationId": "MacroController_dailyPriceIndex",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyPriceIndexResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Daily price index finwire (finwire_daily_price_index, experimental): online shelf prices of a fixed basket of food, household and personal care products in three Polish online shops, unit prices per kg, l or piece, Jevons within COICOP 2018 subclasses and GUS CPI weights; base month = 100. Daily series, monthly readings with m/m, categories, food part vs GUS CPI food, collection state and the basket list. No prices of single products or shops.",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/investment-funds": {
       "get": {
         "operationId": "MacroController_investmentFunds",
@@ -12325,6 +12347,201 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/AveragePoleDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "DailyPriceIndexLatestDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-11-13"
+          },
+          "value": {
+            "type": "number",
+            "example": 100.42,
+            "description": "Index value, base month = 100"
+          },
+          "status": {
+            "type": "string",
+            "example": "ok",
+            "enum": [
+              "ok",
+              "low_coverage"
+            ]
+          },
+          "changeSinceBasePct": {
+            "type": "number",
+            "example": 0.42
+          },
+          "changeDayPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.1
+          },
+          "previousDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "weightCoverage": {
+            "type": "number",
+            "example": 0.93,
+            "description": "Share of CPI weights of subclasses with quotes (0-1)"
+          },
+          "quotes": {
+            "type": "number",
+            "example": 312
+          },
+          "carriedQuotes": {
+            "type": "number",
+            "example": 4,
+            "description": "Quotes with the last price carried forward (max 28 days)"
+          },
+          "substitutedQuotes": {
+            "type": "number",
+            "example": 1,
+            "description": "Quotes replaced by a substitute from the same subclass"
+          }
+        },
+        "required": [
+          "date",
+          "value",
+          "status",
+          "changeSinceBasePct",
+          "changeDayPct",
+          "previousDate",
+          "weightCoverage",
+          "quotes",
+          "carriedQuotes",
+          "substitutedQuotes"
+        ]
+      },
+      "DailyPriceIndexDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-13"
+          },
+          "id": {
+            "type": "string",
+            "example": "finwire_daily_price_index"
+          },
+          "name": {
+            "type": "string",
+            "example": "Dzienny indeks cen finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "experimental": {
+            "type": "boolean",
+            "example": true,
+            "description": "Experimental index (online shelf prices, not CPI)"
+          },
+          "status": {
+            "type": "string",
+            "example": "ok",
+            "enum": [
+              "collecting",
+              "ok",
+              "low_coverage"
+            ],
+            "description": "collecting = prices of the base month are being collected, no value yet"
+          },
+          "base": {
+            "type": "object",
+            "description": "Base month (= 100)"
+          },
+          "weightsYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 2026
+          },
+          "latest": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DailyPriceIndexLatestDto"
+              }
+            ]
+          },
+          "series": {
+            "description": "Daily series: date, value, status, categories (category id -> index)",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "months": {
+            "description": "Monthly readings (geometric mean of prices in the month): value, foodValue, changeMomPct, foodChangeMomPct, days, complete",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "categories": {
+            "description": "Basket categories (COICOP 2018 groups): label, food, weightShare, index, changeSinceBasePct, changeMomPct, products",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "movers": {
+            "type": "object",
+            "nullable": true,
+            "description": "Categories with the largest rise and fall (month on month, or since the base month before the first m/m)"
+          },
+          "gusFoodComparison": {
+            "type": "object",
+            "nullable": true,
+            "description": "Food part of the index vs GUS CPI food and non-alcoholic beverages, same completed month"
+          },
+          "collection": {
+            "type": "object",
+            "description": "Collection state: since, days, products, stores (name, region, products), expectedFirstReading, lastDayCoverage"
+          },
+          "basket": {
+            "description": "Basket list per category: generic product name, pack size, number of products; no prices, brands or shop links",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "id",
+          "name",
+          "methodVersion",
+          "experimental",
+          "status",
+          "base",
+          "weightsYear",
+          "latest",
+          "series",
+          "months",
+          "categories",
+          "movers",
+          "gusFoodComparison",
+          "collection",
+          "basket"
+        ]
+      },
+      "DailyPriceIndexResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DailyPriceIndexDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
