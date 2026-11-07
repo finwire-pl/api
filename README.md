@@ -434,6 +434,7 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_next_year_limits` | [Limity na przyszły rok finwire](https://finwire.pl/indeksy/limity-na-przyszly-rok) | law | daily | `next-year-limits` |
 | `finwire_local_tax_squeeze` | [Nożyce fiskalne gmin finwire](https://finwire.pl/najbogatsze-gminy#nozyce-fiskalne) | housing | yearly | `local-tax-squeeze` |
 | `finwire_gmina_spending_per_capita` | [Wydatki gmin na mieszkańca finwire](https://finwire.pl/budzet-gminy) | market | yearly | `jst-budget` |
+| `finwire_average_pole` | [Przeciętny Polak finwire](https://finwire.pl/przecietny-polak) | credit | monthly | `average-pole` |
 | `finwire_location_premium` | [Premia za okolicę finwire](https://finwire.pl/ceny-mieszkan/warszawa#premia-za-okolice) | housing | quarterly | `location-premium` |
 
 ¹ Computed from WIBOR (GPW Benchmark): only the result is published, never WIBOR or POLSTR (`usesBenchmarkRate: true`).
