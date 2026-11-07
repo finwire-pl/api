@@ -10,6 +10,11 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 - `GET /v1/daily-price-index` - dataset `daily-price-index`: Daily price index finwire (`finwire_daily_price_index`, experimental), online shelf prices of a fixed basket of food, drinks, household and personal care products in Frisco.pl, Rossmann.pl and zakupy.biedronka.pl; unit prices per kg, l or piece, Jevons within COICOP 2018 subclasses, GUS CPI weights, base month = 100. Daily series with categories, monthly readings with `changeMomPct`, `movers`, `gusFoodComparison` (food part vs GUS CPI food and non-alcoholic beverages, same completed month), `collection` (state before the first reading, `expectedFirstReading`) and `basket` (generic product names and pack sizes). No prices of single products or shops.
 - MCP server 1.15.0: new tool `get_daily_price_index`; `daily-price-index` in `search_datasets` and `get_dataset`.
 
+### Changed
+
+- Plain HTTP requests are redirected to HTTPS (308); responses carry `Strict-Transport-Security`.
+- MCP server 1.15.0: every tool parameter has a description.
+
 ## 2026-11-06
 
 ### Added
