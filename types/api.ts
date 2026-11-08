@@ -956,6 +956,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/pension-forecast": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Pension forecast finwire (finwire_pension_forecast): first gross ZUS pension as % of own last wage and in today's money by birth year (1966-2006), sex and retirement age (woman 60, woman 65, man 65) and wage level (minimum wage, median, average, twice the average), P10/P50/P90 from thousands of simulations of wages and the number of workers. Model from the statutory indexation of the ZUS account and subaccount, EUROPOP2023 working-age population and life expectancy, GUS life table, Ministry of Finance wage assumptions; fan by retirement year, effect of the shrinking workforce and longer life, OECD and European Commission benchmarks. */
+        get: operations["MacroController_pensionForecast"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/investment-funds": {
         parameters: {
             query?: never;
@@ -5102,6 +5119,53 @@ export interface components {
         };
         DailyPriceIndexResponseDto: {
             data: components["schemas"]["DailyPriceIndexDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        PensionForecastDataDto: {
+            /** @example 2026-11-08 */
+            asOf: string | null;
+            /** @example finwire_pension_forecast */
+            id: string;
+            /** @example Prognoza emerytur finwire */
+            name: string;
+            /**
+             * @description false = model not computed yet; other fields absent
+             * @example true
+             */
+            available: boolean;
+            /** @example 1.0.0 */
+            modelVersion: string;
+            /**
+             * @description Number of simulated paths of real wage growth and the number of workers
+             * @example 2000
+             */
+            simulations: number;
+            /** @description Data periods: last ZUS indexation year, last wage year, GUS life table year, population projection, employment year */
+            periods: Record<string, never>;
+            /** @description Base year, average monthly gross wage (period), minimum pension */
+            base: Record<string, never>;
+            /** @description Man, average wage, full career, retiring at 65 thirty years after the base year: replacement rate P10/P50/P90 (%), woman at 60 in the same year, pension in today's money */
+            headline: Record<string, never> | null;
+            /** @description Wage levels: id, label, multiple of the average wage, monthly gross wage today */
+            thresholds: unknown[][];
+            /** @description Grid birth year x profile (k60, k65, m65) x wage level: replacement rate vs own wage and vs average wage [P10, P50, P90] in %, pension in today's money (PLN, = rate x today's average wage), minimum pension flag */
+            grid: unknown[][];
+            /** @description Fan of the replacement rate by retirement year for woman 60 (k60) and man 65 (m65): P10, P25, P50, P75, P90 in % */
+            fan: Record<string, never>;
+            /** @description Decomposition: base result, without the decline of the working-age population, without longer life (%) */
+            decomposition: unknown[][];
+            /** @description Population aged 20-64 in millions: history and EUROPOP2023 baseline projection */
+            workingAgePopulation: unknown[][];
+            /** @description Benchmarks: OECD Pensions at a Glance 2025, European Commission Ageing Report 2024, each with its definition */
+            benchmarks: unknown[][];
+            /** @description Model check vs OECD: the same cohort without random shocks */
+            oecdCheck: Record<string, never>;
+            /** @description Parameters: employment rate 20-64 in Poland and the best EU country, catch-up half-life, real wage growth path, demographic variant weights */
+            params: Record<string, never>;
+            sources: unknown[][];
+        };
+        PensionForecastResponseDto: {
+            data: components["schemas"]["PensionForecastDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         FundSegmentDto: {
@@ -9707,6 +9771,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DailyPriceIndexResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_pensionForecast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PensionForecastResponseDto"];
                 };
             };
         };

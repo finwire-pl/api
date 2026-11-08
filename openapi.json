@@ -1618,6 +1618,28 @@
         ]
       }
     },
+    "/v1/pension-forecast": {
+      "get": {
+        "operationId": "MacroController_pensionForecast",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PensionForecastResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Pension forecast finwire (finwire_pension_forecast): first gross ZUS pension as % of own last wage and in today's money by birth year (1966-2006), sex and retirement age (woman 60, woman 65, man 65) and wage level (minimum wage, median, average, twice the average), P10/P50/P90 from thousands of simulations of wages and the number of workers. Model from the statutory indexation of the ZUS account and subaccount, EUROPOP2023 working-age population and life expectancy, GUS life table, Ministry of Finance wage assumptions; fan by retirement year, effect of the shrinking workforce and longer life, OECD and European Commission benchmarks.",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/investment-funds": {
       "get": {
         "operationId": "MacroController_investmentFunds",
@@ -12542,6 +12564,139 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/DailyPriceIndexDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "PensionForecastDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-08"
+          },
+          "id": {
+            "type": "string",
+            "example": "finwire_pension_forecast"
+          },
+          "name": {
+            "type": "string",
+            "example": "Prognoza emerytur finwire"
+          },
+          "available": {
+            "type": "boolean",
+            "example": true,
+            "description": "false = model not computed yet; other fields absent"
+          },
+          "modelVersion": {
+            "type": "string",
+            "example": "1.0.0"
+          },
+          "simulations": {
+            "type": "number",
+            "example": 2000,
+            "description": "Number of simulated paths of real wage growth and the number of workers"
+          },
+          "periods": {
+            "type": "object",
+            "description": "Data periods: last ZUS indexation year, last wage year, GUS life table year, population projection, employment year"
+          },
+          "base": {
+            "type": "object",
+            "description": "Base year, average monthly gross wage (period), minimum pension"
+          },
+          "headline": {
+            "type": "object",
+            "nullable": true,
+            "description": "Man, average wage, full career, retiring at 65 thirty years after the base year: replacement rate P10/P50/P90 (%), woman at 60 in the same year, pension in today's money"
+          },
+          "thresholds": {
+            "description": "Wage levels: id, label, multiple of the average wage, monthly gross wage today",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "grid": {
+            "description": "Grid birth year x profile (k60, k65, m65) x wage level: replacement rate vs own wage and vs average wage [P10, P50, P90] in %, pension in today's money (PLN, = rate x today's average wage), minimum pension flag",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "fan": {
+            "type": "object",
+            "description": "Fan of the replacement rate by retirement year for woman 60 (k60) and man 65 (m65): P10, P25, P50, P75, P90 in %"
+          },
+          "decomposition": {
+            "description": "Decomposition: base result, without the decline of the working-age population, without longer life (%)",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "workingAgePopulation": {
+            "description": "Population aged 20-64 in millions: history and EUROPOP2023 baseline projection",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "benchmarks": {
+            "description": "Benchmarks: OECD Pensions at a Glance 2025, European Commission Ageing Report 2024, each with its definition",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "oecdCheck": {
+            "type": "object",
+            "description": "Model check vs OECD: the same cohort without random shocks"
+          },
+          "params": {
+            "type": "object",
+            "description": "Parameters: employment rate 20-64 in Poland and the best EU country, catch-up half-life, real wage growth path, demographic variant weights"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "id",
+          "name",
+          "available",
+          "modelVersion",
+          "simulations",
+          "periods",
+          "base",
+          "headline",
+          "thresholds",
+          "grid",
+          "fan",
+          "decomposition",
+          "workingAgePopulation",
+          "benchmarks",
+          "oecdCheck",
+          "params",
+          "sources"
+        ]
+      },
+      "PensionForecastResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PensionForecastDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

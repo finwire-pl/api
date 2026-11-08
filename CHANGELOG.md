@@ -3,6 +3,13 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-08
+
+### Added
+
+- `GET /v1/pension-forecast` - dataset `pension-forecast`: Pension forecast finwire (`finwire_pension_forecast`), model of the first gross ZUS pension by birth year 1966-2006, sex and retirement age and wage level (minimum wage, median, average, twice the average): replacement rate vs own last wage and vs the average wage, pension in today's money, P10/P50/P90 from simulations, fan by retirement year, effect of the shrinking workforce and longer life, OECD and European Commission benchmarks.
+- MCP server 1.16.0: new tool `get_pension_forecast`; `pension-forecast` in `search_datasets` and `get_dataset`.
+
 ## 2026-11-07
 
 ### Added
