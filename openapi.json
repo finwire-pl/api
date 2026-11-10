@@ -1708,6 +1708,39 @@
         ]
       }
     },
+    "/v1/consumer-bankruptcies": {
+      "get": {
+        "operationId": "MacroController_consumerBankruptcies",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N months of history, 1-400, default all",
+            "schema": {
+              "example": 24,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsumerBankruptciesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Consumer bankruptcies in Poland (COIG, Centralny O\u015brodek Informacji Gospodarczych, from court announcements in the National Register of Debtors KRZ and Monitor S\u0105dowy i Gospodarczy): people declared bankrupt as consumers per month, year on year, sum since January vs the same period a year earlier, rank of the latest month in the series, yearly totals and Licznik upad\u0142o\u015bci konsumenckich finwire (finwire_consumer_bankruptcies, 12-month sum); data COIG, reuse with attribution",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/vehicle-registrations": {
       "get": {
         "operationId": "MacroController_vehicleRegistrations",
@@ -1844,6 +1877,28 @@
           }
         },
         "summary": "IKE and IKZE (Polish individual retirement accounts) market, KNF half-yearly data: accounts and assets by institution type (insurers, investment funds, brokers, banks, voluntary pension funds), contributions, withdrawals and returns since January, account holders by sex and age, average annual contribution vs the statutory limit, \u015arednie saldo IKE i IKZE finwire (finwire_ike_ikze_avg_balance) and half-yearly history; PLN, informational data, not investment advice",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/car-insurance": {
+      "get": {
+        "operationId": "MacroController_carInsurance",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarInsuranceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Car insurance market in Poland, KNF quarterly bulletin \"Rynek ubezpiecze\u0144\" (part D): average OC (motor third-party liability, class 10) and autocasco (class 3) premium per policy over 4 quarters and in the quarter, policies written and in force, claims paid per 100 PLN of premium, 18 non-life insurance classes, \u015arednia sk\u0142adka OC finwire (finwire_oc_avg_premium) and quarterly history; PLN, market averages, not a quote for a specific driver",
         "tags": [
           "Macro and prices"
         ]
@@ -13382,6 +13437,269 @@
           "meta"
         ]
       },
+      "ConsumerBankruptcyMonthDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "count": {
+            "type": "number",
+            "nullable": true,
+            "example": 2277,
+            "description": "People declared bankrupt as consumers in the month"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 14.1,
+            "description": "Change against the same month a year earlier, %"
+          },
+          "last12Months": {
+            "type": "number",
+            "nullable": true,
+            "description": "Sum of the 12 months up to the period"
+          }
+        },
+        "required": [
+          "period",
+          "count",
+          "yoyPct",
+          "last12Months"
+        ]
+      },
+      "ConsumerBankruptciesIndexDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_consumer_bankruptcies"
+          },
+          "name": {
+            "type": "string",
+            "example": "Licznik upad\u0142o\u015bci konsumenckich finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-09"
+          },
+          "value": {
+            "type": "number",
+            "example": 25123,
+            "description": "Consumer bankruptcies in the 12 months up to the period"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Change against the 12 months a year earlier, %"
+          },
+          "previous": {
+            "type": "number",
+            "nullable": true
+          },
+          "yearAgo": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "period",
+          "value",
+          "yoyPct",
+          "previous",
+          "yearAgo"
+        ]
+      },
+      "ConsumerBankruptciesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09"
+          },
+          "firstPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2015-01",
+            "description": "First month of the continuous series"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataChangedAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "Last change of the numbers: new month or a COIG correction"
+          },
+          "publisher": {
+            "type": "string",
+            "nullable": true,
+            "example": "Centralny O\u015brodek Informacji Gospodarczych (COIG)"
+          },
+          "attribution": {
+            "type": "string",
+            "nullable": true,
+            "description": "Mandatory attribution"
+          },
+          "license": {
+            "type": "string",
+            "nullable": true,
+            "example": "dane COIG bez okre\u015blonej licencji, cytowane z podaniem \u017ar\u00f3d\u0142a"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourcePageUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "COIG page with the latest month"
+          },
+          "reformDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2020-03-24",
+            "description": "Amendment of the bankruptcy law: since this day courts no longer dismiss applications because of the debtor's fault"
+          },
+          "units": {
+            "type": "object",
+            "description": "Units"
+          },
+          "latest": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConsumerBankruptcyMonthDto"
+              }
+            ]
+          },
+          "previous": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConsumerBankruptcyMonthDto"
+              }
+            ]
+          },
+          "yearAgo": {
+            "nullable": true,
+            "description": "Same month a year earlier",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConsumerBankruptcyMonthDto"
+              }
+            ]
+          },
+          "yearToDate": {
+            "type": "object",
+            "nullable": true,
+            "description": "Sum since January"
+          },
+          "yearToDatePreviousYear": {
+            "type": "object",
+            "nullable": true,
+            "description": "Same period a year earlier"
+          },
+          "yearToDateYoyPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "last12Months": {
+            "type": "number",
+            "nullable": true
+          },
+          "previous12Months": {
+            "type": "number",
+            "nullable": true
+          },
+          "last12MonthsYoyPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "record": {
+            "type": "object",
+            "description": "Rank of the latest month among all months, among the same calendar month and of the sum since January among the same periods (1 = most bankruptcies), highest and lowest month"
+          },
+          "years": {
+            "description": "Years with 12 monthly values (null = month not yet published), full-year total and sum since January up to the latest month",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "consumerBankruptcies12m": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConsumerBankruptciesIndexDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "Monthly history",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConsumerBankruptcyMonthDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "firstPeriod",
+          "updatedAt",
+          "dataChangedAt",
+          "publisher",
+          "attribution",
+          "license",
+          "sourceUrl",
+          "sourcePageUrl",
+          "reformDate",
+          "units",
+          "latest",
+          "previous",
+          "yearAgo",
+          "yearToDate",
+          "yearToDatePreviousYear",
+          "yearToDateYoyPct",
+          "last12Months",
+          "previous12Months",
+          "last12MonthsYoyPct",
+          "record",
+          "years",
+          "consumerBankruptcies12m",
+          "history"
+        ]
+      },
+      "ConsumerBankruptciesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ConsumerBankruptciesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "VehicleRegistrationsDataDto": {
         "type": "object",
         "properties": {
@@ -13917,6 +14235,200 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/IkeIkzeDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "CarInsuranceIndexDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_oc_avg_premium"
+          },
+          "name": {
+            "type": "string",
+            "example": "\u015arednia sk\u0142adka OC finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-Q2",
+            "description": "Last quarter of the 4-quarter window"
+          },
+          "periodEnd": {
+            "type": "string",
+            "example": "2026-06-30"
+          },
+          "valuePln": {
+            "type": "number",
+            "example": 553,
+            "description": "Gross written premium of class 10 (motor third-party liability) over 4 quarters divided by policies with OC cover written in those quarters, PLN"
+          },
+          "premiumPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "policies": {
+            "type": "number",
+            "nullable": true
+          },
+          "previousPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "yearAgoPln": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "period",
+          "periodEnd",
+          "valuePln",
+          "premiumPln",
+          "policies",
+          "previousPln",
+          "yearAgoPln"
+        ]
+      },
+      "CarInsuranceDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-06-30",
+            "description": "Latest quarter end with OC data"
+          },
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-Q2"
+          },
+          "periodLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "II kw. 2026"
+          },
+          "trailing12mLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "lipiec 2025 - czerwiec 2026"
+          },
+          "yearToDateLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "stycze\u0144 - czerwiec 2026"
+          },
+          "firstPeriodEnd": {
+            "type": "string",
+            "nullable": true,
+            "example": "2017-03-31"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "units": {
+            "type": "object",
+            "description": "Units and windows"
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "publisher": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "KNF article with the latest quarterly bulletin"
+          },
+          "sourceFileUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "XLSX of part D (statistical statement) for the latest quarter"
+          },
+          "publishedOn": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09-29"
+          },
+          "oc": {
+            "type": "object",
+            "nullable": true,
+            "description": "OC (class 10): average premium per policy over 4 quarters and in the quarter, policies written and in force, claims paid, claims paid per 100 PLN of premium, share of non-life premium, year-to-date values"
+          },
+          "ac": {
+            "type": "object",
+            "nullable": true,
+            "description": "Autocasco (class 3), same fields as oc"
+          },
+          "ocAvgPremiumIndex": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CarInsuranceIndexDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "Quarterly history: OC and AC average premium (4 quarters and the quarter), OC policies, premium and claims in the quarter, policies in force, claims paid per 100 PLN",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "insuranceClasses": {
+            "description": "18 non-life insurance classes over 4 quarters: premium, policies, average premium, share, claims paid per 100 PLN, policies in force",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "period",
+          "periodLabel",
+          "trailing12mLabel",
+          "yearToDateLabel",
+          "firstPeriodEnd",
+          "updatedAt",
+          "units",
+          "source",
+          "publisher",
+          "sourceUrl",
+          "sourceFileUrl",
+          "publishedOn",
+          "oc",
+          "ac",
+          "ocAvgPremiumIndex",
+          "history",
+          "insuranceClasses"
+        ]
+      },
+      "CarInsuranceResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CarInsuranceDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

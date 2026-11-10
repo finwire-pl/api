@@ -79,6 +79,7 @@ Each dataset name links to its documentation page with fields, source and citati
 | [Electric cars](https://public-api.finwire.pl/datasets/electric-vehicles): BEV and PHEV fleet and new cars, fuel mix of new cars, counties and provinces, charging vs EV correlation, `finwire_ev_share_new_cars` | `/v1/electric-vehicles` | [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/road_eqs_carpda/default/table), GUS BDL, UDT EIPA | yearly | Eurostat from 2013 |
 | [EV charging points](https://public-api.finwire.pl/datasets/ev-charging): locations, stations and points, fast sites by province and county, `finwire_ev_charging_coverage` | `/v1/ev-charging` | [UDT EIPA](https://eipa.udt.gov.pl/stats) | monthly (month ends), daily current state | from December 2019 |
 | [IKE and IKZE retirement accounts](https://public-api.finwire.pl/datasets/ike-ikze): accounts, assets and contributions by institution type, limit usage, `finwire_ike_ikze_avg_balance` | `/v1/ike-ikze` | [KNF](https://www.knf.gov.pl/wyniki_wyszukiwania?searchText=Informacje+o+rynku+IKE) | half-yearly | from June 2020 |
+| [Car insurance: average OC and autocasco premium](https://public-api.finwire.pl/datasets/car-insurance): average premium per policy over 4 quarters and in the quarter, policies in force, claims paid per 100 PLN of premium, 18 non-life classes, `finwire_oc_avg_premium` | `/v1/car-insurance` | [KNF](https://www.knf.gov.pl/publikacje_i_opracowania/dane_statystyczne?categories=%2Fpublikacje_i_opracowania%2Fdane_statystyczne%2Fubepieczeniowy&apply=1) | quarterly | from Q1 2017 |
 | [Investment funds](https://public-api.finwire.pl/datasets/investment-funds): assets and net flows of the market, fund groups, PPK, bond types, equity regions, `finwire_fund_flows_index` | `/v1/investment-funds` | [IZFiA](https://www.izfa.pl/raporty) | monthly | market from February 2020, groups from February 2022 |
 | [Czyste Powietrze subsidy programme](https://public-api.finwire.pl/datasets/clean-air): applications, contracts, payouts, payout queue, heat sources, `finwire_clean_air_payout_rate` | `/v1/subsidies/clean-air` | [NFOŚiGW](https://czystepowietrze.gov.pl/efekty-programu/czyste-powietrze-w-liczbach) | weekly | from February 2024 (archived readings) |
 | [Average ZUS pension](https://public-api.finwire.pl/datasets/zus-benefits): gross and net, other pensions, allowances, `finwire_pension_wage_ratio` | `/v1/pensions` | [ZUS](https://www.zus.pl/baza-wiedzy/statystyka/miesieczna-informacja-o-wybranych-swiadczeniach-pienieznych), GUS | monthly (preliminary data) | from December 2023 |
@@ -120,6 +121,7 @@ Each dataset name links to its documentation page with fields, source and citati
 | [Finwire Nowcast](https://public-api.finwire.pl/datasets/nowcast): forecasts of CPI and core inflation and the RPP decision | `/v1/macro/nowcast` | finwire.pl model (inputs: GUS, NBP, EC Oil Bulletin) | daily, frozen 3 working days before publication | backtest since 2019 (CPI, core), 2012 (RPP) |
 | [finwire lead forecasts](https://public-api.finwire.pl/datasets/lead-forecasts): core inflation in 6-12 months and impaired loans in 2-4 quarters | `/v1/macro/lead-forecasts` | finwire.pl models (inputs: GUS, NBP, Eurostat, KNF) | daily model run, monthly data | rolling backtest, published only above 70% interval coverage |
 | finwire indicators: [credit stress map](https://public-api.finwire.pl/datasets/credit-stress), barometers | `/v1/index/*` | finwire.pl (computed from the above) | daily (credit stress), monthly (barometers) | barometers since 2015 |
+| [Consumer bankruptcies](https://public-api.finwire.pl/datasets/consumer-bankruptcies): people declared bankrupt as consumers per month, year on year, since January, rank in the series, yearly totals, `finwire_consumer_bankruptcies` | `/v1/consumer-bankruptcies` | [COIG](https://www.coig.com.pl/) (from announcements in KRZ and MSiG; reuse with attribution to COIG, not CC BY) | monthly | from January 2015 |
 
 Aggregates never expose single offers, deeds or listings - only medians, percentiles and counts.
 
@@ -202,6 +204,7 @@ Tools (all read-only, each with `outputSchema`):
 - Heating season: `get_heating_season` (degree days vs norm, cold index, season forecast and heating cost of a 100 m2 house, Poland and 17 cities, `finwire_heating_season_index`, `finwire_heating_season_cost`)
 - Investment funds: `get_investment_funds` (IZFiA assets, inflows, outflows and net flows by fund group, PPK, `finwire_fund_flows_index`)
 - IKE and IKZE: `get_ike_ikze_stats` (KNF half-yearly accounts, assets and contributions by institution type, limit usage, `finwire_ike_ikze_avg_balance`)
+- Car insurance: `get_car_insurance_market` (KNF quarterly average OC and autocasco premium per policy, policies in force, claims paid per 100 PLN of premium, 18 non-life classes, `finwire_oc_avg_premium`)
 - Public debt: `get_public_debt` (State Treasury debt, debt per resident `finwire_public_debt_per_capita`, public debt % of GDP, state budget deficit)
 - finwire indices: `list_finwire_indices` (all `finwire_*` ids with the latest reading), `get_finwire_index` (one index by id or alias, with history and citation)
 - Forecasts: `get_nowcast` (Finwire Nowcast: CPI and core inflation, RPP decision probabilities, accuracy)
@@ -212,6 +215,7 @@ Tools (all read-only, each with `outputSchema`):
 - Business in Poland (also for founders from abroad): `plan_business_entry` (forms available to the owner with reasons, taxes and net per form with the treaty dividend rate, setup steps, residence, deadlines), `get_business_forms`, `calc_net_income` (employment, mandate, work contract, B2B), `compare_business_forms` (JDG vs sp. z o.o.), `calc_employer_cost`, `calc_zus_contributions`, `get_tax_treaty` (withholding tax, treaty rates), `get_compliance_calendar`, `get_business_guide` (verified facts with legal basis), `get_business_glossary`
 - Regions and Europe: `get_regional_data` (income and PIT per resident by municipality, unemployment, wages), `get_europe_data` (house prices, mortgage rates, bond yields, household electricity and gas prices, minimum wages in the EU)
 - Any dataset: `search_datasets`, `get_dataset`
+- Consumer bankruptcies: `get_consumer_bankruptcies` (people declared bankrupt as consumers per month from COIG, year on year, since January, rank in the series, yearly totals, `finwire_consumer_bankruptcies`)
 
 Every result carries the period of the data, the original source, `license`, a ready `citation` and `url` - the finwire.pl page with the full table, chart and calculator (with `utm_source=mcp`). Resources: `macro://catalog`, `finwire://datasets`, `finwire://dataset/{id}`; prompts: `macro_briefing`, `explain_indicator`, `city_housing_report`, `personal_finance_limits`.
 
@@ -327,6 +331,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/retail-bond-premium?months=12` | Premia obligacji skarbowych finwire: retail savings bonds vs the finwire deposit and savings indices and the NBP average new deposit, after tax, per series, retail bond debt change, sales response test |
 | `GET /v1/fixed-cost-burden?region=mazowieckie` | Sztywne koszty gospodarstwa finwire: share of household net income taken by fixed costs, Poland and 16 provinces, components in PLN, monthly history |
 | `GET /v1/ike-ikze` | IKE and IKZE (KNF, half-yearly): accounts, assets, contributions, withdrawals and returns by institution type, holders by sex and age, average contribution vs annual limit, `finwire_ike_ikze_avg_balance`, history in PLN |
+| `GET /v1/car-insurance` | Car insurance (KNF quarterly bulletin, part D): average OC (class 10) and autocasco (class 3) premium per policy over 4 quarters and in the quarter, policies written and in force, claims paid per 100 PLN of premium, 18 non-life classes, `finwire_oc_avg_premium`, quarterly history since 2017 |
 | `GET /v1/investment-funds?months=24` | Investment funds (IZFiA): assets, purchases, redemptions and net flows of the market and fund groups, bond types, equity regions, `finwire_fund_flows_index`, monthly history in PLN million |
 | `GET /v1/public-debt` | State Treasury debt monthly since 2001, debt per resident, growth per second, structure, public debt % of GDP, budget deficit with plan |
 | `GET /v1/energy/regulated-prices?date=2026-10-29` | Household electricity and gas tariffs approved by URE in force on a day (default today): energy and distribution rates, fees, cheaper-zone hours, decision and PDF per row; net amounts |
@@ -357,6 +362,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/market/savings-rates?amount=10000` | Savings account rates: median, percentiles |
 | `GET /v1/market/mortgage-rates?amount=400000&period=25` | Mortgage APRC (RRSO), margin, nominal rate: median, percentiles |
 | `GET /v1/market/cash-loan-rates?amount=20000&period=48` | Cash loan APRC and nominal rate: median, percentiles |
+| `GET /v1/consumer-bankruptcies?months=24` | Consumer bankruptcies (COIG, from court announcements in KRZ and MSiG): latest month with year-on-year change, sum since January vs the same period a year earlier, last 12 months, rank of the latest month in the series and among the same calendar month, yearly totals, `finwire_consumer_bankruptcies`, monthly history; data COIG, reuse with attribution |
 
 ### finwire indicators
 
@@ -414,6 +420,7 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_heating_season_index` | [Indeks chłodu sezonu finwire](https://finwire.pl/sezon-grzewczy) | housing | daily | - |
 | `finwire_heating_season_cost` | [Koszt sezonu grzewczego finwire](https://finwire.pl/sezon-grzewczy#koszt-sezonu) | housing | daily | - |
 | `finwire_ike_ikze_avg_balance` | [Średnie saldo IKE i IKZE finwire](https://finwire.pl/kalkulatory/ike-ikze) | savings | half-yearly | - |
+| `finwire_oc_avg_premium` | [Średnia składka OC finwire](https://finwire.pl/ubezpieczenia/srednia-cena-oc) | market | quarterly | - |
 | `finwire_clean_air_payout_rate` | [Wskaźnik wypłat Czystego Powietrza finwire](https://finwire.pl/czyste-powietrze) | housing | weekly | - |
 | `finwire_public_debt_per_capita` | [Dług na osobę finwire](https://finwire.pl/dlug-publiczny) | market | monthly | - |
 | `finwire_pit_per_capita` | [PIT na mieszkańca finwire](https://finwire.pl/najbogatsze-gminy#podatek-pit) | market | yearly | - |
@@ -447,6 +454,7 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_location_premium` | [Premia za okolicę finwire](https://finwire.pl/ceny-mieszkan/warszawa#premia-za-okolice) | housing | quarterly | `location-premium` |
 | `finwire_coal_price_pl` | [Cena węgla finwire](https://finwire.pl/cena-wegla) | housing | yearly | `coal-waste-prices` |
 | `finwire_waste_fee_pl` | [Opłata za odpady finwire](https://finwire.pl/kalkulatory/oplata-za-smieci) | housing | yearly | `coal-waste-prices` |
+| `finwire_consumer_bankruptcies` | [Licznik upadłości konsumenckich finwire](https://finwire.pl/upadlosc-konsumencka) | credit | monthly | - |
 
 ¹ Computed from WIBOR (GPW Benchmark): only the result is published, never WIBOR or POLSTR (`usesBenchmarkRate: true`).
 

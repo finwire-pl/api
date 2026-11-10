@@ -9,6 +9,10 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 - `GET /v1/coal-waste-prices` - dataset `coal-waste-prices`: annual average price of a tonne of hard coal (`finwire_coal_price_pl`) and fee for sorted waste collection per person (`finwire_waste_fee_pl`), Poland and 16 provinces, from GUS BDL.
 - MCP server 1.18.0: new tool `get_coal_waste_prices`; `coal-waste-prices` in `search_datasets` and `get_dataset`.
+- `GET /v1/car-insurance` - dataset `car-insurance`: car insurance market from the quarterly KNF bulletin "Rynek ubezpieczeń" (part D, tables D.2a and D.2c) since Q1 2017: average gross written premium per policy for OC (motor third-party liability, class 10) and autocasco (class 3) over 4 quarters and in the quarter, policies written and in force, claims paid per 100 PLN of premium, claims paid per settled claim, 18 non-life insurance classes and the finwire index Średnia składka OC finwire (`finwire_oc_avg_premium`).
+- MCP server 1.19.0: new tool `get_car_insurance_market`; `car-insurance` in `search_datasets` and `get_dataset`.
+- `GET /v1/consumer-bankruptcies` - dataset `consumer-bankruptcies`: monthly number of people declared bankrupt as consumers in Poland since January 2015, compiled by COIG from court announcements (KRZ, MSiG): month, year to date, 12-month sum, change year on year, rank of the month in the series and the finwire index Licznik upadłości konsumenckich finwire (`finwire_consumer_bankruptcies`). Attribution to COIG required.
+- MCP server 1.19.0: new tool `get_consumer_bankruptcies`; `consumer-bankruptcies` in `search_datasets` and `get_dataset`.
 
 ### Changed
 
