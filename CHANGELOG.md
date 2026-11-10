@@ -3,6 +3,12 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-10
+
+### Changed
+
+- MCP server 1.17.0: server instructions are shorter than 2048 characters. Each tool description now starts with when to use the tool. Tool names, arguments and results did not change.
+
 ## 2026-11-08
 
 ### Added
