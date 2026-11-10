@@ -5,6 +5,11 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ## 2026-11-10
 
+### Added
+
+- `GET /v1/coal-waste-prices` - dataset `coal-waste-prices`: annual average price of a tonne of hard coal (`finwire_coal_price_pl`) and fee for sorted waste collection per person (`finwire_waste_fee_pl`), Poland and 16 provinces, from GUS BDL.
+- MCP server 1.18.0: new tool `get_coal_waste_prices`; `coal-waste-prices` in `search_datasets` and `get_dataset`.
+
 ### Changed
 
 - MCP server 1.17.0: server instructions are shorter than 2048 characters. Each tool description now starts with when to use the tool. Tool names, arguments and results did not change.

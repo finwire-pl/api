@@ -1500,6 +1500,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/coal-waste-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cena węgla finwire (finwire_coal_price_pl) and Opłata za odpady finwire (finwire_waste_fee_pl): annual average price of a tonne of hard coal and monthly fee for sorted waste collection per person in multi-family buildings, Poland and 16 provinces (GUS BDL) */
+        get: operations["RegionalController_coalWastePrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/housing/europe": {
         parameters: {
             query?: never;
@@ -7236,6 +7253,42 @@ export interface components {
             data: components["schemas"]["UpkeepDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        AnnualPointDto: {
+            /** @example 2025 */
+            year: number;
+            /** @example 1546.31 */
+            value: number;
+        };
+        CoalWasteProvinceDto: {
+            /** @example mazowieckie */
+            slug: string;
+            /** @example Mazowieckie */
+            name: string;
+            points: components["schemas"]["AnnualPointDto"][];
+        };
+        CoalWastePricesDataDto: {
+            /** @example finwire_coal_price_pl */
+            id: string;
+            /** @enum {string} */
+            series: "coal" | "waste";
+            /** @example Węgiel kamienny za 1 t */
+            label: string;
+            /** @example zł/t */
+            unit: string;
+            /** @example 2025 */
+            lastYear: number;
+            /** @example 2025 */
+            asOf: string;
+            /** @example GUS Bank Danych Lokalnych */
+            source: string;
+            sourceUpdatedAt: string | null;
+            poland: components["schemas"]["AnnualPointDto"][];
+            provinces: components["schemas"]["CoalWasteProvinceDto"][];
+        };
+        CoalWastePricesResponseDto: {
+            data: components["schemas"]["CoalWastePricesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         EuHpiAreaDto: {
             /**
              * @description Eurostat geo code
@@ -10477,6 +10530,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UpkeepResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_coalWastePrices: {
+        parameters: {
+            query?: {
+                /** @description coal (default) or waste */
+                series?: "coal" | "waste";
+                /** @description Province slug without diacritics, e.g. kujawsko-pomorskie; default all 16 */
+                region?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CoalWastePricesResponseDto"];
                 };
             };
         };

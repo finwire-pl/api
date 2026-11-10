@@ -2711,6 +2711,52 @@
         ]
       }
     },
+    "/v1/coal-waste-prices": {
+      "get": {
+        "operationId": "RegionalController_coalWastePrices",
+        "parameters": [
+          {
+            "name": "series",
+            "required": false,
+            "in": "query",
+            "description": "coal (default) or waste",
+            "schema": {
+              "enum": [
+                "coal",
+                "waste"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "region",
+            "required": false,
+            "in": "query",
+            "description": "Province slug without diacritics, e.g. kujawsko-pomorskie; default all 16",
+            "schema": {
+              "example": "mazowieckie",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoalWastePricesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cena w\u0119gla finwire (finwire_coal_price_pl) and Op\u0142ata za odpady finwire (finwire_waste_fee_pl): annual average price of a tonne of hard coal and monthly fee for sorted waste collection per person in multi-family buildings, Poland and 16 provinces (GUS BDL)",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
     "/v1/housing/europe": {
       "get": {
         "operationId": "RegionalController_europe",
@@ -18204,6 +18250,126 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/UpkeepDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "AnnualPointDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number",
+            "example": 2025
+          },
+          "value": {
+            "type": "number",
+            "example": 1546.31
+          }
+        },
+        "required": [
+          "year",
+          "value"
+        ]
+      },
+      "CoalWasteProvinceDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "mazowieckie"
+          },
+          "name": {
+            "type": "string",
+            "example": "Mazowieckie"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnnualPointDto"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "points"
+        ]
+      },
+      "CoalWastePricesDataDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_coal_price_pl"
+          },
+          "series": {
+            "type": "string",
+            "enum": [
+              "coal",
+              "waste"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "example": "W\u0119giel kamienny za 1 t"
+          },
+          "unit": {
+            "type": "string",
+            "example": "z\u0142/t"
+          },
+          "lastYear": {
+            "type": "number",
+            "example": 2025
+          },
+          "asOf": {
+            "type": "string",
+            "example": "2025"
+          },
+          "source": {
+            "type": "string",
+            "example": "GUS Bank Danych Lokalnych"
+          },
+          "sourceUpdatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "poland": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnnualPointDto"
+            }
+          },
+          "provinces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CoalWasteProvinceDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "series",
+          "label",
+          "unit",
+          "lastYear",
+          "asOf",
+          "source",
+          "sourceUpdatedAt",
+          "poland",
+          "provinces"
+        ]
+      },
+      "CoalWastePricesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CoalWastePricesDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
