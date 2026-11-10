@@ -78,7 +78,8 @@
                 "monthly",
                 "yearly"
               ],
-              "type": "string"
+              "type": "string",
+              "example": "monthly"
             }
           },
           {
@@ -1475,7 +1476,8 @@
                 "5y",
                 "max"
               ],
-              "type": "string"
+              "type": "string",
+              "example": "1y"
             }
           }
         ],
@@ -2725,7 +2727,8 @@
                 "coal",
                 "waste"
               ],
-              "type": "string"
+              "type": "string",
+              "example": "coal"
             }
           },
           {
@@ -5679,6 +5682,7 @@
           },
           "official": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NextYearLimitOfficialDto"
@@ -6542,6 +6546,7 @@
           },
           "best": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/BarometrExtremeDto"
@@ -6550,6 +6555,7 @@
           },
           "worst": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/BarometrExtremeDto"
@@ -6648,6 +6654,7 @@
           },
           "history": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/BarometrHistoryDto"
@@ -7152,6 +7159,7 @@
           },
           "params": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EntryThresholdParamsDto"
@@ -7263,6 +7271,7 @@
           },
           "params": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EntryThresholdParamsDto"
@@ -7452,6 +7461,7 @@
           },
           "history": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/BarometrHistoryDto"
@@ -7604,6 +7614,7 @@
         "properties": {
           "interestRate": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NumericAggregateDto"
@@ -7681,6 +7692,7 @@
         "properties": {
           "interestRate": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NumericAggregateDto"
@@ -7769,6 +7781,7 @@
           "rrso": {
             "nullable": true,
             "description": "APRC (RRSO)",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NumericAggregateDto"
@@ -7777,6 +7790,7 @@
           },
           "margin": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NumericAggregateDto"
@@ -7785,6 +7799,7 @@
           },
           "nominalRate": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NumericAggregateDto"
@@ -7870,6 +7885,7 @@
           "rrso": {
             "nullable": true,
             "description": "APRC (RRSO)",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NumericAggregateDto"
@@ -7878,6 +7894,7 @@
           },
           "nominalRate": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NumericAggregateDto"
@@ -7944,6 +7961,7 @@
         "properties": {
           "interestRates": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/InterestRatesTableDataDto"
@@ -7952,6 +7970,7 @@
           },
           "inflation": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CpiDataDto"
@@ -7960,6 +7979,7 @@
           },
           "currencies": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FxTableDataDto"
@@ -7968,6 +7988,7 @@
           },
           "creditStress": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreditStressDataDto"
@@ -7976,6 +7997,7 @@
           },
           "barometry": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/BarometrListInnerDto"
@@ -8425,6 +8447,7 @@
           },
           "highestPremium": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/LocationPremiumPickDto"
@@ -8433,6 +8456,7 @@
           },
           "lowestPremium": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/LocationPremiumPickDto"
@@ -8639,6 +8663,7 @@
           },
           "accuracy": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/LocationPremiumAccuracyDto"
@@ -9419,6 +9444,7 @@
           },
           "netForeignMigration": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/YearValueDto"
@@ -9427,6 +9453,7 @@
           },
           "registrationsFromAbroad": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/YearValueDto"
@@ -9597,6 +9624,7 @@
           },
           "netForeignMigration": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/YearValueDto"
@@ -9605,6 +9633,7 @@
           },
           "registrationsFromAbroad": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/YearValueDto"
@@ -9715,6 +9744,7 @@
           },
           "netForeignMigration": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/YearValueDto"
@@ -9723,6 +9753,7 @@
           },
           "registrationsFromAbroad": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/YearValueDto"
@@ -9996,6 +10027,7 @@
           },
           "poland": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/HousingPressureUnitDto"
@@ -10178,6 +10210,7 @@
           },
           "poland": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/HousingPipelineUnitDto"
@@ -10298,6 +10331,7 @@
           },
           "accuracy": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/HousingBalanceAccuracyDto"
@@ -10335,6 +10369,7 @@
           },
           "pressure": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/HousingPressureDto"
@@ -10343,6 +10378,7 @@
           },
           "pipeline": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/HousingPipelineDto"
@@ -10351,6 +10387,7 @@
           },
           "rent": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/RentForecastDto"
@@ -10994,6 +11031,7 @@
           },
           "latest": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PeriodValuePointDto"
@@ -11002,6 +11040,7 @@
           },
           "previous": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PeriodValuePointDto"
@@ -11010,6 +11049,7 @@
           },
           "yearAgo": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PeriodValuePointDto"
@@ -11029,6 +11069,7 @@
           "max": {
             "nullable": true,
             "description": "Highest reading in the history",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PeriodValuePointDto"
@@ -11038,6 +11079,7 @@
           "min": {
             "nullable": true,
             "description": "Lowest reading in the history",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PeriodValuePointDto"
@@ -11228,6 +11270,7 @@
           },
           "latest": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/WageEnterpriseLatestDto"
@@ -11378,6 +11421,7 @@
           },
           "latest": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/GoldLatestDto"
@@ -11392,6 +11436,7 @@
           },
           "allTimeHigh": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/GoldPricePointDto"
@@ -11604,6 +11649,7 @@
           "current": {
             "nullable": true,
             "description": "Price in force today (Polish time)",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FuelPriceRowDto"
@@ -11613,6 +11659,7 @@
           "upcoming": {
             "nullable": true,
             "description": "Price announced for the next day",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FuelPriceRowDto"
@@ -11962,6 +12009,7 @@
           },
           "wage": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/RetailWageDto"
@@ -11971,6 +12019,7 @@
           "product": {
             "nullable": true,
             "description": "Price history of the product given in ?product",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/RetailProductHistoryDto"
@@ -12216,6 +12265,7 @@
           },
           "pensionWageRatio": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PensionWageRatioDto"
@@ -12537,6 +12587,7 @@
           },
           "latest": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/DailyPriceIndexLatestDto"
@@ -12996,6 +13047,7 @@
           "nonDedicated": {
             "nullable": true,
             "description": "Funds open to all investors (without dedicated funds)",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FundSegmentDto"
@@ -13024,6 +13076,7 @@
           },
           "fundFlowsIndex": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FundFlowsIndexDto"
@@ -13218,6 +13271,7 @@
           },
           "latest": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CeidgMonthDto"
@@ -13226,6 +13280,7 @@
           },
           "previous": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CeidgMonthDto"
@@ -13235,6 +13290,7 @@
           "yearAgo": {
             "nullable": true,
             "description": "Same month a year earlier",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CeidgMonthDto"
@@ -13276,6 +13332,7 @@
           },
           "newBusinessRatio": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CeidgNewBusinessRatioDto"
@@ -13827,6 +13884,7 @@
           },
           "avgBalanceIndex": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/IkeIkzeIndexDto"
@@ -13993,6 +14051,7 @@
           "allEditionsMonthAgo": {
             "nullable": true,
             "description": "Latest reading at least 28 days earlier",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CleanAirTotalsDto"
@@ -14002,6 +14061,7 @@
           "allEditionsYearAgo": {
             "nullable": true,
             "description": "Reading closest to 365 days earlier (+/- 45 days)",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CleanAirTotalsDto"
@@ -14011,6 +14071,7 @@
           "modernisationFundEdition": {
             "nullable": true,
             "description": "Edition financed from the Modernisation Fund, cumulative since its start",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CleanAirTotalsDto"
@@ -14019,6 +14080,7 @@
           },
           "lastWeek": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CleanAirTotalsDto"
@@ -14027,6 +14089,7 @@
           },
           "lastWeekModernisationFund": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CleanAirTotalsDto"
@@ -14269,6 +14332,7 @@
           },
           "previous": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PpkPointDto"
@@ -14277,6 +14341,7 @@
           },
           "yearAgo": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PpkPointDto"
@@ -14285,6 +14350,7 @@
           },
           "avgAccount": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PpkAvgAccountDto"
@@ -14786,6 +14852,7 @@
           "probabilities": {
             "nullable": true,
             "description": "RPP only",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NowcastProbabilitiesDto"
@@ -14868,6 +14935,7 @@
           },
           "probabilities": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NowcastProbabilitiesDto"
@@ -15040,6 +15108,7 @@
           "current": {
             "nullable": true,
             "description": "Forecast for the next publication",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NowcastForecastDto"
@@ -15049,6 +15118,7 @@
           "lastSettled": {
             "nullable": true,
             "description": "Latest settled live forecast",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NowcastForecastDto"
@@ -15064,6 +15134,7 @@
           },
           "backtestScores": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NowcastScoresDto"
@@ -15072,6 +15143,7 @@
           },
           "liveScores": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/NowcastScoresDto"
@@ -16214,6 +16286,7 @@
           "act": {
             "nullable": true,
             "description": "The act published in Dz.U. after promulgation",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/LegalActDto"
@@ -16395,6 +16468,7 @@
           },
           "upcomingChanges30d": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/LegalCalendarIndexDto"
@@ -17173,6 +17247,7 @@
           },
           "national": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/PitNationalDto"
@@ -17890,6 +17965,7 @@
           },
           "thresholds": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/LocalTaxSqueezeThresholdsDto"
@@ -17898,6 +17974,7 @@
           },
           "national": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/LocalTaxSqueezeAreaDto"
@@ -17931,6 +18008,7 @@
           },
           "upperLimit": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/LocalTaxUpperLimitDto"
@@ -17992,6 +18070,7 @@
           },
           "thresholds": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/LocalTaxSqueezeThresholdsDto"
@@ -18513,6 +18592,7 @@
           },
           "poland": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EuHpiAreaDto"
@@ -18521,6 +18601,7 @@
           },
           "eu": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EuHpiAreaDto"
@@ -18529,6 +18610,7 @@
           },
           "euroArea": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EuHpiAreaDto"
@@ -18904,6 +18986,7 @@
           },
           "latest": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EuPowerPriceGapPointDto"
@@ -19046,6 +19129,7 @@
           "poland": {
             "nullable": true,
             "description": "Null when Eurostat does not publish Poland (gas from 2024-S1: confidential)",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EuEnergyPolandDto"
@@ -19060,6 +19144,7 @@
           "eu": {
             "nullable": true,
             "description": "EU average (EU27_2020)",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EuEnergyPriceRowDto"
@@ -19068,6 +19153,7 @@
           },
           "euroArea": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EuEnergyPriceRowDto"
@@ -19265,6 +19351,7 @@
           },
           "poland": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EuMinimumWageRowDto"
@@ -19567,6 +19654,7 @@
           },
           "latest": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/MonetaryReadingDto"
@@ -19575,6 +19663,7 @@
           },
           "previousMonth": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/MonetaryReadingDto"
@@ -19583,6 +19672,7 @@
           },
           "yearAgo": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/MonetaryReadingDto"
@@ -19796,6 +19886,7 @@
           },
           "cash": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreditDemandProductDto"
@@ -19804,6 +19895,7 @@
           },
           "installment": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreditDemandProductDto"
@@ -19812,6 +19904,7 @@
           },
           "card": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreditDemandProductDto"
@@ -19865,6 +19958,7 @@
           },
           "demand": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreditDemandBikDto"
@@ -19874,6 +19968,7 @@
           "granted": {
             "nullable": true,
             "description": "null for June and December (BIK publishes half-year and full-year summaries instead)",
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreditDemandGrantedDto"
@@ -19882,6 +19977,7 @@
           },
           "nbpNewHousingLoans": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreditDemandNbpDto"
@@ -20174,6 +20270,7 @@
           },
           "rateRisk": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/RateRiskGaugeDto"
@@ -20182,6 +20279,7 @@
           },
           "fixedRatePremium": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FixedRatePremiumDto"
@@ -20309,6 +20407,7 @@
           },
           "product": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EcbProductDto"
@@ -20333,6 +20432,7 @@
           },
           "poland": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EcbCountryRateDto"
@@ -20341,6 +20441,7 @@
           },
           "euroArea": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EcbCountryRateDto"
@@ -20451,6 +20552,7 @@
           },
           "product": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/EcbProductDto"
@@ -20614,6 +20716,7 @@
           },
           "latest": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FinwireIndexLatestDto"
@@ -20622,6 +20725,7 @@
           },
           "previous": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FinwireIndexPreviousDto"
@@ -20876,6 +20980,7 @@
           },
           "latest": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FinwireIndexLatestDto"
@@ -20884,6 +20989,7 @@
           },
           "previous": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/FinwireIndexPreviousDto"
@@ -21238,6 +21344,7 @@
           },
           "thisWeek": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/KnfWarningsWeekEntriesDto"
@@ -21455,6 +21562,7 @@
           },
           "counts": {
             "nullable": true,
+            "type": "object",
             "allOf": [
               {
                 "$ref": "#/components/schemas/BfgCountsDto"
