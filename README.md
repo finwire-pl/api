@@ -457,9 +457,9 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_eu_power_price_gap` | [Luka cen prądu Polska-UE finwire](https://finwire.pl/ceny-pradu-w-europie) | market | half-yearly | - |
 | `finwire_eu_fuel_price_gap` | [Luka cen paliw Polska-UE finwire](https://finwire.pl/ceny-paliw-w-europie) | market | weekly | `eu-fuel-prices` |
 | `finwire_eu_youth_unemployment_ratio` | [Mnożnik bezrobocia młodych finwire](https://finwire.pl/bezrobocie-w-europie) | market | monthly | - |
-| `finwire_eu_net_wage_gap` | [Luka płacowa Polska-UE finwire](https://finwire.pl/zarobki/europa) | market | yearly | - |
+| `finwire_eu_net_wage_gap` | [Pensja w Polsce wobec średniej UE finwire](https://finwire.pl/zarobki/europa) | market | yearly | - |
 | `finwire_eu_convergence_years` | [Licznik doganiania UE finwire](https://finwire.pl/pkb-per-capita) | market | yearly | `eu-gdp-per-capita` |
-| `finwire_eu_debt_threshold_gap` | [Dystans długu Polski do progu z Maastricht finwire](https://finwire.pl/dlug-publiczny/europa) | market | quarterly | - |
+| `finwire_eu_debt_threshold_gap` | [Dług Polski wobec progu 60% PKB finwire](https://finwire.pl/dlug-publiczny/europa) | market | quarterly | - |
 | `finwire_nowcast` | [Finwire Nowcast](https://finwire.pl/nowcast) | market | monthly | `nowcast` |
 | `finwire_cost_pressure` | [Presja kosztowa finwire](https://finwire.pl/nowcast#presja-kosztowa) | market | monthly (forecast) | - |
 | `finwire_legal_calendar` | [Kalendarz zmian w finansach finwire](https://finwire.pl/kalendarz-zmian) | law | daily | - |
