@@ -5,6 +5,11 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ## 2026-11-11
 
+### Changed
+
+- `GET /v1/retail-bond-premium`: new month fields `retailBondsSalesMln` (retail savings bonds sold in the month, Ministry of Finance) and `retailBondsNewCashMln` (sold for cash, excluding exchange of maturing bonds). `salesResponse` correlations now use sales for cash instead of the monthly change of retail bond debt; `retailBondsChangeMln` stays.
+- MCP server 1.21.1: `get_retail_bond_premium` reports sales for cash in the monthly history and the sales response test.
+
 ### Added
 
 - `GET /v1/savings-bond-sales` - dataset `savings-bond-sales`: retail savings bonds of the State Treasury sold in Poland per month since January 2015 from the Ministry of Finance statistics (gov.pl): total in PLN million with month-on-month and year-on-year change, series shares and amounts (OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD), exchange of maturing bonds and new money, IKE/IKZE purchases, sales channels, buyer age, sum since January with rank among years, yearly totals and the finwire index Licznik obligacji oszczędnościowych finwire (`finwire_savings_bond_sales`, 12-month sum in PLN billion). Attribution to the Ministry of Finance required.
