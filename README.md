@@ -112,6 +112,7 @@ Each dataset name links to its documentation page with fields, source and citati
 | [Unemployment in EU countries](https://public-api.finwire.pl/datasets/eu-unemployment): total and under 25, rank, Poland rank over time, `finwire_eu_youth_unemployment_ratio` | `/v1/europe/unemployment` | [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/une_rt_m/default/table) (une_rt_m) | monthly | since 2010 |
 | [Net earnings in the EU by household type](https://public-api.finwire.pl/datasets/eu-net-earnings): EUR, PPS, gross, tax, contributions, labour cost per hour, tax wedge, `finwire_eu_net_wage_gap`, own salary vs every EU country | `/v1/europe/net-earnings` | [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/earn_nt_net/default/table) (earn_nt_net, lc_lci_lev, earn_nt_taxwedge) | yearly | since 2010 |
 | [Government debt and deficit in the EU](https://public-api.finwire.pl/datasets/eu-public-debt): % of GDP, ranks, 3% and 60% reference values, `finwire_eu_debt_threshold_gap` | `/v1/europe/public-debt` | [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/gov_10dd_edpt1/default/table) (gov_10dd_edpt1, gov_10q_ggdebt) | yearly, quarterly | since 2000 (yearly), 2010 (quarterly) |
+| [Living conditions in the EU (EU-SILC)](https://public-api.finwire.pl/datasets/eu-living-conditions): own home with and without a mortgage, renting, people who cannot face an unexpected expense, median and mean household income per person in EUR and PPS, `finwire_eu_mortgaged_owners`, `finwire_eu_household_income_gap` | `/v1/europe/living-conditions` | [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/ilc_lvho02/default/table) (ilc_lvho02, ilc_mdes04, ilc_di03) | yearly | since 2005 |
 | [Economic calendar](https://public-api.finwire.pl/datasets/economic-calendar): MPC (RPP) decisions, CPI, wages, GDP, unemployment | `/v1/calendar` | GUS, NBP, compiled by finwire.pl | continuous | upcoming events |
 | [IKE / IKZE contribution limits](https://public-api.finwire.pl/datasets/legal-limits) | `/v1/legal-limits` | Ministry of Family announcements | yearly | current year |
 | [Property tax upper limits](https://public-api.finwire.pl/datasets/local-tax) | `/v1/legal-limits/local-tax` | Minister of Finance ([Monitor Polski](https://eli.gov.pl)) | yearly | announced tax years |
@@ -128,6 +129,7 @@ Each dataset name links to its documentation page with fields, source and citati
 | [finwire lead forecasts](https://public-api.finwire.pl/datasets/lead-forecasts): core inflation in 6-12 months and impaired loans in 2-4 quarters | `/v1/macro/lead-forecasts` | finwire.pl models (inputs: GUS, NBP, Eurostat, KNF) | daily model run, monthly data | rolling backtest, published only above 70% interval coverage |
 | finwire indicators: [credit stress map](https://public-api.finwire.pl/datasets/credit-stress), barometers | `/v1/index/*` | finwire.pl (computed from the above) | daily (credit stress), monthly (barometers) | barometers since 2015 |
 | [Consumer bankruptcies](https://public-api.finwire.pl/datasets/consumer-bankruptcies): people declared bankrupt as consumers per month, year on year, since January, rank in the series, yearly totals, `finwire_consumer_bankruptcies` | `/v1/consumer-bankruptcies` | [COIG](https://www.coig.com.pl/) (from announcements in KRZ and MSiG; reuse with attribution to COIG, not CC BY) | monthly | from January 2015 |
+| [Savings bond sales](https://public-api.finwire.pl/datasets/savings-bond-sales): retail savings bonds sold per month, series, exchange, IKE/IKZE, channels, buyer age, since January vs every year, `finwire_savings_bond_sales` | `/v1/savings-bond-sales` | [Ministry of Finance](https://www.gov.pl/web/finanse/wiadomosci) (gov.pl, reuse with attribution) | monthly | from January 2015 |
 
 Aggregates never expose single offers, deeds or listings - only medians, percentiles and counts.
 
@@ -215,6 +217,7 @@ Tools (all read-only, each with `outputSchema`):
 - Fuel prices in the EU: `get_eu_fuel_prices` (European Commission Weekly Oil Bulletin: petrol 95, diesel, LPG and heating oil in PLN and EUR per litre in 27 EU countries, rank, taxes, full-tank difference against Poland, `finwire_eu_fuel_price_gap`)
 - Inflation in the EU: `get_eu_inflation` (Eurostat HICP in 27 EU countries: ranking, place of Poland, components, price growth since a year, `finwire_eu_inflation_gap`).
 - Unemployment in the EU: `get_eu_unemployment` (Eurostat monthly unemployment rate, total and under 25, rank of Poland since 2010, `finwire_eu_youth_unemployment_ratio`)
+- Living conditions in the EU: `get_eu_living_conditions` (Eurostat EU-SILC: own home with and without a mortgage, renting, people who cannot face an unexpected expense, median household income per person in 27 EU countries, `finwire_eu_mortgaged_owners`, `finwire_eu_household_income_gap`)
 - Public debt: `get_public_debt` (State Treasury debt, debt per resident `finwire_public_debt_per_capita`, public debt % of GDP, state budget deficit)
 - finwire indices: `list_finwire_indices` (all `finwire_*` ids with the latest reading), `get_finwire_index` (one index by id or alias, with history and citation)
 - Forecasts: `get_nowcast` (Finwire Nowcast: CPI and core inflation, RPP decision probabilities, accuracy)
@@ -226,6 +229,7 @@ Tools (all read-only, each with `outputSchema`):
 - Regions and Europe: `get_regional_data` (income and PIT per resident by municipality, unemployment, wages), `get_europe_data` (house prices, mortgage rates, bond yields, household electricity and gas prices, minimum wages in the EU), `get_eu_gdp` (GDP per capita in PPS and EUR, AIC, price levels, quarterly GDP growth of EU countries, `finwire_eu_convergence_years`)
 - Any dataset: `search_datasets`, `get_dataset`
 - Consumer bankruptcies: `get_consumer_bankruptcies` (people declared bankrupt as consumers per month from COIG, year on year, since January, rank in the series, yearly totals, `finwire_consumer_bankruptcies`)
+- Savings bond sales: `get_savings_bond_sales` (retail savings bonds sold per month from the Ministry of Finance: series, exchange of maturing bonds, IKE/IKZE, channels, buyer age, since January vs every year, `finwire_savings_bond_sales`)
 
 Every result carries the period of the data, the original source, `license`, a ready `citation` and `url` - the finwire.pl page with the full table, chart and calculator (with `utm_source=mcp`). Resources: `macro://catalog`, `finwire://datasets`, `finwire://dataset/{id}`; prompts: `macro_briefing`, `explain_indicator`, `city_housing_report`, `personal_finance_limits`.
 
@@ -367,6 +371,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/europe/unemployment?compare=DE` | Unemployment rate in EU countries (Eurostat une_rt_m, monthly, seasonally adjusted, ILO definition): total and under 25, rank, Poland rank each month since 2010, history of Poland, EU, euro area and a comparison country, `finwire_eu_youth_unemployment_ratio` |
 | `GET /v1/europe/net-earnings?household=single&compare=DE&salary=7000` | Annual net earnings in EU countries by household type (Eurostat, yearly): ranking in EUR and PPS, gross, tax, contributions, labour cost per hour, tax wedge, `finwire_eu_net_wage_gap`; `salary` (monthly net PLN) compared with the average in every country |
 | `GET /v1/europe/public-debt?compare=DE` | Government debt, deficit and interest in EU countries (Eurostat), % of GDP: latest quarter and year with ranks, countries above the 3% and 60% reference values, history of Poland, the EU and a comparison country, `finwire_eu_debt_threshold_gap` |
+| `GET /v1/europe/living-conditions?compare=DE` | Living conditions in EU countries (Eurostat EU-SILC, yearly since 2005): share of people in their own home without and with a mortgage, in market and reduced rent, people who cannot face an unexpected expense, median and mean equivalised income in EUR and PPS, ranks, history of Poland, the EU and a comparison country, `finwire_eu_mortgaged_owners`, `finwire_eu_household_income_gap` |
 | `GET /v1/credit-market/survey?quarters=12` | NBP bank lending survey |
 | `GET /v1/credit-market/monetary?months=25` | NBP household loans, deposits and new loans |
 | `GET /v1/credit-market/demand?months=12` | BIK housing loan demand, requested vs granted amount, granted loans (BIK) and new housing loans (NBP) |
@@ -379,6 +384,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/market/mortgage-rates?amount=400000&period=25` | Mortgage APRC (RRSO), margin, nominal rate: median, percentiles |
 | `GET /v1/market/cash-loan-rates?amount=20000&period=48` | Cash loan APRC and nominal rate: median, percentiles |
 | `GET /v1/consumer-bankruptcies?months=24` | Consumer bankruptcies (COIG, from court announcements in KRZ and MSiG): latest month with year-on-year change, sum since January vs the same period a year earlier, last 12 months, rank of the latest month in the series and among the same calendar month, yearly totals, `finwire_consumer_bankruptcies`, monthly history; data COIG, reuse with attribution |
+| `GET /v1/savings-bond-sales?months=24` | Retail savings bond sales (Ministry of Finance statistics): latest month with month-on-month and year-on-year change, series shares and amounts, exchange and new money, IKE/IKZE, channels, buyer age, sum since January with rank among years, yearly totals, `finwire_savings_bond_sales`, monthly history; gov.pl, reuse with attribution |
 
 ### finwire indicators
 
@@ -450,6 +456,7 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_housing_pressure` | [Presja demograficzna na mieszkania finwire](https://finwire.pl/indeksy/presja-demograficzna) | housing | yearly | - |
 | `finwire_housing_pipeline` | [Podaż mieszkań za 2 lata finwire](https://finwire.pl/indeksy/podaz-mieszkan) | housing | quarterly | - |
 | `finwire_rent_forecast` | [Prognoza czynszów finwire](https://finwire.pl/indeksy/podaz-mieszkan#czynsze) | housing | monthly | - |
+| `finwire_eu_mortgaged_owners` | [Właściciele mieszkań z kredytem finwire](https://finwire.pl/ceny-mieszkan/europa) | housing | yearly | `eu-living-conditions` |
 | `finwire_offer_ticker` | [Ticker zmian ofert finwire](https://finwire.pl/zmiany-ofert) | market | daily | `offer-changes` |
 | `finwire_demand_index` | [Indeks popytu finwire](https://finwire.pl/indeksy/popyt) | market | monthly | - |
 | `finwire_power_price_index` | [Indeks ceny prądu finwire](https://finwire.pl/ceny-pradu-jutro) | market | daily | - |
@@ -460,6 +467,7 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_eu_net_wage_gap` | [Pensja w Polsce wobec średniej UE finwire](https://finwire.pl/zarobki/europa) | market | yearly | - |
 | `finwire_eu_convergence_years` | [Licznik doganiania UE finwire](https://finwire.pl/pkb-per-capita) | market | yearly | `eu-gdp-per-capita` |
 | `finwire_eu_debt_threshold_gap` | [Dług Polski wobec progu 60% PKB finwire](https://finwire.pl/dlug-publiczny/europa) | market | quarterly | - |
+| `finwire_eu_household_income_gap` | [Dochód gospodarstw w Polsce wobec UE finwire](https://finwire.pl/zarobki/europa) | market | yearly | `eu-living-conditions` |
 | `finwire_nowcast` | [Finwire Nowcast](https://finwire.pl/nowcast) | market | monthly | `nowcast` |
 | `finwire_cost_pressure` | [Presja kosztowa finwire](https://finwire.pl/nowcast#presja-kosztowa) | market | monthly (forecast) | - |
 | `finwire_legal_calendar` | [Kalendarz zmian w finansach finwire](https://finwire.pl/kalendarz-zmian) | law | daily | - |
@@ -477,6 +485,7 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_coal_price_pl` | [Cena węgla finwire](https://finwire.pl/cena-wegla) | housing | yearly | `coal-waste-prices` |
 | `finwire_waste_fee_pl` | [Opłata za odpady finwire](https://finwire.pl/kalkulatory/oplata-za-smieci) | housing | yearly | `coal-waste-prices` |
 | `finwire_consumer_bankruptcies` | [Licznik upadłości konsumenckich finwire](https://finwire.pl/upadlosc-konsumencka) | credit | monthly | - |
+| `finwire_savings_bond_sales` | [Licznik obligacji oszczędnościowych finwire](https://finwire.pl/obligacje-skarbowe) | savings | monthly | - |
 
 ¹ Computed from WIBOR (GPW Benchmark): only the result is published, never WIBOR or POLSTR (`usesBenchmarkRate: true`).
 

@@ -1024,6 +1024,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/savings-bond-sales": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retail savings bonds of the State Treasury sold in Poland per month (Ministry of Finance statistics, since January 2015): total in PLN million with month-on-month and year-on-year change, series (OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD) with shares and amounts, exchange of maturing bonds, IKE/IKZE accounts, sales channels, buyer age, sum since January against the same months of every year, yearly totals and Licznik obligacji oszczędnościowych finwire (finwire_savings_bond_sales, 12-month sum in PLN billion); data gov.pl, reuse with attribution */
+        get: operations["MacroController_savingsBondSales"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/vehicle-registrations": {
         parameters: {
             query?: never;
@@ -1713,6 +1730,23 @@ export interface paths {
         };
         /** Government debt and deficit in EU countries (Eurostat): latest quarter debt and latest year deficit, interest and debt as % of GDP with ranks, EU and euro area, countries above the 3% and 60% reference values, annual history since 2000 of Poland, the EU and a comparison country, finwire_eu_debt_threshold_gap */
         get: operations["RegionalController_publicDebt"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/europe/living-conditions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Living conditions in EU countries (Eurostat EU-SILC, yearly): share of people living in their own home without a mortgage, with a mortgage, in market rent and reduced rent, people who cannot face an unexpected expense from own resources, median and mean equivalised disposable income in EUR and PPS, ranks of 27 countries, history since 2005 of Poland, the EU and a comparison country, finwire_eu_mortgaged_owners and finwire_eu_household_income_gap */
+        get: operations["RegionalController_livingConditions"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5605,6 +5639,129 @@ export interface components {
             data: components["schemas"]["ConsumerBankruptciesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        SavingsBondSalesMonthDto: {
+            /** @example 2026-10 */
+            period: string | null;
+            /**
+             * @description Retail savings bonds sold in the month, PLN million
+             * @example 8168.38
+             */
+            totalMln: number | null;
+            /**
+             * @description Change against the previous month, %
+             * @example 4
+             */
+            momPct: number | null;
+            /**
+             * @description Change against the same month a year earlier, %
+             * @example 29.7
+             */
+            yoyPct: number | null;
+            /** @description Sum of the 12 months up to the period, PLN million */
+            last12MonthsMln: number | null;
+            /** @description Of which exchange of maturing bonds, PLN million */
+            exchangeMln: number | null;
+            /** @description Of which IKE-Obligacje, PLN million */
+            ikeMln: number | null;
+            /** @description Of which IKZE-Obligacje, PLN million */
+            ikzeMln: number | null;
+        };
+        SavingsBondSeriesDto: {
+            /** @example ROR */
+            code: string | null;
+            /** @example 1-roczne */
+            tenor: string | null;
+            /**
+             * @description stałe (fixed), zmienne (NBP reference rate), inflacja (CPI + margin)
+             * @example zmienne
+             */
+            rate: string | null;
+            /**
+             * @description Family bonds for beneficiaries of Rodzina 800+ only
+             * @example false
+             */
+            family: boolean;
+            /** @example 35.2 */
+            sharePct: number | null;
+            /**
+             * @description Share x total, PLN million
+             * @example 2871.93
+             */
+            amountMln: number | null;
+            previousSharePct: number | null;
+            yearAgoSharePct: number | null;
+        };
+        SavingsBondSalesIndexDto: {
+            /** @example finwire_savings_bond_sales */
+            id: string;
+            /** @example Licznik obligacji oszczędnościowych finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2026-10 */
+            period: string;
+            /**
+             * @description Savings bonds sold in the 12 months up to the period, PLN billion
+             * @example 83.3
+             */
+            valueBn: number;
+            /** @description Change against the 12 months a year earlier, % */
+            yoyPct: number | null;
+            yearAgoBn: number | null;
+        };
+        SavingsBondSalesDataDto: {
+            /** @example 2026-10 */
+            asOf: string | null;
+            /** @example 2015-01 */
+            firstPeriod: string | null;
+            /**
+             * @description Day the Ministry of Finance published the latest month
+             * @example 2026-11-10
+             */
+            releasedOn: string | null;
+            updatedAt: string | null;
+            /** @description Last change of the numbers: new month or a correction by the ministry */
+            dataChangedAt: string | null;
+            /** @example Ministerstwo Finansów */
+            publisher: string | null;
+            attribution: string | null;
+            license: string | null;
+            /** @example https://www.gov.pl/web/gov/warunki-korzystania */
+            termsUrl: string | null;
+            /** @description Ministry of Finance release (gov.pl) */
+            sourceUrl: string | null;
+            /** @description XLSX "Dane statystyczne sprzedaży obligacji oszczędnościowych" */
+            sourceFileUrl: string | null;
+            /** @description Units */
+            units: Record<string, never>;
+            latest: components["schemas"]["SavingsBondSalesMonthDto"] | null;
+            previous: components["schemas"]["SavingsBondSalesMonthDto"] | null;
+            /** @description Same month a year earlier */
+            yearAgo: components["schemas"]["SavingsBondSalesMonthDto"] | null;
+            /** @description Series sold in the latest month, largest share first */
+            series: components["schemas"]["SavingsBondSeriesDto"][];
+            /** @description Exchange of maturing bonds and new money */
+            exchange: Record<string, never>;
+            /** @description IKE-Obligacje and IKZE-Obligacje purchases */
+            retirementAccounts: Record<string, never>;
+            /** @description Sales channels: internet, points of sale, phone (%) */
+            channels: unknown[][];
+            /** @description Buyer age groups, natural persons only (%) */
+            ages: unknown[][];
+            /** @description Sum since January, the same months a year earlier and the rank among all years (1 = most) */
+            yearToDate: Record<string, never>;
+            /** @description Rank of the latest month among all months (1 = most), highest month and best full year */
+            record: Record<string, never>;
+            /** @description Years: total, sum since January up to the latest month, exchange share, internet share, buyers over 50 */
+            years: unknown[][];
+            savingsBondSales12m: components["schemas"]["SavingsBondSalesIndexDto"] | null;
+            /** @description Monthly history */
+            history: components["schemas"]["SavingsBondSalesMonthDto"][];
+        };
+        SavingsBondSalesResponseDto: {
+            data: components["schemas"]["SavingsBondSalesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         VehicleRegistrationsDataDto: {
             /**
              * @description Latest month of first registrations
@@ -8388,6 +8545,128 @@ export interface components {
             data: components["schemas"]["EuDebtDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        EuLivingTenureDto: {
+            /**
+             * @description Owner without an outstanding mortgage or housing loan, % of the population
+             * @example 74.7
+             */
+            ownNoMortgagePct: number | null;
+            /**
+             * @description Owner with a mortgage or housing loan, % of the population
+             * @example 12.5
+             */
+            ownWithMortgagePct: number | null;
+            /**
+             * @description Tenant at market price, % of the population
+             * @example 5
+             */
+            rentMarketPct: number | null;
+            /**
+             * @description Tenant at reduced price or free, % of the population
+             * @example 7.8
+             */
+            rentReducedOrFreePct: number | null;
+            /** @example 87.2 */
+            ownersPct: number | null;
+            /** @example 12.8 */
+            tenantsPct: number | null;
+            /**
+             * @description Owners with a mortgage as % of all owners
+             * @example 14.3
+             */
+            mortgagedOwnersPct: number | null;
+            /** @description Eurostat flag of ownNoMortgagePct */
+            status: string | null;
+        };
+        EuLivingIncomeDto: {
+            /**
+             * @description Median equivalised disposable income per year, EUR
+             * @example 14394
+             */
+            medianEur: number | null;
+            /**
+             * @description Median equivalised disposable income per year, PPS
+             * @example 19925
+             */
+            medianPps: number | null;
+            /**
+             * @description Median in national currency (PLN for Poland); null for aggregates
+             * @example 61976
+             */
+            medianNationalCurrency: number | null;
+            /** @example 15588 */
+            meanEur: number | null;
+            /** @example 21578 */
+            meanPps: number | null;
+            /**
+             * @description Change of the median in PPS on the previous survey year, %
+             * @example 10.3
+             */
+            medianPpsYoyPct: number | null;
+            status: string | null;
+        };
+        EuLivingCountryDto: {
+            /**
+             * @description Eurostat code (Greece = EL)
+             * @example PL
+             */
+            geo: string | null;
+            /** @example Poland */
+            name: string;
+            tenure: components["schemas"]["EuLivingTenureDto"];
+            /**
+             * @description People in households that cannot face an unexpected required expense from own resources, %
+             * @example 22.5
+             */
+            cannotFaceUnexpectedExpensePct: number | null;
+            /** @example 22.8 */
+            cannotFaceUnexpectedExpensePrevYearPct: number | null;
+            cannotFaceUnexpectedExpenseStatus: string | null;
+            income: components["schemas"]["EuLivingIncomeDto"];
+            /** @description Ranks among the 27 EU countries (1 = highest; unexpectedExpense: 1 = lowest share); null for aggregates */
+            ranks: Record<string, never>;
+        };
+        EuLivingDataDto: {
+            /**
+             * @description Latest EU-SILC survey year
+             * @example 2025
+             */
+            asOf: string | null;
+            /** @description Latest survey year with at least 20 EU countries per dataset */
+            surveyYears: Record<string, never>;
+            /**
+             * @description Income reference year (survey year minus 1)
+             * @example 2024
+             */
+            incomeReferenceYear: string | null;
+            /** @description Eurostat dataset update time per dataset (ISO) */
+            updatedAt: Record<string, never>;
+            definitions: Record<string, never>;
+            statusCodes: Record<string, never>;
+            /**
+             * @description Eurostat PLN per PPS for Poland in the income survey year
+             * @example 3.1105
+             */
+            plnPerPps: number | null;
+            /** @example 4.3057 */
+            plnPerEur: number | null;
+            poland: components["schemas"]["EuLivingCountryDto"] | null;
+            eu: components["schemas"]["EuLivingCountryDto"] | null;
+            /** @description Euro area (EA20) */
+            euroArea: components["schemas"]["EuLivingCountryDto"] | null;
+            /** @description 27 EU countries in protocol order */
+            countries: components["schemas"]["EuLivingCountryDto"][];
+            /** @description Yearly history of Poland, the EU and the ?compare= country */
+            history: Record<string, never>[];
+            /** @description finwire_eu_mortgaged_owners: owners with a mortgage as % of owners in Poland and the EU, yearly */
+            mortgagedOwners: Record<string, never>;
+            /** @description finwire_eu_household_income_gap: median equivalised income in Poland as % of the EU value (PPS), yearly */
+            householdIncomeGap: Record<string, never>;
+        };
+        EuLivingResponseDto: {
+            data: components["schemas"]["EuLivingDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         CreditSurveyMetricDto: {
             /** @example housing_criteria */
             id: string;
@@ -10672,6 +10951,28 @@ export interface operations {
             };
         };
     };
+    MacroController_savingsBondSales: {
+        parameters: {
+            query?: {
+                /** @description Last N months of history, 1-400, default all */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SavingsBondSalesResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_vehicleRegistrations: {
         parameters: {
             query?: {
@@ -11575,6 +11876,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EuDebtResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_livingConditions: {
+        parameters: {
+            query?: {
+                /** @description EU country code (Eurostat, Greece = EL) added to the history, default DE */
+                compare?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuLivingResponseDto"];
                 };
             };
         };

@@ -1741,6 +1741,39 @@
         ]
       }
     },
+    "/v1/savings-bond-sales": {
+      "get": {
+        "operationId": "MacroController_savingsBondSales",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N months of history, 1-400, default all",
+            "schema": {
+              "example": 24,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavingsBondSalesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retail savings bonds of the State Treasury sold in Poland per month (Ministry of Finance statistics, since January 2015): total in PLN million with month-on-month and year-on-year change, series (OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD) with shares and amounts, exchange of maturing bonds, IKE/IKZE accounts, sales channels, buyer age, sum since January against the same months of every year, yearly totals and Licznik obligacji oszcz\u0119dno\u015bciowych finwire (finwire_savings_bond_sales, 12-month sum in PLN billion); data gov.pl, reuse with attribution",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/vehicle-registrations": {
       "get": {
         "operationId": "MacroController_vehicleRegistrations",
@@ -3160,6 +3193,39 @@
           }
         },
         "summary": "Government debt and deficit in EU countries (Eurostat): latest quarter debt and latest year deficit, interest and debt as % of GDP with ranks, EU and euro area, countries above the 3% and 60% reference values, annual history since 2000 of Poland, the EU and a comparison country, finwire_eu_debt_threshold_gap",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/europe/living-conditions": {
+      "get": {
+        "operationId": "RegionalController_livingConditions",
+        "parameters": [
+          {
+            "name": "compare",
+            "required": false,
+            "in": "query",
+            "description": "EU country code (Eurostat, Greece = EL) added to the history, default DE",
+            "schema": {
+              "example": "DE",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EuLivingResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Living conditions in EU countries (Eurostat EU-SILC, yearly): share of people living in their own home without a mortgage, with a mortgage, in market rent and reduced rent, people who cannot face an unexpected expense from own resources, median and mean equivalised disposable income in EUR and PPS, ranks of 27 countries, history since 2005 of Poland, the EU and a comparison country, finwire_eu_mortgaged_owners and finwire_eu_household_income_gap",
         "tags": [
           "Real estate"
         ]
@@ -13953,6 +14019,355 @@
           "meta"
         ]
       },
+      "SavingsBondSalesMonthDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10"
+          },
+          "totalMln": {
+            "type": "number",
+            "nullable": true,
+            "example": 8168.38,
+            "description": "Retail savings bonds sold in the month, PLN million"
+          },
+          "momPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 4,
+            "description": "Change against the previous month, %"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 29.7,
+            "description": "Change against the same month a year earlier, %"
+          },
+          "last12MonthsMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Sum of the 12 months up to the period, PLN million"
+          },
+          "exchangeMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Of which exchange of maturing bonds, PLN million"
+          },
+          "ikeMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Of which IKE-Obligacje, PLN million"
+          },
+          "ikzeMln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Of which IKZE-Obligacje, PLN million"
+          }
+        },
+        "required": [
+          "period",
+          "totalMln",
+          "momPct",
+          "yoyPct",
+          "last12MonthsMln",
+          "exchangeMln",
+          "ikeMln",
+          "ikzeMln"
+        ]
+      },
+      "SavingsBondSeriesDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true,
+            "example": "ROR"
+          },
+          "tenor": {
+            "type": "string",
+            "nullable": true,
+            "example": "1-roczne"
+          },
+          "rate": {
+            "type": "string",
+            "nullable": true,
+            "example": "zmienne",
+            "description": "sta\u0142e (fixed), zmienne (NBP reference rate), inflacja (CPI + margin)"
+          },
+          "family": {
+            "type": "boolean",
+            "example": false,
+            "description": "Family bonds for beneficiaries of Rodzina 800+ only"
+          },
+          "sharePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 35.2
+          },
+          "amountMln": {
+            "type": "number",
+            "nullable": true,
+            "example": 2871.93,
+            "description": "Share x total, PLN million"
+          },
+          "previousSharePct": {
+            "type": "number",
+            "nullable": true
+          },
+          "yearAgoSharePct": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "code",
+          "tenor",
+          "rate",
+          "family",
+          "sharePct",
+          "amountMln",
+          "previousSharePct",
+          "yearAgoSharePct"
+        ]
+      },
+      "SavingsBondSalesIndexDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_savings_bond_sales"
+          },
+          "name": {
+            "type": "string",
+            "example": "Licznik obligacji oszcz\u0119dno\u015bciowych finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-10"
+          },
+          "valueBn": {
+            "type": "number",
+            "example": 83.3,
+            "description": "Savings bonds sold in the 12 months up to the period, PLN billion"
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Change against the 12 months a year earlier, %"
+          },
+          "yearAgoBn": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "period",
+          "valueBn",
+          "yoyPct",
+          "yearAgoBn"
+        ]
+      },
+      "SavingsBondSalesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10"
+          },
+          "firstPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2015-01"
+          },
+          "releasedOn": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-10",
+            "description": "Day the Ministry of Finance published the latest month"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataChangedAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "Last change of the numbers: new month or a correction by the ministry"
+          },
+          "publisher": {
+            "type": "string",
+            "nullable": true,
+            "example": "Ministerstwo Finans\u00f3w"
+          },
+          "attribution": {
+            "type": "string",
+            "nullable": true
+          },
+          "license": {
+            "type": "string",
+            "nullable": true
+          },
+          "termsUrl": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://www.gov.pl/web/gov/warunki-korzystania"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Ministry of Finance release (gov.pl)"
+          },
+          "sourceFileUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "XLSX \"Dane statystyczne sprzeda\u017cy obligacji oszcz\u0119dno\u015bciowych\""
+          },
+          "units": {
+            "type": "object",
+            "description": "Units"
+          },
+          "latest": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SavingsBondSalesMonthDto"
+              }
+            ]
+          },
+          "previous": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SavingsBondSalesMonthDto"
+              }
+            ]
+          },
+          "yearAgo": {
+            "nullable": true,
+            "description": "Same month a year earlier",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SavingsBondSalesMonthDto"
+              }
+            ]
+          },
+          "series": {
+            "description": "Series sold in the latest month, largest share first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SavingsBondSeriesDto"
+            }
+          },
+          "exchange": {
+            "type": "object",
+            "description": "Exchange of maturing bonds and new money"
+          },
+          "retirementAccounts": {
+            "type": "object",
+            "description": "IKE-Obligacje and IKZE-Obligacje purchases"
+          },
+          "channels": {
+            "description": "Sales channels: internet, points of sale, phone (%)",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "ages": {
+            "description": "Buyer age groups, natural persons only (%)",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "yearToDate": {
+            "type": "object",
+            "description": "Sum since January, the same months a year earlier and the rank among all years (1 = most)"
+          },
+          "record": {
+            "type": "object",
+            "description": "Rank of the latest month among all months (1 = most), highest month and best full year"
+          },
+          "years": {
+            "description": "Years: total, sum since January up to the latest month, exchange share, internet share, buyers over 50",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "savingsBondSales12m": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SavingsBondSalesIndexDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "Monthly history",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SavingsBondSalesMonthDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "firstPeriod",
+          "releasedOn",
+          "updatedAt",
+          "dataChangedAt",
+          "publisher",
+          "attribution",
+          "license",
+          "termsUrl",
+          "sourceUrl",
+          "sourceFileUrl",
+          "units",
+          "latest",
+          "previous",
+          "yearAgo",
+          "series",
+          "exchange",
+          "retirementAccounts",
+          "channels",
+          "ages",
+          "yearToDate",
+          "record",
+          "years",
+          "savingsBondSales12m",
+          "history"
+        ]
+      },
+      "SavingsBondSalesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SavingsBondSalesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "VehicleRegistrationsDataDto": {
         "type": "object",
         "properties": {
@@ -21420,6 +21835,292 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/EuDebtDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "EuLivingTenureDto": {
+        "type": "object",
+        "properties": {
+          "ownNoMortgagePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 74.7,
+            "description": "Owner without an outstanding mortgage or housing loan, % of the population"
+          },
+          "ownWithMortgagePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 12.5,
+            "description": "Owner with a mortgage or housing loan, % of the population"
+          },
+          "rentMarketPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 5,
+            "description": "Tenant at market price, % of the population"
+          },
+          "rentReducedOrFreePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 7.8,
+            "description": "Tenant at reduced price or free, % of the population"
+          },
+          "ownersPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 87.2
+          },
+          "tenantsPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 12.8
+          },
+          "mortgagedOwnersPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 14.3,
+            "description": "Owners with a mortgage as % of all owners"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "description": "Eurostat flag of ownNoMortgagePct"
+          }
+        },
+        "required": [
+          "ownNoMortgagePct",
+          "ownWithMortgagePct",
+          "rentMarketPct",
+          "rentReducedOrFreePct",
+          "ownersPct",
+          "tenantsPct",
+          "mortgagedOwnersPct",
+          "status"
+        ]
+      },
+      "EuLivingIncomeDto": {
+        "type": "object",
+        "properties": {
+          "medianEur": {
+            "type": "number",
+            "nullable": true,
+            "example": 14394,
+            "description": "Median equivalised disposable income per year, EUR"
+          },
+          "medianPps": {
+            "type": "number",
+            "nullable": true,
+            "example": 19925,
+            "description": "Median equivalised disposable income per year, PPS"
+          },
+          "medianNationalCurrency": {
+            "type": "number",
+            "nullable": true,
+            "example": 61976,
+            "description": "Median in national currency (PLN for Poland); null for aggregates"
+          },
+          "meanEur": {
+            "type": "number",
+            "nullable": true,
+            "example": 15588
+          },
+          "meanPps": {
+            "type": "number",
+            "nullable": true,
+            "example": 21578
+          },
+          "medianPpsYoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 10.3,
+            "description": "Change of the median in PPS on the previous survey year, %"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "medianEur",
+          "medianPps",
+          "medianNationalCurrency",
+          "meanEur",
+          "meanPps",
+          "medianPpsYoyPct",
+          "status"
+        ]
+      },
+      "EuLivingCountryDto": {
+        "type": "object",
+        "properties": {
+          "geo": {
+            "type": "string",
+            "nullable": true,
+            "example": "PL",
+            "description": "Eurostat code (Greece = EL)"
+          },
+          "name": {
+            "type": "string",
+            "example": "Poland"
+          },
+          "tenure": {
+            "$ref": "#/components/schemas/EuLivingTenureDto"
+          },
+          "cannotFaceUnexpectedExpensePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 22.5,
+            "description": "People in households that cannot face an unexpected required expense from own resources, %"
+          },
+          "cannotFaceUnexpectedExpensePrevYearPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 22.8
+          },
+          "cannotFaceUnexpectedExpenseStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "income": {
+            "$ref": "#/components/schemas/EuLivingIncomeDto"
+          },
+          "ranks": {
+            "type": "object",
+            "description": "Ranks among the 27 EU countries (1 = highest; unexpectedExpense: 1 = lowest share); null for aggregates"
+          }
+        },
+        "required": [
+          "geo",
+          "name",
+          "tenure",
+          "cannotFaceUnexpectedExpensePct",
+          "cannotFaceUnexpectedExpensePrevYearPct",
+          "cannotFaceUnexpectedExpenseStatus",
+          "income",
+          "ranks"
+        ]
+      },
+      "EuLivingDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025",
+            "description": "Latest EU-SILC survey year"
+          },
+          "surveyYears": {
+            "type": "object",
+            "description": "Latest survey year with at least 20 EU countries per dataset"
+          },
+          "incomeReferenceYear": {
+            "type": "string",
+            "nullable": true,
+            "example": "2024",
+            "description": "Income reference year (survey year minus 1)"
+          },
+          "updatedAt": {
+            "type": "object",
+            "description": "Eurostat dataset update time per dataset (ISO)"
+          },
+          "definitions": {
+            "type": "object"
+          },
+          "statusCodes": {
+            "type": "object"
+          },
+          "plnPerPps": {
+            "type": "number",
+            "nullable": true,
+            "example": 3.1105,
+            "description": "Eurostat PLN per PPS for Poland in the income survey year"
+          },
+          "plnPerEur": {
+            "type": "number",
+            "nullable": true,
+            "example": 4.3057
+          },
+          "poland": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuLivingCountryDto"
+              }
+            ]
+          },
+          "eu": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuLivingCountryDto"
+              }
+            ]
+          },
+          "euroArea": {
+            "nullable": true,
+            "description": "Euro area (EA20)",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EuLivingCountryDto"
+              }
+            ]
+          },
+          "countries": {
+            "description": "27 EU countries in protocol order",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EuLivingCountryDto"
+            }
+          },
+          "history": {
+            "description": "Yearly history of Poland, the EU and the ?compare= country",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "mortgagedOwners": {
+            "type": "object",
+            "description": "finwire_eu_mortgaged_owners: owners with a mortgage as % of owners in Poland and the EU, yearly"
+          },
+          "householdIncomeGap": {
+            "type": "object",
+            "description": "finwire_eu_household_income_gap: median equivalised income in Poland as % of the EU value (PPS), yearly"
+          }
+        },
+        "required": [
+          "asOf",
+          "surveyYears",
+          "incomeReferenceYear",
+          "updatedAt",
+          "definitions",
+          "statusCodes",
+          "plnPerPps",
+          "plnPerEur",
+          "poland",
+          "eu",
+          "euroArea",
+          "countries",
+          "history",
+          "mortgagedOwners",
+          "householdIncomeGap"
+        ]
+      },
+      "EuLivingResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EuLivingDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
