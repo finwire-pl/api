@@ -3,6 +3,23 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-11
+
+### Added
+
+- `GET /v1/europe/fuel-prices` - dataset `eu-fuel-prices`: prices of Euro-super 95 petrol, diesel, LPG and heating oil at filling stations in the 27 EU countries with EU and euro area weighted averages from the European Commission Weekly Oil Bulletin (weekly since 2005), in EUR and PLN per litre (NBP EUR mid rate), without taxes and tax share, weekly change, a year earlier, rank from the cheapest, and the finwire index Luka cen paliw Polska-UE finwire (`finwire_eu_fuel_price_gap`).
+- MCP server 1.20.0: new tool `get_eu_fuel_prices`; `eu-fuel-prices` in `search_datasets` and `get_dataset`.
+- `GET /v1/europe/inflation` - dataset `eu-inflation`: Eurostat HICP inflation (annual rate) in the 27 EU countries, the EU and the euro area, monthly since 2000: latest ranking with core, food, energy, services and industrial goods, Poland, history with a comparison country, price growth since the same month of a chosen year (`since`), the finwire index Luka inflacji Polska-UE finwire (`finwire_eu_inflation_gap`, Polish HICP minus EU HICP in percentage points) and the euro area flash estimate; `country` adds that country's component history.
+- MCP server 1.20.0: new tool `get_eu_inflation`; `eu-inflation` in `search_datasets` and `get_dataset`.
+- `GET /v1/europe/unemployment` - dataset `eu-unemployment`: Eurostat monthly unemployment rate (une_rt_m, seasonally adjusted, ILO definition) since January 2010 for the 27 EU countries, the EU and the euro area (EA21): total and under 25, rank from the lowest rate, changes in percentage points, rank of Poland each month, history of Poland, the EU, the euro area and a comparison country, and the finwire index Mnożnik bezrobocia młodych finwire (`finwire_eu_youth_unemployment_ratio`).
+- MCP server 1.20.0: new tool `get_eu_unemployment`; `eu-unemployment` in `search_datasets` and `get_dataset`.
+- `GET /v1/europe/net-earnings` - dataset `eu-net-earnings`: annual net earnings in EU countries by household type from Eurostat (earn_nt_net) since 2010, in EUR and PPS, with gross pay, income tax, employee social contributions and family allowances, hourly labour cost (lc_lci_lev), the tax wedge of a low-wage single earner (earn_nt_taxwedge) and the finwire index Luka płacowa Polska-UE finwire (`finwire_eu_net_wage_gap`). Optional `salary` (monthly net PLN) compares the amount with the average in every EU country.
+- MCP server 1.20.0: new tool `get_eu_earnings`; `eu-net-earnings` in `search_datasets` and `get_dataset`.
+- `GET /v1/europe/gdp-per-capita` - dataset `eu-gdp-per-capita`: GDP per capita of the 27 EU countries from Eurostat (nama_10_pc, prc_ppp_ind_1, namq_10_gdp): ranking in purchasing power standards (EU27 = 100), PPS and EUR per inhabitant, real growth per capita (last year, 5- and 10-year averages), actual individual consumption and price level, latest quarter of real GDP growth, history since 1995 of Poland, the EU and one country, and the finwire index Licznik doganiania UE finwire (`finwire_eu_convergence_years`): years until Poland reaches the EU average at the 10-year pace.
+- MCP server 1.20.0: new tool `get_eu_gdp`; `eu-gdp-per-capita` in `search_datasets` and `get_dataset`.
+- `GET /v1/europe/public-debt` - dataset `eu-public-debt`: general government gross debt, deficit and interest as % of GDP in the 27 EU countries, the EU and the euro area from Eurostat (gov_10dd_edpt1 annual since 2000, gov_10q_ggdebt quarterly since 2010): latest quarter and year with ranks, countries above the 3% deficit and 60% debt reference values in the data, annual history of Poland, the EU and a comparison country (`compare`, default `DE`) and the finwire index Dystans długu Polski do progu z Maastricht finwire (`finwire_eu_debt_threshold_gap`).
+- MCP server 1.20.0: new tool `get_eu_public_debt`; `eu-public-debt` in `search_datasets` and `get_dataset`.
+
 ## 2026-11-10
 
 ### Added

@@ -1636,6 +1636,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/europe/inflation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** HICP inflation in EU countries (Eurostat prc_hicp_minr, monthly): latest ranking with core, food, energy, services and goods, Poland, EU and euro area, history since 2000, price growth since a chosen year (basket) and finwire_eu_inflation_gap; with country also that country's component history */
+        get: operations["RegionalController_euInflation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/europe/unemployment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Unemployment rate in EU countries (Eurostat une_rt_m, monthly since 2010, seasonally adjusted, ILO definition): total and under-25 rate for the 27 countries, EU and euro area, rank (1 = lowest), changes in percentage points, Poland rank each month, history of Poland, the EU, the euro area and one comparison country, finwire_eu_youth_unemployment_ratio */
+        get: operations["RegionalController_unemployment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/europe/net-earnings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Annual net earnings in EU countries by household type (Eurostat earn_nt_net, yearly): ranking in EUR and PPS with gross, tax, social contributions and family allowances, hourly labour cost, tax wedge, finwire_eu_net_wage_gap, history of Poland and a comparison country; optional comparison of a monthly net salary in PLN with every country */
+        get: operations["RegionalController_netEarnings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/europe/gdp-per-capita": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GDP per capita in EU countries (Eurostat): ranking of 27 countries in purchasing power standards (EU27 = 100), PPS and EUR per inhabitant, real growth per capita (last year, 5- and 10-year average), actual individual consumption and price level, latest quarter of real GDP growth, history since 1995 and finwire_eu_convergence_years (years until Poland reaches the EU average at the 10-year pace) */
+        get: operations["RegionalController_gdpPerCapita"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/europe/public-debt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Government debt and deficit in EU countries (Eurostat): latest quarter debt and latest year deficit, interest and debt as % of GDP with ranks, EU and euro area, countries above the 3% and 60% reference values, annual history since 2000 of Poland, the EU and a comparison country, finwire_eu_debt_threshold_gap */
+        get: operations["RegionalController_publicDebt"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/credit-market/survey": {
         parameters: {
             query?: never;
@@ -2189,6 +2274,23 @@ export interface paths {
         };
         /** Polish-English glossary of business, tax and ZUS terms */
         get: operations["BusinessPolandController_glossary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/europe/fuel-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fuel prices at filling stations in EU countries (European Commission Weekly Oil Bulletin, weekly since 2005): ranking in EUR and PLN per litre with and without taxes, Poland, EU and euro area averages, last year weekly, finwire_eu_fuel_price_gap */
+        get: operations["EuFuelController_fuelPrices"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7844,6 +7946,448 @@ export interface components {
             data: components["schemas"]["EuMinimumWagesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        EuInflationComponentsDto: {
+            /**
+             * @description All items excluding energy, food, alcohol and tobacco
+             * @example 2.9
+             */
+            core: number | null;
+            /**
+             * @description Food including alcohol and tobacco
+             * @example 1.9
+             */
+            food: number | null;
+            /** @example 14.2 */
+            energy: number | null;
+            /** @example 5.9 */
+            services: number | null;
+            /**
+             * @description Non-energy industrial goods
+             * @example 1.2
+             */
+            goods: number | null;
+        };
+        EuInflationRowDto: {
+            /**
+             * @description 1 = highest inflation among EU countries
+             * @example 11
+             */
+            rank: number | null;
+            /** @example PL */
+            geo: string;
+            /** @example Poland */
+            name: string;
+            /**
+             * @description HICP annual rate of change, %
+             * @example 4
+             */
+            valuePct: number | null;
+            previousPct: number | null;
+            yearAgoPct: number | null;
+            /** @example 0.5 */
+            changeVsPreviousPp: number | null;
+            changeVsYearAgoPp: number | null;
+            /**
+             * @description Eurostat flag: e estimated, b break, d definition differs
+             * @example null
+             */
+            status: string | null;
+            components: components["schemas"]["EuInflationComponentsDto"];
+        };
+        EuInflationDataDto: {
+            /** @example 2026-09 */
+            asOf: string | null;
+            updatedAt: string | null;
+            poland: components["schemas"]["EuInflationRowDto"] | null;
+            eu: components["schemas"]["EuInflationRowDto"] | null;
+            euroArea: components["schemas"]["EuInflationRowDto"] | null;
+            countries: components["schemas"]["EuInflationRowDto"][];
+            /** @description Monthly HICP of Poland, EU, euro area and the comparison country since 2000 */
+            history: string[];
+            /** @description Price growth since the same month of the start year, per country (rank, priceGrowthPct, costOf100) */
+            basket: Record<string, never> | null;
+            /** @description finwire_eu_inflation_gap: Poland minus EU, percentage points (latest and last 60 months) */
+            inflationGap: Record<string, never>;
+            /** @description Newer month with the euro area flash estimate (outside the ranking) */
+            euroAreaFlash: Record<string, never> | null;
+        };
+        EuInflationResponseDto: {
+            data: components["schemas"]["EuInflationDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EuUnemploymentCountryDto: {
+            /** @example PL */
+            geo: string;
+            /** @example Poland */
+            name: string;
+            /**
+             * @description 1 = lowest unemployment among the 27 EU countries; null for aggregates
+             * @example 2
+             */
+            rank: number | null;
+            /** @example 3.4 */
+            unemploymentRatePct: number | null;
+            /**
+             * @description Persons under 25
+             * @example 11.3
+             */
+            youthUnemploymentRatePct: number | null;
+            /**
+             * @description Month of the youth value (Romania reports youth quarterly)
+             * @example 2026-09
+             */
+            youthPeriod: string | null;
+            youthRank: number | null;
+            /**
+             * @description Youth rate / total rate (same month only)
+             * @example 3.32
+             */
+            youthToTotalRatio: number | null;
+            previousMonthPct: number | null;
+            yearAgoPct: number | null;
+            /** @description Percentage points */
+            changeMoMPp: number | null;
+            /** @description Percentage points */
+            changeYoYPp: number | null;
+            youthYearAgoPct: number | null;
+            youthChangeYoYPp: number | null;
+            /** @description Eurostat observation flag */
+            status: string | null;
+        };
+        EuUnemploymentDataDto: {
+            /**
+             * @description Latest month with at least 20 EU countries
+             * @example 2026-09
+             */
+            asOf: string | null;
+            /** @example 2026-09 */
+            period: string | null;
+            previousPeriod: string | null;
+            yearAgoPeriod: string | null;
+            /** @example 2010-01 */
+            firstPeriod: string | null;
+            /** @description Eurostat dataset update time (ISO) */
+            updatedAt: string | null;
+            unit: string;
+            definition: string;
+            ranking: string;
+            /** @description Eurostat observation flags */
+            statusCodes: Record<string, never>;
+            /** @example 27 */
+            countriesWithData: number | null;
+            /** @example 27 */
+            countriesWithYouthData: number | null;
+            poland: components["schemas"]["EuUnemploymentCountryDto"] | null;
+            eu: components["schemas"]["EuUnemploymentCountryDto"] | null;
+            /** @description Euro area, Eurostat code EA21 */
+            euroArea: components["schemas"]["EuUnemploymentCountryDto"] | null;
+            /** @description EU countries from the lowest unemployment rate */
+            countries: components["schemas"]["EuUnemploymentCountryDto"][];
+            /** @description finwire_eu_youth_unemployment_ratio: youth / total unemployment rate in Poland, with the EU value */
+            youthRatioIndex: Record<string, never> | null;
+            /** @description Lowest and highest total rate in Poland since firstPeriod */
+            polandRecord: Record<string, never> | null;
+            /** @description Countries that already have a month later than period */
+            countriesAhead: Record<string, never> | null;
+            /** @description Comparison country of the history */
+            compare: Record<string, never> | null;
+            /** @description Monthly history: Poland, EU, euro area (total) and youth, plus comparePct when compare is set */
+            history: unknown[][];
+            /** @description Rank of Poland among EU countries each month (1 = lowest), total and youth */
+            polandRankHistory: unknown[][];
+        };
+        EuUnemploymentResponseDto: {
+            data: components["schemas"]["EuUnemploymentDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EuNetEarningsRowDto: {
+            /**
+             * @description 1 = highest annual net in EUR for the household type
+             * @example 21
+             */
+            rankEur: number | null;
+            /**
+             * @description 1 = highest in purchasing power standards
+             * @example 16
+             */
+            rankPps: number | null;
+            /** @example PL */
+            geo: string;
+            /** @example Poland */
+            name: string;
+            /**
+             * @description Annual net earnings, EUR
+             * @example 19086.3
+             */
+            netEur: number | null;
+            /**
+             * @description Annual net earnings, PPS
+             * @example 26014.84
+             */
+            netPps: number | null;
+            /**
+             * @description Annual net / 12, EUR
+             * @example 1591
+             */
+            netEurMonthly: number | null;
+            /** @description Annual gross earnings, EUR */
+            grossEur: number | null;
+            incomeTaxEur: number | null;
+            /** @description Employee social security contributions, EUR */
+            socialContributionsEur: number | null;
+            familyAllowancesEur: number | null;
+            /**
+             * @description Hourly labour cost of employers, EUR (lc_lci_lev, B-S excluding O)
+             * @example 19.1
+             */
+            labourCostPerHourEur: number | null;
+            /** @example 2025 */
+            labourCostYear: string | null;
+            /** @description Share of non-wage costs in labour costs, % */
+            nonWageLabourCostSharePct: number | null;
+            /** @description Tax wedge of a single person earning 67% of the average wage, % of labour costs */
+            taxWedgeLowWagePct: number | null;
+            taxWedgeYear: string | null;
+        };
+        EuNetEarningsDataDto: {
+            /** @example 2025 */
+            asOf: string | null;
+            updatedAt: string | null;
+            unit: string;
+            /** @description Selected household type (?household=) */
+            household: Record<string, never>;
+            householdTypes: unknown[][];
+            statusCodes: Record<string, never>;
+            poland: components["schemas"]["EuNetEarningsRowDto"] | null;
+            /** @description EU27_2020 and EA20 */
+            aggregates: components["schemas"]["EuNetEarningsRowDto"][];
+            /** @description EU countries, highest (EUR) first */
+            countries: components["schemas"]["EuNetEarningsRowDto"][];
+            /** @description finwire_eu_net_wage_gap: Poland as % of the EU average (PPS), yearly history */
+            netWageGap: Record<string, never>;
+            /** @description Yearly history of Poland and the ?compare= country for the household type */
+            history: unknown[][];
+            /** @description With ?salary= (monthly net PLN): % of the average net of the household type in each country (EUR and PPS) and the monthly EUR amount with the same purchasing power */
+            salaryComparison: Record<string, never> | null;
+        };
+        EuNetEarningsResponseDto: {
+            data: components["schemas"]["EuNetEarningsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EuGdpQuarterDto: {
+            /** @example 2026-Q2 */
+            period: string | null;
+            /**
+             * @description Real GDP change quarter on quarter, seasonally and calendar adjusted, %
+             * @example 1.1
+             */
+            qoqPct: number | null;
+            /**
+             * @description Real GDP change year on year, seasonally and calendar adjusted, %
+             * @example 4
+             */
+            yoyPct: number | null;
+            status: string | null;
+        };
+        EuGdpCountryDto: {
+            /**
+             * @description Rank among 27 EU countries by GDP per capita in PPS
+             * @example 19
+             */
+            rank: number | null;
+            /** @example PL */
+            geo: string | null;
+            /** @example Poland */
+            name: string | null;
+            /**
+             * @description GDP per capita in PPS, EU27 = 100
+             * @example 81.1
+             */
+            gdpPerCapitaPpsIndex: number | null;
+            gdpPerCapitaPpsIndexPrevYear: number | null;
+            gdpPerCapitaPpsIndex10YearsAgo: number | null;
+            /** @example 33859.2 */
+            gdpPerCapitaPps: number | null;
+            /** @example 24710 */
+            gdpPerCapitaEur: number | null;
+            /** @example 4.3 */
+            realGrowthPerCapitaPct: number | null;
+            /** @example 3.76 */
+            avgRealGrowthPerCapita5yPct: number | null;
+            /** @example 3.78 */
+            avgRealGrowthPerCapita10yPct: number | null;
+            /**
+             * @description Actual individual consumption per capita in PPS, EU27 = 100
+             * @example 88
+             */
+            aicPerCapitaPpsIndex: number | null;
+            aicRank: number | null;
+            /**
+             * @description Price level of actual individual consumption, EU27 = 100
+             * @example 71.1
+             */
+            priceLevelIndexConsumption: number | null;
+            /** @example 73 */
+            priceLevelIndexGdp: number | null;
+            latestQuarter: components["schemas"]["EuGdpQuarterDto"] | null;
+            status: string | null;
+        };
+        EuConvergencePointDto: {
+            /** @example 2025 */
+            year: string | null;
+            /**
+             * @description Years to the EU average; 0 = at or above; null = the gap does not shrink
+             * @example 9
+             */
+            years: number | null;
+            /** @example 2034 */
+            targetYear: number | null;
+            /** @example 81.1 */
+            polandGdpPerCapitaPpsIndex: number | null;
+            /** @example 3.78 */
+            polandAvgRealGrowthPct: number | null;
+            /** @example 1.4 */
+            euAvgRealGrowthPct: number | null;
+            /** @example 10 */
+            windowYears: number | null;
+        };
+        EuConvergenceDto: {
+            /** @example finwire_eu_convergence_years */
+            id: string;
+            /** @example Licznik doganiania UE finwire */
+            name: string;
+            /** @example years */
+            unit: string;
+            basis: string;
+            latest: components["schemas"]["EuConvergencePointDto"] | null;
+            history: components["schemas"]["EuConvergencePointDto"][];
+        };
+        EuGdpPerCapitaDataDto: {
+            /** @example 2025 */
+            asOf: string | null;
+            /** @example 2025 */
+            pppYear: string | null;
+            updatedAt: string | null;
+            units: Record<string, never>;
+            statusCodes: Record<string, never>;
+            poland: components["schemas"]["EuGdpCountryDto"] | null;
+            eu: components["schemas"]["EuGdpCountryDto"] | null;
+            euroArea: components["schemas"]["EuGdpCountryDto"] | null;
+            countries: components["schemas"]["EuGdpCountryDto"][];
+            /** @description Latest quarter with at least 20 countries and the newest quarter in the dataset (flash estimates cover fewer countries) */
+            latestQuarter: Record<string, never>;
+            /** @description Yearly history of Poland, the EU and the comparison country */
+            history: Record<string, never>[];
+            convergence: components["schemas"]["EuConvergenceDto"];
+        };
+        EuGdpPerCapitaResponseDto: {
+            data: components["schemas"]["EuGdpPerCapitaDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EuDebtCountryDto: {
+            /**
+             * @description Eurostat code (Greece = EL)
+             * @example PL
+             */
+            geo: string | null;
+            /** @example Poland */
+            name: string;
+            /**
+             * @description Rank by debt (latest quarter), 1 = highest, EU countries only
+             * @example 11
+             */
+            rankDebt: number | null;
+            /**
+             * @description Rank by deficit (latest year), 1 = highest deficit
+             * @example 2
+             */
+            rankDeficit: number | null;
+            /**
+             * @description Gross debt at the end of the latest quarter, % of GDP
+             * @example 64.5
+             */
+            debtPctGdpQuarter: number | null;
+            /**
+             * @description Change of quarterly debt vs the same quarter a year earlier, percentage points
+             * @example 6.7
+             */
+            debtChangeYoyPp: number | null;
+            /**
+             * @description Eurostat flag p on the quarterly value
+             * @example true
+             */
+            debtQuarterProvisional: boolean;
+            /**
+             * @description Gross debt at the end of the latest year, % of GDP
+             * @example 59.6
+             */
+            debtPctGdpYear: number | null;
+            /**
+             * @description Net lending (+) / net borrowing (-), % of GDP (B9)
+             * @example -7.2
+             */
+            balancePctGdpYear: number | null;
+            /**
+             * @description Deficit, % of GDP (minus balance; negative = surplus)
+             * @example 7.2
+             */
+            deficitPctGdpYear: number | null;
+            /**
+             * @description Interest expenditure, % of GDP (D41PAY)
+             * @example 2.5
+             */
+            interestPctGdpYear: number | null;
+            /**
+             * @description Gross debt, million EUR
+             * @example 553218.9
+             */
+            debtMioEurYear: number | null;
+        };
+        EuDebtHistoryPointDto: {
+            /** @example 2025 */
+            year: string;
+            debtPctGdp: number | null;
+            /** @description Below 0 = deficit */
+            balancePctGdp: number | null;
+            interestPctGdp: number | null;
+        };
+        EuDebtHistoryDto: {
+            /** @example PL */
+            geo: string;
+            /** @example Poland */
+            name: string;
+            points: components["schemas"]["EuDebtHistoryPointDto"][];
+        };
+        EuDebtDataDto: {
+            /** @example 2026-Q2 */
+            asOf: string | null;
+            /** @example 2025 */
+            latestYear: string | null;
+            /** @example 2026-Q2 */
+            latestQuarter: string | null;
+            /** @description Eurostat dataset update time (ISO): annual (gov_10dd_edpt1) and quarterly (gov_10q_ggdebt) */
+            updatedAt: Record<string, never>;
+            unit: string;
+            /** @description Eurostat flags */
+            statusCodes: Record<string, never>;
+            /** @description 3% of GDP for the deficit and 60% of GDP for debt (Protocol No 12, Article 1) */
+            treatyReferenceValues: Record<string, never>;
+            poland: components["schemas"]["EuDebtCountryDto"] | null;
+            /** @description 27 EU countries by debt rank */
+            countries: components["schemas"]["EuDebtCountryDto"][];
+            /** @description EU and euro area (composition of the period) */
+            aggregates: components["schemas"]["EuDebtCountryDto"][];
+            /** @description Countries above 3% deficit and 60% debt in the latest year (data facts, not the list of countries under the excessive deficit procedure) */
+            aboveReferenceValues: Record<string, never>;
+            /** @description Annual history since 2000: Poland, EU and the comparison country */
+            history: components["schemas"]["EuDebtHistoryDto"][];
+            /** @description finwire_eu_debt_threshold_gap: latest reading and the last 12 quarters */
+            finwireIndex: Record<string, never>;
+        };
+        EuDebtResponseDto: {
+            data: components["schemas"]["EuDebtDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         CreditSurveyMetricDto: {
             /** @example housing_criteria */
             id: string;
@@ -8853,6 +9397,36 @@ export interface components {
         };
         CreditJudgmentsResponseDto: {
             data: components["schemas"]["CreditJudgmentsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        EuFuelDataDto: {
+            /**
+             * @example euro95
+             * @enum {string}
+             */
+            fuel: "euro95" | "diesel" | "lpg" | "heating_oil";
+            /**
+             * @description Monday of the European Commission price reading
+             * @example 2026-11-02
+             */
+            asOf: string;
+            /** @description NBP EUR mid rate used for PLN prices */
+            exchangeRate: Record<string, never>;
+            /** @description Poland: EUR and PLN per litre, without taxes, tax share, weekly change, a year earlier, rank (1 = cheapest) */
+            poland?: Record<string, never> | null;
+            /** @description EU weighted average */
+            eu?: Record<string, never> | null;
+            /** @description Euro area weighted average */
+            euroArea?: Record<string, never> | null;
+            /** @description EU countries sorted from the cheapest */
+            countries: unknown[][];
+            /** @description Last year weekly, PLN per litre: Poland, EU and the comparison country */
+            history: unknown[][];
+            /** @description finwire_eu_fuel_price_gap: Poland as % of the EU weighted average, last 2 years weekly */
+            fuelPriceGap: Record<string, never>;
+        };
+        EuFuelPricesResponseDto: {
+            data: components["schemas"]["EuFuelDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
     };
@@ -10887,6 +11461,124 @@ export interface operations {
             };
         };
     };
+    RegionalController_euInflation: {
+        parameters: {
+            query?: {
+                /** @description EU country code (Eurostat, Greece = EL) added to the history, default DE */
+                compare?: string;
+                /** @description Start year of the basket (same month as the latest reading), default 2015 */
+                since?: string;
+                /** @description EU country code: adds monthly history of all items and 5 components since 2000 */
+                country?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuInflationResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_unemployment: {
+        parameters: {
+            query?: {
+                /** @description EU country code (Eurostat, Greece = EL) added to the history, default DE */
+                compare?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuUnemploymentResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_netEarnings: {
+        parameters: {
+            query?: {
+                /** @description single (default), couple, couple_kids_two, couple_kids_one, single_parent, single_low, single_high */
+                household?: string;
+                /** @description EU country code added to the history, default DE */
+                compare?: string;
+                /** @description Monthly net salary in PLN (100-1000000) compared with the average of the household type in each country */
+                salary?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuNetEarningsResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_gdpPerCapita: {
+        parameters: {
+            query?: {
+                /** @description EU country code (Eurostat, Greece = EL) added to the history, default DE */
+                compare?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuGdpPerCapitaResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_publicDebt: {
+        parameters: {
+            query?: {
+                /** @description EU country code (Eurostat, Greece = EL) added to the history, default DE */
+                compare?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuDebtResponseDto"];
+                };
+            };
+        };
+    };
     CreditMarketController_survey: {
         parameters: {
             query?: {
@@ -11626,6 +12318,30 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    EuFuelController_fuelPrices: {
+        parameters: {
+            query?: {
+                /** @description Default euro95 */
+                fuel?: "euro95" | "diesel" | "lpg" | "heating_oil";
+                /** @description EU country code (Eurostat, Greece = EL) added to the history, default DE */
+                compare?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EuFuelPricesResponseDto"];
+                };
             };
         };
     };
