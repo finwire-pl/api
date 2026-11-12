@@ -1007,6 +1007,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/family-benefits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Child benefits paid by ZUS (Polish Social Insurance Institution): 800 plus (świadczenie wychowawcze) and the three Aktywny Rodzic benefits (working parents, nursery, at home) per month - benefits paid, amounts since January and in the month, children, 800 plus applications, 16 voivodeships with the share of Aktywny Rodzic variants and Wypłaty na dzieci z ZUS finwire (finwire_child_benefits_payout, PLN billion in the month); ZUS data CC0 1.0 */
+        get: operations["MacroController_familyBenefits"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/consumer-bankruptcies": {
         parameters: {
             query?: never;
@@ -1016,6 +1033,23 @@ export interface paths {
         };
         /** Consumer bankruptcies in Poland (COIG, Centralny Ośrodek Informacji Gospodarczych, from court announcements in the National Register of Debtors KRZ and Monitor Sądowy i Gospodarczy): people declared bankrupt as consumers per month, year on year, sum since January vs the same period a year earlier, rank of the latest month in the series, yearly totals and Licznik upadłości konsumenckich finwire (finwire_consumer_bankruptcies, 12-month sum); data COIG, reuse with attribution */
         get: operations["MacroController_consumerBankruptcies"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rkm-price-limits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Price limits per m2 in the Polish family housing loan (rodzinny kredyt mieszkaniowy, "Mieszkanie bez wkładu własnego": mortgage without down payment with a BGK guarantee), quarterly lists of Bank Gospodarstwa Krajowego computed from voivode announcements: 52 locations (voivodeship city, neighbouring municipalities, other municipalities), primary market (first buyer from the developer) and secondary market, change vs previous quarter and year, history since Q1 2023, and Mieszkania w limicie RKM finwire (finwire_rkm_offer_fit: share of developer offers within the limit); data BGK, cited with attribution */
+        get: operations["MacroController_rkmPriceLimits"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1390,6 +1424,23 @@ export interface paths {
         };
         /** PIT returns by municipality (Ministry of Finance, yearly): national PIT due per resident (finwire_pit_per_capita), by type of return, provinces, top and bottom municipalities, PIT-38 returns per 1000 residents and history */
         get: operations["RegionalController_pitSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pit/national": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** PIT settlement in the whole of Poland by tax year (Ministry of Finance yearly information, since 2019): scale taxpayers and returns by form, taxpayers in each bracket of the tax scale with their share in tax due, reliefs deducted from income (IKZE, thermal modernisation, internet, rehabilitation, donations, trade union dues), child relief, overpayments, flat tax (PIT-36L), capital gains (PIT-38), property sale (PIT-39), lump-sum tax (PIT-28) and the finwire index finwire_pit_top_bracket_multiplier */
+        get: operations["RegionalController_pitNational"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5553,6 +5604,82 @@ export interface components {
             data: components["schemas"]["CeidgDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        FamilyBenefitMonthDto: {
+            /** @example 2026-10 */
+            period: string | null;
+            /**
+             * @description Benefits paid by ZUS in the month
+             * @example 6407206
+             */
+            paymentsInMonth: number | null;
+            /** @description PLN paid in the month (difference of year-to-date sums) */
+            amountInMonth: number | null;
+            /** @description PLN paid since 1 January */
+            amountSinceJanuary: number | null;
+            /** @description Children with at least one payment since 1 January */
+            childrenPaidSinceJanuary: number | null;
+            /** @description Average PLN per payment in the month */
+            averagePayment: number | null;
+        };
+        FamilyBenefitProgrammeDto: {
+            /**
+             * @description childBenefit800, activeParentsAtWork, activelyInNursery, activelyAtHome
+             * @example childBenefit800
+             */
+            id: string;
+            name: string | null;
+            latest: components["schemas"]["FamilyBenefitMonthDto"] | null;
+            previous: components["schemas"]["FamilyBenefitMonthDto"] | null;
+            /** @description Same month a year earlier */
+            yearAgo: components["schemas"]["FamilyBenefitMonthDto"] | null;
+            paymentsYoyPct: number | null;
+            amountSinceJanuaryPreviousYear: number | null;
+            amountSinceJanuaryYoyPct: number | null;
+            /** @description 800 plus: applications, children in applications, processed, granted, refusals since 1 January */
+            applicationsSinceJanuary: Record<string, never> | null;
+            history: components["schemas"]["FamilyBenefitMonthDto"][];
+        };
+        FamilyBenefitsDataDto: {
+            /** @example 2026-10 */
+            asOf: string | null;
+            /** @example 2024-01 */
+            firstPeriod: string | null;
+            /**
+             * @description Date of the ZUS database state
+             * @example 2026-11-04
+             */
+            zusDatabaseDate: string | null;
+            updatedAt: string | null;
+            dataChangedAt: string | null;
+            /** @example Zakład Ubezpieczeń Społecznych (ZUS) */
+            publisher: string | null;
+            attribution: string | null;
+            /** @example dane ZUS, CC0 1.0 (zbiory ZUS na dane.gov.pl) */
+            license: string | null;
+            licenseUrl: string | null;
+            sourceUrl: string | null;
+            activeParentSourceUrl: string | null;
+            /** @description ZUS XLSX files of the latest month per programme */
+            sourceFiles: Record<string, never>;
+            /** @description Units */
+            units: Record<string, never>;
+            programmes: components["schemas"]["FamilyBenefitProgrammeDto"][];
+            /** @description Aktywny Rodzic together: payments, amounts and share of the three variants in payments of the month */
+            activeParent: Record<string, never> | null;
+            regionsPeriod: string | null;
+            /** @description 16 voivodeships: 800 plus, Aktywny Rodzic by variant, shares, Aktywny Rodzic payments per 100 payments of 800 plus */
+            voivodeships: unknown[][];
+            /** @description Municipalities (gminy): 10 highest and lowest 800 plus payments per 1000 residents, value for all municipalities, GUS population year */
+            municipalities: Record<string, never> | null;
+            /** @description Municipalities matching the gmina parameter (name without Polish characters or TERYT code), 800 plus per 1000 residents and Aktywny Rodzic shares */
+            municipalitySearch: Record<string, never> | null;
+            /** @description finwire_child_benefits_payout: PLN billion paid in the month, year on year, history */
+            childBenefitsPayout: Record<string, never> | null;
+        };
+        FamilyBenefitsResponseDto: {
+            data: components["schemas"]["FamilyBenefitsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         ConsumerBankruptcyMonthDto: {
             /** @example 2026-09 */
             period: string | null;
@@ -5637,6 +5764,88 @@ export interface components {
         };
         ConsumerBankruptciesResponseDto: {
             data: components["schemas"]["ConsumerBankruptciesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        RkmLimitLocationDto: {
+            /**
+             * @description Location key: city, "<city>-okolice" (neighbouring municipalities) or "<voivodeship>-pozostale"
+             * @example warszawa
+             */
+            key: string | null;
+            /**
+             * @description city | neighbors | rest
+             * @example city
+             */
+            kind: string | null;
+            /** @example mazowieckie */
+            voivodeship: string | null;
+            /** @example warszawa */
+            city: string | null;
+            /** @example Warszawa */
+            label: string | null;
+            /**
+             * @description PLN per m2, first buyer from the developer
+             * @example 17497.7
+             */
+            primaryMarket: number | null;
+            /**
+             * @description PLN per m2, secondary market and cooperative right
+             * @example 16247.87
+             */
+            secondaryMarket: number | null;
+            previousPrimaryMarket: number | null;
+            /** @example 8.2 */
+            changePct: number | null;
+            /** @example 12.9 */
+            yoyPct: number | null;
+            /** @description Quarterly history: quarter, primaryMarket, secondaryMarket */
+            history: unknown[][];
+        };
+        RkmPriceLimitsDataDto: {
+            /** @example 2026-Q4 */
+            asOf: string | null;
+            /** @example IV kwartał 2026 */
+            quarterLabel: string | null;
+            /**
+             * @description Date of the BGK list
+             * @example 2026-10-01
+             */
+            infoDate: string | null;
+            /** @example 2026-10-01 */
+            validFrom: string | null;
+            /** @example 2026-Q3 */
+            previousQuarter: string | null;
+            /** @description Statutory coefficients (art. 5 sec. 1 point 4 of the act) */
+            coefficients: Record<string, never>;
+            /**
+             * @description Last day banks may grant the loan
+             * @example 2030-12-31
+             */
+            programEnd: string | null;
+            updatedAt: string | null;
+            /** @description Last change of the limits: new quarter or a BGK correction */
+            dataChangedAt: string | null;
+            /** @example Bank Gospodarstwa Krajowego (BGK) */
+            publisher: string | null;
+            /** @description Mandatory attribution */
+            attribution: string | null;
+            /** @example dane BGK bez określonej licencji, cytowane z podaniem źródła */
+            license: string | null;
+            sourceUrl: string | null;
+            /** @description PDF of the current BGK list */
+            sourceFileUrl: string | null;
+            /** @description Units */
+            units: Record<string, never>;
+            /** @description Highest and lowest limit, median of voivodeship cities, locations with a higher and lower limit than a quarter earlier */
+            summary: Record<string, never>;
+            locations: components["schemas"]["RkmLimitLocationDto"][];
+            /** @description Mieszkania w limicie kredytu bez wkładu finwire (finwire_rkm_offer_fit): share of developer offers within the limit per voivodeship city */
+            offerFit: Record<string, never> | null;
+            /** @description Quarters in the data with the BGK list date and PDF */
+            quarters: unknown[][];
+        };
+        RkmPriceLimitsResponseDto: {
+            data: components["schemas"]["RkmPriceLimitsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         SavingsBondSalesMonthDto: {
@@ -7348,6 +7557,104 @@ export interface components {
         };
         PitSummaryResponseDto: {
             data: components["schemas"]["PitSummaryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        PitSettlementYearDto: {
+            /** @example 2024 */
+            year: number;
+            /** @description PDF of the Ministry of Finance information for the year */
+            sourceUrl: string;
+            /** @description PDF of the lump-sum tax (ryczałt) information */
+            ryczaltSourceUrl: string | null;
+            /**
+             * @description Figures of the year by key (see units.metrics)
+             * @example {
+             *       "scale_taxpayers": 25582561,
+             *       "ikze_taxpayers": 303771,
+             *       "tax_due_mln": 112387
+             *     }
+             */
+            metrics: Record<string, never>;
+        };
+        PitSettlementBracketDto: {
+            /** @example 2024 */
+            year: number;
+            /**
+             * @description Income threshold of the upper bracket, PLN
+             * @example 120000
+             */
+            thresholdPln: number;
+            /** @example 23645782 */
+            lowerTaxpayers: number;
+            /** @example 1935495 */
+            upperTaxpayers: number;
+            /**
+             * @description Upper bracket share in the number of scale taxpayers, %
+             * @example 7.57
+             */
+            upperTaxpayersPct: number;
+            /**
+             * @description Upper bracket share in scale tax due, % (Ministry of Finance)
+             * @example 48.7
+             */
+            upperTaxSharePct: number;
+            /** @example 23.5 */
+            upperIncomeSharePct: number | null;
+            /**
+             * @description finwire_pit_top_bracket_multiplier
+             * @example 6.43
+             */
+            multiplier: number;
+        };
+        PitSettlementReliefDto: {
+            /** @example ikze */
+            key: string;
+            /** @example Wpłaty na IKZE (indywidualne konto zabezpieczenia emerytalnego) */
+            label: string;
+            /** @example art. 26 ust. 1 pkt 2b */
+            basis: string;
+            /** @example 303771 */
+            taxpayers: number;
+            /**
+             * @description PLN million
+             * @example 2112.037
+             */
+            amountMln: number | null;
+            /** @example 6953 */
+            avgPln: number | null;
+            /** @example 244946 */
+            previousYearTaxpayers: number | null;
+            /** @example 24 */
+            changePct: number | null;
+        };
+        PitSettlementDataDto: {
+            /** @example 2024 */
+            asOf: string;
+            /** @example 2024 */
+            latestYear: number;
+            /** @example 2019 */
+            firstYear: number;
+            /** @example 2026-01-15 */
+            publishedOn: string | null;
+            dataChangedAt: string | null;
+            /** @example Ministerstwo Finansów */
+            publisher: string;
+            attribution: string;
+            license: string;
+            termsUrl: string;
+            sourceUrl: string;
+            units: Record<string, never>;
+            latest: components["schemas"]["PitSettlementYearDto"];
+            previous: components["schemas"]["PitSettlementYearDto"] | null;
+            brackets: components["schemas"]["PitSettlementBracketDto"][];
+            /** @description Reliefs deducted from income in the latest year, most used first */
+            reliefs: components["schemas"]["PitSettlementReliefDto"][];
+            /** @description finwire_pit_top_bracket_multiplier: latest value and history */
+            pitTopBracketMultiplier: Record<string, never>;
+            years: components["schemas"]["PitSettlementYearDto"][];
+        };
+        PitSettlementResponseDto: {
+            data: components["schemas"]["PitSettlementDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         PitMunicipalitiesDataDto: {
@@ -10929,6 +11236,30 @@ export interface operations {
             };
         };
     };
+    MacroController_familyBenefits: {
+        parameters: {
+            query?: {
+                /** @description Last N months of history per programme, 1-120, default all */
+                months?: number;
+                /** @description Municipality name (Polish, diacritics optional, from the start of a word) or TERYT code; adds municipalitySearch (up to 10 matches) */
+                gmina?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FamilyBenefitsResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_consumerBankruptcies: {
         parameters: {
             query?: {
@@ -10947,6 +11278,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ConsumerBankruptciesResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_rkmPriceLimits: {
+        parameters: {
+            query?: {
+                /** @description Filter: location key (krakow, krakow-okolice, malopolskie-pozostale), city or voivodeship name */
+                location?: string;
+                /** @description Last N quarters of history per location, 1-40, default all */
+                quarters?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RkmPriceLimitsResponseDto"];
                 };
             };
         };
@@ -11433,6 +11788,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PitSummaryResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_pitNational: {
+        parameters: {
+            query?: {
+                /** @description Last N tax years in `years`, 1-30, default all */
+                years?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PitSettlementResponseDto"];
                 };
             };
         };

@@ -3,6 +3,17 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-12
+
+### Added
+
+- `GET /v1/pit/national` - dataset `pit-national`: PIT settlement in the whole of Poland for every tax year since 2019 from the yearly Ministry of Finance information on the personal income tax settlement and on the lump-sum tax on recorded revenue: taxpayers on the tax scale and returns by form (PIT-36, PIT-36L, PIT-37, PIT-38, PIT-39, PIT-28), taxpayers in the first and second bracket with the threshold and the second bracket share in income and tax due, reliefs deducted from income with taxpayers, amount and average, child relief, overpayments, flat tax, capital gains and crypto, property sale, and the finwire index Mnożnik drugiego progu PIT finwire (`finwire_pit_top_bracket_multiplier`). Query `years` limits the yearly list.
+- MCP server 1.22.0: new tool `get_pit_settlement_stats`; `pit-national` in `search_datasets` and `get_dataset`.
+- `GET /v1/rkm-price-limits` - dataset `rkm-price-limits`: price limits per m2 in the Polish family housing loan (rodzinny kredyt mieszkaniowy, mortgage without down payment with a BGK guarantee) from the quarterly lists of Bank Gospodarstwa Krajowego since Q1 2023: 52 locations (voivodeship city, neighbouring municipalities, other municipalities), primary market (first buyer from the developer) and secondary market or cooperative right, change against the previous quarter and a year earlier, statutory coefficients, and the finwire index Mieszkania w limicie RKM finwire (`finwire_rkm_offer_fit`, share of developer price-list flats in voivodeship cities within the primary-market limit). `location` filters by city, voivodeship or key, `quarters` trims the history. Attribution to BGK required (no reuse terms stated, not CC BY).
+- MCP: new tool `get_rkm_price_limits` (optional check of a price per m2 against the limit); `rkm-price-limits` in `search_datasets` and `get_dataset`.
+- `GET /v1/family-benefits` - dataset `family-benefits`: monthly ZUS statistics of the 800+ child benefit and the three Aktywny Rodzic variants (payments, amounts, Poland and voivodeships; optional `gmina` for one municipality with payments per 1000 residents) + index `finwire_child_benefits_payout`.
+- MCP: new tool `get_family_benefits`; `family-benefits` in `search_datasets` and `get_dataset`.
+
 ## 2026-11-11
 
 ### Changed

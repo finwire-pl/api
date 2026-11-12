@@ -1708,6 +1708,49 @@
         ]
       }
     },
+    "/v1/family-benefits": {
+      "get": {
+        "operationId": "MacroController_familyBenefits",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N months of history per programme, 1-120, default all",
+            "schema": {
+              "example": 12,
+              "type": "number"
+            }
+          },
+          {
+            "name": "gmina",
+            "required": false,
+            "in": "query",
+            "description": "Municipality name (Polish, diacritics optional, from the start of a word) or TERYT code; adds municipalitySearch (up to 10 matches)",
+            "schema": {
+              "example": "szczecin",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FamilyBenefitsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Child benefits paid by ZUS (Polish Social Insurance Institution): 800 plus (\u015bwiadczenie wychowawcze) and the three Aktywny Rodzic benefits (working parents, nursery, at home) per month - benefits paid, amounts since January and in the month, children, 800 plus applications, 16 voivodeships with the share of Aktywny Rodzic variants and Wyp\u0142aty na dzieci z ZUS finwire (finwire_child_benefits_payout, PLN billion in the month); ZUS data CC0 1.0",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/consumer-bankruptcies": {
       "get": {
         "operationId": "MacroController_consumerBankruptcies",
@@ -1736,6 +1779,49 @@
           }
         },
         "summary": "Consumer bankruptcies in Poland (COIG, Centralny O\u015brodek Informacji Gospodarczych, from court announcements in the National Register of Debtors KRZ and Monitor S\u0105dowy i Gospodarczy): people declared bankrupt as consumers per month, year on year, sum since January vs the same period a year earlier, rank of the latest month in the series, yearly totals and Licznik upad\u0142o\u015bci konsumenckich finwire (finwire_consumer_bankruptcies, 12-month sum); data COIG, reuse with attribution",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/rkm-price-limits": {
+      "get": {
+        "operationId": "MacroController_rkmPriceLimits",
+        "parameters": [
+          {
+            "name": "location",
+            "required": false,
+            "in": "query",
+            "description": "Filter: location key (krakow, krakow-okolice, malopolskie-pozostale), city or voivodeship name",
+            "schema": {
+              "example": "krakow",
+              "type": "string"
+            }
+          },
+          {
+            "name": "quarters",
+            "required": false,
+            "in": "query",
+            "description": "Last N quarters of history per location, 1-40, default all",
+            "schema": {
+              "example": 4,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RkmPriceLimitsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Price limits per m2 in the Polish family housing loan (rodzinny kredyt mieszkaniowy, \"Mieszkanie bez wk\u0142adu w\u0142asnego\": mortgage without down payment with a BGK guarantee), quarterly lists of Bank Gospodarstwa Krajowego computed from voivode announcements: 52 locations (voivodeship city, neighbouring municipalities, other municipalities), primary market (first buyer from the developer) and secondary market, change vs previous quarter and year, history since Q1 2023, and Mieszkania w limicie RKM finwire (finwire_rkm_offer_fit: share of developer offers within the limit); data BGK, cited with attribution",
         "tags": [
           "Macro and prices"
         ]
@@ -2491,6 +2577,39 @@
           }
         },
         "summary": "PIT returns by municipality (Ministry of Finance, yearly): national PIT due per resident (finwire_pit_per_capita), by type of return, provinces, top and bottom municipalities, PIT-38 returns per 1000 residents and history",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/pit/national": {
+      "get": {
+        "operationId": "RegionalController_pitNational",
+        "parameters": [
+          {
+            "name": "years",
+            "required": false,
+            "in": "query",
+            "description": "Last N tax years in `years`, 1-30, default all",
+            "schema": {
+              "example": 3,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PitSettlementResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "PIT settlement in the whole of Poland by tax year (Ministry of Finance yearly information, since 2019): scale taxpayers and returns by form, taxpayers in each bracket of the tax scale with their share in tax due, reliefs deducted from income (IKZE, thermal modernisation, internet, rehabilitation, donations, trade union dues), child relief, overpayments, flat tax (PIT-36L), capital gains (PIT-38), property sale (PIT-39), lump-sum tax (PIT-28) and the finwire index finwire_pit_top_bracket_multiplier",
         "tags": [
           "Real estate"
         ]
@@ -13756,6 +13875,264 @@
           "meta"
         ]
       },
+      "FamilyBenefitMonthDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10"
+          },
+          "paymentsInMonth": {
+            "type": "number",
+            "nullable": true,
+            "example": 6407206,
+            "description": "Benefits paid by ZUS in the month"
+          },
+          "amountInMonth": {
+            "type": "number",
+            "nullable": true,
+            "description": "PLN paid in the month (difference of year-to-date sums)"
+          },
+          "amountSinceJanuary": {
+            "type": "number",
+            "nullable": true,
+            "description": "PLN paid since 1 January"
+          },
+          "childrenPaidSinceJanuary": {
+            "type": "number",
+            "nullable": true,
+            "description": "Children with at least one payment since 1 January"
+          },
+          "averagePayment": {
+            "type": "number",
+            "nullable": true,
+            "description": "Average PLN per payment in the month"
+          }
+        },
+        "required": [
+          "period",
+          "paymentsInMonth",
+          "amountInMonth",
+          "amountSinceJanuary",
+          "childrenPaidSinceJanuary",
+          "averagePayment"
+        ]
+      },
+      "FamilyBenefitProgrammeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "childBenefit800",
+            "description": "childBenefit800, activeParentsAtWork, activelyInNursery, activelyAtHome"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "latest": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FamilyBenefitMonthDto"
+              }
+            ]
+          },
+          "previous": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FamilyBenefitMonthDto"
+              }
+            ]
+          },
+          "yearAgo": {
+            "nullable": true,
+            "description": "Same month a year earlier",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FamilyBenefitMonthDto"
+              }
+            ]
+          },
+          "paymentsYoyPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "amountSinceJanuaryPreviousYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "amountSinceJanuaryYoyPct": {
+            "type": "number",
+            "nullable": true
+          },
+          "applicationsSinceJanuary": {
+            "type": "object",
+            "nullable": true,
+            "description": "800 plus: applications, children in applications, processed, granted, refusals since 1 January"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FamilyBenefitMonthDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "latest",
+          "previous",
+          "yearAgo",
+          "paymentsYoyPct",
+          "amountSinceJanuaryPreviousYear",
+          "amountSinceJanuaryYoyPct",
+          "applicationsSinceJanuary",
+          "history"
+        ]
+      },
+      "FamilyBenefitsDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10"
+          },
+          "firstPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2024-01"
+          },
+          "zusDatabaseDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-04",
+            "description": "Date of the ZUS database state"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataChangedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "publisher": {
+            "type": "string",
+            "nullable": true,
+            "example": "Zak\u0142ad Ubezpiecze\u0144 Spo\u0142ecznych (ZUS)"
+          },
+          "attribution": {
+            "type": "string",
+            "nullable": true
+          },
+          "license": {
+            "type": "string",
+            "nullable": true,
+            "example": "dane ZUS, CC0 1.0 (zbiory ZUS na dane.gov.pl)"
+          },
+          "licenseUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "activeParentSourceUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceFiles": {
+            "type": "object",
+            "description": "ZUS XLSX files of the latest month per programme"
+          },
+          "units": {
+            "type": "object",
+            "description": "Units"
+          },
+          "programmes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FamilyBenefitProgrammeDto"
+            }
+          },
+          "activeParent": {
+            "type": "object",
+            "nullable": true,
+            "description": "Aktywny Rodzic together: payments, amounts and share of the three variants in payments of the month"
+          },
+          "regionsPeriod": {
+            "type": "string",
+            "nullable": true
+          },
+          "voivodeships": {
+            "description": "16 voivodeships: 800 plus, Aktywny Rodzic by variant, shares, Aktywny Rodzic payments per 100 payments of 800 plus",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "municipalities": {
+            "type": "object",
+            "nullable": true,
+            "description": "Municipalities (gminy): 10 highest and lowest 800 plus payments per 1000 residents, value for all municipalities, GUS population year"
+          },
+          "municipalitySearch": {
+            "type": "object",
+            "nullable": true,
+            "description": "Municipalities matching the gmina parameter (name without Polish characters or TERYT code), 800 plus per 1000 residents and Aktywny Rodzic shares"
+          },
+          "childBenefitsPayout": {
+            "type": "object",
+            "nullable": true,
+            "description": "finwire_child_benefits_payout: PLN billion paid in the month, year on year, history"
+          }
+        },
+        "required": [
+          "asOf",
+          "firstPeriod",
+          "zusDatabaseDate",
+          "updatedAt",
+          "dataChangedAt",
+          "publisher",
+          "attribution",
+          "license",
+          "licenseUrl",
+          "sourceUrl",
+          "activeParentSourceUrl",
+          "sourceFiles",
+          "units",
+          "programmes",
+          "activeParent",
+          "regionsPeriod",
+          "voivodeships",
+          "municipalities",
+          "municipalitySearch",
+          "childBenefitsPayout"
+        ]
+      },
+      "FamilyBenefitsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FamilyBenefitsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "ConsumerBankruptcyMonthDto": {
         "type": "object",
         "properties": {
@@ -14009,6 +14386,220 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/ConsumerBankruptciesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "RkmLimitLocationDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true,
+            "example": "warszawa",
+            "description": "Location key: city, \"<city>-okolice\" (neighbouring municipalities) or \"<voivodeship>-pozostale\""
+          },
+          "kind": {
+            "type": "string",
+            "nullable": true,
+            "example": "city",
+            "description": "city | neighbors | rest"
+          },
+          "voivodeship": {
+            "type": "string",
+            "nullable": true,
+            "example": "mazowieckie"
+          },
+          "city": {
+            "type": "string",
+            "nullable": true,
+            "example": "warszawa"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true,
+            "example": "Warszawa"
+          },
+          "primaryMarket": {
+            "type": "number",
+            "nullable": true,
+            "example": 17497.7,
+            "description": "PLN per m2, first buyer from the developer"
+          },
+          "secondaryMarket": {
+            "type": "number",
+            "nullable": true,
+            "example": 16247.87,
+            "description": "PLN per m2, secondary market and cooperative right"
+          },
+          "previousPrimaryMarket": {
+            "type": "number",
+            "nullable": true
+          },
+          "changePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 8.2
+          },
+          "yoyPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 12.9
+          },
+          "history": {
+            "description": "Quarterly history: quarter, primaryMarket, secondaryMarket",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "kind",
+          "voivodeship",
+          "city",
+          "label",
+          "primaryMarket",
+          "secondaryMarket",
+          "previousPrimaryMarket",
+          "changePct",
+          "yoyPct",
+          "history"
+        ]
+      },
+      "RkmPriceLimitsDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-Q4"
+          },
+          "quarterLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "IV kwarta\u0142 2026"
+          },
+          "infoDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-01",
+            "description": "Date of the BGK list"
+          },
+          "validFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10-01"
+          },
+          "previousQuarter": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-Q3"
+          },
+          "coefficients": {
+            "type": "object",
+            "description": "Statutory coefficients (art. 5 sec. 1 point 4 of the act)"
+          },
+          "programEnd": {
+            "type": "string",
+            "nullable": true,
+            "example": "2030-12-31",
+            "description": "Last day banks may grant the loan"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataChangedAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "Last change of the limits: new quarter or a BGK correction"
+          },
+          "publisher": {
+            "type": "string",
+            "nullable": true,
+            "example": "Bank Gospodarstwa Krajowego (BGK)"
+          },
+          "attribution": {
+            "type": "string",
+            "nullable": true,
+            "description": "Mandatory attribution"
+          },
+          "license": {
+            "type": "string",
+            "nullable": true,
+            "example": "dane BGK bez okre\u015blonej licencji, cytowane z podaniem \u017ar\u00f3d\u0142a"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceFileUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "PDF of the current BGK list"
+          },
+          "units": {
+            "type": "object",
+            "description": "Units"
+          },
+          "summary": {
+            "type": "object",
+            "description": "Highest and lowest limit, median of voivodeship cities, locations with a higher and lower limit than a quarter earlier"
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RkmLimitLocationDto"
+            }
+          },
+          "offerFit": {
+            "type": "object",
+            "nullable": true,
+            "description": "Mieszkania w limicie kredytu bez wk\u0142adu finwire (finwire_rkm_offer_fit): share of developer offers within the limit per voivodeship city"
+          },
+          "quarters": {
+            "description": "Quarters in the data with the BGK list date and PDF",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "quarterLabel",
+          "infoDate",
+          "validFrom",
+          "previousQuarter",
+          "coefficients",
+          "programEnd",
+          "updatedAt",
+          "dataChangedAt",
+          "publisher",
+          "attribution",
+          "license",
+          "sourceUrl",
+          "sourceFileUrl",
+          "units",
+          "summary",
+          "locations",
+          "offerFit",
+          "quarters"
+        ]
+      },
+      "RkmPriceLimitsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/RkmPriceLimitsDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -18500,6 +19091,257 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/PitSummaryDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "PitSettlementYearDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number",
+            "example": 2024
+          },
+          "sourceUrl": {
+            "type": "string",
+            "description": "PDF of the Ministry of Finance information for the year"
+          },
+          "ryczaltSourceUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "PDF of the lump-sum tax (rycza\u0142t) information"
+          },
+          "metrics": {
+            "type": "object",
+            "description": "Figures of the year by key (see units.metrics)",
+            "example": {
+              "scale_taxpayers": 25582561,
+              "ikze_taxpayers": 303771,
+              "tax_due_mln": 112387
+            }
+          }
+        },
+        "required": [
+          "year",
+          "sourceUrl",
+          "ryczaltSourceUrl",
+          "metrics"
+        ]
+      },
+      "PitSettlementBracketDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number",
+            "example": 2024
+          },
+          "thresholdPln": {
+            "type": "number",
+            "example": 120000,
+            "description": "Income threshold of the upper bracket, PLN"
+          },
+          "lowerTaxpayers": {
+            "type": "number",
+            "example": 23645782
+          },
+          "upperTaxpayers": {
+            "type": "number",
+            "example": 1935495
+          },
+          "upperTaxpayersPct": {
+            "type": "number",
+            "example": 7.57,
+            "description": "Upper bracket share in the number of scale taxpayers, %"
+          },
+          "upperTaxSharePct": {
+            "type": "number",
+            "example": 48.7,
+            "description": "Upper bracket share in scale tax due, % (Ministry of Finance)"
+          },
+          "upperIncomeSharePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 23.5
+          },
+          "multiplier": {
+            "type": "number",
+            "example": 6.43,
+            "description": "finwire_pit_top_bracket_multiplier"
+          }
+        },
+        "required": [
+          "year",
+          "thresholdPln",
+          "lowerTaxpayers",
+          "upperTaxpayers",
+          "upperTaxpayersPct",
+          "upperTaxSharePct",
+          "upperIncomeSharePct",
+          "multiplier"
+        ]
+      },
+      "PitSettlementReliefDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "ikze"
+          },
+          "label": {
+            "type": "string",
+            "example": "Wp\u0142aty na IKZE (indywidualne konto zabezpieczenia emerytalnego)"
+          },
+          "basis": {
+            "type": "string",
+            "example": "art. 26 ust. 1 pkt 2b"
+          },
+          "taxpayers": {
+            "type": "number",
+            "example": 303771
+          },
+          "amountMln": {
+            "type": "number",
+            "nullable": true,
+            "example": 2112.037,
+            "description": "PLN million"
+          },
+          "avgPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 6953
+          },
+          "previousYearTaxpayers": {
+            "type": "number",
+            "nullable": true,
+            "example": 244946
+          },
+          "changePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 24
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "basis",
+          "taxpayers",
+          "amountMln",
+          "avgPln",
+          "previousYearTaxpayers",
+          "changePct"
+        ]
+      },
+      "PitSettlementDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "example": "2024"
+          },
+          "latestYear": {
+            "type": "number",
+            "example": 2024
+          },
+          "firstYear": {
+            "type": "number",
+            "example": 2019
+          },
+          "publishedOn": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-01-15"
+          },
+          "dataChangedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "publisher": {
+            "type": "string",
+            "example": "Ministerstwo Finans\u00f3w"
+          },
+          "attribution": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "termsUrl": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "units": {
+            "type": "object"
+          },
+          "latest": {
+            "$ref": "#/components/schemas/PitSettlementYearDto"
+          },
+          "previous": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PitSettlementYearDto"
+              }
+            ]
+          },
+          "brackets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PitSettlementBracketDto"
+            }
+          },
+          "reliefs": {
+            "description": "Reliefs deducted from income in the latest year, most used first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PitSettlementReliefDto"
+            }
+          },
+          "pitTopBracketMultiplier": {
+            "type": "object",
+            "description": "finwire_pit_top_bracket_multiplier: latest value and history"
+          },
+          "years": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PitSettlementYearDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "latestYear",
+          "firstYear",
+          "publishedOn",
+          "dataChangedAt",
+          "publisher",
+          "attribution",
+          "license",
+          "termsUrl",
+          "sourceUrl",
+          "units",
+          "latest",
+          "previous",
+          "brackets",
+          "reliefs",
+          "pitTopBracketMultiplier",
+          "years"
+        ]
+      },
+      "PitSettlementResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PitSettlementDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
