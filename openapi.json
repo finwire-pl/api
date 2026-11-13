@@ -1636,7 +1636,7 @@
             }
           }
         },
-        "summary": "Pension forecast finwire (finwire_pension_forecast): first gross ZUS pension as % of own last wage and in today's money by birth year (1966-2006), sex and retirement age (woman 60, woman 65, man 65) and wage level (minimum wage, median, average, twice the average), P10/P50/P90 from thousands of simulations of wages and the number of workers. Model from the statutory indexation of the ZUS account and subaccount, EUROPOP2023 working-age population and life expectancy, GUS life table, Ministry of Finance wage assumptions; fan by retirement year, effect of the shrinking workforce and longer life, OECD and European Commission benchmarks.",
+        "summary": "Pension forecast finwire (finwire_pension_forecast): first gross ZUS pension as % of own last wage and in today's money by birth year (1966-2006), sex and retirement age (woman 60, woman 65, man 65) and wage level (minimum wage, median, average, twice the average), P10/P50/P90 from thousands of simulations of wages and the number of workers. Model from the statutory indexation of the ZUS account and subaccount, Eurostat EUROPOP working-age population and life expectancy, GUS life table, Ministry of Finance wage assumptions; fan by retirement year, effect of the shrinking workforce and longer life, OECD and European Commission benchmarks.",
         "tags": [
           "Macro and prices"
         ]
@@ -1822,6 +1822,49 @@
           }
         },
         "summary": "Price limits per m2 in the Polish family housing loan (rodzinny kredyt mieszkaniowy, \"Mieszkanie bez wk\u0142adu w\u0142asnego\": mortgage without down payment with a BGK guarantee), quarterly lists of Bank Gospodarstwa Krajowego computed from voivode announcements: 52 locations (voivodeship city, neighbouring municipalities, other municipalities), primary market (first buyer from the developer) and secondary market, change vs previous quarter and year, history since Q1 2023, and Mieszkania w limicie RKM finwire (finwire_rkm_offer_fit: share of developer offers within the limit); data BGK, cited with attribution",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/developer-parking-prices": {
+      "get": {
+        "operationId": "MacroController_developerParkingPrices",
+        "parameters": [
+          {
+            "name": "city",
+            "required": false,
+            "in": "query",
+            "description": "City slug (lower case, hyphens); fills `city` and switches the trend to the city",
+            "schema": {
+              "example": "warszawa",
+              "type": "string"
+            }
+          },
+          {
+            "name": "weeks",
+            "required": false,
+            "in": "query",
+            "description": "Last N weeks of the trend, 1-156, default all",
+            "schema": {
+              "example": 26,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeveloperParkingPricesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Parking space prices from developer price lists (dane.gov.pl, act on transparency of new-flat prices): weekly median, quartiles and counts of single parking spaces for Poland and cities, underground vs outdoor vs garage, storage rooms and bike boxes, square metres of a new flat a space costs, change vs 4 weeks earlier and weekly trend; index finwire_dev_parking_price",
         "tags": [
           "Macro and prices"
         ]
@@ -13233,7 +13276,7 @@
             }
           },
           "workingAgePopulation": {
-            "description": "Population aged 20-64 in millions: history and EUROPOP2023 baseline projection",
+            "description": "Population aged 20-64 in millions: history and Eurostat EUROPOP baseline projection",
             "type": "array",
             "items": {
               "type": "array"
@@ -14600,6 +14643,196 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/RkmPriceLimitsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "DeveloperParkingCityDto": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "nullable": true,
+            "example": "warszawa"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Warszawa"
+          },
+          "week": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-09",
+            "description": "Week (Monday)"
+          },
+          "medianPrice": {
+            "type": "number",
+            "nullable": true,
+            "example": 65000,
+            "description": "Median asking price of one parking space, PLN"
+          },
+          "p25Price": {
+            "type": "number",
+            "nullable": true
+          },
+          "p75Price": {
+            "type": "number",
+            "nullable": true
+          },
+          "spaces": {
+            "type": "number",
+            "nullable": true,
+            "description": "Single parking spaces with a price"
+          },
+          "investments": {
+            "type": "number",
+            "nullable": true
+          },
+          "developers": {
+            "type": "number",
+            "nullable": true
+          },
+          "byType": {
+            "description": "underground | outdoor | garage | unknown: median, quartiles, counts",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "storageRoom": {
+            "type": "object",
+            "nullable": true,
+            "description": "Storage rooms (kom\u00f3rki lokatorskie)"
+          },
+          "bikeBox": {
+            "type": "object",
+            "nullable": true,
+            "description": "Bike boxes"
+          },
+          "flatMedianPricePerM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 16250,
+            "description": "Median asking price per m2 of new flats in the city"
+          },
+          "squareMetresOfFlat": {
+            "type": "number",
+            "nullable": true,
+            "example": 4,
+            "description": "Square metres of a new flat that one parking space costs"
+          },
+          "change4w": {
+            "type": "object",
+            "nullable": true,
+            "description": "Change vs 4 weeks earlier"
+          }
+        },
+        "required": [
+          "city",
+          "name",
+          "week",
+          "medianPrice",
+          "p25Price",
+          "p75Price",
+          "spaces",
+          "investments",
+          "developers",
+          "byType",
+          "storageRoom",
+          "bikeBox",
+          "flatMedianPricePerM2",
+          "squareMetresOfFlat",
+          "change4w"
+        ]
+      },
+      "DeveloperParkingPricesDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-09",
+            "description": "Week (Monday) of the latest aggregate"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "index": {
+            "type": "object",
+            "description": "finwire_dev_parking_price"
+          },
+          "units": {
+            "type": "object",
+            "description": "Units"
+          },
+          "thresholds": {
+            "type": "object",
+            "description": "Publication thresholds"
+          },
+          "country": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeveloperParkingCityDto"
+              }
+            ]
+          },
+          "city": {
+            "nullable": true,
+            "description": "Requested city (?city=), null when below the threshold",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeveloperParkingCityDto"
+              }
+            ]
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeveloperParkingCityDto"
+            }
+          },
+          "trendScope": {
+            "type": "string",
+            "nullable": true,
+            "example": "polska"
+          },
+          "trend": {
+            "description": "Weekly median price of one parking space: week, medianPrice, p25Price, p75Price, spaces",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "updatedAt",
+          "index",
+          "units",
+          "thresholds",
+          "country",
+          "city",
+          "cities",
+          "trendScope",
+          "trend"
+        ]
+      },
+      "DeveloperParkingPricesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DeveloperParkingPricesDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

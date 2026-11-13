@@ -3,6 +3,13 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-13
+
+### Added
+
+- `GET /v1/developer-parking-prices` - dataset `developer-parking-prices`: asking prices of parking spaces from the daily developer price lists on dane.gov.pl: weekly median, quartiles and counts of single spaces for Poland and cities above the publication threshold, underground or garage-hall vs outdoor vs garage, storage rooms and bike boxes, square metres of a new flat in the same city one space costs, change vs 4 weeks earlier, weekly trend, and the finwire index Indeks cen miejsc postojowych finwire (`finwire_dev_parking_price`). `city` selects a city and its trend, `weeks` trims the trend.
+- MCP server 1.23.0: new tool `get_parking_prices`; `developer-parking-prices` in `search_datasets` and `get_dataset`.
+
 ## 2026-11-12
 
 ### Added
