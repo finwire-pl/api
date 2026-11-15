@@ -225,6 +225,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/bonds/next-rate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Finwire Bondcast (finwire_bond_next_rate): interest rate of Polish retail savings bonds in the next interest period from the rules in the Ministry of Finance issue letters - CPI-linked COI, ROS, EDO, ROD (margin + GUS CPI y/y) and ROR, DOR (margin + NBP reference rate); state announced, known, estimate (80% interval or RPP scenarios) or unknown with the date the rate will be known; index = 2nd year of EDO bought 12 months before next month; periods starting in the next 3 months by type; how the Ministry of Finance followed RPP decisions */
+        get: operations["ReferenceController_bondNextRate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/wages": {
         parameters: {
             query?: never;
@@ -2866,6 +2883,74 @@ export interface components {
         };
         BondsResponseDto: {
             data: components["schemas"]["BondsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        BondNextRateIndexDto: {
+            /**
+             * @description Month from which the index series has its new rate
+             * @example 2026-12
+             */
+            targetMonth: string;
+            /**
+             * @description 10-year EDO series bought 12 months before targetMonth (2nd interest period)
+             * @example EDO1235
+             */
+            code: string;
+            /** @example 2 */
+            periodNo: number;
+            /**
+             * @description % per year
+             * @example 5.5
+             */
+            rate: number | null;
+            /** @enum {string} */
+            state: "announced" | "known" | "estimate" | "unknown";
+            /**
+             * @description first, fixed, mf, cpi_final, cpi_flash, nowcast, ref_fixed, ref_no_meeting, rpp or none
+             * @example cpi_final
+             */
+            basis: string;
+            /** @description Lower end of the 80% interval (estimate only) */
+            lo: number | null;
+            /** @description Upper end of the 80% interval (estimate only) */
+            hi: number | null;
+            /**
+             * @description Margin over CPI in percentage points
+             * @example 2
+             */
+            margin: number | null;
+            /** @description Formula input: { kind: 'cpi' | 'ref', period, value } */
+            input: Record<string, never> | null;
+            /** @description When the exact rate will be known: 'YYYY-MM-DD' or 'YYYY-MM' */
+            knownFrom: string | null;
+            /** @description Date of the Ministry of Finance interest table */
+            publishedOn: string | null;
+        };
+        BondNextRateDataDto: {
+            /** @example finwire_bond_next_rate */
+            id: string;
+            /** @example Finwire Bondcast */
+            name: string;
+            /** @example 2026-11-15 */
+            asOf: string | null;
+            updatedAt: string | null;
+            units: Record<string, never>;
+            index: components["schemas"]["BondNextRateIndexDto"] | null;
+            /** @description Ministry of Finance rates of the 2nd year of EDO by month of period start: { period, code, value } */
+            indexHistory: Record<string, never>[];
+            /** @description Interest periods that start in the next 3 months, grouped by bond type and month: rate range over all series, weakest state, input, 80% interval, number of series, knownFrom */
+            upcoming: Record<string, never>[];
+            /** @description Latest CPI reading (GUS), Finwire Nowcast CPI with 80% interval, NBP reference rate, next RPP decision with Finwire Nowcast probabilities, rate step for the RPP scenarios */
+            inputs: Record<string, never>;
+            /** @description How the Ministry of Finance changed first-period rates of new issues after RPP rate changes: per type decisions, followed, median lag in months; per decision lags */
+            mfReaction: Record<string, never>;
+            /** @description Series in circulation with a variable rate: { code, type, issueMonth } */
+            series: Record<string, never>[];
+            /** @description With ?series: all interest periods of the series with state, basis, rate, 80% interval or RPP scenarios, input, knownFrom, publishedOn */
+            seriesDetail?: Record<string, never>;
+        };
+        BondNextRateResponseDto: {
+            data: components["schemas"]["BondNextRateDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         WageBreakpointDto: {
@@ -10674,6 +10759,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BondsResponseDto"];
+                };
+            };
+        };
+    };
+    ReferenceController_bondNextRate: {
+        parameters: {
+            query?: {
+                /** @description Series code: type + month and year of maturity (MMYY), e.g. EDO1235, COI1129, ROR1127; adds seriesDetail with all interest periods */
+                series?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BondNextRateResponseDto"];
                 };
             };
         };
