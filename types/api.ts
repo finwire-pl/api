@@ -259,6 +259,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/statutory-interest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Polish statutory, maximum, tax-arrears and commercial late payment interest rates computed from NBP rates by the formulas in the laws, each with the date from which it applies and the next announced or estimated rate */
+        get: operations["ReferenceController_statutoryInterest"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/legal-limits/next-year": {
         parameters: {
             query?: never;
@@ -319,6 +336,23 @@ export interface paths {
         };
         /** Upper limits of local property tax rates per year (Minister of Finance announcement) */
         get: operations["ReferenceController_localTax"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/legal-limits/local-tax/next-year": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Granica podatku od mieszkań finwire (finwire_property_tax_cap): upper limits of the local property tax for the next year from the formula in art. 20 of the local taxes act (this year limit x GUS CPI index for the first half-year, rounded up to full grosz) - estimate from monthly CPI, final figure from the GUS notice, then the Minister of Finance announcement. All 9 categories, 80% interval, estimate path and accuracy on past years */
+        get: operations["ReferenceController_localTaxNextYear"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1075,6 +1109,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/pension-earning-limits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** How much a pensioner can earn without losing the pension in Poland (limity dorabiania): income thresholds of 70% (benefit reduced by the excess, up to the maximum reduction) and 130% (benefit suspended) of the average wage for the quarter, from the announcements of the President of ZUS in Monitor Polski; before the ZUS announcement a finwire estimate from the GUS announcement with the statutory formula (art. 104 ust. 10 pkt 1: rounded up to 10 grosz) and its match with every earlier ZUS announcement; maximum reductions for old-age and disability pensions, annual income thresholds, history since 2016 */
+        get: operations["MacroController_pensionEarningLimits"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/savings-bond-sales": {
         parameters: {
             query?: never;
@@ -1218,7 +1269,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Premia obligacji skarbowych finwire (finwire_retail_bond_premium): first-year rate of Polish retail savings bonds (OTS, ROR, DOR, TOS, COI, EDO, family ROS and ROD) minus the finwire deposit and savings account indices and the average new household term deposit rate (NBP MIR), after the 19% capital gains tax on both sides, in percentage points; monthly change of retail bond debt (Ministry of Finance) and household term deposits (NBP); correlation test of the premium with bond sales */
+        /** Premia obligacji skarbowych finwire (finwire_retail_bond_premium): first-year rate of Polish retail savings bonds (OTS, ROR, DOR, TOS, COI, EDO, family ROS and ROD) minus the finwire deposit and savings account indices and the average new household term deposit rate (NBP MIR), after the Polish capital gains tax (Belka tax, rate in taxRate) on both sides, in percentage points; monthly change of retail bond debt (Ministry of Finance) and household term deposits (NBP); correlation test of the premium with bond sales */
         get: operations["MacroController_retailBondPremium"];
         put?: never;
         post?: never;
@@ -2877,6 +2928,76 @@ export interface components {
             data: components["schemas"]["LegalLimitsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        StatutoryInterestRateDto: {
+            /** @example 3.75 */
+            value: number;
+            /** @example 2026-03-05 */
+            since: string;
+        };
+        StatutoryInterestNextDto: {
+            /**
+             * @description Next annual rate (%)
+             * @example 13.75
+             */
+            rate: number;
+            /**
+             * @description Date from which the next rate applies
+             * @example 2027-01-01
+             */
+            from: string;
+            /**
+             * @description true = settled; false = finwire.pl estimate at the current NBP rate, an RPP decision before `from` can change it
+             * @example false
+             */
+            certain: boolean;
+        };
+        StatutoryInterestRowDto: {
+            /** @example opoznienie */
+            id: string;
+            /** @example Statutory interest for late payment */
+            name: string;
+            /** @example NBP reference rate + 5.5 pp */
+            formula: string;
+            /** @example Civil Code art. 481 par. 2 */
+            basis: string;
+            /**
+             * @description Annual rate (%) in force on asOf
+             * @example 9.25
+             */
+            rate: number;
+            /**
+             * @description Date from which the rate applies
+             * @example 2026-03-05
+             */
+            validFrom: string;
+            next: components["schemas"]["StatutoryInterestNextDto"] | null;
+        };
+        StatutoryInterestDataDto: {
+            /** @example % per year */
+            unit: string;
+            /**
+             * @description Day of the table (Polish time)
+             * @example 2026-11-15
+             */
+            asOf: string;
+            referenceRate: components["schemas"]["StatutoryInterestRateDto"];
+            lombardRate: components["schemas"]["StatutoryInterestRateDto"];
+            /**
+             * @description Start of the next half-year for commercial transaction interest
+             * @example 2027-01-01
+             */
+            nextHalfYear: string;
+            /**
+             * @description Next RPP decision day from the NBP schedule
+             * @example 2026-12-02
+             */
+            nextRppDecision: string | null;
+            rows: components["schemas"]["StatutoryInterestRowDto"][];
+        };
+        StatutoryInterestResponseDto: {
+            data: components["schemas"]["StatutoryInterestDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         NextYearLimitOfficialDto: {
             /** @example 4950 */
             value: number | null;
@@ -3065,6 +3186,68 @@ export interface components {
         };
         LocalTaxResponseDto: {
             data: components["schemas"]["LocalTaxDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        PropertyTaxCapRateDto: {
+            /** @example budynki_mieszkalne */
+            key: string;
+            /** @example Budynki mieszkalne i lokale mieszkalne */
+            label: string;
+            /** @example art. 5 ust. 1 pkt 2 lit. a */
+            legalRef: string;
+            /** @example zł/m² pow. użytkowej */
+            unit: string;
+            /**
+             * @description Upper limit in the year before (Minister of Finance announcement)
+             * @example 1.25
+             */
+            previousYear: number;
+            /**
+             * @description Shown value: official when announced, otherwise the formula result
+             * @example 1.29
+             */
+            value: number;
+            /** @example 1.28 */
+            low80: number;
+            /** @example 1.3 */
+            high80: number;
+            /** @description Formula result on the stage CPI index (art. 20 ust. 1-2) */
+            formula: number | null;
+            /** @description Value from the Minister of Finance announcement */
+            official: number | null;
+        };
+        PropertyTaxCapsDataDto: {
+            /** @example finwire_property_tax_cap */
+            indexId: string;
+            /** @example Granica podatku od mieszkań finwire */
+            indexName: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @example 2028 */
+            targetYear: number | null;
+            /**
+             * @description szacunek = estimate from monthly CPI, wskaznik_gus = formula on the GUS half-year index (final), obwieszczenie = announced by the Minister of Finance, obowiazuje = in force
+             * @example szacunek
+             */
+            stage: string | null;
+            stages: string[];
+            updatedAt: string | null;
+            /** @example 2027-03 */
+            lastCpiPeriod: string | null;
+            /** @description CPI index for the first half-year (GUS notice or estimate from monthly CPI) */
+            halfYearCpi: Record<string, never> | null;
+            /** @description Flats and houses (art. 5 ust. 1 pkt 2 lit. a): value, 80% interval, previous year, change % */
+            headline: Record<string, never> | null;
+            /** @description Minister of Finance announcement for the target year */
+            officialAct: Record<string, never> | null;
+            rates: components["schemas"]["PropertyTaxCapRateDto"][];
+            /** @description Headline value after each monthly CPI reading of the half-year, the GUS notice and the announcement */
+            path: string[];
+            /** @description Accuracy on past years with an announcement: per step (1-6 months, 7 = GUS notice) mean absolute error in grosz, exact hits, 80% interval coverage */
+            backtest: Record<string, never>;
+        };
+        PropertyTaxCapsResponseDto: {
+            data: components["schemas"]["PropertyTaxCapsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         BrokerCommissionDto: {
@@ -4283,6 +4466,10 @@ export interface components {
             permits: components["schemas"]["YearValueDto"];
             permitsPer1000: number | null;
             population: components["schemas"]["YearValueDto"];
+            /** @description Population per km2 (GUS BDL P2425), 31 December */
+            populationDensityPerKm2: components["schemas"]["YearValueDto"] | null;
+            /** @description Median age of the population in years (GUS BDL P3814), 31 December */
+            medianAge: components["schemas"]["YearValueDto"] | null;
             populationChange: number | null;
             netForeignMigration: components["schemas"]["YearValueDto"] | null;
             registrationsFromAbroad: components["schemas"]["YearValueDto"] | null;
@@ -4326,6 +4513,10 @@ export interface components {
             permits: components["schemas"]["YearValueDto"];
             permitsPer1000: number | null;
             population: components["schemas"]["YearValueDto"];
+            /** @description Population per km2 (GUS BDL P2425), 31 December */
+            populationDensityPerKm2: components["schemas"]["YearValueDto"] | null;
+            /** @description Median age of the population in years (GUS BDL P3814), 31 December */
+            medianAge: components["schemas"]["YearValueDto"] | null;
             populationChange: number | null;
             netForeignMigration: components["schemas"]["YearValueDto"] | null;
             registrationsFromAbroad: components["schemas"]["YearValueDto"] | null;
@@ -4353,6 +4544,10 @@ export interface components {
             permits: components["schemas"]["YearValueDto"];
             permitsPer1000: number | null;
             population: components["schemas"]["YearValueDto"];
+            /** @description Population per km2 (GUS BDL P2425), 31 December */
+            populationDensityPerKm2: components["schemas"]["YearValueDto"] | null;
+            /** @description Median age of the population in years (GUS BDL P3814), 31 December */
+            medianAge: components["schemas"]["YearValueDto"] | null;
             populationChange: number | null;
             netForeignMigration: components["schemas"]["YearValueDto"] | null;
             registrationsFromAbroad: components["schemas"]["YearValueDto"] | null;
@@ -5931,6 +6126,35 @@ export interface components {
             data: components["schemas"]["DeveloperParkingPricesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        PensionEarningLimitsDataDto: {
+            /**
+             * @description Date (Poland) for which `current` was picked
+             * @example 2026-11-15
+             */
+            asOf: string | null;
+            checkedAt: string | null;
+            /** @description Units */
+            units: Record<string, never>;
+            legalBasis: string;
+            /** @description Thresholds in force today: quarter (GUS data), validFrom, validTo, status official (ZUS announcement) or estimate (finwire formula from the GUS announcement), reductionThreshold (70%), suspensionThreshold (130%), averageWage, finwireEstimate, zusAnnouncement, gusAnnouncement, estimateMatchesZus */
+            current: Record<string, never> | null;
+            /** @description Next thresholds (announced or estimated), same shape as current */
+            upcoming: Record<string, never> | null;
+            /** @description Maximum monthly reduction of the benefit (PLN): current, upcoming, history */
+            maxReductions: Record<string, never>;
+            /** @description Annual income thresholds (sum of monthly thresholds of the year) */
+            annual: unknown[][];
+            /** @description Quarters where the finwire estimate was compared with the ZUS announcement, and exact matches */
+            estimateAccuracy: Record<string, never>;
+            /** @description Next quarter of GUS data, month of the GUS and ZUS announcements, month from which the new thresholds apply */
+            next: Record<string, never> | null;
+            /** @description All quarters, oldest first, same shape as current */
+            history: unknown[][];
+        };
+        PensionEarningLimitsResponseDto: {
+            data: components["schemas"]["PensionEarningLimitsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         SavingsBondSalesMonthDto: {
             /** @example 2026-10 */
             period: string | null;
@@ -6671,6 +6895,78 @@ export interface components {
              */
             source: "backtest" | "live";
         };
+        NowcastTrackRowDto: {
+            /**
+             * @description YYYY-MM for CPI and core inflation; date of the decision day for RPP
+             * @example 2026-10
+             */
+            period: string;
+            /**
+             * @description Publication date of the official reading or decision
+             * @example 2026-10-30
+             */
+            releaseDate: string;
+            /** @example 2026-10-27 */
+            freezeDate: string;
+            /** @example 2026-10-27T06:50:00.000Z */
+            frozenAt: string | null;
+            /**
+             * @description Date of the latest input data of the forecast
+             * @example 2026-10-27
+             */
+            inputsAsOf: string | null;
+            /**
+             * @description settled = frozen 3 working days before publication, counts in live accuracy; expired = last forecast before publication that was not frozen in time, shown but not scored
+             * @enum {string}
+             */
+            status: "settled" | "expired";
+            /**
+             * @description Point forecast, % y/y (null for RPP)
+             * @example 3.7
+             */
+            point: number | null;
+            /** @example 3.3 */
+            lo80: number | null;
+            /** @example 4.1 */
+            hi80: number | null;
+            /** @description RPP only */
+            probabilities: components["schemas"]["NowcastProbabilitiesDto"] | null;
+            /**
+             * @description First official reading (GUS flash estimate for CPI, NBP for core inflation)
+             * @example 3.5
+             */
+            actual: number | null;
+            /**
+             * @description RPP only: actual decision
+             * @enum {string|null}
+             */
+            actualOutcome: "cut" | "hold" | "hike" | null;
+            /**
+             * @description actual minus point, pp
+             * @example -0.2
+             */
+            error: number | null;
+            /**
+             * @description Naive benchmark: previous reading known at forecast time
+             * @example 2.9
+             */
+            naive: number | null;
+            /**
+             * @description actual minus naive, pp
+             * @example 0.6
+             */
+            naiveError: number | null;
+            /**
+             * @description Actual reading inside the 80% interval
+             * @example true
+             */
+            inInterval: boolean | null;
+            /**
+             * @description CPI only: reading from the full GUS release (mid next month), null before it
+             * @example 3.6
+             */
+            fullRelease: number | null;
+        };
         NowcastScoresDto: {
             /** @enum {string} */
             kind: "numeric" | "rpp";
@@ -6751,6 +7047,8 @@ export interface components {
             lastSettled: components["schemas"]["NowcastForecastDto"] | null;
             /** @description Backtest and settled live forecasts, ascending */
             history: components["schemas"]["NowcastHistoryPointDto"][];
+            /** @description Live track record: every forecast published before the reading vs the first official reading, newest first; no backtest */
+            track: components["schemas"]["NowcastTrackRowDto"][];
             backtestScores: components["schemas"]["NowcastScoresDto"] | null;
             liveScores: components["schemas"]["NowcastScoresDto"] | null;
         };
@@ -10418,6 +10716,25 @@ export interface operations {
             };
         };
     };
+    ReferenceController_statutoryInterest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StatutoryInterestResponseDto"];
+                };
+            };
+        };
+    };
     ReferenceController_nextYearLimits: {
         parameters: {
             query?: {
@@ -10496,6 +10813,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LocalTaxResponseDto"];
+                };
+            };
+        };
+    };
+    ReferenceController_localTaxNextYear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyTaxCapsResponseDto"];
                 };
             };
         };
@@ -11409,6 +11745,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DeveloperParkingPricesResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_pensionEarningLimits: {
+        parameters: {
+            query?: {
+                /** @description Last N quarters of history, 1-80, default all */
+                quarters?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PensionEarningLimitsResponseDto"];
                 };
             };
         };

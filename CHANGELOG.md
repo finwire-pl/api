@@ -3,6 +3,22 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-15
+
+### Added
+
+- `GET /v1/macro/nowcast`: new field `track` per indicator - live track record of Finwire Nowcast, newest first: every forecast published before the reading (`status` `settled` = frozen 3 working days before publication and scored, `expired` = not frozen in time, shown but not scored) with the first official reading (`actual`: GUS flash estimate for CPI, NBP for core inflation, RPP decision), `error`, the naive benchmark and `naiveError`, `inInterval` and, for CPI, `fullRelease` (reading from the full GUS release). No backtest rows.
+- `GET /v1/statutory-interest` - dataset `statutory-interest`: Polish interest rates set by law and computed from NBP rates: statutory and late payment interest (Civil Code art. 359 and 481), maximum interest, interest on tax arrears with the reduced rate (Tax Ordinance art. 56 and 56a), late payment interest in commercial transactions (Late Payments Act art. 4 and 11b). Each rate has `validFrom` and `next` (`rate`, `from`, `certain`): announced after an RPP decision, or the commercial rate for the next half-year, settled or a finwire.pl estimate.
+- `GET /v1/legal-limits/local-tax/next-year` - dataset `local-tax-next-year`: upper limits of the local property tax for the next tax year from the formula in art. 20 of the local taxes act (this year limit x GUS CPI index for the first half-year, rounded up to full grosz): estimate from the monthly CPI readings of the half-year with 80% interval, final figure after the GUS notice in Monitor Polski, official values after the Minister of Finance announcement; all 9 categories of art. 5 ust. 1, estimate path and accuracy on past years. Index Granica podatku od mieszkań finwire (`finwire_property_tax_cap`).
+- `GET /v1/pension-earning-limits` - dataset `pension-earning-limits`: income thresholds for working pensioners in Poland (art. 104 of the act on pensions from FUS): 70% (benefit reduced by the excess, up to the maximum reduction) and 130% (benefit suspended) of the average wage for the quarter, from the announcements of the President of ZUS in Monitor Polski with the date they apply from, history since 2016; before the ZUS announcement a finwire estimate from the GUS announcement with the statutory formula and its match with every earlier ZUS announcement; maximum reductions and annual thresholds. `quarters` trims the history.
+- MCP server 1.24.0: new tools `get_statutory_interest`, `get_property_tax_next_year` and `get_pension_earning_limits`; `get_nowcast` returns the Finwire Nowcast track record; new datasets in `search_datasets` and `get_dataset`.
+
+## 2026-11-14
+
+### Changed
+
+- `GET /v1/housing/supply` and `GET /v1/housing/supply/{city}`: new fields `populationDensityPerKm2` (population per km2, GUS BDL P2425) and `medianAge` (median age of the population, GUS BDL P3814), each with `year` and `value`, stock as of 31 December, for Poland, 16 voivodeships and 17 cities.
+
 ## 2026-11-13
 
 ### Added
