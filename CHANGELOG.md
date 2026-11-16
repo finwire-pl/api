@@ -3,6 +3,13 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-16
+
+### Added
+
+- `GET /v1/bonds/next-rate`: new field `wait` - Ministry of Finance offer for the current month (`offers`: type, code, first-period rate, margin) and for the next month once announced (`nextOffers`, otherwise null), Finwire savings account index and deposit index (`savingsAccountIndex`, `depositIndex`), RPP decisions in the next 3 months with Finwire Nowcast probabilities for the nearest one (`rppDecisions`). New field `inputs.cpiPath`: Finwire Nowcast CPI path 2 and 3 readings ahead (published only for horizons more accurate than the naive benchmark in the backtest); periods based on it have `basis` `nowcast_path`.
+- MCP server 1.26.0: `get_bond_next_rate` returns the current and next offer, savings account and deposit indices and the CPI path.
+
 ## 2026-11-15
 
 ### Added
