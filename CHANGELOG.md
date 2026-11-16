@@ -7,6 +7,8 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ### Added
 
+- `GET /v1/legal-changes/president-desk` - dataset `bills-president-desk`: all acts passed by parliament and presented to the President without a decision, with the day of presentation, the deadline (21 days, art. 122 ust. 2 of the Constitution; 7 days for the budget act, art. 224 ust. 1), days left and a personal finance flag; decisions of the last 30 days (signature, veto, referral to the Constitutional Tribunal) with the announcement of the Chancellery of the President when known. `finance=true` keeps only acts on personal finance topics.
+- MCP server 1.27.0: new tool `get_bills_awaiting_president`; `bills-president-desk` in `search_datasets` and `get_dataset`.
 - `GET /v1/bonds/next-rate`: new field `wait` - Ministry of Finance offer for the current month (`offers`: type, code, first-period rate, margin) and for the next month once announced (`nextOffers`, otherwise null), Finwire savings account index and deposit index (`savingsAccountIndex`, `depositIndex`), RPP decisions in the next 3 months with Finwire Nowcast probabilities for the nearest one (`rppDecisions`). New field `inputs.cpiPath`: Finwire Nowcast CPI path 2 and 3 readings ahead (published only for horizons more accurate than the naive benchmark in the backtest); periods based on it have `basis` `nowcast_path`.
 - MCP server 1.26.0: `get_bond_next_rate` returns the current and next offer, savings account and deposit indices and the CPI path.
 

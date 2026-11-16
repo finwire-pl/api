@@ -1432,6 +1432,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/legal-changes/president-desk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Acts passed by parliament and awaiting the President's decision, with the constitutional deadline (21 days from presentation, art. 122 ust. 2; 7 days for the budget act, art. 224 ust. 1) and days left; decisions of the last 30 days: signature, veto (refusal to sign) or referral to the Constitutional Tribunal, with the announcement of the Chancellery of the President */
+        get: operations["LegalController_presidentDesk"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/legal-changes/process/{term}/{number}": {
         parameters: {
             query?: never;
@@ -7546,6 +7563,90 @@ export interface components {
             data: components["schemas"]["LegalChangesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        PresidentDeskAwaitingDto: {
+            /**
+             * @description Sejm term
+             * @example 10
+             */
+            term: number | null;
+            /**
+             * @description Sejm print number of the bill
+             * @example 3293
+             */
+            print: string | null;
+            /** @description Bill title from the Sejm (Polish) */
+            title: string | null;
+            /**
+             * @description Day the act was presented to the President
+             * @example 2026-11-06
+             */
+            handedAt: string | null;
+            /**
+             * @description Last day for the decision
+             * @example 2026-11-27
+             */
+            deadline: string | null;
+            /**
+             * @description 21 days (art. 122 ust. 2) or 7 for the budget act (art. 224 ust. 1)
+             * @example 21
+             */
+            deadlineDays: number | null;
+            /** @description Budget act or interim budget act (7 days, no veto) */
+            budgetAct: boolean;
+            /**
+             * @description Days from asOf to the deadline; negative = deadline passed and the decision is not in the data yet
+             * @example 11
+             */
+            daysLeft: number | null;
+            overdue: boolean;
+            /** @description Act on personal finance topics (tax, social security, credit, housing, wages, benefits) */
+            finance: boolean;
+            sejmUrl: string | null;
+            /** @description Latest finwire.pl note about the act */
+            noteUrl: string | null;
+        };
+        PresidentDeskDecisionDto: {
+            term: number | null;
+            print: string | null;
+            title: string | null;
+            /**
+             * @description signed; veto = refusal to sign, act returned to the Sejm; tribunal = referral to the Constitutional Tribunal before signing
+             * @enum {string|null}
+             */
+            decision: "signed" | "veto" | "tribunal" | null;
+            /** @example 2026-11-13 */
+            date: string | null;
+            /** @description Announcement of the Chancellery of the President (prezydent.pl), when known */
+            sourceUrl: string | null;
+            /** @enum {string|null} */
+            source: "prezydent_pl" | "sejm_api" | null;
+            finance: boolean;
+            sejmUrl: string | null;
+            noteUrl: string | null;
+        };
+        PresidentDeskDataDto: {
+            /**
+             * @description Day (Poland) daysLeft is counted from
+             * @example 2026-11-16
+             */
+            asOf: string | null;
+            /** @description Last read of the Sejm data, ISO 8601 */
+            checkedAt: string | null;
+            /**
+             * @description Window of recent decisions in days
+             * @example 30
+             */
+            decisionDays: number | null;
+            legalBasis: string;
+            /** @description Acts awaiting the decision, nearest deadline first */
+            awaiting: components["schemas"]["PresidentDeskAwaitingDto"][];
+            /** @description Decisions in the window, newest first */
+            decisions: components["schemas"]["PresidentDeskDecisionDto"][];
+        };
+        PresidentDeskResponseDto: {
+            data: components["schemas"]["PresidentDeskDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         LegalProcessDetailDto: {
             /**
              * @description Sejm term
@@ -12244,6 +12345,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LegalChangesResponseDto"];
+                };
+            };
+        };
+    };
+    LegalController_presidentDesk: {
+        parameters: {
+            query?: {
+                /** @description true = only acts on personal finance topics; default all acts */
+                finance?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PresidentDeskResponseDto"];
                 };
             };
         };

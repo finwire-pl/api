@@ -2540,6 +2540,39 @@
         ]
       }
     },
+    "/v1/legal-changes/president-desk": {
+      "get": {
+        "operationId": "LegalController_presidentDesk",
+        "parameters": [
+          {
+            "name": "finance",
+            "required": false,
+            "in": "query",
+            "description": "true = only acts on personal finance topics; default all acts",
+            "schema": {
+              "example": true,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresidentDeskResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Acts passed by parliament and awaiting the President's decision, with the constitutional deadline (21 days from presentation, art. 122 ust. 2; 7 days for the budget act, art. 224 ust. 1) and days left; decisions of the last 30 days: signature, veto (refusal to sign) or referral to the Constitutional Tribunal, with the announcement of the Chancellery of the President",
+        "tags": [
+          "Calendar"
+        ]
+      }
+    },
     "/v1/legal-changes/process/{term}/{number}": {
       "get": {
         "operationId": "LegalController_process",
@@ -19084,6 +19117,216 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/LegalChangesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "PresidentDeskAwaitingDto": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "number",
+            "nullable": true,
+            "example": 10,
+            "description": "Sejm term"
+          },
+          "print": {
+            "type": "string",
+            "nullable": true,
+            "example": "3293",
+            "description": "Sejm print number of the bill"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "Bill title from the Sejm (Polish)"
+          },
+          "handedAt": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-06",
+            "description": "Day the act was presented to the President"
+          },
+          "deadline": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-27",
+            "description": "Last day for the decision"
+          },
+          "deadlineDays": {
+            "type": "number",
+            "nullable": true,
+            "example": 21,
+            "description": "21 days (art. 122 ust. 2) or 7 for the budget act (art. 224 ust. 1)"
+          },
+          "budgetAct": {
+            "type": "boolean",
+            "description": "Budget act or interim budget act (7 days, no veto)"
+          },
+          "daysLeft": {
+            "type": "number",
+            "nullable": true,
+            "example": 11,
+            "description": "Days from asOf to the deadline; negative = deadline passed and the decision is not in the data yet"
+          },
+          "overdue": {
+            "type": "boolean"
+          },
+          "finance": {
+            "type": "boolean",
+            "description": "Act on personal finance topics (tax, social security, credit, housing, wages, benefits)"
+          },
+          "sejmUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "noteUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Latest finwire.pl note about the act"
+          }
+        },
+        "required": [
+          "term",
+          "print",
+          "title",
+          "handedAt",
+          "deadline",
+          "deadlineDays",
+          "budgetAct",
+          "daysLeft",
+          "overdue",
+          "finance",
+          "sejmUrl",
+          "noteUrl"
+        ]
+      },
+      "PresidentDeskDecisionDto": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "number",
+            "nullable": true
+          },
+          "print": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "decision": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "signed",
+              "veto",
+              "tribunal"
+            ],
+            "description": "signed; veto = refusal to sign, act returned to the Sejm; tribunal = referral to the Constitutional Tribunal before signing"
+          },
+          "date": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-13"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Announcement of the Chancellery of the President (prezydent.pl), when known"
+          },
+          "source": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "prezydent_pl",
+              "sejm_api"
+            ]
+          },
+          "finance": {
+            "type": "boolean"
+          },
+          "sejmUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "noteUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "term",
+          "print",
+          "title",
+          "decision",
+          "date",
+          "sourceUrl",
+          "source",
+          "finance",
+          "sejmUrl",
+          "noteUrl"
+        ]
+      },
+      "PresidentDeskDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-16",
+            "description": "Day (Poland) daysLeft is counted from"
+          },
+          "checkedAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "Last read of the Sejm data, ISO 8601"
+          },
+          "decisionDays": {
+            "type": "number",
+            "nullable": true,
+            "example": 30,
+            "description": "Window of recent decisions in days"
+          },
+          "legalBasis": {
+            "type": "string"
+          },
+          "awaiting": {
+            "description": "Acts awaiting the decision, nearest deadline first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresidentDeskAwaitingDto"
+            }
+          },
+          "decisions": {
+            "description": "Decisions in the window, newest first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresidentDeskDecisionDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "checkedAt",
+          "decisionDays",
+          "legalBasis",
+          "awaiting",
+          "decisions"
+        ]
+      },
+      "PresidentDeskResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PresidentDeskDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
