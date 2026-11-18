@@ -3,6 +3,12 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-18
+
+### Changed
+
+- MCP server: `get_broker_fees` no longer returns broker promotions (text and `data.brokers[].promos`); `/v1/reference/brokers` unchanged. Tool results label the finwire.pl link "Full table and chart"; server instructions ask for the source page link once per answer instead of with every value.
+
 ## 2026-11-16
 
 ### Added
