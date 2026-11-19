@@ -1058,6 +1058,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/new-companies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** New companies in Poland: commercial companies entered in KRS each month (Ministry of Justice KRS API: daily bulletin and current extracts) by legal form, other KRS business-register entities, applications to register a sole proprietorship in CEIDG (MRiT), the current month so far, Puls nowych firm finwire (finwire_new_companies_pulse: new firms year on year) and monthly history */
+        get: operations["MacroController_newCompanies"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/family-benefits": {
         parameters: {
             query?: never;
@@ -1296,6 +1313,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/deposits/bank-average": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Premia za wybór lokaty finwire (finwire_deposit_choice_premium): finwire deposit index (best 3-month deposits) minus the average rate on new 1-3 month household deposits in Polish banks (NBP MIR), in pp and in PLN per year on PLN 10,000 after tax; NBP MIR rates and values of new deposits by maturity; average rate and APRC of new consumer loans */
+        get: operations["MacroController_depositBankAverage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/deposits/forecast": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Finwire Depocast (finwire_deposit_rate_forecast): forecast of the average rate on new household deposits in Polish banks (NBP MIR) 1, 3 and 6 months after the latest NBP month, with an 80% interval and walk-forward backtest accuracy; horizons below the accuracy gate are not published */
+        get: operations["MacroController_depositForecast"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/fixed-cost-burden": {
         parameters: {
             query?: never;
@@ -1398,6 +1449,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/forecasts/poland": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Forecasts for Poland: every edition of the European Commission (AMECO), OECD Economic Outlook, NBP projection and Finwire Nowcast kept separately; real GDP growth, inflation (EC: HICP, others: CPI), unemployment, general government balance and debt for this and next years, previous edition, outturns, forecast errors by institution and the finwire index finwire_forecast_accuracy; Finwire Konsensus only once it beats the best single institution in the backtest */
+        get: operations["MacroController_polandForecasts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/energy/regulated-prices": {
         parameters: {
             query?: never;
@@ -1407,6 +1475,23 @@ export interface paths {
         };
         /** Regulated household electricity (G11, G12, G12w) and gas (W-1.1 to W-4) tariffs approved by URE, in force on a day; net amounts with decision and PDF */
         get: operations["MacroController_energyPrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/household-savings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Household savings in Poland (oszczędności Polaków): financial assets of households and NPISH at the end of each quarter since 2003 from the quarterly financial accounts compiled by NBP and published by the ECB (QSA), by group (cash, deposits, debt securities, equity, investment funds, life insurance, pension entitlements, other), Udział oszczędności pracujących finwire (finwire_household_invested_share: share outside cash and deposits), Poland among countries in the OECD financial dashboard (share of currency and deposits, equity, funds, pension; net financial worth per person), and products tracked in other finwire datasets (investment funds, PPK, IKE and IKZE, retail savings bonds) */
+        get: operations["MacroController_householdSavings"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1900,6 +1985,74 @@ export interface paths {
         };
         /** Living conditions in EU countries (Eurostat EU-SILC, yearly): share of people living in their own home without a mortgage, with a mortgage, in market rent and reduced rent, people who cannot face an unexpected expense from own resources, median and mean equivalised disposable income in EUR and PPS, ranks of 27 countries, history since 2005 of Poland, the EU and a comparison country, finwire_eu_mortgaged_owners and finwire_eu_household_income_gap */
         get: operations["RegionalController_livingConditions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/oecd/comparison": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Poland compared with OECD countries (OECD, CC BY 4.0): pension replacement rates from Pensions at a Glance (net and gross, men and women, average wage, mandatory schemes) and the tax wedge from Taxing Wages (6 household profiles, history since 2000), with finwire_oecd_pension_gap and finwire_oecd_tax_wedge_gap */
+        get: operations["RegionalController_oecdComparison"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tourism": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Presja turystyczna finwire (finwire_tourism_pressure): bed places in tourist accommodation on 31 July per 1000 residents, Poland and the ranking of municipalities; nights spent and tourists per year (Poland, provinces, counties), nights and bed occupancy per month (Poland, provinces) from GUS BDL */
+        get: operations["RegionalController_tourism"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tourism/municipalities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Municipalities matching a name: bed places on 31 July, residents, finwire_tourism_pressure (per 1000 residents), rank, nights per resident in the county */
+        get: operations["RegionalController_tourismMunicipalities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pension-systems": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Average old-age pension from ZUS vs average pension and disability benefit of farmers from KRUS (GUS BDL): yearly since 1999, the latest year-to-date period (Q1, H1, Q1-Q3) with the previous year, 16 provinces */
+        get: operations["RegionalController_pensionSystems"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2478,6 +2631,91 @@ export interface paths {
         };
         /** Fuel prices at filling stations in EU countries (European Commission Weekly Oil Bulletin, weekly since 2005): ranking in EUR and PLN per litre with and without taxes, Poland, EU and euro area averages, last year weekly, finwire_eu_fuel_price_gap */
         get: operations["EuFuelController_fuelPrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/bank-penalties": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fines imposed by the President of UOKiK and by KNF on Polish banks in the last 5 years: count and sum per bank (finwire_bank_penalty_count), and the list of fines of one bank with links to the decisions */
+        get: operations["BankPenaltiesController_summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/world/policy-rates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Central bank policy rates of BIS reporting economies: ranking, real rates (policy rate minus CPI inflation), place of the NBP rate (finwire_policy_rate_rank) with monthly history, real effective exchange rate of the zloty */
+        get: operations["WorldController_policyRates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/world/house-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Residential property prices in BIS economies (real and nominal annual change, real index 2010 = 100 for Poland) and OECD price-to-income and price-to-rent ratios for Poland and the OECD average */
+        get: operations["WorldController_housePrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/world/credit-cycle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** BIS credit-to-GDP gap of Poland (private non-financial sector) and debt service ratio of the private non-financial sector, quarterly */
+        get: operations["WorldController_creditCycle"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/world/housecast": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Finwire Housecast (finwire_housing_valuation_gap): housing valuation gap of Poland and panel countries, forecast of real house prices 4 and 8 quarters ahead with 80% interval and rolling backtest; horizons below the accuracy gate have no numbers */
+        get: operations["WorldController_housecast"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5708,7 +5946,7 @@ export interface components {
             decomposition: unknown[][];
             /** @description Population aged 20-64 in millions: history and Eurostat EUROPOP baseline projection */
             workingAgePopulation: unknown[][];
-            /** @description Benchmarks: OECD Pensions at a Glance 2025, European Commission Ageing Report 2024, each with its definition */
+            /** @description Benchmarks: OECD Pensions at a Glance (latest year of system parameters), European Commission Ageing Report 2024, each with its definition */
             benchmarks: unknown[][];
             /** @description Model check vs OECD: the same cohort without random shocks */
             oecdCheck: Record<string, never>;
@@ -5916,6 +6154,30 @@ export interface components {
         };
         CeidgResponseDto: {
             data: components["schemas"]["CeidgDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        NewCompaniesDataDto: {
+            /**
+             * @description Latest full month of KRS registrations
+             * @example 2026-10
+             */
+            asOf: string | null;
+            /**
+             * @description Latest month with both KRS and CEIDG data
+             * @example 2026-09
+             */
+            combinedPeriod: string | null;
+            /** @description Latest full KRS month: new companies by legal form, CEIDG sole proprietorships when published */
+            latest: Record<string, never>;
+            /** @description Current month so far (KRS daily bulletin) and the same days a year earlier */
+            monthToDate: Record<string, never> | null;
+            /** @description Puls nowych firm finwire (finwire_new_companies_pulse): total new firms year on year, % */
+            newCompaniesPulse: Record<string, never> | null;
+            /** @description Monthly history, oldest first */
+            history: string[];
+        };
+        NewCompaniesResponseDto: {
+            data: components["schemas"]["NewCompaniesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         FamilyBenefitMonthDto: {
@@ -6799,6 +7061,70 @@ export interface components {
             data: components["schemas"]["RetailBondPremiumDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        DepositBankAverageDataDto: {
+            /** @example finwire_deposit_choice_premium */
+            id: string;
+            /** @example Premia za wybór lokaty finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number | null;
+            /**
+             * @description Latest month of NBP MIR deposit data
+             * @example 2026-09
+             */
+            asOf: string | null;
+            updatedAt: string | null;
+            units: Record<string, never>;
+            /** @example 10000 */
+            exampleAmount: number | null;
+            /** @description Latest month with both the finwire deposit index and NBP MIR: premium in pp and net gain in PLN per year */
+            latest: Record<string, never> | null;
+            /** @description Current estimate: latest daily finwire deposit index vs the latest NBP MIR month */
+            live: Record<string, never> | null;
+            /** @description Average rate and value of new household deposits by original maturity in asOf (NBP MIR tables 2 and 8) */
+            byTerm: Record<string, never>[];
+            /** @description Monthly premium history, ascending */
+            history: Record<string, never>[];
+            /** @description Average rate on new household deposits (all maturities, 1-3 months), monthly, ascending */
+            avgNewDepositHistory: Record<string, never>[];
+            /** @description New consumer loans in PLN (NBP MIR): average rate, APRC (RRSO) and value per month */
+            newConsumerLoans: Record<string, never>;
+        };
+        DepositBankAverageResponseDto: {
+            data: components["schemas"]["DepositBankAverageDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        DepositForecastDataDto: {
+            /** @example finwire_deposit_rate_forecast */
+            id: string;
+            /** @example Finwire Depocast */
+            name: string;
+            /** @example 1 */
+            methodVersion: number | null;
+            /**
+             * @description Latest NBP MIR month; horizons count from it
+             * @example 2026-09
+             */
+            asOf: string | null;
+            updatedAt: string | null;
+            units: Record<string, never>;
+            latest: Record<string, never> | null;
+            /** @description Forecasts with an 80% interval and backtest accuracy; only horizons that passed the gate (coverage >= 70% and error below the no-change forecast) */
+            forecasts: Record<string, never>[];
+            /** @description Horizons computed but not published (below the accuracy gate) */
+            hiddenHorizons: number | null;
+            /** @description Source of the assumed NBP reference rate path */
+            ratePath: Record<string, never> | null;
+            depositIndex: Record<string, never> | null;
+            /** @description Earlier published forecasts with the NBP MIR reading for the target month */
+            settled: Record<string, never>[];
+            /** @description Average rate on new household deposits and NBP reference rate at month end, ascending */
+            history: Record<string, never>[];
+        };
+        DepositForecastResponseDto: {
+            data: components["schemas"]["DepositForecastDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         FixedCostBurdenDataDto: {
             /** @example finwire_fixed_cost_burden */
             id: string;
@@ -7248,6 +7574,56 @@ export interface components {
             data: components["schemas"]["LeadForecastsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        PolandForecastsEditionDto: {
+            /**
+             * @example KE
+             * @enum {string}
+             */
+            institution: "KE" | "OECD" | "NBP" | "FINWIRE";
+            /** @example European Commission */
+            name: string;
+            /**
+             * @description Edition id: EC year-season (1 winter, 2 spring, 3 autumn), OECD EO number, NBP YYYY-MM
+             * @example 2026-3
+             */
+            edition: string;
+            /** @example 2026 */
+            madeYear: number;
+            /** @example 2026-11-18 */
+            releasedOn: string | null;
+            /** @example hicp */
+            inflationMeasure: string | null;
+            /**
+             * @description Indicator -> target year -> value
+             * @example {
+             *       "gdp": {
+             *         "2026": 3.54,
+             *         "2027": 2.74
+             *       }
+             *     }
+             */
+            values: Record<string, never>;
+        };
+        PolandForecastsDataDto: {
+            /** @example 2026-11-18 */
+            asOf: string | null;
+            units: Record<string, never>;
+            sources: Record<string, never>;
+            latest: components["schemas"]["PolandForecastsEditionDto"][];
+            previous: components["schemas"]["PolandForecastsEditionDto"][];
+            /** @description "indicator:measure" -> [{ year, value, source }] (ameco = Eurostat data in the latest EC edition, gus = annual CPI) */
+            actuals: Record<string, never>;
+            /** @description Forecast errors by institution, indicator and horizon (1 = last edition of the previous year) */
+            accuracy: string[];
+            /** @description finwire_forecast_accuracy: latest value and yearly history (pp) */
+            forecastAccuracy: Record<string, never>;
+            /** @description finwire_forecast_consensus: published indicators and points (empty until the accuracy gate opens) */
+            consensus: Record<string, never>;
+        };
+        PolandForecastsResponseDto: {
+            data: components["schemas"]["PolandForecastsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         EnergyUnitDto: {
             /** @example PLN per kWh, net of VAT (electricity: also net of excise) */
             energy: string;
@@ -7461,6 +7837,43 @@ export interface components {
         };
         EnergyPricesResponseDto: {
             data: components["schemas"]["EnergyPricesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        HouseholdSavingsDataDto: {
+            /**
+             * @description Latest quarter with all instruments
+             * @example 2026-Q2
+             */
+            asOf: string | null;
+            /** @example II kwartał 2026 */
+            periodLabel: string | null;
+            /** @example 2003-Q4 */
+            firstPeriod: string | null;
+            updatedAt: string | null;
+            /** @description Last real change of the numbers (new quarter or revision) */
+            dataChangedAt: string | null;
+            /** @description Units */
+            units: Record<string, never>;
+            /** @description ESA 2010 instruments behind each group */
+            groupDefinitions: Record<string, never>;
+            /** @description Latest quarter: totalMln, investedMln, investedSharePct, liquidSharePct (cash and deposits), groups (PLN million) */
+            latest: Record<string, never> | null;
+            previous: Record<string, never> | null;
+            /** @description Same quarter a year earlier */
+            yearAgo: Record<string, never> | null;
+            /** @description Groups in the latest quarter with share and year-on-year change */
+            groups: unknown[][];
+            /** @description Udział oszczędności pracujących finwire (finwire_household_invested_share): latest, previous, yearAgo, max, min */
+            investedShare: Record<string, never>;
+            /** @description Poland among countries in the OECD financial dashboard (yearly): ranking by the share of currency and deposits, medians, Poland history */
+            oecd: Record<string, never> | null;
+            /** @description Products from other finwire datasets: investment funds (IZFiA), PPK, IKE and IKZE (KNF), retail savings bond sales in 12 months (Ministry of Finance) */
+            products: unknown[][];
+            /** @description Quarters, oldest first */
+            history: unknown[][];
+        };
+        HouseholdSavingsResponseDto: {
+            data: components["schemas"]["HouseholdSavingsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         LegalTopicDto: {
@@ -9541,6 +9954,21 @@ export interface components {
             data: components["schemas"]["EuLivingDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        OecdComparisonDataDto: {
+            /**
+             * @description Latest year of the returned topics
+             * @example 2025
+             */
+            asOf: string | null;
+            /** @description OECD Pensions at a Glance (DSD_PAG@DF_PRR): year of system parameters, net and gross replacement rates (% of individual pre-retirement earnings) for men and women at the average wage in every country of the OECD comparison, Poland, the OECD average, Poland rank by the male net rate, and finwire_oecd_pension_gap (Poland minus the OECD average, percentage points) */
+            pensionReplacement: Record<string, never> | null;
+            /** @description OECD Taxing Wages (DSD_TAX_WAGES_COMP@DF_TW_COMP): tax wedge (% of total labour costs) for the chosen household profile in every OECD country with an EU membership flag, Poland, OECD averages, history of Poland and the OECD average for a single person at the average wage, and finwire_oecd_tax_wedge_gap (Poland minus the OECD average, percentage points) */
+            taxWedge: Record<string, never> | null;
+        };
+        OecdComparisonResponseDto: {
+            data: components["schemas"]["OecdComparisonDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         CreditSurveyMetricDto: {
             /** @example housing_criteria */
             id: string;
@@ -10580,6 +11008,107 @@ export interface components {
         };
         EuFuelPricesResponseDto: {
             data: components["schemas"]["EuFuelDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        BankPenaltyTotalsDto: {
+            /** @example 2 */
+            count: number | null;
+            /** @example 15350000 */
+            totalPln: number | null;
+            /** @example 0 */
+            uokikCount: number | null;
+            /** @example 2 */
+            knfCount: number | null;
+            /**
+             * @description true = part of the sum comes from amounts rounded in UOKiK press releases (e.g. "80.68 mln zł")
+             * @example false
+             */
+            includesRoundedAmounts: boolean;
+        };
+        BankPenaltyBankDto: {
+            /** @example 2 */
+            count: number | null;
+            /** @example 15350000 */
+            totalPln: number | null;
+            /** @example 0 */
+            uokikCount: number | null;
+            /** @example 2 */
+            knfCount: number | null;
+            /**
+             * @description true = part of the sum comes from amounts rounded in UOKiK press releases (e.g. "80.68 mln zł")
+             * @example false
+             */
+            includesRoundedAmounts: boolean;
+            /** @example mbank */
+            slug: string | null;
+            /** @example mBank S.A. */
+            name: string | null;
+            /**
+             * @description Date of the newest fine of the bank in the window
+             * @example 2026-05-29
+             */
+            lastOn: string | null;
+            /** @description Fines of group companies (mortgage bank, fund manager, leasing), outside the bank count */
+            groupCompanies: components["schemas"]["BankPenaltyTotalsDto"] | null;
+            /** @example https://finwire.pl/bank/mbank#kary-uokik-knf */
+            pageUrl: string;
+        };
+        BankPenaltyFineDto: {
+            /** @enum {string|null} */
+            regulator: "uokik" | "knf" | null;
+            /**
+             * @description Party to the decision, verbatim from the source
+             * @example mBank SA
+             */
+            entity: string | null;
+            /** @enum {string|null} */
+            relation: "bank" | "group" | null;
+            /** @example 14900000 */
+            amountPln: number | null;
+            /** @example false */
+            amountRounded: boolean;
+            /** @example 2026-05-29 */
+            decisionDate: string | null;
+            /**
+             * @description UOKiK press release date; KNF: decision date, first read day or end of the list year when KNF gives no date
+             * @example 2026-05-29
+             */
+            publishedOn: string | null;
+            /** @description true = the press release says the decision is not final */
+            notFinal: boolean | null;
+            sourceUrl: string | null;
+            sourceTitle: string | null;
+        };
+        BankPenaltiesDataDto: {
+            /** @example finwire_bank_penalty_count */
+            seriesId: string;
+            /** @example 2026-11-19 */
+            asOf: string | null;
+            checkedAt: string | null;
+            /** @example 5 */
+            windowYears: number | null;
+            /** @example 2021-11-19 */
+            windowFrom: string | null;
+            /** @description uokikSince = first UOKiK press release read (the RSS feed has no history), knfListsSince = oldest KNF yearly list */
+            coverage: Record<string, never>;
+            stale: boolean;
+            total: components["schemas"]["BankPenaltyTotalsDto"] | null;
+            banks: components["schemas"]["BankPenaltyBankDto"][];
+            /** @description Only with ?bank= */
+            fines: components["schemas"]["BankPenaltyFineDto"][];
+            /** @description Monthly points of the counter: period, count, totalPln */
+            history: unknown[][];
+            sources: unknown[][];
+            /** @example https://finwire.pl/bank/mbank#kary-uokik-knf */
+            pageUrl: string;
+        };
+        BankPenaltiesResponseDto: {
+            data: components["schemas"]["BankPenaltiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        WorldResponseDto: {
+            /** @description Projection of the dataset (see /v1/datasets) */
+            data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
     };
@@ -11863,6 +12392,28 @@ export interface operations {
             };
         };
     };
+    MacroController_newCompanies: {
+        parameters: {
+            query?: {
+                /** @description Last N months of history, 1-400, default all */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewCompaniesResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_familyBenefits: {
         parameters: {
             query?: {
@@ -12172,6 +12723,50 @@ export interface operations {
             };
         };
     };
+    MacroController_depositBankAverage: {
+        parameters: {
+            query?: {
+                /** @description Last N months of history, 1-400, default all */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DepositBankAverageResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_depositForecast: {
+        parameters: {
+            query?: {
+                /** @description Last N months of history, 1-400, default 60 */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DepositForecastResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_fixedCostBurden: {
         parameters: {
             query?: {
@@ -12305,6 +12900,25 @@ export interface operations {
             };
         };
     };
+    MacroController_polandForecasts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PolandForecastsResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_energyPrices: {
         parameters: {
             query?: {
@@ -12323,6 +12937,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EnergyPricesResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_householdSavings: {
+        parameters: {
+            query?: {
+                /** @description Last N quarters of history, 1-200, default all */
+                quarters?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HouseholdSavingsResponseDto"];
                 };
             };
         };
@@ -12971,6 +13607,87 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["EuLivingResponseDto"];
                 };
+            };
+        };
+    };
+    RegionalController_oecdComparison: {
+        parameters: {
+            query?: {
+                /** @description pension or tax-wedge; default both */
+                topic?: string;
+                /** @description Tax wedge household profile: single_67, single_100 (default), single_167, couple_2c_one_earner, couple_2c_100_67, couple_2c_100_100 */
+                profile?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OecdComparisonResponseDto"];
+                };
+            };
+        };
+    };
+    RegionalController_tourism: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Poland, provinces, top municipalities and counties */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RegionalController_tourismMunicipalities: {
+        parameters: {
+            query: {
+                /** @description Part of the municipality name, 2-60 characters, Polish letters optional */
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Up to 20 municipalities */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RegionalController_pensionSystems: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ZUS and KRUS averages, gap and KRUS as % of ZUS */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -13736,6 +14453,107 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EuFuelPricesResponseDto"];
+                };
+            };
+        };
+    };
+    BankPenaltiesController_summary: {
+        parameters: {
+            query?: {
+                /** @description Bank page slug on finwire.pl (/bank/{slug}); with it, the fines of the bank and of its group companies */
+                bank?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankPenaltiesResponseDto"];
+                };
+            };
+        };
+    };
+    WorldController_policyRates: {
+        parameters: {
+            query?: {
+                /** @description Last N months of the rank history, 1-400; default all */
+                history?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorldResponseDto"];
+                };
+            };
+        };
+    };
+    WorldController_housePrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorldResponseDto"];
+                };
+            };
+        };
+    };
+    WorldController_creditCycle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorldResponseDto"];
+                };
+            };
+        };
+    };
+    WorldController_housecast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorldResponseDto"];
                 };
             };
         };
