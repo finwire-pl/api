@@ -2724,6 +2724,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/us-economy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** US economy: CPI inflation (all items and core) with Polish CPI, jobs report (nonfarm payrolls, unemployment, average hourly earnings, finwire_us_real_wage_growth), Treasury par yield curve with spreads and inverted days, public debt with finwire_us_debt_per_second (USD and PLN per second). A block is null when its source has no data yet. */
+        get: operations["UsEconomyController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -11111,6 +11128,11 @@ export interface components {
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        UsEconomyResponseDto: {
+            /** @description Projection of the dataset us-economy (see /v1/datasets/us-economy) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
     };
     responses: never;
     parameters: never;
@@ -14554,6 +14576,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WorldResponseDto"];
+                };
+            };
+        };
+    };
+    UsEconomyController_get: {
+        parameters: {
+            query?: {
+                /** @description Last N months of every history, 1-400; default all (monthly since 2011, weekly yields and monthly debt since 2010) */
+                months?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsEconomyResponseDto"];
                 };
             };
         };

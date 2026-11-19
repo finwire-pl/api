@@ -153,6 +153,7 @@ Each dataset name links to its documentation page with fields, source and citati
 | [House prices worldwide](https://public-api.finwire.pl/datasets/world-house-prices): real and nominal change by country, price to income and rent | `/v1/world/house-prices` | [BIS](https://data.bis.org/topics/RPP) (WS_SPP), [OECD](https://data-explorer.oecd.org/) (DF_HOUSE_PRICES) | quarterly | Poland since 2010 (BIS), 2005 (OECD) |
 | [Credit gap and debt service ratio of Poland](https://public-api.finwire.pl/datasets/world-credit-cycle) | `/v1/world/credit-cycle` | [BIS](https://data.bis.org/topics/CREDIT_GAPS) (WS_CREDIT_GAP, WS_DSR) | quarterly | full BIS history |
 | [Finwire Housecast](https://public-api.finwire.pl/datasets/housecast): housing valuation gap, real house price forecast 4 and 8 quarters ahead with backtest, `finwire_housing_valuation_gap` | `/v1/world/housecast` | finwire.pl model on [OECD](https://data-explorer.oecd.org/) and [BIS](https://data.bis.org/topics/RPP) | quarterly | gap since 2015 |
+| [US economy](https://public-api.finwire.pl/datasets/us-economy): CPI and core CPI with Polish CPI, jobs report, Treasury par yield curve, public debt, `finwire_us_debt_per_second`, `finwire_us_real_wage_growth` | `/v1/us-economy` | [BLS](https://www.bls.gov/) (CPI-U, CES, CPS), [US Treasury](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve) (par yield curve), [Fiscal Data](https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/) (Debt to the Penny); public domain | monthly, daily | since 2010 |
 
 Aggregates never expose single offers, deeds or listings - only medians, percentiles and counts.
 
@@ -249,6 +250,7 @@ Tools (all read-only, each with `outputSchema`):
 - Poland vs OECD: `get_oecd_comparison` (OECD Pensions at a Glance replacement rates and Taxing Wages tax wedge, also countries outside the EU, `finwire_oecd_pension_gap`, `finwire_oecd_tax_wedge_gap`)
 - Tourism in municipalities: `get_tourism_pressure` (GUS BDL: bed places per 1000 residents and the municipality ranking, nights and tourists per county and province, bed occupancy by month, `finwire_tourism_pressure`)
 - ZUS vs KRUS: `get_pension_systems` (GUS BDL: average ZUS pension and average KRUS farmer pension, yearly since 1999, year to date, provinces)
+- US economy: `get_us_economy` (BLS and US Treasury: CPI and core CPI next to Polish CPI, jobs report, Treasury yield curve with spreads and inverted days, public debt per second in USD and PLN, `finwire_us_debt_per_second`, `finwire_us_real_wage_growth`)
 - Public debt: `get_public_debt` (State Treasury debt, debt per resident `finwire_public_debt_per_capita`, public debt % of GDP, state budget deficit)
 - finwire indices: `list_finwire_indices` (all `finwire_*` ids with the latest reading), `get_finwire_index` (one index by id or alias, with history and citation)
 - Forecasts: `get_nowcast` (Finwire Nowcast: CPI and core inflation, RPP decision probabilities, accuracy)
@@ -457,6 +459,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/world/house-prices` | BIS residential property prices by country (real and nominal y/y), real index of Poland, OECD price-to-income and price-to-rent ratios |
 | `GET /v1/world/credit-cycle` | BIS credit-to-GDP gap of Poland and debt service ratio of the private non-financial sector |
 | `GET /v1/world/housecast` | Finwire Housecast `finwire_housing_valuation_gap`: valuation gap, real house price forecast with 80% interval and backtest |
+| `GET /v1/us-economy?months=24` | US economy: CPI y/y and m/m, core CPI and Polish CPI since 2011; nonfarm payrolls change, unemployment, average hourly earnings, `finwire_us_real_wage_growth`; Treasury par yield curve now and a year earlier, 10Y-2Y and 10Y-3M spreads, inverted days in 365, weekly history since 2010; public debt with `finwire_us_debt_per_second` in USD and PLN. `months` trims the histories |
 
 Full field-level schemas: [openapi.json](https://public-api.finwire.pl/openapi.json).
 
@@ -560,6 +563,8 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_oecd_tax_wedge_gap` | [Klin podatkowy w Polsce wobec OECD finwire](https://finwire.pl/zarobki/europa) | market | yearly | `oecd-comparison` |
 | `finwire_new_companies_pulse` | [Puls nowych firm finwire](https://finwire.pl/finanse-firmy) | market | monthly | `new-companies` |
 | `finwire_tourism_pressure` | [Presja turystyczna finwire](https://finwire.pl/najem-krotkoterminowy) | housing | yearly | `tourism` |
+| `finwire_us_debt_per_second` | [Licznik długu USA finwire](https://finwire.pl/gospodarka-usa#licznik-dlugu-usa) | market | daily | `us-economy` |
+| `finwire_us_real_wage_growth` | [Realne płace w USA finwire](https://finwire.pl/gospodarka-usa#realne-place-w-usa) | market | monthly | `us-economy` |
 
 ¹ Computed from WIBOR (GPW Benchmark): only the result is published, never WIBOR or POLSTR (`usesBenchmarkRate: true`).
 
