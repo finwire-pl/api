@@ -3,6 +3,23 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-20
+
+### Added
+
+- `GET /v1/housing/cities` - dataset `city-flat-prices`: flat prices per m² in Polish cities from notarial deeds (RCN, GUGiK), last 4 full quarters, cities with at least 200 deeds and no quarter gaps, from the cheapest median: quartiles, median area and price, secondary and primary market, year-over-year change, developer price-list median (dane.gov.pl) in the same city.
+- `GET /v1/housing/cities/{city}` - one city with a finwire.pl page: rank, latest quarter with enough deeds, quarterly medians since 2010 (all markets, secondary, primary).
+- `GET /v1/housing/land-prices` and `GET /v1/housing/land-prices/{voivodeship}` - dataset `land-prices`: median price per m² of building plots from notarial deeds (RCN) by province and county, rural vs urban areas, quarterly trend, price of a 10-are plot per county.
+- `GET /v1/deposits/history` - dataset `deposit-rate-history`: yearly average rate on new household term deposits (NBP MIR) since 2005 by maturity, annual CPI (GUS) and the real result, finwire index `finwire_real_avg_deposit_rate` (Realne oprocentowanie przeciętnej lokaty finwire).
+- `GET /v1/household-inflation` - dataset `household-inflation`: GUS inflation by household group (personas, GUS groups) and the retiree and pensioner inflation block (monthly readings since 2018, year-to-date averages, the index used by the pension indexation formula).
+- `GET /v1/wages/enterprise`: new field `officialAverages` - official average wages (GUS) with amount, period, announcement and application dates and legal uses.
+- `GET /v1/legal-limits`: new blocks `zfss` (company social benefits fund allowance base and rates) and `lifeExpectancy` (GUS life expectancy tables for ages 55-75, current and previous edition).
+- MCP server 1.30.0: new tools `get_city_flat_prices` and `get_household_inflation`; `get_housing_prices` accepts `property: land` and `voivodeship`; `get_deposit_bank_average` accepts `view=history`; `get_regional_data` (topic `wages`) returns official averages; `get_legal_limits` returns the ZFSS allowance and life expectancy tables.
+
+### Changed
+
+- `GET /v1/legal-limits/next-year`: the `ryczalt_limit` note separates the limit in force from a law passed by Parliament but not yet published.
+
 ## 2026-11-19
 
 ### Added

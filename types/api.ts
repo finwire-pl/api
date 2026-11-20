@@ -616,6 +616,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/housing/cities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Flat prices per sqm in Polish cities from notarial deeds (RCN), last 4 full quarters, from the cheapest median: cities with at least minDeeds deeds and no quarter gaps; secondary and primary market, year-over-year change, developer price-list median in the same city */
+        get: operations["RealEstateController_housingCities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/cities/{city}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One city with a finwire.pl price page from notarial deeds (RCN): ranking row, rank from the cheapest, latest quarter with enough deeds and quarterly medians since 2010 (all markets, secondary, primary) */
+        get: operations["RealEstateController_housingCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/land-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Building plot prices per sqm (RCN): Poland and 16 voivodeships, last 12 months */
+        get: operations["RealEstateController_landPricesCountry"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/land-prices/{voivodeship}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Building plot prices per sqm (RCN) in one voivodeship: counties with a 10-are plot price and distance to the capital, rural vs urban areas, capital city, quarterly trend (up to 4 years) */
+        get: operations["RealEstateController_landPricesVoivodeship"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/housing/location-premium": {
         parameters: {
             query?: never;
@@ -878,7 +946,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Average gross wage in the enterprise sector (GUS): monthly, real change, by province */
+        /** Average gross wage in the enterprise sector (GUS): monthly, real change, by province, and the official averages used in Polish law (quarterly, annual, forecast, Q4 enterprise, social fund base) with what each one is for */
         get: operations["MacroController_wageEnterprise"];
         put?: never;
         post?: never;
@@ -1347,6 +1415,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/deposits/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Realne oprocentowanie przeciętnej lokaty finwire (finwire_real_avg_deposit_rate): average rate on new household PLN term deposits in Polish banks (NBP MIR) monthly since 2005, all maturities and up to 1 month, 1-3, 3-6 and 6-12 months; yearly average, annual average CPI (GUS) and the real result in percentage points before and after the Polish capital gains tax; number of years the average deposit beat inflation */
+        get: operations["MacroController_depositHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/fixed-cost-burden": {
         parameters: {
             query?: never;
@@ -1475,6 +1560,23 @@ export interface paths {
         };
         /** Regulated household electricity (G11, G12, G12w) and gas (W-1.1 to W-4) tariffs approved by URE, in force on a day; net amounts with decision and PDF */
         get: operations["MacroController_energyPrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/household-inflation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Household inflation in Poland: Inflacja gospodarstw domowych finwire (finwire_household_inflation_index: CPI y/y for family types and income quintiles, finwire.pl method on Statistics Poland weights) next to the official Statistics Poland CPI by socio-economic group; retiree inflation (inflacja emerycka: CPI for households of retirees and pensioners vs total since 2018, year-to-date and annual averages as finwire.pl approximation, which index is higher under art. 89(2) of the pension act, basket shares from Statistics Poland weights, monthly history) */
+        get: operations["MacroController_householdInflation"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3280,6 +3382,50 @@ export interface components {
             limits: {
                 [key: string]: number;
             };
+            /**
+             * @description Company social benefits fund (ZFŚS): base from the GUS announcement (art. 5 ust. 2 and 7 of the ZFŚS act), allowances per employee by type (zwykle 37.5%, szczegolne 50%, mlodociany1-3 5/6/7%), optional increases (niepelnosprawny, emeryt 6.25%, zlobek 7.5%), transfer deadlines (art. 6 ust. 2) and the next-year status
+             * @example {
+             *       "year": 2026,
+             *       "base": 7848.6,
+             *       "act": "M.P. 2026 poz. 232",
+             *       "allowances": {
+             *         "zwykle": 2943.23
+             *       },
+             *       "transfer": {
+             *         "firstDue": "2026-05-31",
+             *         "firstMinShareOfBasic": 0.75,
+             *         "finalDue": "2026-09-30"
+             *       },
+             *       "nextYear": {
+             *         "year": 2027,
+             *         "status": "pending",
+             *         "expectedBy": "2027-02-20"
+             *       }
+             *     }
+             */
+            zfss: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * @description GUS life expectancy table (months, ages 55-75) used to divide pension capital (art. 26 of the pension act), with the previous edition
+             * @example {
+             *       "tablesYear": 2026,
+             *       "validFrom": "2026-04-01",
+             *       "monthsByAge": {
+             *         "65": 222.7
+             *       },
+             *       "previous": {
+             *         "tablesYear": 2025,
+             *         "monthsByAge": {
+             *           "65": 220.8
+             *         }
+             *       },
+             *       "nextExpectedFrom": "2027-04-01"
+             *     }
+             */
+            lifeExpectancy: {
+                [key: string]: unknown;
+            };
         };
         LegalLimitsResponseDto: {
             data: components["schemas"]["LegalLimitsDataDto"];
@@ -4446,6 +4592,395 @@ export interface components {
             data: components["schemas"]["TransactionDistrictsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        HousingCitiesWindowDto: {
+            /**
+             * @description First quarter of the 4-quarter window
+             * @example 2025-Q3
+             */
+            from: string;
+            /**
+             * @description Last full quarter of the window
+             * @example 2026-Q2
+             */
+            to: string;
+        };
+        HousingCitiesCityDto: {
+            /** @example gliwice */
+            slug: string;
+            /** @example Gliwice */
+            name: string;
+            /** @example śląskie */
+            voivodeship: string | null;
+            population: number | null;
+            populationYear: number | null;
+            /**
+             * @description Flat deeds in the 4-quarter window
+             * @example 2147
+             */
+            deeds: number;
+            /**
+             * @description Median price per m2 (PLN), primary and secondary market together
+             * @example 8662
+             */
+            medianM2: number | null;
+            p25M2: number | null;
+            p75M2: number | null;
+            /** @description Median flat area (m2) */
+            medianAreaM2: number | null;
+            /** @description Median flat price (PLN) */
+            medianPricePln: number | null;
+            /** @description Secondary market median per m2; null below 5 deeds */
+            secondaryMedianM2: number | null;
+            secondaryDeeds: number;
+            /** @description Primary market median per m2; null below 5 deeds */
+            primaryMedianM2: number | null;
+            primaryDeeds: number;
+            /** @description Median per m2 in the window one year earlier */
+            prevMedianM2: number | null;
+            /** @description Year-over-year change of the median, % */
+            changePct: number | null;
+            /**
+             * @description Median asking price per m2 in developer price lists (dane.gov.pl)
+             * @example 9993
+             */
+            developerMedianM2: number | null;
+            /** @example 1595 */
+            developerOffers: number | null;
+            /**
+             * @description Monday of the developer price-list week
+             * @example 2026-11-16
+             */
+            developerWeek: string | null;
+            /**
+             * @description City page on finwire.pl; null = no page
+             * @example https://finwire.pl/ceny-mieszkan/gliwice
+             */
+            url: string | null;
+        };
+        HousingCitiesDataDto: {
+            /** @description Data source as named by finwire.pl */
+            source: string;
+            window: components["schemas"]["HousingCitiesWindowDto"] | null;
+            /**
+             * @description Minimum deeds of a city in the window
+             * @example 200
+             */
+            minDeeds: number;
+            /** @description Date of the newest deed in the data */
+            dataUntil: string | null;
+            updatedAt: string | null;
+            count: number;
+            /** @description Cities from the cheapest median per m2 */
+            cities: components["schemas"]["HousingCitiesCityDto"][];
+            /** @example https://finwire.pl/najtansze-mieszkania-w-polsce */
+            pageUrl: string;
+        };
+        HousingCitiesResponseDto: {
+            data: components["schemas"]["HousingCitiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        HousingCityQuarterDto: {
+            /** @example 2026-Q2 */
+            quarter: string;
+            deeds: number;
+            medianM2: number;
+        };
+        HousingCityRankDto: {
+            /** @description 1 = cheapest median per m2 */
+            position: number;
+            of: number;
+        };
+        HousingCitySeriesPointDto: {
+            /** @example 2026-Q2 */
+            quarter: string;
+            /**
+             * @description All markets, secondary or primary
+             * @enum {string}
+             */
+            market: "wszystkie" | "wtorny" | "pierwotny";
+            deeds: number;
+            medianM2: number;
+            p25M2: number;
+            p75M2: number;
+            /**
+             * @description Quarter not complete yet (late deed entries)
+             * @example false
+             */
+            provisional: boolean;
+        };
+        HousingCityDataDto: {
+            /** @description Data source as named by finwire.pl */
+            source: string;
+            city: components["schemas"]["HousingCitiesCityDto"];
+            /** @description Latest quarter with enough deeds */
+            quarter: components["schemas"]["HousingCityQuarterDto"] | null;
+            /** @description Null when the city is outside the ranking */
+            rank: components["schemas"]["HousingCityRankDto"] | null;
+            window: components["schemas"]["HousingCitiesWindowDto"] | null;
+            /** @example 200 */
+            minDeeds: number;
+            dataUntil: string | null;
+            updatedAt: string | null;
+            /** @description Quarterly medians since 2010: all markets, secondary and primary */
+            series: components["schemas"]["HousingCitySeriesPointDto"][];
+            /** @example https://finwire.pl/ceny-mieszkan/gliwice */
+            url: string | null;
+        };
+        HousingCityResponseDto: {
+            data: components["schemas"]["HousingCityDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LandWindowDto: {
+            /**
+             * @description Start of the last-12-months window
+             * @example 2025-11-21
+             */
+            from: string | null;
+            /**
+             * @description Latest deed date in the register
+             * @example 2026-11-10
+             */
+            dataUntil: string | null;
+        };
+        LandStatsDto: {
+            /**
+             * @description Median price per m2 of building plots, PLN
+             * @example 160.83
+             */
+            medianM2: number | null;
+            /** @example 98 */
+            p25M2: number | null;
+            /** @example 290 */
+            p75M2: number | null;
+            /**
+             * @description Median plot area, m2
+             * @example 1243
+             */
+            medianAreaM2: number | null;
+            /**
+             * @description Median deed price, PLN
+             * @example 225000
+             */
+            medianPricePln: number | null;
+            /**
+             * @description Deeds in the window (outliers excluded)
+             * @example 5629
+             */
+            transactions: number | null;
+        };
+        LandVoivodeshipItemDto: {
+            /**
+             * @description Median price per m2 of building plots, PLN
+             * @example 160.83
+             */
+            medianM2: number | null;
+            /** @example 98 */
+            p25M2: number | null;
+            /** @example 290 */
+            p75M2: number | null;
+            /**
+             * @description Median plot area, m2
+             * @example 1243
+             */
+            medianAreaM2: number | null;
+            /**
+             * @description Median deed price, PLN
+             * @example 225000
+             */
+            medianPricePln: number | null;
+            /**
+             * @description Deeds in the window (outliers excluded)
+             * @example 5629
+             */
+            transactions: number | null;
+            /** @example mazowieckie */
+            slug: string;
+            /** @example mazowieckie */
+            name: string;
+            /** @example 14 */
+            teryt: string;
+            /** @example https://finwire.pl/ceny-dzialek/mazowieckie */
+            pageUrl: string;
+        };
+        LandPricesCountryDataDto: {
+            /** @example building */
+            segment: string;
+            window: components["schemas"]["LandWindowDto"];
+            country: components["schemas"]["LandStatsDto"];
+            /** @example 16 */
+            count: number;
+            voivodeships: components["schemas"]["LandVoivodeshipItemDto"][];
+        };
+        LandPricesCountryResponseDto: {
+            data: components["schemas"]["LandPricesCountryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LandVoivodeshipDto: {
+            /**
+             * @description Median price per m2 of building plots, PLN
+             * @example 160.83
+             */
+            medianM2: number | null;
+            /** @example 98 */
+            p25M2: number | null;
+            /** @example 290 */
+            p75M2: number | null;
+            /**
+             * @description Median plot area, m2
+             * @example 1243
+             */
+            medianAreaM2: number | null;
+            /**
+             * @description Median deed price, PLN
+             * @example 225000
+             */
+            medianPricePln: number | null;
+            /**
+             * @description Deeds in the window (outliers excluded)
+             * @example 5629
+             */
+            transactions: number | null;
+            /** @example mazowieckie */
+            slug: string;
+            /** @example mazowieckie */
+            name: string;
+            /** @example 14 */
+            teryt: string;
+            /** @example https://finwire.pl/ceny-dzialek/mazowieckie */
+            pageUrl: string;
+            /**
+             * @description Position among 16 voivodeships by median price per m2 (1 = most expensive)
+             * @example 3
+             */
+            rank: number | null;
+            /** @example 16 */
+            of: number;
+        };
+        LandCapitalDto: {
+            /**
+             * @description Median price per m2 of building plots, PLN
+             * @example 160.83
+             */
+            medianM2: number | null;
+            /** @example 98 */
+            p25M2: number | null;
+            /** @example 290 */
+            p75M2: number | null;
+            /**
+             * @description Median plot area, m2
+             * @example 1243
+             */
+            medianAreaM2: number | null;
+            /**
+             * @description Median deed price, PLN
+             * @example 225000
+             */
+            medianPricePln: number | null;
+            /**
+             * @description Deeds in the window (outliers excluded)
+             * @example 5629
+             */
+            transactions: number | null;
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            name: string;
+            /**
+             * @description TERYT of the city county
+             * @example 1465
+             */
+            teryt: string;
+        };
+        LandCountyDto: {
+            /**
+             * @description Median price per m2 of building plots, PLN
+             * @example 160.83
+             */
+            medianM2: number | null;
+            /** @example 98 */
+            p25M2: number | null;
+            /** @example 290 */
+            p75M2: number | null;
+            /**
+             * @description Median plot area, m2
+             * @example 1243
+             */
+            medianAreaM2: number | null;
+            /**
+             * @description Median deed price, PLN
+             * @example 225000
+             */
+            medianPricePln: number | null;
+            /**
+             * @description Deeds in the window (outliers excluded)
+             * @example 5629
+             */
+            transactions: number | null;
+            /** @example 1421 */
+            teryt: string;
+            /** @example powiat warszawski zachodni */
+            name: string;
+            /**
+             * @description 1000 m2 (10 ares) plot at the county median, PLN, rounded to 1000
+             * @example 420000
+             */
+            plot10ArPln: number | null;
+            /**
+             * @description Distance between county and capital centroids (PRG address points), km
+             * @example 19.2
+             */
+            distanceToCapitalKm: number | null;
+            /**
+             * @description County around the voivodeship capital (centroid within nearCapitalKm)
+             * @example true
+             */
+            nearCapital: boolean;
+        };
+        LandQuarterDto: {
+            /** @example 2026-Q2 */
+            quarter: string;
+            /** @example 158 */
+            medianM2: number | null;
+            /**
+             * @description Rural areas: rural gminas and rural parts of urban-rural gminas (TERYT type 2 and 5)
+             * @example 128
+             */
+            ruralM2: number | null;
+            /**
+             * @description Urban areas (TERYT type 1, 4, 8, 9)
+             * @example 470
+             */
+            urbanM2: number | null;
+            /** @example 125 */
+            countryM2: number | null;
+            /** @example 1450 */
+            transactions: number | null;
+            /**
+             * @description Quarter still incomplete (counties register deeds with delay)
+             * @example false
+             */
+            provisional: boolean;
+        };
+        LandPricesVoivodeshipDataDto: {
+            /** @example building */
+            segment: string;
+            window: components["schemas"]["LandWindowDto"];
+            voivodeship: components["schemas"]["LandVoivodeshipDto"];
+            country: components["schemas"]["LandStatsDto"] | null;
+            rural: components["schemas"]["LandStatsDto"] | null;
+            urban: components["schemas"]["LandStatsDto"] | null;
+            countryRural: components["schemas"]["LandStatsDto"] | null;
+            countryUrban: components["schemas"]["LandStatsDto"] | null;
+            capital: components["schemas"]["LandCapitalDto"] | null;
+            /** @example 30 */
+            nearCapitalKm: number | null;
+            counties: components["schemas"]["LandCountyDto"][];
+            quarterly: components["schemas"]["LandQuarterDto"][];
+        };
+        LandPricesVoivodeshipResponseDto: {
+            data: components["schemas"]["LandPricesVoivodeshipDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         FinwireIndexRefLiteDto: {
             /** @example finwire_local_tax_squeeze */
             id: string | null;
@@ -5429,6 +5964,65 @@ export interface components {
             /** @example 6 */
             yoyPct: number | null;
         };
+        OfficialWageValueDto: {
+            /** @example 9317.01 */
+            amountPln: number | null;
+            /**
+             * @description YYYY-MM, YYYY-Qn or YYYY (for the social fund base: the year of the allowance)
+             * @example 2026-Q3
+             */
+            period: string | null;
+            /** @example III kwartał 2026 */
+            periodLabel: string | null;
+            /**
+             * @description Day of publication (Monitor Polski or GUS release)
+             * @example 2026-11-10
+             */
+            publishedOn: string | null;
+            /**
+             * @description Day from which the law applies the amount; null for the monthly enterprise average
+             * @example 2026-12-01
+             */
+            validFrom: string | null;
+            /** @example M.P. 2026 poz. 1122 */
+            act: string | null;
+            sourceUrl: string | null;
+        };
+        OfficialWageUseDto: {
+            /** @example Limity dorabiania do emerytury i renty: 70% i 130% kwoty */
+            use: string | null;
+            /** @example art. 104 ust. 7 i 8 ustawy o emeryturach i rentach z FUS */
+            basis: string | null;
+        };
+        OfficialWageAverageDto: {
+            /** @enum {string|null} */
+            kind: "enterprise_monthly" | "national_quarterly" | "national_annual" | "prognosed" | "enterprise_q4" | "zfss_base" | null;
+            name: string | null;
+            /** @description Amount applied today */
+            current: components["schemas"]["OfficialWageValueDto"] | null;
+            /** @description Already announced amount applied from a future day */
+            next: components["schemas"]["OfficialWageValueDto"] | null;
+            uses: components["schemas"]["OfficialWageUseDto"][];
+        };
+        OfficialWagesDto: {
+            /** @example 2026-11-20 */
+            asOf: string | null;
+            averages: components["schemas"]["OfficialWageAverageDto"][];
+            /**
+             * @description Quarterly average wage in the national economy (GUS), ascending
+             * @example [
+             *       {
+             *         "period": "2026-Q3",
+             *         "amountPln": 9317.01
+             *       }
+             *     ]
+             */
+            quarterly: string[];
+            /** @description GUS wage distribution survey: mean, median and share of employees earning less than the mean, % */
+            distribution: Record<string, never> | null;
+            /** @description Latest release (quarterly or monthly) used as the headline average */
+            headline: Record<string, never> | null;
+        };
         WageEnterpriseDataDto: {
             /** @example 2026-09 */
             asOf: string | null;
@@ -5439,6 +6033,8 @@ export interface components {
             /** @example 2026-09 */
             regionsPeriod: string | null;
             regions: components["schemas"]["WageEnterpriseRegionDto"][];
+            /** @description Official averages used in Polish law with amount, period, publication day, day of application and legal basis of each use */
+            officialAverages: components["schemas"]["OfficialWagesDto"] | null;
         };
         WageEnterpriseResponseDto: {
             data: components["schemas"]["WageEnterpriseDataDto"];
@@ -7142,6 +7738,58 @@ export interface components {
             data: components["schemas"]["DepositForecastDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        DepositRateHistoryDataDto: {
+            /** @example finwire_real_avg_deposit_rate */
+            id: string;
+            /** @example Realne oprocentowanie przeciętnej lokaty finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number | null;
+            /**
+             * @description Latest NBP MIR month
+             * @example 2026-09
+             */
+            asOf: string | null;
+            /**
+             * @description First NBP MIR month
+             * @example 2005-01
+             */
+            firstPeriod: string | null;
+            updatedAt: string | null;
+            units: Record<string, never>;
+            /** @description Average rate on new household PLN deposits in the latest month: all maturities, up to 1 month, 1-3, 3-6 and 6-12 months */
+            latest: Record<string, never> | null;
+            /** @description The same month a year earlier */
+            yearAgo: Record<string, never> | null;
+            /** @description Latest full year with annual average CPI: finwire_real_avg_deposit_rate reading */
+            latestYear: Record<string, never> | null;
+            /**
+             * @description Full years with the real result
+             * @example 21
+             */
+            fullYears: number | null;
+            /**
+             * @description Years in which the average new deposit beat annual average CPI
+             * @example 14
+             */
+            yearsAboveInflation: number | null;
+            /** @description The same after the Polish capital gains tax */
+            yearsAboveInflationAfterTax: number | null;
+            bestYear: Record<string, never> | null;
+            worstYear: Record<string, never> | null;
+            /** @description Highest monthly average (all maturities) */
+            peakMonth: Record<string, never> | null;
+            /** @description Lowest monthly average (all maturities) */
+            troughMonth: Record<string, never> | null;
+            /** @description Years ascending: months with NBP data, average rate, annual average CPI (GUS), real result before and after tax (null for the year in progress) */
+            years: Record<string, never>[];
+            /** @description Monthly average rates by maturity, ascending */
+            monthly: Record<string, never>[];
+        };
+        DepositRateHistoryResponseDto: {
+            data: components["schemas"]["DepositRateHistoryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         FixedCostBurdenDataDto: {
             /** @example finwire_fixed_cost_burden */
             id: string;
@@ -7854,6 +8502,35 @@ export interface components {
         };
         EnergyPricesResponseDto: {
             data: components["schemas"]["EnergyPricesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        HouseholdInflationSeriesDto: {
+            /** @example retirees_pensioners */
+            key: string | null;
+            label: string | null;
+            /** @example 3.3 */
+            yoy: number | null;
+            /** @example -0.1 */
+            mom: number | null;
+            /** @example -0.2 */
+            diffPp: number | null;
+        };
+        HouseholdInflationDataDto: {
+            /** @example 2026-10 */
+            asOf: string | null;
+            /** @description finwire_household_inflation_index: id, name, method version, period, page */
+            index: Record<string, never>;
+            /** @description Statistics Poland CPI total y/y and m/m, % */
+            cpiTotal: Record<string, never>;
+            /** @description finwire.pl method: family types and income quintiles */
+            personas: components["schemas"]["HouseholdInflationSeriesDto"][];
+            /** @description Official Statistics Poland CPI by socio-economic group */
+            gusGroups: components["schemas"]["HouseholdInflationSeriesDto"][];
+            /** @description Retiree inflation (inflacja emerycka): latest month, year-to-date and annual averages (finwire.pl approximation) with the higher index under art. 89(2), basket shares from Statistics Poland weights, monthly history */
+            retirees: Record<string, never>;
+        };
+        HouseholdInflationResponseDto: {
+            data: components["schemas"]["HouseholdInflationDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         HouseholdSavingsDataDto: {
@@ -11882,6 +12559,88 @@ export interface operations {
             };
         };
     };
+    RealEstateController_housingCities: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HousingCitiesResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_housingCity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description City slug from /v1/housing/cities (cities with a page; 404 otherwise) */
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HousingCityResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_landPricesCountry: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LandPricesCountryResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_landPricesVoivodeship: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Voivodeship slug from /v1/housing/land-prices */
+                voivodeship: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LandPricesVoivodeshipResponseDto"];
+                };
+            };
+        };
+    };
     RealEstateController_locationPremium: {
         parameters: {
             query?: never;
@@ -12789,6 +13548,28 @@ export interface operations {
             };
         };
     };
+    MacroController_depositHistory: {
+        parameters: {
+            query?: {
+                /** @description Last N months of the monthly series, 1-400, default all; years are always complete */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DepositRateHistoryResponseDto"];
+                };
+            };
+        };
+    };
     MacroController_fixedCostBurden: {
         parameters: {
             query?: {
@@ -12959,6 +13740,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EnergyPricesResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_householdInflation: {
+        parameters: {
+            query?: {
+                /** @description Months of retiree inflation history, 0-120, default 24 */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HouseholdInflationResponseDto"];
                 };
             };
         };

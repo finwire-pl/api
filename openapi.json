@@ -1063,6 +1063,116 @@
         ]
       }
     },
+    "/v1/housing/cities": {
+      "get": {
+        "operationId": "RealEstateController_housingCities",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HousingCitiesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Flat prices per sqm in Polish cities from notarial deeds (RCN), last 4 full quarters, from the cheapest median: cities with at least minDeeds deeds and no quarter gaps; secondary and primary market, year-over-year change, developer price-list median in the same city",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/cities/{city}": {
+      "get": {
+        "operationId": "RealEstateController_housingCity",
+        "parameters": [
+          {
+            "name": "city",
+            "required": true,
+            "in": "path",
+            "description": "City slug from /v1/housing/cities (cities with a page; 404 otherwise)",
+            "schema": {
+              "example": "gliwice",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HousingCityResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "One city with a finwire.pl price page from notarial deeds (RCN): ranking row, rank from the cheapest, latest quarter with enough deeds and quarterly medians since 2010 (all markets, secondary, primary)",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/land-prices": {
+      "get": {
+        "operationId": "RealEstateController_landPricesCountry",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LandPricesCountryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Building plot prices per sqm (RCN): Poland and 16 voivodeships, last 12 months",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
+    "/v1/housing/land-prices/{voivodeship}": {
+      "get": {
+        "operationId": "RealEstateController_landPricesVoivodeship",
+        "parameters": [
+          {
+            "name": "voivodeship",
+            "required": true,
+            "in": "path",
+            "description": "Voivodeship slug from /v1/housing/land-prices",
+            "schema": {
+              "example": "mazowieckie",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LandPricesVoivodeshipResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Building plot prices per sqm (RCN) in one voivodeship: counties with a 10-are plot price and distance to the capital, rural vs urban areas, capital city, quarterly trend (up to 4 years)",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
     "/v1/housing/location-premium": {
       "get": {
         "operationId": "RealEstateController_locationPremium",
@@ -1509,7 +1619,7 @@
             }
           }
         },
-        "summary": "Average gross wage in the enterprise sector (GUS): monthly, real change, by province",
+        "summary": "Average gross wage in the enterprise sector (GUS): monthly, real change, by province, and the official averages used in Polish law (quarterly, annual, forecast, Q4 enterprise, social fund base) with what each one is for",
         "tags": [
           "Macro and prices"
         ]
@@ -2363,6 +2473,39 @@
         ]
       }
     },
+    "/v1/deposits/history": {
+      "get": {
+        "operationId": "MacroController_depositHistory",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Last N months of the monthly series, 1-400, default all; years are always complete",
+            "schema": {
+              "example": 120,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepositRateHistoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Realne oprocentowanie przeci\u0119tnej lokaty finwire (finwire_real_avg_deposit_rate): average rate on new household PLN term deposits in Polish banks (NBP MIR) monthly since 2005, all maturities and up to 1 month, 1-3, 3-6 and 6-12 months; yearly average, annual average CPI (GUS) and the real result in percentage points before and after the Polish capital gains tax; number of years the average deposit beat inflation",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/fixed-cost-burden": {
       "get": {
         "operationId": "MacroController_fixedCostBurden",
@@ -2623,6 +2766,39 @@
           }
         },
         "summary": "Regulated household electricity (G11, G12, G12w) and gas (W-1.1 to W-4) tariffs approved by URE, in force on a day; net amounts with decision and PDF",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/household-inflation": {
+      "get": {
+        "operationId": "MacroController_householdInflation",
+        "parameters": [
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Months of retiree inflation history, 0-120, default 24",
+            "schema": {
+              "example": 24,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HouseholdInflationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Household inflation in Poland: Inflacja gospodarstw domowych finwire (finwire_household_inflation_index: CPI y/y for family types and income quintiles, finwire.pl method on Statistics Poland weights) next to the official Statistics Poland CPI by socio-economic group; retiree inflation (inflacja emerycka: CPI for households of retirees and pensioners vs total since 2018, year-to-date and annual averages as finwire.pl approximation, which index is higher under art. 89(2) of the pension act, basket shares from Statistics Poland weights, monthly history)",
         "tags": [
           "Macro and prices"
         ]
@@ -6844,11 +7020,56 @@
               "ikeAnnual": 28260,
               "ikzeAnnual": 11304
             }
+          },
+          "zfss": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true,
+            "description": "Company social benefits fund (ZF\u015aS): base from the GUS announcement (art. 5 ust. 2 and 7 of the ZF\u015aS act), allowances per employee by type (zwykle 37.5%, szczegolne 50%, mlodociany1-3 5/6/7%), optional increases (niepelnosprawny, emeryt 6.25%, zlobek 7.5%), transfer deadlines (art. 6 ust. 2) and the next-year status",
+            "example": {
+              "year": 2026,
+              "base": 7848.6,
+              "act": "M.P. 2026 poz. 232",
+              "allowances": {
+                "zwykle": 2943.23
+              },
+              "transfer": {
+                "firstDue": "2026-05-31",
+                "firstMinShareOfBasic": 0.75,
+                "finalDue": "2026-09-30"
+              },
+              "nextYear": {
+                "year": 2027,
+                "status": "pending",
+                "expectedBy": "2027-02-20"
+              }
+            }
+          },
+          "lifeExpectancy": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "GUS life expectancy table (months, ages 55-75) used to divide pension capital (art. 26 of the pension act), with the previous edition",
+            "example": {
+              "tablesYear": 2026,
+              "validFrom": "2026-04-01",
+              "monthsByAge": {
+                "65": 222.7
+              },
+              "previous": {
+                "tablesYear": 2025,
+                "monthsByAge": {
+                  "65": 220.8
+                }
+              },
+              "nextExpectedFrom": "2027-04-01"
+            }
           }
         },
         "required": [
           "source",
-          "limits"
+          "limits",
+          "zfss",
+          "lifeExpectancy"
         ]
       },
       "LegalLimitsResponseDto": {
@@ -9963,6 +10184,961 @@
           "meta"
         ]
       },
+      "HousingCitiesWindowDto": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "example": "2025-Q3",
+            "description": "First quarter of the 4-quarter window"
+          },
+          "to": {
+            "type": "string",
+            "example": "2026-Q2",
+            "description": "Last full quarter of the window"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ]
+      },
+      "HousingCitiesCityDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "gliwice"
+          },
+          "name": {
+            "type": "string",
+            "example": "Gliwice"
+          },
+          "voivodeship": {
+            "type": "string",
+            "nullable": true,
+            "example": "\u015bl\u0105skie"
+          },
+          "population": {
+            "type": "number",
+            "nullable": true
+          },
+          "populationYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "deeds": {
+            "type": "number",
+            "example": 2147,
+            "description": "Flat deeds in the 4-quarter window"
+          },
+          "medianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 8662,
+            "description": "Median price per m2 (PLN), primary and secondary market together"
+          },
+          "p25M2": {
+            "type": "number",
+            "nullable": true
+          },
+          "p75M2": {
+            "type": "number",
+            "nullable": true
+          },
+          "medianAreaM2": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median flat area (m2)"
+          },
+          "medianPricePln": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median flat price (PLN)"
+          },
+          "secondaryMedianM2": {
+            "type": "number",
+            "nullable": true,
+            "description": "Secondary market median per m2; null below 5 deeds"
+          },
+          "secondaryDeeds": {
+            "type": "number"
+          },
+          "primaryMedianM2": {
+            "type": "number",
+            "nullable": true,
+            "description": "Primary market median per m2; null below 5 deeds"
+          },
+          "primaryDeeds": {
+            "type": "number"
+          },
+          "prevMedianM2": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median per m2 in the window one year earlier"
+          },
+          "changePct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Year-over-year change of the median, %"
+          },
+          "developerMedianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 9993,
+            "description": "Median asking price per m2 in developer price lists (dane.gov.pl)"
+          },
+          "developerOffers": {
+            "type": "number",
+            "nullable": true,
+            "example": 1595
+          },
+          "developerWeek": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-16",
+            "description": "Monday of the developer price-list week"
+          },
+          "url": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://finwire.pl/ceny-mieszkan/gliwice",
+            "description": "City page on finwire.pl; null = no page"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "voivodeship",
+          "population",
+          "populationYear",
+          "deeds",
+          "medianM2",
+          "p25M2",
+          "p75M2",
+          "medianAreaM2",
+          "medianPricePln",
+          "secondaryMedianM2",
+          "secondaryDeeds",
+          "primaryMedianM2",
+          "primaryDeeds",
+          "prevMedianM2",
+          "changePct",
+          "developerMedianM2",
+          "developerOffers",
+          "developerWeek",
+          "url"
+        ]
+      },
+      "HousingCitiesDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Data source as named by finwire.pl"
+          },
+          "window": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HousingCitiesWindowDto"
+              }
+            ]
+          },
+          "minDeeds": {
+            "type": "number",
+            "example": 200,
+            "description": "Minimum deeds of a city in the window"
+          },
+          "dataUntil": {
+            "type": "string",
+            "nullable": true,
+            "description": "Date of the newest deed in the data"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "count": {
+            "type": "number"
+          },
+          "cities": {
+            "description": "Cities from the cheapest median per m2",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HousingCitiesCityDto"
+            }
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/najtansze-mieszkania-w-polsce"
+          }
+        },
+        "required": [
+          "source",
+          "window",
+          "minDeeds",
+          "dataUntil",
+          "updatedAt",
+          "count",
+          "cities",
+          "pageUrl"
+        ]
+      },
+      "HousingCitiesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/HousingCitiesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "HousingCityQuarterDto": {
+        "type": "object",
+        "properties": {
+          "quarter": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "deeds": {
+            "type": "number"
+          },
+          "medianM2": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "quarter",
+          "deeds",
+          "medianM2"
+        ]
+      },
+      "HousingCityRankDto": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "type": "number",
+            "description": "1 = cheapest median per m2"
+          },
+          "of": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "position",
+          "of"
+        ]
+      },
+      "HousingCitySeriesPointDto": {
+        "type": "object",
+        "properties": {
+          "quarter": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "market": {
+            "type": "string",
+            "enum": [
+              "wszystkie",
+              "wtorny",
+              "pierwotny"
+            ],
+            "description": "All markets, secondary or primary"
+          },
+          "deeds": {
+            "type": "number"
+          },
+          "medianM2": {
+            "type": "number"
+          },
+          "p25M2": {
+            "type": "number"
+          },
+          "p75M2": {
+            "type": "number"
+          },
+          "provisional": {
+            "type": "boolean",
+            "example": false,
+            "description": "Quarter not complete yet (late deed entries)"
+          }
+        },
+        "required": [
+          "quarter",
+          "market",
+          "deeds",
+          "medianM2",
+          "p25M2",
+          "p75M2",
+          "provisional"
+        ]
+      },
+      "HousingCityDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Data source as named by finwire.pl"
+          },
+          "city": {
+            "$ref": "#/components/schemas/HousingCitiesCityDto"
+          },
+          "quarter": {
+            "nullable": true,
+            "description": "Latest quarter with enough deeds",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HousingCityQuarterDto"
+              }
+            ]
+          },
+          "rank": {
+            "nullable": true,
+            "description": "Null when the city is outside the ranking",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HousingCityRankDto"
+              }
+            ]
+          },
+          "window": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HousingCitiesWindowDto"
+              }
+            ]
+          },
+          "minDeeds": {
+            "type": "number",
+            "example": 200
+          },
+          "dataUntil": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "series": {
+            "description": "Quarterly medians since 2010: all markets, secondary and primary",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HousingCitySeriesPointDto"
+            }
+          },
+          "url": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://finwire.pl/ceny-mieszkan/gliwice"
+          }
+        },
+        "required": [
+          "source",
+          "city",
+          "quarter",
+          "rank",
+          "window",
+          "minDeeds",
+          "dataUntil",
+          "updatedAt",
+          "series",
+          "url"
+        ]
+      },
+      "HousingCityResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/HousingCityDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LandWindowDto": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "nullable": true,
+            "example": "2025-11-21",
+            "description": "Start of the last-12-months window"
+          },
+          "dataUntil": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-10",
+            "description": "Latest deed date in the register"
+          }
+        },
+        "required": [
+          "from",
+          "dataUntil"
+        ]
+      },
+      "LandStatsDto": {
+        "type": "object",
+        "properties": {
+          "medianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 160.83,
+            "description": "Median price per m2 of building plots, PLN"
+          },
+          "p25M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 98
+          },
+          "p75M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 290
+          },
+          "medianAreaM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 1243,
+            "description": "Median plot area, m2"
+          },
+          "medianPricePln": {
+            "type": "number",
+            "nullable": true,
+            "example": 225000,
+            "description": "Median deed price, PLN"
+          },
+          "transactions": {
+            "type": "number",
+            "nullable": true,
+            "example": 5629,
+            "description": "Deeds in the window (outliers excluded)"
+          }
+        },
+        "required": [
+          "medianM2",
+          "p25M2",
+          "p75M2",
+          "medianAreaM2",
+          "medianPricePln",
+          "transactions"
+        ]
+      },
+      "LandVoivodeshipItemDto": {
+        "type": "object",
+        "properties": {
+          "medianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 160.83,
+            "description": "Median price per m2 of building plots, PLN"
+          },
+          "p25M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 98
+          },
+          "p75M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 290
+          },
+          "medianAreaM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 1243,
+            "description": "Median plot area, m2"
+          },
+          "medianPricePln": {
+            "type": "number",
+            "nullable": true,
+            "example": 225000,
+            "description": "Median deed price, PLN"
+          },
+          "transactions": {
+            "type": "number",
+            "nullable": true,
+            "example": 5629,
+            "description": "Deeds in the window (outliers excluded)"
+          },
+          "slug": {
+            "type": "string",
+            "example": "mazowieckie"
+          },
+          "name": {
+            "type": "string",
+            "example": "mazowieckie"
+          },
+          "teryt": {
+            "type": "string",
+            "example": "14"
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/ceny-dzialek/mazowieckie"
+          }
+        },
+        "required": [
+          "medianM2",
+          "p25M2",
+          "p75M2",
+          "medianAreaM2",
+          "medianPricePln",
+          "transactions",
+          "slug",
+          "name",
+          "teryt",
+          "pageUrl"
+        ]
+      },
+      "LandPricesCountryDataDto": {
+        "type": "object",
+        "properties": {
+          "segment": {
+            "type": "string",
+            "example": "building"
+          },
+          "window": {
+            "$ref": "#/components/schemas/LandWindowDto"
+          },
+          "country": {
+            "$ref": "#/components/schemas/LandStatsDto"
+          },
+          "count": {
+            "type": "number",
+            "example": 16
+          },
+          "voivodeships": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LandVoivodeshipItemDto"
+            }
+          }
+        },
+        "required": [
+          "segment",
+          "window",
+          "country",
+          "count",
+          "voivodeships"
+        ]
+      },
+      "LandPricesCountryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LandPricesCountryDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LandVoivodeshipDto": {
+        "type": "object",
+        "properties": {
+          "medianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 160.83,
+            "description": "Median price per m2 of building plots, PLN"
+          },
+          "p25M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 98
+          },
+          "p75M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 290
+          },
+          "medianAreaM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 1243,
+            "description": "Median plot area, m2"
+          },
+          "medianPricePln": {
+            "type": "number",
+            "nullable": true,
+            "example": 225000,
+            "description": "Median deed price, PLN"
+          },
+          "transactions": {
+            "type": "number",
+            "nullable": true,
+            "example": 5629,
+            "description": "Deeds in the window (outliers excluded)"
+          },
+          "slug": {
+            "type": "string",
+            "example": "mazowieckie"
+          },
+          "name": {
+            "type": "string",
+            "example": "mazowieckie"
+          },
+          "teryt": {
+            "type": "string",
+            "example": "14"
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/ceny-dzialek/mazowieckie"
+          },
+          "rank": {
+            "type": "number",
+            "nullable": true,
+            "example": 3,
+            "description": "Position among 16 voivodeships by median price per m2 (1 = most expensive)"
+          },
+          "of": {
+            "type": "number",
+            "example": 16
+          }
+        },
+        "required": [
+          "medianM2",
+          "p25M2",
+          "p75M2",
+          "medianAreaM2",
+          "medianPricePln",
+          "transactions",
+          "slug",
+          "name",
+          "teryt",
+          "pageUrl",
+          "rank",
+          "of"
+        ]
+      },
+      "LandCapitalDto": {
+        "type": "object",
+        "properties": {
+          "medianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 160.83,
+            "description": "Median price per m2 of building plots, PLN"
+          },
+          "p25M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 98
+          },
+          "p75M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 290
+          },
+          "medianAreaM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 1243,
+            "description": "Median plot area, m2"
+          },
+          "medianPricePln": {
+            "type": "number",
+            "nullable": true,
+            "example": 225000,
+            "description": "Median deed price, PLN"
+          },
+          "transactions": {
+            "type": "number",
+            "nullable": true,
+            "example": 5629,
+            "description": "Deeds in the window (outliers excluded)"
+          },
+          "slug": {
+            "type": "string",
+            "example": "warszawa"
+          },
+          "name": {
+            "type": "string",
+            "example": "Warszawa"
+          },
+          "teryt": {
+            "type": "string",
+            "example": "1465",
+            "description": "TERYT of the city county"
+          }
+        },
+        "required": [
+          "medianM2",
+          "p25M2",
+          "p75M2",
+          "medianAreaM2",
+          "medianPricePln",
+          "transactions",
+          "slug",
+          "name",
+          "teryt"
+        ]
+      },
+      "LandCountyDto": {
+        "type": "object",
+        "properties": {
+          "medianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 160.83,
+            "description": "Median price per m2 of building plots, PLN"
+          },
+          "p25M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 98
+          },
+          "p75M2": {
+            "type": "number",
+            "nullable": true,
+            "example": 290
+          },
+          "medianAreaM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 1243,
+            "description": "Median plot area, m2"
+          },
+          "medianPricePln": {
+            "type": "number",
+            "nullable": true,
+            "example": 225000,
+            "description": "Median deed price, PLN"
+          },
+          "transactions": {
+            "type": "number",
+            "nullable": true,
+            "example": 5629,
+            "description": "Deeds in the window (outliers excluded)"
+          },
+          "teryt": {
+            "type": "string",
+            "example": "1421"
+          },
+          "name": {
+            "type": "string",
+            "example": "powiat warszawski zachodni"
+          },
+          "plot10ArPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 420000,
+            "description": "1000 m2 (10 ares) plot at the county median, PLN, rounded to 1000"
+          },
+          "distanceToCapitalKm": {
+            "type": "number",
+            "nullable": true,
+            "example": 19.2,
+            "description": "Distance between county and capital centroids (PRG address points), km"
+          },
+          "nearCapital": {
+            "type": "boolean",
+            "example": true,
+            "description": "County around the voivodeship capital (centroid within nearCapitalKm)"
+          }
+        },
+        "required": [
+          "medianM2",
+          "p25M2",
+          "p75M2",
+          "medianAreaM2",
+          "medianPricePln",
+          "transactions",
+          "teryt",
+          "name",
+          "plot10ArPln",
+          "distanceToCapitalKm",
+          "nearCapital"
+        ]
+      },
+      "LandQuarterDto": {
+        "type": "object",
+        "properties": {
+          "quarter": {
+            "type": "string",
+            "example": "2026-Q2"
+          },
+          "medianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 158
+          },
+          "ruralM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 128,
+            "description": "Rural areas: rural gminas and rural parts of urban-rural gminas (TERYT type 2 and 5)"
+          },
+          "urbanM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 470,
+            "description": "Urban areas (TERYT type 1, 4, 8, 9)"
+          },
+          "countryM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 125
+          },
+          "transactions": {
+            "type": "number",
+            "nullable": true,
+            "example": 1450
+          },
+          "provisional": {
+            "type": "boolean",
+            "example": false,
+            "description": "Quarter still incomplete (counties register deeds with delay)"
+          }
+        },
+        "required": [
+          "quarter",
+          "medianM2",
+          "ruralM2",
+          "urbanM2",
+          "countryM2",
+          "transactions",
+          "provisional"
+        ]
+      },
+      "LandPricesVoivodeshipDataDto": {
+        "type": "object",
+        "properties": {
+          "segment": {
+            "type": "string",
+            "example": "building"
+          },
+          "window": {
+            "$ref": "#/components/schemas/LandWindowDto"
+          },
+          "voivodeship": {
+            "$ref": "#/components/schemas/LandVoivodeshipDto"
+          },
+          "country": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LandStatsDto"
+              }
+            ]
+          },
+          "rural": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LandStatsDto"
+              }
+            ]
+          },
+          "urban": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LandStatsDto"
+              }
+            ]
+          },
+          "countryRural": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LandStatsDto"
+              }
+            ]
+          },
+          "countryUrban": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LandStatsDto"
+              }
+            ]
+          },
+          "capital": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LandCapitalDto"
+              }
+            ]
+          },
+          "nearCapitalKm": {
+            "type": "number",
+            "nullable": true,
+            "example": 30
+          },
+          "counties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LandCountyDto"
+            }
+          },
+          "quarterly": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LandQuarterDto"
+            }
+          }
+        },
+        "required": [
+          "segment",
+          "window",
+          "voivodeship",
+          "country",
+          "rural",
+          "urban",
+          "countryRural",
+          "countryUrban",
+          "capital",
+          "nearCapitalKm",
+          "counties",
+          "quarterly"
+        ]
+      },
+      "LandPricesVoivodeshipResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LandPricesVoivodeshipDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "FinwireIndexRefLiteDto": {
         "type": "object",
         "properties": {
@@ -12915,6 +14091,176 @@
           "yoyPct"
         ]
       },
+      "OfficialWageValueDto": {
+        "type": "object",
+        "properties": {
+          "amountPln": {
+            "type": "number",
+            "nullable": true,
+            "example": 9317.01
+          },
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-Q3",
+            "description": "YYYY-MM, YYYY-Qn or YYYY (for the social fund base: the year of the allowance)"
+          },
+          "periodLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "III kwarta\u0142 2026"
+          },
+          "publishedOn": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-10",
+            "description": "Day of publication (Monitor Polski or GUS release)"
+          },
+          "validFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-12-01",
+            "description": "Day from which the law applies the amount; null for the monthly enterprise average"
+          },
+          "act": {
+            "type": "string",
+            "nullable": true,
+            "example": "M.P. 2026 poz. 1122"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "amountPln",
+          "period",
+          "periodLabel",
+          "publishedOn",
+          "validFrom",
+          "act",
+          "sourceUrl"
+        ]
+      },
+      "OfficialWageUseDto": {
+        "type": "object",
+        "properties": {
+          "use": {
+            "type": "string",
+            "nullable": true,
+            "example": "Limity dorabiania do emerytury i renty: 70% i 130% kwoty"
+          },
+          "basis": {
+            "type": "string",
+            "nullable": true,
+            "example": "art. 104 ust. 7 i 8 ustawy o emeryturach i rentach z FUS"
+          }
+        },
+        "required": [
+          "use",
+          "basis"
+        ]
+      },
+      "OfficialWageAverageDto": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "enterprise_monthly",
+              "national_quarterly",
+              "national_annual",
+              "prognosed",
+              "enterprise_q4",
+              "zfss_base"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "current": {
+            "nullable": true,
+            "description": "Amount applied today",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OfficialWageValueDto"
+              }
+            ]
+          },
+          "next": {
+            "nullable": true,
+            "description": "Already announced amount applied from a future day",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OfficialWageValueDto"
+              }
+            ]
+          },
+          "uses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfficialWageUseDto"
+            }
+          }
+        },
+        "required": [
+          "kind",
+          "name",
+          "current",
+          "next",
+          "uses"
+        ]
+      },
+      "OfficialWagesDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-20"
+          },
+          "averages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfficialWageAverageDto"
+            }
+          },
+          "quarterly": {
+            "description": "Quarterly average wage in the national economy (GUS), ascending",
+            "example": [
+              {
+                "period": "2026-Q3",
+                "amountPln": 9317.01
+              }
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "distribution": {
+            "type": "object",
+            "nullable": true,
+            "description": "GUS wage distribution survey: mean, median and share of employees earning less than the mean, %"
+          },
+          "headline": {
+            "type": "object",
+            "nullable": true,
+            "description": "Latest release (quarterly or monthly) used as the headline average"
+          }
+        },
+        "required": [
+          "asOf",
+          "averages",
+          "quarterly",
+          "distribution",
+          "headline"
+        ]
+      },
       "WageEnterpriseDataDto": {
         "type": "object",
         "properties": {
@@ -12953,6 +14299,16 @@
             "items": {
               "$ref": "#/components/schemas/WageEnterpriseRegionDto"
             }
+          },
+          "officialAverages": {
+            "nullable": true,
+            "description": "Official averages used in Polish law with amount, period, publication day, day of application and legal basis of each use",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OfficialWagesDto"
+              }
+            ]
           }
         },
         "required": [
@@ -12961,7 +14317,8 @@
           "latest",
           "history",
           "regionsPeriod",
-          "regions"
+          "regions",
+          "officialAverages"
         ]
       },
       "WageEnterpriseResponseDto": {
@@ -17947,6 +19304,143 @@
           "meta"
         ]
       },
+      "DepositRateHistoryDataDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_real_avg_deposit_rate"
+          },
+          "name": {
+            "type": "string",
+            "example": "Realne oprocentowanie przeci\u0119tnej lokaty finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "nullable": true,
+            "example": 1
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09",
+            "description": "Latest NBP MIR month"
+          },
+          "firstPeriod": {
+            "type": "string",
+            "nullable": true,
+            "example": "2005-01",
+            "description": "First NBP MIR month"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "units": {
+            "type": "object"
+          },
+          "latest": {
+            "type": "object",
+            "nullable": true,
+            "description": "Average rate on new household PLN deposits in the latest month: all maturities, up to 1 month, 1-3, 3-6 and 6-12 months"
+          },
+          "yearAgo": {
+            "type": "object",
+            "nullable": true,
+            "description": "The same month a year earlier"
+          },
+          "latestYear": {
+            "type": "object",
+            "nullable": true,
+            "description": "Latest full year with annual average CPI: finwire_real_avg_deposit_rate reading"
+          },
+          "fullYears": {
+            "type": "number",
+            "nullable": true,
+            "example": 21,
+            "description": "Full years with the real result"
+          },
+          "yearsAboveInflation": {
+            "type": "number",
+            "nullable": true,
+            "example": 14,
+            "description": "Years in which the average new deposit beat annual average CPI"
+          },
+          "yearsAboveInflationAfterTax": {
+            "type": "number",
+            "nullable": true,
+            "description": "The same after the Polish capital gains tax"
+          },
+          "bestYear": {
+            "type": "object",
+            "nullable": true
+          },
+          "worstYear": {
+            "type": "object",
+            "nullable": true
+          },
+          "peakMonth": {
+            "type": "object",
+            "nullable": true,
+            "description": "Highest monthly average (all maturities)"
+          },
+          "troughMonth": {
+            "type": "object",
+            "nullable": true,
+            "description": "Lowest monthly average (all maturities)"
+          },
+          "years": {
+            "description": "Years ascending: months with NBP data, average rate, annual average CPI (GUS), real result before and after tax (null for the year in progress)",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "monthly": {
+            "description": "Monthly average rates by maturity, ascending",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "asOf",
+          "firstPeriod",
+          "updatedAt",
+          "units",
+          "latest",
+          "yearAgo",
+          "latestYear",
+          "fullYears",
+          "yearsAboveInflation",
+          "yearsAboveInflationAfterTax",
+          "bestYear",
+          "worstYear",
+          "peakMonth",
+          "troughMonth",
+          "years",
+          "monthly"
+        ]
+      },
+      "DepositRateHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DepositRateHistoryDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "FixedCostBurdenDataDto": {
         "type": "object",
         "properties": {
@@ -19669,6 +21163,101 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/EnergyPricesDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "HouseholdInflationSeriesDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true,
+            "example": "retirees_pensioners"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "yoy": {
+            "type": "number",
+            "nullable": true,
+            "example": 3.3
+          },
+          "mom": {
+            "type": "number",
+            "nullable": true,
+            "example": -0.1
+          },
+          "diffPp": {
+            "type": "number",
+            "nullable": true,
+            "example": -0.2
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "yoy",
+          "mom",
+          "diffPp"
+        ]
+      },
+      "HouseholdInflationDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-10"
+          },
+          "index": {
+            "type": "object",
+            "description": "finwire_household_inflation_index: id, name, method version, period, page"
+          },
+          "cpiTotal": {
+            "type": "object",
+            "description": "Statistics Poland CPI total y/y and m/m, %"
+          },
+          "personas": {
+            "description": "finwire.pl method: family types and income quintiles",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HouseholdInflationSeriesDto"
+            }
+          },
+          "gusGroups": {
+            "description": "Official Statistics Poland CPI by socio-economic group",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HouseholdInflationSeriesDto"
+            }
+          },
+          "retirees": {
+            "type": "object",
+            "description": "Retiree inflation (inflacja emerycka): latest month, year-to-date and annual averages (finwire.pl approximation) with the higher index under art. 89(2), basket shares from Statistics Poland weights, monthly history"
+          }
+        },
+        "required": [
+          "asOf",
+          "index",
+          "cpiTotal",
+          "personas",
+          "gusGroups",
+          "retirees"
+        ]
+      },
+      "HouseholdInflationResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/HouseholdInflationDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
