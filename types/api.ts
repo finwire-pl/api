@@ -72,6 +72,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/series/fx-customs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Customs exchange rates: NBP table A of the penultimate Wednesday, current and next month */
+        get: operations["SeriesController_fxCustoms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/series/fx/{code}": {
         parameters: {
             query?: never;
@@ -266,7 +283,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** IKE/IKZE legal limits and related values (updated annually) */
+        /** Statutory limits of the current year (IKE/IKZE, PIT, tax-free amount) and a business block: euro-denominated limits (small VAT, PIT and CIT taxpayer, flat-rate tax, de minimis one-off depreciation, full accounting threshold) in PLN at the NBP rate of the first business day of October for the previous, current and next year, fiscal penal code fines and thresholds from the minimum wage, and the monthly company car private use amounts */
         get: operations["ReferenceController_legalLimits"];
         put?: never;
         post?: never;
@@ -370,6 +387,23 @@ export interface paths {
         };
         /** Granica podatku od mieszkań finwire (finwire_property_tax_cap): upper limits of the local property tax for the next year from the formula in art. 20 of the local taxes act (this year limit x GUS CPI index for the first half-year, rounded up to full grosz) - estimate from monthly CPI, final figure from the GUS notice, then the Minister of Finance announcement. All 9 categories, 80% interval, estimate path and accuracy on past years */
         get: operations["ReferenceController_localTaxNextYear"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/local-fees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Upper limits of Polish local fees (market fee, tourist (local) and spa fee, dog fee, advertising fee) and of the transport vehicle tax per tax year from the Minister of Finance announcements, the 2027 reform (tourist and spa fee per night), the finwire index finwire_resort_fee_family_week (maximum fee for 7 nights of a family of 2+2) and agricultural and forest tax per hectare from GUS rye and wood prices */
+        get: operations["ReferenceController_localFees"];
         put?: never;
         post?: never;
         delete?: never;
@@ -557,6 +591,23 @@ export interface paths {
         };
         /** Median APRC and nominal cash loan rates (aggregate) */
         get: operations["MarketController_cashLoanRates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/market/account-costs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Personal account cost aggregates by group: all accounts, young people and children, foreign currency accounts (no offers) */
+        get: operations["MarketController_accountCosts"];
         put?: never;
         post?: never;
         delete?: never;
@@ -761,6 +812,23 @@ export interface paths {
         };
         /** Carry nieruchomości finwire (finwire_housing_carry): net rental yield of a flat minus the mortgage interest rate per city, percentage points, monthly with history; negative = interest on a loan for the whole price exceeds net rent. Informational data, not investment advice */
         get: operations["RealEstateController_housingCarry"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/cost-of-living": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Koszt życia w mieście finwire (finwire_city_cost_of_living): monthly cost of housing and living of a family of 2 adults and 1 child in 17 Polish cities, renting a 3-room flat and owning it without a mortgage, with each component (asking rent, GUS running costs, property tax upper limit, GUS household budget expenses, flat price) and its period */
+        get: operations["RealEstateController_costOfLiving"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1014,7 +1082,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Average retail prices of 30 goods and services in Poland (GUS): latest month, month and year changes, minutes of work at the average net wage, finwire shopping basket (finwire_shopping_basket_index) with history */
+        /** Average retail prices of 30 goods and services in Poland (GUS): latest month, month and year changes, minutes of work at the average net wage, finwire shopping basket (finwire_shopping_basket_index) with history; excise duty and VAT in the price of cigarettes, vodka, beer, wine and fuel at today's rates, upcoming excise changes and Akcyza w cenie papierosów finwire (finwire_cigarette_excise_share) */
         get: operations["MacroController_retailPrices"];
         put?: never;
         post?: never;
@@ -1033,6 +1101,23 @@ export interface paths {
         };
         /** Average ZUS old-age pension (gross and net), disability and survivor pensions, recipients, sickness and maternity allowances, pension to wage ratio (finwire_pension_wage_ratio), CPI, indexations and monthly history */
         get: operations["MacroController_pensions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pension-payment-dates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ZUS pension payment calendar for 12 months: payment days from ZUS announcements, dates moved to the last working day before weekends and public holidays, next payment for each day, 800+ payment deadlines by filing date, minimum pensions and the number of ZUS pension recipients */
+        get: operations["MacroController_pensionPaymentDates"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1065,7 +1150,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Daily price index finwire (finwire_daily_price_index, experimental): online shelf prices of a fixed basket of food, household and personal care products in three Polish online shops, unit prices per kg, l or piece, Jevons within COICOP 2018 subclasses and GUS CPI weights; base month = 100. Daily series, monthly readings with m/m, categories, food part vs GUS CPI food, collection state and the basket list. No prices of single products or shops. */
+        /** Daily price index finwire (finwire_daily_price_index, experimental): online shelf prices of a fixed basket of food, household and personal care products in three Polish online shops, unit prices per kg, l or piece, Jevons within COICOP 2018 subclasses and GUS CPI weights; base month = 100. Daily series, monthly readings with m/m, categories, food part vs GUS CPI food, shop comparison (the same index per shop, category changes per shop vs GUS CPI of the category), collection state and the basket list. No prices of single products or shops. */
         get: operations["MacroController_dailyPriceIndex"];
         put?: never;
         post?: never;
@@ -1150,7 +1235,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Child benefits paid by ZUS (Polish Social Insurance Institution): 800 plus (świadczenie wychowawcze) and the three Aktywny Rodzic benefits (working parents, nursery, at home) per month - benefits paid, amounts since January and in the month, children, 800 plus applications, 16 voivodeships with the share of Aktywny Rodzic variants and Wypłaty na dzieci z ZUS finwire (finwire_child_benefits_payout, PLN billion in the month); ZUS data CC0 1.0 */
+        /** Child benefits paid by ZUS (Polish Social Insurance Institution): 800 plus (świadczenie wychowawcze) and the three Aktywny Rodzic benefits (working parents, nursery, at home) per month - benefits paid, amounts since January and in the month, children, 800 plus applications, 16 voivodeships with the share of Aktywny Rodzic variants and Wypłaty na dzieci z ZUS finwire (finwire_child_benefits_payout, PLN billion in the month); ZUS data CC0 1.0. Block familyBenefitAmounts: family benefits paid by municipalities from the Council of Ministers regulation (family allowance by age, supplements, income thresholds, birth grant, care benefit, special care allowance), the nursing benefit świadczenie pielęgnacyjne computed from the minimum wage, Dobry Start and Realny zasiłek rodzinny finwire (finwire_family_allowance_real: family allowance in prices of the month of the last review, GUS CPI) */
         get: operations["MacroController_familyBenefits"];
         put?: never;
         post?: never;
@@ -2843,6 +2928,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/car-costs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cost of driving 100 km in Poland per day (finwire_car_cost_100km) with petrol 95, diesel, LPG and electricity (home G12 tariff, public AC and DC chargers) for the ICCT reference compact car, the daily prices behind it, NBP EUR and USD mid rates, and the legal constants of buying a car: customs duty for cars from outside the EU (TARIC, US-origin preference), import VAT, PCC on a used car from a private seller with its exemption threshold, toll motorway sections free for cars up to 3.5 t with announced changes and the speeding fine and penalty point table. */
+        get: operations["CarCostsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/oil-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Brent and WTI crude oil spot prices (U.S. Energy Information Administration) in USD and PLN per barrel (NBP mid rate of the trading day or the last earlier one), week, month and year change, 52-week range, Brent-WTI spread, finwire_brent_pln, and recent weeks of Polish pump prices (European Commission Weekly Oil Bulletin) and maximum prices next to the crude cost per litre. */
+        get: operations["OilPricesController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ofe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Open pension funds (OFE) in Poland from KNF: members, accounts, contributions from ZUS, accounting unit value and net assets by fund (monthly), net rates of return over 12, 36, 60 and 120 months (KNF, April and October), 100 PLN in OFE vs 100 PLN on the ZUS subaccount over the same window, yearly ZUS subaccount indexation and finwire_ofe_vs_subaccount_10y. */
+        get: operations["OfeController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/build-cost": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** House building cost in Poland: replacement cost per m2 of a residential building announced by voivodes (average of the two latest half-year announcements, derived from BGK family housing loan limits) for 52 locations and 16 voivodeships, a 120 m2 house per voivodeship with the change year on year, the finwire index finwire_house_build_cost (quarterly history) and GUS construction and assembly price indices by division of section F (monthly, m/m and y/y). An official indicator, not a contractor quote. A block is null when its source has no data yet. */
+        get: operations["BuildCostController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2965,6 +3118,69 @@ export interface components {
         };
         FxTableResponseDto: {
             data: components["schemas"]["FxTableDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        FxCustomsMonthDto: {
+            /**
+             * @description Month the customs rate applies (YYYY-MM)
+             * @example 2026-12
+             */
+            month: string;
+            /**
+             * @description Penultimate Wednesday of the previous month (date of NBP table A)
+             * @example 2026-11-18
+             */
+            sourceDate: string;
+            /**
+             * @description pending = table of that Wednesday not published yet; no-table = NBP published no table A on that Wednesday (no rate shown)
+             * @enum {string}
+             */
+            status: "ok" | "pending" | "no-table";
+            /** @example 224/A/NBP/2026 */
+            tableNo: string | null;
+        };
+        FxCustomsRowDto: {
+            /** @example USD */
+            code: string;
+            /** @example Dolar amerykański */
+            name: string;
+            /**
+             * @description Customs rate in the current month (PLN)
+             * @example 4.0545
+             */
+            currentMonthRate: number | null;
+            /**
+             * @description Customs rate in the next month (PLN), null until published
+             * @example 4.017
+             */
+            nextMonthRate: number | null;
+            /**
+             * @description Latest NBP mid rate (PLN)
+             * @example 4.0613
+             */
+            latestMid: number;
+            /** @example 2026-11-20 */
+            latestDate: string;
+            /**
+             * @description Current customs rate vs latest NBP mid rate, %
+             * @example -0.17
+             */
+            diffPct: number | null;
+        };
+        FxCustomsDataDto: {
+            /** @example NBP */
+            source: string;
+            rule: string;
+            currentMonth: components["schemas"]["FxCustomsMonthDto"];
+            nextMonth: components["schemas"]["FxCustomsMonthDto"];
+            /** @example 2026-11-20 */
+            latestDate: string | null;
+            /** @example 31 */
+            count: number;
+            rows: components["schemas"]["FxCustomsRowDto"][];
+        };
+        FxCustomsResponseDto: {
+            data: components["schemas"]["FxCustomsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         FxHistoryDataDto: {
@@ -3426,6 +3642,10 @@ export interface components {
             lifeExpectancy: {
                 [key: string]: unknown;
             };
+            /** @description Business block: eurRates (NBP mid rate of the first business day of October per year), eurLimits (key, label, measure, legalBasis, rounding, values per year in EUR and PLN), taxOffences (fiscal penal code fines and thresholds from the minimum wage, current and next), companyCarPrivateUse (monthly PLN amounts). Null when the upstream is unavailable. */
+            business: {
+                [key: string]: unknown;
+            } | null;
         };
         LegalLimitsResponseDto: {
             data: components["schemas"]["LegalLimitsDataDto"];
@@ -3517,7 +3737,7 @@ export interface components {
         };
         NextYearLimitItemDto: {
             /**
-             * @description pension_indexation, min_pension, min_wage, min_hourly, zus_preferential_base, prognosed_wage, ike, ikze, ikze_self_employed, pension_base_cap_30x, zus_full_base, ryczalt_limit, cit_small_taxpayer
+             * @description pension_indexation, min_pension, min_wage, min_hourly, zus_preferential_base, prognosed_wage, ike, ikze, ikze_self_employed, pension_base_cap_30x, zus_full_base, ryczalt_limit, cit_small_taxpayer, vat_small_taxpayer, pit_small_taxpayer, depreciation_de_minimis, full_accounting_threshold, kks_offence_threshold
              * @example pension_indexation
              */
             key: string;
@@ -3751,6 +3971,73 @@ export interface components {
         };
         PropertyTaxCapsResponseDto: {
             data: components["schemas"]["PropertyTaxCapsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        LocalFeeRateDto: {
+            /** @example oplata_psy */
+            key: string;
+            /**
+             * @example local_fees
+             * @enum {string}
+             */
+            group: "local_fees" | "transport_tax";
+            /** @example Opłata od posiadania psów */
+            label: string;
+            /** @example art. 19 pkt 1 lit. f */
+            legalRef: string;
+            /** @example zł rocznie od psa */
+            unit: string;
+            /**
+             * @description krajobraz | ochrona_uzdrowiskowa | uzdrowisko for the tourist and spa fee
+             * @example null
+             */
+            resortType: string | null;
+            /**
+             * @description Upper limit; municipalities set their own rate up to it
+             * @example 191.32
+             */
+            maxRate: number;
+            /**
+             * @description false = position of the announcement repealed for this year (daily tourist fee from 2027)
+             * @example true
+             */
+            inForce: boolean;
+            /**
+             * @example announcement
+             * @enum {string}
+             */
+            basis: "announcement" | "statute";
+        };
+        LocalFeesYearDto: {
+            /** @example 2027 */
+            taxYear: number;
+            /**
+             * @example per_night
+             * @enum {string}
+             */
+            resortFeeRegime: "per_day" | "per_night";
+            act: components["schemas"]["LocalTaxActDto"] | null;
+            rates: components["schemas"]["LocalFeeRateDto"][];
+        };
+        LocalFeesDataDto: {
+            /** @example 2026 */
+            currentYear: number;
+            /** @example 2026 */
+            defaultYear: number | null;
+            /** @example 2027 */
+            nextYear: number | null;
+            changedAt: string | null;
+            years: components["schemas"]["LocalFeesYearDto"][];
+            /** @description Tourist and spa fee per night from 1 January 2027 (Dz.U. 2026 poz. 1354) */
+            resortFeeReform: Record<string, never>;
+            /** @description finwire_resort_fee_family_week: maximum fee for 7 nights of 2 adults and 2 children by resort type */
+            familyWeekIndex: Record<string, never> | null;
+            familyWeekHistory: Record<string, never>[];
+            /** @description Agricultural and forest tax per hectare from GUS rye and wood prices */
+            agriculturalForestTax: Record<string, never>;
+        };
+        LocalFeesResponseDto: {
+            data: components["schemas"]["LocalFeesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         BrokerCommissionDto: {
@@ -4442,6 +4729,55 @@ export interface components {
         };
         CashLoanRatesResponseDto: {
             data: components["schemas"]["CashLoanRatesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        AccountCostValuesDto: {
+            /** @description PLN per year without meeting the fee waiver conditions */
+            annualCostWithoutConditions: components["schemas"]["NumericAggregateDto"] | null;
+            /** @description PLN per year after meeting the conditions */
+            annualCostWithConditions: components["schemas"]["NumericAggregateDto"] | null;
+        };
+        FxAccountFeeValuesDto: {
+            /** @description PLN per month without conditions */
+            accountFeeWithoutConditions: components["schemas"]["NumericAggregateDto"] | null;
+            accountFeeWithConditions: components["schemas"]["NumericAggregateDto"] | null;
+            debitCardFeeWithoutConditions: components["schemas"]["NumericAggregateDto"] | null;
+            /** @description SEPA credit transfer, PLN */
+            sepaTransfer: components["schemas"]["NumericAggregateDto"] | null;
+        };
+        AccountCostsDataDto: {
+            /** @enum {string} */
+            group: "all" | "young" | "fx";
+            /** @example 55 */
+            accounts: number;
+            /** @example 16 */
+            bankCount: number;
+            /** @example 5 */
+            youngAccounts?: number;
+            /** @example 10 */
+            kidsAccounts?: number;
+            /**
+             * @description Accounts that cost 0 PLN without any condition
+             * @example 12
+             */
+            freeWithoutConditions: number;
+            /**
+             * @description fx: accounts with a debit card fee in KNF
+             * @example 28
+             */
+            withDebitCard?: number;
+            dataChangedAt?: Record<string, never> | null;
+            /** @example 2026-04-22 */
+            dataDateMin?: Record<string, never> | null;
+            /** @example 2026-11-16 */
+            dataDateMax?: Record<string, never> | null;
+            unit: string;
+            note: string;
+            costs?: components["schemas"]["AccountCostValuesDto"];
+            fees?: components["schemas"]["FxAccountFeeValuesDto"];
+        };
+        AccountCostsResponseDto: {
+            data: components["schemas"]["AccountCostsDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         SnapshotDataDto: {
@@ -5274,6 +5610,82 @@ export interface components {
         };
         HousingCarryResponseDto: {
             data: components["schemas"]["HousingCarryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        CostOfLivingCityDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            name: string;
+            /** @example mazowieckie */
+            voivodeship: string;
+            /**
+             * @description 1 = lowest monthly cost when renting
+             * @example 17
+             */
+            rank: number | null;
+            /**
+             * @description Flat area: average area of 3-room rent listings (fallback: GUS floor area per person x 3)
+             * @example 63
+             */
+            flatAreaM2: number | null;
+            /** @enum {string|null} */
+            flatAreaBasis: "rent_listings_3_rooms" | "gus_floor_area_per_person" | null;
+            /** @description Monthly cost of a family of 2 adults and 1 child: renting (rent + running costs + living expenses) and owning without a mortgage (running costs + property tax + living expenses), PLN */
+            monthlyTotal: Record<string, never>;
+            /** @description Monthly housing cost only, PLN */
+            monthlyHousing: Record<string, never>;
+            /** @description Living expenses outside housing (GUS household budget survey, Poland average), PLN per month */
+            monthlyLivingExpenses: number | null;
+            /** @description Median asking rent of 3-room flats (znajdznajem.pl, CC BY 4.0) */
+            rent: Record<string, never> | null;
+            /** @description Owners association fee, central heating, water, waste and electricity from GUS Local Data Bank rates */
+            runningCosts: Record<string, never> | null;
+            /** @description Gas price per kWh (GUS), shown only - no consumption data */
+            gasPricePerKwh: Record<string, never> | null;
+            /** @description Property tax at the statutory upper rate for flats (Minister of Finance announcement) */
+            propertyTax: Record<string, never> | null;
+            /** @description Median secondary-market transaction price (RCN deeds, GUS fallback) */
+            flatPrice: Record<string, never> | null;
+            /**
+             * @description Flat price divided by yearly rent
+             * @example 20.6
+             */
+            yearsOfRentToBuy: number | null;
+        };
+        CostOfLivingDataDto: {
+            /** @example finwire_city_cost_of_living */
+            seriesId: string;
+            /** @example Koszt życia w mieście finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /**
+             * @description Day of the latest rent listings
+             * @example 2026-11-20
+             */
+            asOf: string | null;
+            /**
+             * @example {
+             *       "adults": 2,
+             *       "children": 1,
+             *       "persons": 3,
+             *       "rooms": 3
+             *     }
+             */
+            household: Record<string, never>;
+            /** @description Index reading: median monthly cost of renting across cities */
+            index: Record<string, never> | null;
+            /** @description Period of each component, from the data */
+            periods: Record<string, never>;
+            /** @description Living expenses of a married couple with 1 child by COICOP division without housing and energy, at prices of the latest CPI month */
+            livingExpenses: Record<string, never> | null;
+            /** @description finwire shopping basket (GUS retail prices, Poland), context only */
+            shoppingBasket: Record<string, never> | null;
+            cities: components["schemas"]["CostOfLivingCityDto"][];
+        };
+        CostOfLivingResponseDto: {
+            data: components["schemas"]["CostOfLivingDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         RentDistrictDto: {
@@ -6285,6 +6697,10 @@ export interface components {
             product: components["schemas"]["RetailProductHistoryDto"] | null;
             source: components["schemas"]["RetailSourceDto"];
             methodVersion: number | null;
+            /** @description Excise duty in prices: items (pack of 20 cigarettes, vodka 0.5 l 40%, beer 0.5 l, wine 0.75 l from GUS BDL P1467 yearly prices; petrol 95 and diesel per litre from GUS monthly prices) with excisePln, exciseSharePct, vatPln, taxSharePct at the rates in force on asOf and the next announced rate; rates of all excise goods; annualPrices with provinces; index finwire_cigarette_excise_share (share of excise in the average pack price, yearly). null = no data. */
+            excise: {
+                [key: string]: unknown;
+            } | null;
         };
         RetailPricesResponseDto: {
             data: components["schemas"]["RetailPricesDataDto"];
@@ -6381,6 +6797,73 @@ export interface components {
         };
         ZusBenefitsResponseDto: {
             data: components["schemas"]["ZusBenefitsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        PensionPaymentDateDto: {
+            /**
+             * @description Day of the month set in the ZUS decision
+             * @example 1
+             */
+            termDay: number | null;
+            /** @example 2026-08-01 */
+            termDate: string | null;
+            /**
+             * @description Day ZUS pays after the shift before a non-working day
+             * @example 2026-07-31
+             */
+            paymentDate: string | null;
+            /** @example true */
+            shifted: boolean;
+            /** @example 1 */
+            shiftDays: number | null;
+            /**
+             * @description saturday, sunday or holiday
+             * @example saturday
+             */
+            shiftReason: string | null;
+            /**
+             * @description Polish name of the public holiday
+             * @example null
+             */
+            holiday: string | null;
+            /**
+             * @description The payment falls in the previous month (the 1st of the month)
+             * @example true
+             */
+            paidInPreviousMonth: boolean;
+        };
+        PensionPaymentMonthDto: {
+            /** @example 2026-12 */
+            month: string | null;
+            /** @example 3 */
+            shiftedCount: number | null;
+            dates: components["schemas"]["PensionPaymentDateDto"][];
+        };
+        PensionPaymentDatesDataDto: {
+            /**
+             * @description Date the calendar is computed for (Europe/Warsaw)
+             * @example 2026-11-20
+             */
+            asOf: string | null;
+            /** @description Payment days from ZUS announcements, the non-working day rule, legal basis and sources */
+            rule: Record<string, never>;
+            /** @description Next payment for each payment day, by payment date */
+            nextPayments: components["schemas"]["PensionPaymentDateDto"][];
+            /** @description Shifted dates in the 12-month calendar */
+            shiftedCount: number | null;
+            /** @description Payment calendar for 12 months from the current month */
+            calendar: components["schemas"]["PensionPaymentMonthDto"][];
+            /** @description 800+ child benefit: amount, benefit period, applications start and payment deadlines by filing date (art. 21 sec. 4-5c) */
+            childBenefit: Record<string, never>;
+            /** @description Minimum old-age pension, survivor pension and total disability pension (PLN gross) in force */
+            minimumPension: Record<string, never> | null;
+            /** @description Minimum partial disability pension (PLN gross) in force */
+            minimumPartialDisabilityPension: Record<string, never> | null;
+            /** @description Latest ZUS month: recipients of pensions (thousand), payouts (thousand PLN), average amounts by benefit */
+            recipients: Record<string, never> | null;
+        };
+        PensionPaymentDatesResponseDto: {
+            data: components["schemas"]["PensionPaymentDatesDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         AveragePoleTraitDto: {
@@ -6519,6 +7002,8 @@ export interface components {
             collection: Record<string, never>;
             /** @description Basket list per category: generic product name, pack size, number of products; no prices, brands or shop links */
             basket: unknown[][];
+            /** @description Shop comparison: the same index computed from the quotes of each shop only (value, changeSinceBasePct, changeMonthAgoPct vs the reading about a month earlier), category changes per shop (basis gus = completed month m/m next to GUS CPI of the same category, mom = month to date, base = since the base month; null below minProducts products of the shop in the category) and GUS CPI m/m of the categories (gusCpi); series = daily index per shop. Changes only, no prices. */
+            storeComparison: Record<string, never> | null;
         };
         DailyPriceIndexResponseDto: {
             data: components["schemas"]["DailyPriceIndexDataDto"];
@@ -6864,6 +7349,8 @@ export interface components {
             municipalitySearch: Record<string, never> | null;
             /** @description finwire_child_benefits_payout: PLN billion paid in the month, year on year, history */
             childBenefitsPayout: Record<string, never> | null;
+            /** @description Family benefits from municipalities (Council of Ministers regulation, reviewed every 3 years): current and upcoming amounts with legal basis, benefit period, income rule, next review dates, świadczenie pielęgnacyjne (computed from the minimum wage), Dobry Start and finwire_family_allowance_real (PLN in prices of the review month, history) */
+            familyBenefitAmounts: Record<string, never> | null;
         };
         FamilyBenefitsResponseDto: {
             data: components["schemas"]["FamilyBenefitsDataDto"];
@@ -7030,6 +7517,8 @@ export interface components {
             locations: components["schemas"]["RkmLimitLocationDto"][];
             /** @description Mieszkania w limicie kredytu bez wkładu finwire (finwire_rkm_offer_fit): share of developer offers within the limit per voivodeship city */
             offerFit: Record<string, never> | null;
+            /** @description State of government housing programmes: family housing loan, Safe Loan 2% (bezpieczny kredyt 2%), withdrawn bills Pierwsze klucze and #naStart, draft amendment; state active | ended | closed | withdrawn | draft | parliament | enacted | in-force | rejected, Sejm prints with stage from the Sejm process card */
+            housingPrograms: Record<string, never> | null;
             /** @description Quarters in the data with the BGK list date and PDF */
             quarters: unknown[][];
         };
@@ -11810,6 +12299,26 @@ export interface components {
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        CarCostsResponseDto: {
+            /** @description Projection of the dataset car-costs (see /v1/datasets/car-costs) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        OilPricesResponseDto: {
+            /** @description Projection of the dataset oil-prices (see /v1/datasets/oil-prices) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        OfeResponseDto: {
+            /** @description Projection of the dataset ofe (see /v1/datasets/ofe) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        BuildCostResponseDto: {
+            /** @description Projection of the dataset build-cost (see /v1/datasets/build-cost) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
     };
     responses: never;
     parameters: never;
@@ -11900,6 +12409,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FxTableResponseDto"];
+                };
+            };
+        };
+    };
+    SeriesController_fxCustoms: {
+        parameters: {
+            query?: {
+                /** @description ISO currency code; omit for all currencies */
+                code?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FxCustomsResponseDto"];
                 };
             };
         };
@@ -12272,6 +12803,25 @@ export interface operations {
             };
         };
     };
+    ReferenceController_localFees: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocalFeesResponseDto"];
+                };
+            };
+        };
+    };
     ReferenceController_brokers: {
         parameters: {
             query?: never;
@@ -12495,6 +13045,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CashLoanRatesResponseDto"];
+                };
+            };
+        };
+    };
+    MarketController_accountCosts: {
+        parameters: {
+            query?: {
+                /** @description all (default), young (young people and children), fx (foreign currency accounts, KNF) */
+                group?: "all" | "young" | "fx";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountCostsResponseDto"];
                 };
             };
         };
@@ -12735,6 +13307,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HousingCarryResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_costOfLiving: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CostOfLivingResponseDto"];
                 };
             };
         };
@@ -13068,6 +13659,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZusBenefitsResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_pensionPaymentDates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PensionPaymentDatesResponseDto"];
                 };
             };
         };
@@ -15401,6 +16011,98 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UsEconomyResponseDto"];
+                };
+            };
+        };
+    };
+    CarCostsController_get: {
+        parameters: {
+            query?: {
+                /** @description Last N days of history, 1-400; default all (up to 400 days) */
+                days?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CarCostsResponseDto"];
+                };
+            };
+        };
+    };
+    OilPricesController_get: {
+        parameters: {
+            query?: {
+                /** @description Add a chart history: 1y and 5y daily, max monthly averages; default none */
+                history?: "1y" | "5y" | "max";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OilPricesResponseDto"];
+                };
+            };
+        };
+    };
+    OfeController_get: {
+        parameters: {
+            query?: {
+                /** @description Last N points of the monthly history, 1-400; default all (monthly since 2017 with gaps where KNF search has no file) */
+                months?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OfeResponseDto"];
+                };
+            };
+        };
+    };
+    BuildCostController_get: {
+        parameters: {
+            query?: {
+                /** @description Voivodeship slug, name or voivodeship city, e.g. malopolskie or Kraków; default all */
+                voivodeship?: string;
+                /** @description Last N quarters of the location and index history, 1-40; default all */
+                quarters?: string;
+                /** @description Last N months of the GUS price index history, 1-400; default all */
+                months?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BuildCostResponseDto"];
                 };
             };
         };
