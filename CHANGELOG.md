@@ -5,6 +5,10 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ## 2026-11-21
 
+### Changed
+
+- `GET /v1/world/policy-rates`: Poland's CPI and real rate now use the GUS reading when its month is at least as recent as the BIS long CPI series (BIS publishes Poland later and from its own index); new field `poland.cpiSource` (`label`, `url`) names the source of `poland.cpiYoyPct`.
+
 ### Added
 
 - `GET /v1/daily-price-index` - new field `storeComparison` (dataset `daily-price-index`, MCP `get_daily_price_index`): the same Daily price index finwire computed from the quotes of each online shop only (`value`, `changeSinceBasePct`, `changeMonthAgoPct` vs the reading about a month earlier), category changes per shop (`basis`: `gus` = completed month m/m next to GUS CPI of the same category in `gusCpi`, `mom` = month to date, `base` = since the base month; `changePct` null when the shop has fewer than `minProducts` products in the category) and the daily index per shop (`series`). Price changes only, no prices; covers only the listed shops, not the whole market.
