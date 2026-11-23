@@ -3,6 +3,14 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-23
+
+### Added
+
+- `GET /v1/credit-market/banking-sector` (optional `group`: `sector`, `commercial`, `branches`, `cooperative`; `months` 1-240) - dataset `banking-sector`: Polish banking sector from KNF monthly data (FINREP): household housing loans (also by currency) and consumer loans with stage 2 and impaired loans (IFRS 9 stage 3), provisions and ratios, household deposits by currency, and the profit and loss account (`profit`): net and gross profit, tax, net interest and fee income, total operating income, operating costs and impairment year-to-date (as published by KNF), a year earlier, in the month and over 12 months (derived by finwire.pl), tax as % of gross profit, costs as % of income, monthly history, and the finwire index Udział odsetek w przychodach banków finwire (`finwire_bank_interest_share`: net interest income / total operating income over 12 months). Attribution "KNF".
+- MCP server 1.34.0: new tool `get_banking_sector` (optional `group`, `history`); `banking-sector` in `search_datasets` and `get_dataset`.
+- `GET /v1/finwire-index/finwire_poland_rating` - Rating Polski finwire: average notch of the current long-term foreign-currency ratings of Poland by Fitch, Moody's, S&P, Morningstar DBRS and Scope Ratings on a common scale (AAA = 20, A- = A3 = A (low) = 14), yearly history (end of year, current year as of today), `extra` with the rating closest to the average and the outlook balance. Only the derived index; the ratings of the agencies are not redistributed.
+
 ## 2026-11-21
 
 ### Changed

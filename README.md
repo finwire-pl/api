@@ -113,6 +113,7 @@ Each dataset name links to its documentation page with fields, source and citati
 | [House prices and housing conditions in Europe](https://public-api.finwire.pl/datasets/eu-housing) | `/v1/housing/europe` | [Eurostat](https://ec.europa.eu/eurostat) | quarterly, yearly | since 2010 (conditions) |
 | [Bank lending survey](https://public-api.finwire.pl/datasets/credit-survey) | `/v1/credit-market/survey` | [NBP](https://nbp.pl) | quarterly | editions |
 | [Household loans and deposits](https://public-api.finwire.pl/datasets/nbp-monetary) | `/v1/credit-market/monetary` | [NBP](https://nbp.pl) | monthly | up to 400 months |
+| [Banking sector: profit, loans and deposits](https://public-api.finwire.pl/datasets/banking-sector): net profit year-to-date, in the month and over 12 months, tax, costs, housing and consumer loans with impaired share, household deposits, `finwire_bank_interest_share` | `/v1/credit-market/banking-sector` | [KNF](https://www.knf.gov.pl/?articleId=56224&p_id=18) | monthly | from January 2018 |
 | [Housing loan demand (BIK)](https://public-api.finwire.pl/datasets/bik-credit-demand) | `/v1/credit-market/demand` | [BIK](https://media.bik.pl/informacje-prasowe), [NBP](https://nbp.pl) | monthly | from 2025-08 |
 | [Mortgage payment risk and fixed-rate premium](https://public-api.finwire.pl/datasets/rate-risk): chance the variable-rate payment rises by more than 5% in 12 months, payment percentiles in 3, 6 and 12 months, backtest accuracy, `finwire_rate_risk_gauge`, `finwire_fixed_rate_premium` | `/v1/credit-market/rate-risk` | finwire.pl model on [GPW Benchmark](https://gpwbenchmark.pl) WIBOR (result only), bank offers, [ECB MIR](https://data.ecb.europa.eu/data/datasets/MIR) | daily | month ends from 2008 |
 | [Interest rates on new loans in Europe](https://public-api.finwire.pl/datasets/ecb-mortgage-rates) | `/v1/credit-market/ecb-rates` | [ECB MIR](https://data.ecb.europa.eu) | monthly | since 2014 |
@@ -251,6 +252,7 @@ Tools (all read-only, each with `outputSchema`):
 - OFE: `get_ofe_stats` (KNF monthly members, net assets and accounting unit by fund, rates of return over 12-120 months, 100 PLN in OFE vs the ZUS subaccount, `finwire_ofe_vs_subaccount_10y`)
 - Net earnings in the EU: `get_eu_earnings` (Eurostat net pay by household type in EUR and PPS, labour cost per hour, tax wedge, a net salary in PLN compared with every EU country, `finwire_eu_net_wage_gap`)
 - Car insurance: `get_car_insurance_market` (KNF quarterly average OC and autocasco premium per policy, policies in force, claims paid per 100 PLN of premium, 18 non-life classes, `finwire_oc_avg_premium`)
+- Banking sector: `get_banking_sector` (KNF monthly net profit of banks year-to-date, in the month and over 12 months, tax, costs, impaired housing and consumer loans, household deposits, `finwire_bank_interest_share`)
 - Fuel prices in the EU: `get_eu_fuel_prices` (European Commission Weekly Oil Bulletin: petrol 95, diesel, LPG and heating oil in PLN and EUR per litre in 27 EU countries, rank, taxes, full-tank difference against Poland, `finwire_eu_fuel_price_gap`)
 - Inflation in the EU: `get_eu_inflation` (Eurostat HICP in 27 EU countries: ranking, place of Poland, components, price growth since a year, `finwire_eu_inflation_gap`).
 - Unemployment in the EU: `get_eu_unemployment` (Eurostat monthly unemployment rate, total and under 25, rank of Poland since 2010, `finwire_eu_youth_unemployment_ratio`)
@@ -443,6 +445,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/pension-systems` | Average ZUS pension vs average KRUS farmer pension (GUS BDL): yearly since 1999, latest year-to-date period with the previous year, 16 provinces |
 | `GET /v1/credit-market/survey?quarters=12` | NBP bank lending survey |
 | `GET /v1/credit-market/monetary?months=25` | NBP household loans, deposits and new loans |
+| `GET /v1/credit-market/banking-sector?months=36` | KNF banking sector: housing and consumer loans with impaired share, household deposits, profit and loss year-to-date, in the month and over 12 months, `finwire_bank_interest_share` |
 | `GET /v1/credit-market/demand?months=12` | BIK housing loan demand, requested vs granted amount, granted loans (BIK) and new housing loans (NBP) |
 | `GET /v1/credit-market/rate-risk?days=30` | Ryzyko raty finwire (chance the payment rises by more than 5% or 10% in 3, 6 and 12 months, payment percentiles, backtest since 2008) and Premia za stałą stopę finwire (5-year fixed minus expected variable cost, daily and monthly from ECB MIR, negative premium windows) |
 | `GET /v1/credit-market/ecb-rates?product=mortgage_total&period=2026-08` | ECB MIR rate on new loans by country |
@@ -526,9 +529,11 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 | `finwire_ike_ikze_avg_balance` | [Średnie saldo IKE i IKZE finwire](https://finwire.pl/kalkulatory/ike-ikze) | savings | half-yearly | - |
 | `finwire_ofe_vs_subaccount_10y` | [Różnica OFE i subkonta ZUS finwire](https://finwire.pl/ofe) | savings | half-yearly | `ofe` |
 | `finwire_oc_avg_premium` | [Średnia składka OC finwire](https://finwire.pl/ubezpieczenia/srednia-cena-oc) | market | quarterly | - |
+| `finwire_bank_interest_share` | [Udział odsetek w przychodach banków finwire](https://finwire.pl/bank#ile-zarabiaja-banki) | market | monthly | - |
 | `finwire_eu_inflation_gap` | [Luka inflacji Polska-UE finwire](https://finwire.pl/inflacja-w-europie) | market | monthly | - |
 | `finwire_clean_air_payout_rate` | [Wskaźnik wypłat Czystego Powietrza finwire](https://finwire.pl/czyste-powietrze) | housing | weekly | - |
 | `finwire_public_debt_per_capita` | [Dług na osobę finwire](https://finwire.pl/dlug-publiczny) | market | monthly | - |
+| `finwire_poland_rating` | [Rating Polski finwire](https://finwire.pl/dlug-publiczny#rating) | market | yearly (end of year, current year as of today) | - |
 | `finwire_pit_per_capita` | [PIT na mieszkańca finwire](https://finwire.pl/najbogatsze-gminy#podatek-pit) | market | yearly | - |
 | `finwire_pit_top_bracket_multiplier` | [Mnożnik drugiego progu PIT finwire](https://finwire.pl/rozliczenie-pit#pit-w-liczbach) | law | yearly | `pit-national` |
 | `finwire_rcn_price_index` | [Indeks cen transakcyjnych finwire](https://finwire.pl/raporty/indeks-cen-transakcyjnych) | housing | quarterly | - |

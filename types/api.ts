@@ -2299,6 +2299,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/credit-market/banking-sector": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Polish banking sector, KNF monthly data (FINREP): household housing and consumer loan portfolios with impaired loans (IFRS 9 stage 3), household deposits, and the profit and loss account: net profit year-to-date vs a year earlier, in the month and over 12 months, tax as % of gross profit, costs vs income, and Udział odsetek w przychodach banków finwire (finwire_bank_interest_share: net interest income / total operating income, 12 months); PLN, monthly history */
+        get: operations["CreditMarketController_bankingSector"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/credit-market/rate-risk": {
         parameters: {
             query?: never;
@@ -11365,6 +11382,109 @@ export interface components {
             data: components["schemas"]["CreditDemandDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        BankInterestShareDto: {
+            /** @example finwire_bank_interest_share */
+            id: string;
+            /** @example Udział odsetek w przychodach banków finwire */
+            name: string;
+            /**
+             * @description Net interest income / total operating income (net) of the banking sector, both over 12 months, %
+             * @example 77.81
+             */
+            valuePct: number | null;
+            /** @example 79.62 */
+            yearAgoPct: number | null;
+            /**
+             * @description Change vs a year earlier, percentage points
+             * @example -1.81
+             */
+            changePp: number | null;
+            /** @description Highest value in the history: { period, valuePct } */
+            maxInHistory: Record<string, never> | null;
+            /** @description Lowest value in the history: { period, valuePct } */
+            minInHistory: Record<string, never> | null;
+        };
+        BankProfitDto: {
+            /**
+             * @description Latest month of the profit and loss account
+             * @example 2026-09
+             */
+            period: string | null;
+            /** @example 9 */
+            monthsInYearToDate: number | null;
+            /** @description January to the month (as published by KNF): netProfitPln, grossProfitPln, taxPln, netInterestIncomePln, netFeeIncomePln, operatingIncomePln, operatingCostsPln, impairmentPln */
+            yearToDate: Record<string, never> | null;
+            /** @description Same months a year earlier, same fields */
+            yearToDateYearAgo: Record<string, never> | null;
+            /** @example -10.92 */
+            netProfitYearToDateChangePct: number | null;
+            /** @description The month alone (difference of year-to-date values), same fields */
+            month: Record<string, never> | null;
+            /** @description 12 months to the period, same fields */
+            trailing12m: Record<string, never> | null;
+            /** @description 12 months to the same month a year earlier, same fields */
+            trailing12mYearAgo: Record<string, never> | null;
+            /** @example -0.36 */
+            netProfitTrailing12mChangePct: number | null;
+            interestShare: components["schemas"]["BankInterestShareDto"];
+            /**
+             * @description Tax / gross profit, year-to-date, %
+             * @example 36.33
+             */
+            taxShareOfGrossProfitPct: number | null;
+            /** @example 25.04 */
+            taxShareOfGrossProfitYearAgoPct: number | null;
+            /**
+             * @description Operating costs / operating income, 12 months, %
+             * @example 41.36
+             */
+            costToIncomeTrailing12mPct: number | null;
+            /** @description Highest 12-month net profit in the history: { period, valuePln } */
+            netProfitTrailing12mMax: Record<string, never> | null;
+            /** @example 2018-01 */
+            firstPeriod: string | null;
+            /** @description Monthly history: net profit year-to-date, in the month and over 12 months, net interest income and operating income over 12 months, interest share % */
+            history: unknown[][];
+        };
+        BankingSectorDataDto: {
+            /**
+             * @description Latest month of the loan portfolio data
+             * @example 2026-09
+             */
+            asOf: string | null;
+            /** @example sector */
+            group: string | null;
+            /** @example Sektor bankowy */
+            groupLabel: string | null;
+            /**
+             * @description "Dane z dnia" of the KNF file
+             * @example 2026-11-10
+             */
+            dataAsOf: string | null;
+            updatedAt: string | null;
+            source: string | null;
+            /** @description KNF article "Dane miesięczne sektora bankowego" */
+            sourceUrl: string | null;
+            /** @description XLSX file of the latest month */
+            sourceFileUrl: string | null;
+            /** @description Comparability note from KNF */
+            note: string | null;
+            /** @description Units and windows */
+            units: Record<string, never>;
+            /** @description Household housing loans: gross, performing, stage 2, impaired (stage 3), provisions, ratios, change year on year, split by currency */
+            housingLoans: Record<string, never> | null;
+            /** @description Consumer loans, same fields as housingLoans without the currency split */
+            consumerLoans: Record<string, never> | null;
+            /** @description Household deposits (without blocked deposits): total, PLN, EUR, other currencies, change month on month and year on year */
+            householdDeposits: Record<string, never> | null;
+            /** @description Monthly history of portfolios and deposits */
+            history: unknown[][];
+            profit: components["schemas"]["BankProfitDto"] | null;
+        };
+        BankingSectorResponseDto: {
+            data: components["schemas"]["BankingSectorDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         RateRiskHorizonDto: {
             /**
              * @description Horizon in months (3, 6, 12)
@@ -15188,6 +15308,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreditDemandResponseDto"];
+                };
+            };
+        };
+    };
+    CreditMarketController_bankingSector: {
+        parameters: {
+            query?: {
+                /** @description sector (default), commercial, branches (branches of foreign credit institutions) or cooperative */
+                group?: string;
+                /** @description Months of history, 1-240, default 36 */
+                months?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankingSectorResponseDto"];
                 };
             };
         };
