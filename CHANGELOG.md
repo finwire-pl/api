@@ -3,6 +3,16 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-24
+
+### Added
+
+- `GET /v1/energy/regulated-prices`: new field `gas.distribution.refGcvKwhM3` (dataset `energy-tariffs`) - calorific value of high-methane gas E in kWh/m3 that the PSG tariff uses to convert m3 to kWh (Taryfa PSG nr 14, pkt 1.11); invoices use the factor of their billing period.
+- `GET /v1/pension-payment-dates`: new fields `socialPension` (renta socjalna in force, PLN gross: 100% of the minimum total disability pension, art. 6(1) of the Social Pension Act) and `minimumPensionTopUp` (conditions of the ZUS top-up to the minimum pension, art. 87 of the FUS pension act: minimum age and years of contributory and non-contributory periods for women and men, non-contributory periods counted up to 1/3 of contributory periods, exclusions for earned income above the top-up and for a concurrent military, police or KRUS pension).
+- `GET /v1/cumulative-inflation` (optional `from`, `to`: YYYY or YYYY-MM) - dataset `cumulative-inflation`: cumulative CPI inflation in Poland between two months or years since 1982 from the chain of GUS consumer price indices (December on December for full years, month on month within a year): cumulative %, price factor, average per year, number of months and base month; every year with December-on-December inflation and the GUS yearly average index; cumulative inflation from January of each year to the latest published month.
+- `GET /v1/fuel/retail-estimate` (optional `weeks` 1-104, default 12) - dataset `fuel-retail-estimate`: finwire estimate of the average pump price of petrol 95 and diesel in Poland for the next day (`finwire_hurtcast_pb95`, `finwire_hurtcast_diesel`): wholesale price of the last 4 days plus the station margin of the 2 latest European Commission Weekly Oil Bulletin weeks with the same VAT regime, plus VAT, not above the maximum price of the Minister of Energy while it applies; VAT rate, maximum price, backtest accuracy (mean absolute error per litre over up to 104 weeks, share of weeks within 10 groszy) and recent backtest weeks. Derived numbers only; wholesale prices are not redistributed.
+- MCP server 1.35.0: new tool `calc_gas_bill` (`annualKwh` or `annualM3`, optional `factor`, `area`, `group`) - household gas bill from the URE tariffs in force today, split into energy, distribution and fixed fees with VAT, per PSG tariff area, and the same use in the next tariff once URE has approved it; `get_pension_stats` summarises the social pension and the top-up conditions; new tool `get_cumulative_inflation` (optional `from`, `to`, `years`); `cumulative-inflation` in `search_datasets` and `get_dataset`; new tool `get_fuel_retail_estimate` (optional `weeks`); `fuel-retail-estimate` in `search_datasets` and `get_dataset`.
+
 ## 2026-11-23
 
 ### Added

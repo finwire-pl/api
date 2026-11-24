@@ -2979,6 +2979,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/fuel/retail-estimate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** finwire estimate of the average pump price of petrol 95 and diesel in Poland for the next day (finwire_hurtcast_pb95, finwire_hurtcast_diesel) with VAT rate, maximum price while it applies and backtest accuracy against the European Commission Weekly Oil Bulletin. Derived numbers only; wholesale prices are not redistributed. */
+        get: operations["FuelRetailEstimateController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/ofe": {
         parameters: {
             query?: never;
@@ -3005,6 +3022,23 @@ export interface paths {
         };
         /** House building cost in Poland: replacement cost per m2 of a residential building announced by voivodes (average of the two latest half-year announcements, derived from BGK family housing loan limits) for 52 locations and 16 voivodeships, a 120 m2 house per voivodeship with the change year on year, the finwire index finwire_house_build_cost (quarterly history) and GUS construction and assembly price indices by division of section F (monthly, m/m and y/y). An official indicator, not a contractor quote. A block is null when its source has no data yet. */
         get: operations["BuildCostController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/cumulative-inflation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cumulative CPI inflation in Poland between two months or years, from the chain of GUS consumer price indices (December on December for full years, month-on-month within a year), since 1982. Without from/to: every year (December on December, GUS yearly average) and the cumulative inflation from the start of each year to the latest published month. */
+        get: operations["CumulativeInflationController_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6876,6 +6910,10 @@ export interface components {
             minimumPension: Record<string, never> | null;
             /** @description Minimum partial disability pension (PLN gross) in force */
             minimumPartialDisabilityPension: Record<string, never> | null;
+            /** @description Social pension (renta socjalna, PLN gross) in force: 100% of the minimum total disability pension (art. 6(1) of the Social Pension Act) */
+            socialPension: Record<string, never> | null;
+            /** @description Conditions of the top-up to the minimum pension (art. 87 of the FUS pension act): age and contributory plus non-contributory years for women and men, non-contributory periods capped at 1/3 of contributory periods, exclusions */
+            minimumPensionTopUp: Record<string, never>;
             /** @description Latest ZUS month: recipients of pensions (thousand), payouts (thousand PLN), average amounts by benefit */
             recipients: Record<string, never> | null;
         };
@@ -12429,6 +12467,11 @@ export interface components {
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        FuelRetailEstimateResponseDto: {
+            /** @description Projection of the dataset fuel-retail-estimate (see /v1/datasets/fuel-retail-estimate) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         OfeResponseDto: {
             /** @description Projection of the dataset ofe (see /v1/datasets/ofe) */
             data: Record<string, never>;
@@ -12436,6 +12479,11 @@ export interface components {
         };
         BuildCostResponseDto: {
             /** @description Projection of the dataset build-cost (see /v1/datasets/build-cost) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        CumulativeInflationResponseDto: {
+            /** @description Projection of the dataset cumulative-inflation (see /v1/datasets/cumulative-inflation) */
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
@@ -16203,6 +16251,28 @@ export interface operations {
             };
         };
     };
+    FuelRetailEstimateController_get: {
+        parameters: {
+            query?: {
+                /** @description Last N backtest weeks, 1-104; default 12 */
+                weeks?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FuelRetailEstimateResponseDto"];
+                };
+            };
+        };
+    };
     OfeController_get: {
         parameters: {
             query?: {
@@ -16247,6 +16317,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BuildCostResponseDto"];
+                };
+            };
+        };
+    };
+    CumulativeInflationController_get: {
+        parameters: {
+            query?: {
+                /** @description Start: YYYY (from January) or YYYY-MM, e.g. 2022 */
+                from?: string;
+                /** @description End: YYYY (to December or the latest month) or YYYY-MM; default the latest published month */
+                to?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CumulativeInflationResponseDto"];
                 };
             };
         };

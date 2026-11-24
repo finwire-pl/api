@@ -5798,6 +5798,38 @@
         ]
       }
     },
+    "/v1/fuel/retail-estimate": {
+      "get": {
+        "operationId": "FuelRetailEstimateController_get",
+        "parameters": [
+          {
+            "name": "weeks",
+            "required": false,
+            "in": "query",
+            "description": "Last N backtest weeks, 1-104; default 12",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelRetailEstimateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "finwire estimate of the average pump price of petrol 95 and diesel in Poland for the next day (finwire_hurtcast_pb95, finwire_hurtcast_diesel) with VAT rate, maximum price while it applies and backtest accuracy against the European Commission Weekly Oil Bulletin. Derived numbers only; wholesale prices are not redistributed.",
+        "tags": [
+          "Fuel"
+        ]
+      }
+    },
     "/v1/ofe": {
       "get": {
         "operationId": "OfeController_get",
@@ -5877,6 +5909,47 @@
         "summary": "House building cost in Poland: replacement cost per m2 of a residential building announced by voivodes (average of the two latest half-year announcements, derived from BGK family housing loan limits) for 52 locations and 16 voivodeships, a 120 m2 house per voivodeship with the change year on year, the finwire index finwire_house_build_cost (quarterly history) and GUS construction and assembly price indices by division of section F (monthly, m/m and y/y). An official indicator, not a contractor quote. A block is null when its source has no data yet.",
         "tags": [
           "Housing"
+        ]
+      }
+    },
+    "/v1/cumulative-inflation": {
+      "get": {
+        "operationId": "CumulativeInflationController_get",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Start: YYYY (from January) or YYYY-MM, e.g. 2022",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "description": "End: YYYY (to December or the latest month) or YYYY-MM; default the latest published month",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CumulativeInflationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cumulative CPI inflation in Poland between two months or years, from the chain of GUS consumer price indices (December on December for full years, month-on-month within a year), since 1982. Without from/to: every year (December on December, GUS yearly average) and the cumulative inflation from the start of each year to the latest published month.",
+        "tags": [
+          "Macro"
         ]
       }
     }
@@ -16490,6 +16563,15 @@
             "nullable": true,
             "description": "Minimum partial disability pension (PLN gross) in force"
           },
+          "socialPension": {
+            "type": "object",
+            "nullable": true,
+            "description": "Social pension (renta socjalna, PLN gross) in force: 100% of the minimum total disability pension (art. 6(1) of the Social Pension Act)"
+          },
+          "minimumPensionTopUp": {
+            "type": "object",
+            "description": "Conditions of the top-up to the minimum pension (art. 87 of the FUS pension act): age and contributory plus non-contributory years for women and men, non-contributory periods capped at 1/3 of contributory periods, exclusions"
+          },
           "recipients": {
             "type": "object",
             "nullable": true,
@@ -16505,6 +16587,8 @@
           "childBenefit",
           "minimumPension",
           "minimumPartialDisabilityPension",
+          "socialPension",
+          "minimumPensionTopUp",
           "recipients"
         ]
       },
@@ -31676,6 +31760,22 @@
           "meta"
         ]
       },
+      "FuelRetailEstimateResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Projection of the dataset fuel-retail-estimate (see /v1/datasets/fuel-retail-estimate)"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "OfeResponseDto": {
         "type": "object",
         "properties": {
@@ -31698,6 +31798,22 @@
           "data": {
             "type": "object",
             "description": "Projection of the dataset build-cost (see /v1/datasets/build-cost)"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "CumulativeInflationResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Projection of the dataset cumulative-inflation (see /v1/datasets/cumulative-inflation)"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
