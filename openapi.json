@@ -2526,6 +2526,28 @@
         ]
       }
     },
+    "/v1/life-insurance": {
+      "get": {
+        "operationId": "MacroController_lifeInsurance",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LifeInsuranceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Life insurance market in Poland, KNF quarterly bulletin \"Rynek ubezpiecze\u0144\" (part D, tables D.1a and D.1c): average annual premium per individual life insurance contract (class I total and groups 1-5) over 4 quarters with change vs a year earlier, group premium per person covered by group insurance, individual and group contracts in force, insured persons, premium and single-premium share, claims and benefits paid per 100 PLN of premium, \u015arednia sk\u0142adka na polis\u0119 na \u017cycie finwire (finwire_life_avg_premium) and quarterly history since 2017; PLN, market averages, not a quote for a specific person",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
     "/v1/subsidies/clean-air": {
       "get": {
         "operationId": "MacroController_cleanAir",
@@ -20699,6 +20721,199 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/CarInsuranceDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LifeInsuranceIndexDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "finwire_life_avg_premium"
+          },
+          "name": {
+            "type": "string",
+            "example": "\u015arednia sk\u0142adka na polis\u0119 na \u017cycie finwire"
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "period": {
+            "type": "string",
+            "example": "2026-Q2",
+            "description": "Last quarter of the 4-quarter window"
+          },
+          "periodEnd": {
+            "type": "string",
+            "example": "2026-06-30"
+          },
+          "valuePln": {
+            "type": "number",
+            "example": 1412,
+            "description": "Gross written premium of individual class I contracts over 4 quarters divided by the average number of individual contracts in force at the start and end of those quarters, PLN"
+          },
+          "individualPremiumPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "individualContracts": {
+            "type": "number",
+            "nullable": true
+          },
+          "previousPln": {
+            "type": "number",
+            "nullable": true
+          },
+          "yearAgoPln": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "methodVersion",
+          "period",
+          "periodEnd",
+          "valuePln",
+          "individualPremiumPln",
+          "individualContracts",
+          "previousPln",
+          "yearAgoPln"
+        ]
+      },
+      "LifeInsuranceDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-06-30",
+            "description": "Latest quarter end with class I total"
+          },
+          "period": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-Q2"
+          },
+          "periodLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "II kw. 2026"
+          },
+          "trailing12mLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "lipiec 2025 - czerwiec 2026"
+          },
+          "yearToDateLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "stycze\u0144 - czerwiec 2026"
+          },
+          "firstPeriodEnd": {
+            "type": "string",
+            "nullable": true,
+            "example": "2017-03-31"
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "units": {
+            "type": "object",
+            "description": "Units and windows"
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "publisher": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "KNF article with the latest quarterly bulletin"
+          },
+          "sourceFileUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "XLSX of part D (statistical statement) for the latest quarter"
+          },
+          "publishedOn": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-09-29"
+          },
+          "total": {
+            "type": "object",
+            "nullable": true,
+            "description": "Class I total: average annual premium per individual contract and per person in group insurance (now and a year earlier), individual and group contracts, insured persons, premium (individual, group, single-premium share), claims and benefits paid and paid per 100 PLN of premium"
+          },
+          "insuranceClasses": {
+            "description": "Class I groups 1-5, same fields as total plus share of class I premium",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "yearToDate": {
+            "type": "object",
+            "description": "Year-to-date values from the bulletin (class I total): premium, individual premium, claims and benefits paid"
+          },
+          "avgPremiumIndex": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LifeInsuranceIndexDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "Quarterly history: average premium per individual contract (total, group 1, group 3), group premium per insured person, premium over 4 quarters and in the quarter, claims paid, contracts and insured persons",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "period",
+          "periodLabel",
+          "trailing12mLabel",
+          "yearToDateLabel",
+          "firstPeriodEnd",
+          "updatedAt",
+          "units",
+          "source",
+          "publisher",
+          "sourceUrl",
+          "sourceFileUrl",
+          "publishedOn",
+          "total",
+          "insuranceClasses",
+          "yearToDate",
+          "avgPremiumIndex",
+          "history"
+        ]
+      },
+      "LifeInsuranceResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LifeInsuranceDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

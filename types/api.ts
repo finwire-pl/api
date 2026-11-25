@@ -1449,6 +1449,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/life-insurance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Life insurance market in Poland, KNF quarterly bulletin "Rynek ubezpieczeń" (part D, tables D.1a and D.1c): average annual premium per individual life insurance contract (class I total and groups 1-5) over 4 quarters with change vs a year earlier, group premium per person covered by group insurance, individual and group contracts in force, insured persons, premium and single-premium share, claims and benefits paid per 100 PLN of premium, Średnia składka na polisę na życie finwire (finwire_life_avg_premium) and quarterly history since 2017; PLN, market averages, not a quote for a specific person */
+        get: operations["MacroController_lifeInsurance"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/subsidies/clean-air": {
         parameters: {
             query?: never;
@@ -8327,6 +8344,71 @@ export interface components {
             data: components["schemas"]["CarInsuranceDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        LifeInsuranceIndexDto: {
+            /** @example finwire_life_avg_premium */
+            id: string;
+            /** @example Średnia składka na polisę na życie finwire */
+            name: string;
+            /** @example 1 */
+            methodVersion: number;
+            /**
+             * @description Last quarter of the 4-quarter window
+             * @example 2026-Q2
+             */
+            period: string;
+            /** @example 2026-06-30 */
+            periodEnd: string;
+            /**
+             * @description Gross written premium of individual class I contracts over 4 quarters divided by the average number of individual contracts in force at the start and end of those quarters, PLN
+             * @example 1412
+             */
+            valuePln: number;
+            individualPremiumPln: number | null;
+            individualContracts: number | null;
+            previousPln: number | null;
+            yearAgoPln: number | null;
+        };
+        LifeInsuranceDataDto: {
+            /**
+             * @description Latest quarter end with class I total
+             * @example 2026-06-30
+             */
+            asOf: string | null;
+            /** @example 2026-Q2 */
+            period: string | null;
+            /** @example II kw. 2026 */
+            periodLabel: string | null;
+            /** @example lipiec 2025 - czerwiec 2026 */
+            trailing12mLabel: string | null;
+            /** @example styczeń - czerwiec 2026 */
+            yearToDateLabel: string | null;
+            /** @example 2017-03-31 */
+            firstPeriodEnd: string | null;
+            updatedAt: string | null;
+            /** @description Units and windows */
+            units: Record<string, never>;
+            source: string | null;
+            publisher: string | null;
+            /** @description KNF article with the latest quarterly bulletin */
+            sourceUrl: string | null;
+            /** @description XLSX of part D (statistical statement) for the latest quarter */
+            sourceFileUrl: string | null;
+            /** @example 2026-09-29 */
+            publishedOn: string | null;
+            /** @description Class I total: average annual premium per individual contract and per person in group insurance (now and a year earlier), individual and group contracts, insured persons, premium (individual, group, single-premium share), claims and benefits paid and paid per 100 PLN of premium */
+            total: Record<string, never> | null;
+            /** @description Class I groups 1-5, same fields as total plus share of class I premium */
+            insuranceClasses: unknown[][];
+            /** @description Year-to-date values from the bulletin (class I total): premium, individual premium, claims and benefits paid */
+            yearToDate: Record<string, never>;
+            avgPremiumIndex: components["schemas"]["LifeInsuranceIndexDto"] | null;
+            /** @description Quarterly history: average premium per individual contract (total, group 1, group 3), group premium per insured person, premium over 4 quarters and in the quarter, claims paid, contracts and insured persons */
+            history: unknown[][];
+        };
+        LifeInsuranceResponseDto: {
+            data: components["schemas"]["LifeInsuranceDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         CleanAirTotalsDto: {
             /** @example 2018-09-19 */
             periodStart: string;
@@ -14568,6 +14650,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CarInsuranceResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_lifeInsurance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LifeInsuranceResponseDto"];
                 };
             };
         };
