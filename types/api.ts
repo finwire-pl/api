@@ -4081,7 +4081,7 @@ export interface components {
                 [key: string]: unknown;
             } | null;
             /**
-             * @description Taxes on private transactions in Poland from the statutes: prize (tax on winnings, art. 30 ust. 1 pkt 2 of the PIT act: 10% of the whole prize, exemption up to 2280 PLN for lotteries, numbers games and betting, unlimited for casino games licensed in the EU/EEA, up to 2000 PLN for media contests and premium sales, per kind with breakEven = smallest taxed prize that nets more than the threshold), pcc (civil law transactions tax: private loans 0.5% with exemptions for close family and loans up to 1000 PLN from others, sale of movables 2% above the exemption threshold, property rights 1%, PCC-3 return due in 14 days) and inheritance (maximum notary fee for a contract renouncing a future inheritance, notary fee or court fee for disclaiming an inheritance, 6-month deadline)
+             * @description Taxes on private transactions in Poland from the statutes: prize (tax on winnings, art. 30 ust. 1 pkt 2 of the PIT act: rate on the whole prize, exemption up to gamesExemptUpTo for lotteries, numbers games and betting, unlimited for casino games licensed in the EU/EEA, up to contestExemptUpTo for media contests and premium sales, per kind with breakEven = smallest taxed prize that nets more than the threshold), pcc (civil law transactions tax: private loans 0.5% with exemptions for close family and loans up to 1000 PLN from others, sale of movables 2% above the exemption threshold, property rights 1%, PCC-3 return due in 14 days) and inheritance (maximum notary fee for a contract renouncing a future inheritance, notary fee or court fee for disclaiming an inheritance, 6-month deadline)
              * @example {
              *       "asOf": "2026-11-25",
              *       "prize": {
@@ -7418,7 +7418,7 @@ export interface components {
             socialPension: Record<string, never> | null;
             /** @description Conditions of the top-up to the minimum pension (art. 87 of the FUS pension act): age and contributory plus non-contributory years for women and men, non-contributory periods capped at 1/3 of contributory periods, exclusions */
             minimumPensionTopUp: Record<string, never>;
-            /** @description Supplementary benefit for persons unable to live independently (świadczenie uzupełniające, Act of 31 July 2019): gross benefits threshold in force from 1 March (ZUS announcement) and the next one when known, maximum 500 PLN a month, the amount rule, age 18+, PIT exemption */
+            /** @description Supplementary benefit for persons unable to live independently (świadczenie uzupełniające, Act of 31 July 2019): gross benefits threshold in force from 1 March (ZUS announcement) and the next one when known, maximum monthly amount (maxMonthly), the amount rule, age 18+, PIT exemption */
             supplementaryBenefit: Record<string, never> | null;
             /** @description Latest ZUS month: recipients of pensions (thousand), payouts (thousand PLN), average amounts by benefit */
             recipients: Record<string, never> | null;
