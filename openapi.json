@@ -5134,6 +5134,69 @@
         ]
       }
     },
+    "/v1/business-poland/mandate-vs-employment": {
+      "get": {
+        "operationId": "BusinessPolandController_mandateVsEmployment",
+        "parameters": [
+          {
+            "name": "gross",
+            "required": true,
+            "in": "query",
+            "description": "Monthly gross pay, PLN (the same on both contracts)",
+            "schema": {
+              "example": 6000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "sickness",
+            "required": false,
+            "in": "query",
+            "description": "Mandate: voluntary sickness insurance (true/false), default true",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "student",
+            "required": false,
+            "in": "query",
+            "description": "Mandate: pupil or student under 26 (true/false)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sickDays",
+            "required": false,
+            "in": "query",
+            "description": "Days of sick leave to compare, 1-33, default 10",
+            "schema": {
+              "example": 10,
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Tax year, default current",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Mandate contract (umowa zlecenia) vs employment contract (umowa o prac\u0119) for the same gross pay: take-home pay, contributions, PIT, cost to the payer, paid leave days and their value, sick pay for N days and who pays it, notice period and whether the period counts towards length of employment",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
     "/v1/business-poland/compare-forms": {
       "get": {
         "operationId": "BusinessPolandController_compareForms",
@@ -5454,6 +5517,150 @@
           }
         },
         "summary": "Yearly calendar of tax, ZUS, VAT and reporting deadlines of a business in Poland, dates computed from statutory rules with the working-day shift",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/notice-period": {
+      "get": {
+        "operationId": "BusinessPolandController_noticePeriod",
+        "parameters": [
+          {
+            "name": "served",
+            "required": true,
+            "in": "query",
+            "description": "Day the notice reached the other party, or day of the agreement (YYYY-MM-DD)",
+            "schema": {
+              "example": "2026-11-24",
+              "type": "string"
+            }
+          },
+          {
+            "name": "by",
+            "required": false,
+            "in": "query",
+            "description": "Who ends the contract, default employee",
+            "schema": {
+              "enum": [
+                "employee",
+                "employer",
+                "agreement"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "contract",
+            "required": false,
+            "in": "query",
+            "description": "Contract type, default indefinite",
+            "schema": {
+              "enum": [
+                "indefinite",
+                "fixed",
+                "replacement",
+                "trial"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "required": false,
+            "in": "query",
+            "description": "First day of work for this employer (YYYY-MM-DD); sets the notice period",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "trial",
+            "required": false,
+            "in": "query",
+            "description": "Trial contract: agreed trial length, default 3-months",
+            "schema": {
+              "enum": [
+                "up-to-2-weeks",
+                "over-2-weeks",
+                "3-months"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractEnd",
+            "required": false,
+            "in": "query",
+            "description": "Fixed-term, replacement or trial contract: end date written in the contract",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "agreedEnd",
+            "required": false,
+            "in": "query",
+            "description": "by=agreement: agreed termination date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "employerReasons",
+            "required": false,
+            "in": "query",
+            "description": "Dismissal for reasons not related to the employee by an employer with at least 20 staff (severance pay), true/false",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "payday",
+            "required": false,
+            "in": "query",
+            "description": "Payday in the company, 1-31 (1-10 = pay for the previous month), default 10",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "salary",
+            "required": false,
+            "in": "query",
+            "description": "Gross monthly pay PLN, for the holiday pay-out amount",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "unusedLeaveDays",
+            "required": false,
+            "in": "query",
+            "description": "Unused annual leave days, for the holiday pay-out amount",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "en",
+                "pl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "End of a Polish employment contract after notice or by mutual agreement (Labour Code): notice period, termination date, last payday, holiday pay-out date and amount, paid days off to look for a job, severance pay, with the legal basis",
         "tags": [
           "Business in Poland"
         ]
@@ -6021,6 +6228,119 @@
         "summary": "Cumulative CPI inflation in Poland between two months or years, from the chain of GUS consumer price indices (December on December for full years, month-on-month within a year), since 1982. Without from/to: every year (December on December, GUS yearly average) and the cumulative inflation from the start of each year to the latest published month.",
         "tags": [
           "Macro"
+        ]
+      }
+    },
+    "/v1/parental-leave-plan": {
+      "get": {
+        "operationId": "ParentalLeavePlanController_get",
+        "parameters": [
+          {
+            "name": "birthDate",
+            "required": false,
+            "in": "query",
+            "description": "Birth date (or expected birth date), YYYY-MM-DD; default today (Polish time)",
+            "schema": {
+              "example": "2027-03-15",
+              "type": "string"
+            }
+          },
+          {
+            "name": "children",
+            "required": false,
+            "in": "query",
+            "description": "Children from one birth, 1-5 (5 = five or more); default 1",
+            "schema": {
+              "example": 1,
+              "type": "string"
+            }
+          },
+          {
+            "name": "prenatalWeeks",
+            "required": false,
+            "in": "query",
+            "description": "Weeks of maternity leave before the birth, 0-6; default 0",
+            "schema": {
+              "example": 0,
+              "type": "string"
+            }
+          },
+          {
+            "name": "motherParentalWeeks",
+            "required": false,
+            "in": "query",
+            "description": "Mother's parental leave weeks (with her 9 non-transferable weeks), 0-43; default 32",
+            "schema": {
+              "example": 32,
+              "type": "string"
+            }
+          },
+          {
+            "name": "fatherParentalWeeks",
+            "required": false,
+            "in": "query",
+            "description": "Father's parental leave weeks (with his 9 non-transferable weeks), 0-43; default 9",
+            "schema": {
+              "example": 9,
+              "type": "string"
+            }
+          },
+          {
+            "name": "paternityWeeks",
+            "required": false,
+            "in": "query",
+            "description": "Paternity leave weeks from the birth date, 0-2; default 2",
+            "schema": {
+              "example": 2,
+              "type": "string"
+            }
+          },
+          {
+            "name": "motherGross",
+            "required": false,
+            "in": "query",
+            "description": "Mother's average gross monthly pay of the last 12 months in PLN, 0-1000000; without it the plan has dates only",
+            "schema": {
+              "example": 8000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "fatherGross",
+            "required": false,
+            "in": "query",
+            "description": "Father's average gross monthly pay of the last 12 months in PLN, 0-1000000",
+            "schema": {
+              "example": 9000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "request815",
+            "required": false,
+            "in": "query",
+            "description": "Mother's request for 81.5% within 21 days after the birth, true or false; default true",
+            "schema": {
+              "example": true,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParentalLeavePlanResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Plan of maternity, parental and paternity leave in Poland for both parents from the birth date (Labour Code art. 180-183, sickness and maternity benefits act art. 29a-31): dates of each period, split of the parental leave weeks, maternity benefit per period, per month and in total from the gross pay of each parent, the other payment variant (81.5% on the mother's request vs 100%/70%) for comparison, deadlines and the non-transferable weeks that a parent loses. Rules in force now.",
+        "tags": [
+          "Calculators"
         ]
       }
     }
@@ -32302,6 +32622,22 @@
           "data": {
             "type": "object",
             "description": "Projection of the dataset cumulative-inflation (see /v1/datasets/cumulative-inflation)"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "ParentalLeavePlanResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Projection of the dataset parental-leave-plan (see /v1/datasets/parental-leave-plan)"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

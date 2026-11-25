@@ -2707,6 +2707,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/business-poland/mandate-vs-employment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Mandate contract (umowa zlecenia) vs employment contract (umowa o pracę) for the same gross pay: take-home pay, contributions, PIT, cost to the payer, paid leave days and their value, sick pay for N days and who pays it, notice period and whether the period counts towards length of employment */
+        get: operations["BusinessPolandController_mandateVsEmployment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/business-poland/compare-forms": {
         parameters: {
             query?: never;
@@ -2818,6 +2835,23 @@ export interface paths {
         };
         /** Yearly calendar of tax, ZUS, VAT and reporting deadlines of a business in Poland, dates computed from statutory rules with the working-day shift */
         get: operations["BusinessPolandController_compliance"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/notice-period": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** End of a Polish employment contract after notice or by mutual agreement (Labour Code): notice period, termination date, last payday, holiday pay-out date and amount, paid days off to look for a job, severance pay, with the legal basis */
+        get: operations["BusinessPolandController_noticePeriod"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3073,6 +3107,23 @@ export interface paths {
         };
         /** Cumulative CPI inflation in Poland between two months or years, from the chain of GUS consumer price indices (December on December for full years, month-on-month within a year), since 1982. Without from/to: every year (December on December, GUS yearly average) and the cumulative inflation from the start of each year to the latest published month. */
         get: operations["CumulativeInflationController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/parental-leave-plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Plan of maternity, parental and paternity leave in Poland for both parents from the birth date (Labour Code art. 180-183, sickness and maternity benefits act art. 29a-31): dates of each period, split of the parental leave weeks, maternity benefit per period, per month and in total from the gross pay of each parent, the other payment variant (81.5% on the mother's request vs 100%/70%) for comparison, deadlines and the non-transferable weeks that a parent loses. Rules in force now. */
+        get: operations["ParentalLeavePlanController_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -12692,6 +12743,11 @@ export interface components {
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        ParentalLeavePlanResponseDto: {
+            /** @description Projection of the dataset parental-leave-plan (see /v1/datasets/parental-leave-plan) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
     };
     responses: never;
     parameters: never;
@@ -16103,6 +16159,34 @@ export interface operations {
             };
         };
     };
+    BusinessPolandController_mandateVsEmployment: {
+        parameters: {
+            query: {
+                /** @description Monthly gross pay, PLN (the same on both contracts) */
+                gross: string;
+                /** @description Mandate: voluntary sickness insurance (true/false), default true */
+                sickness?: string;
+                /** @description Mandate: pupil or student under 26 (true/false) */
+                student?: string;
+                /** @description Days of sick leave to compare, 1-33, default 10 */
+                sickDays?: string;
+                /** @description Tax year, default current */
+                year?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     BusinessPolandController_compareForms: {
         parameters: {
             query: {
@@ -16245,6 +16329,47 @@ export interface operations {
                 /** @description Number of people employed */
                 employees?: string;
                 year?: string;
+                lang?: "en" | "pl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_noticePeriod: {
+        parameters: {
+            query: {
+                /** @description Day the notice reached the other party, or day of the agreement (YYYY-MM-DD) */
+                served: string;
+                /** @description Who ends the contract, default employee */
+                by?: "employee" | "employer" | "agreement";
+                /** @description Contract type, default indefinite */
+                contract?: "indefinite" | "fixed" | "replacement" | "trial";
+                /** @description First day of work for this employer (YYYY-MM-DD); sets the notice period */
+                start?: string;
+                /** @description Trial contract: agreed trial length, default 3-months */
+                trial?: "up-to-2-weeks" | "over-2-weeks" | "3-months";
+                /** @description Fixed-term, replacement or trial contract: end date written in the contract */
+                contractEnd?: string;
+                /** @description by=agreement: agreed termination date */
+                agreedEnd?: string;
+                /** @description Dismissal for reasons not related to the employee by an employer with at least 20 staff (severance pay), true/false */
+                employerReasons?: string;
+                /** @description Payday in the company, 1-31 (1-10 = pay for the previous month), default 10 */
+                payday?: string;
+                /** @description Gross monthly pay PLN, for the holiday pay-out amount */
+                salary?: string;
+                /** @description Unused annual leave days, for the holiday pay-out amount */
+                unusedLeaveDays?: string;
                 lang?: "en" | "pl";
             };
             header?: never;
@@ -16590,6 +16715,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CumulativeInflationResponseDto"];
+                };
+            };
+        };
+    };
+    ParentalLeavePlanController_get: {
+        parameters: {
+            query?: {
+                /** @description Birth date (or expected birth date), YYYY-MM-DD; default today (Polish time) */
+                birthDate?: string;
+                /** @description Children from one birth, 1-5 (5 = five or more); default 1 */
+                children?: string;
+                /** @description Weeks of maternity leave before the birth, 0-6; default 0 */
+                prenatalWeeks?: string;
+                /** @description Mother's parental leave weeks (with her 9 non-transferable weeks), 0-43; default 32 */
+                motherParentalWeeks?: string;
+                /** @description Father's parental leave weeks (with his 9 non-transferable weeks), 0-43; default 9 */
+                fatherParentalWeeks?: string;
+                /** @description Paternity leave weeks from the birth date, 0-2; default 2 */
+                paternityWeeks?: string;
+                /** @description Mother's average gross monthly pay of the last 12 months in PLN, 0-1000000; without it the plan has dates only */
+                motherGross?: string;
+                /** @description Father's average gross monthly pay of the last 12 months in PLN, 0-1000000 */
+                fatherGross?: string;
+                /** @description Mother's request for 81.5% within 21 days after the birth, true or false; default true */
+                request815?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ParentalLeavePlanResponseDto"];
                 };
             };
         };
