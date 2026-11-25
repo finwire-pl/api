@@ -6108,6 +6108,47 @@
         ]
       }
     },
+    "/v1/currencies/forecast": {
+      "get": {
+        "operationId": "CurrencyForecastController_get",
+        "parameters": [
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "description": "Currency code, e.g. EUR, USD, GBP, CHF, NOK; default all",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "horizon",
+            "required": false,
+            "in": "query",
+            "description": "One of 1d, 1w, 1m, 3m, 6m, 12m; default all published",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyForecastResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "finwire exchange rate forecast against PLN for 12 currencies from the latest NBP table A: point, forward rate from the central bank rate difference, 50% and 80% ranges for the next table, 1 week, 1, 3, 6 and 12 months (only horizons that passed the backtest accuracy gate), 10-year backtest accuracy and accuracy of resolved forecasts frozen on the day they were made (finwire_fxcast_eur_3m, finwire_fxcast_usd_3m, finwire_fxcast_gbp_3m, finwire_fxcast_chf_3m, finwire_fxcast_nok_3m). A model range, not investment advice.",
+        "tags": [
+          "FX"
+        ]
+      }
+    },
     "/v1/ofe": {
       "get": {
         "operationId": "OfeController_get",
@@ -32574,6 +32615,22 @@
           "data": {
             "type": "object",
             "description": "Projection of the dataset fuel-retail-estimate (see /v1/datasets/fuel-retail-estimate)"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "CurrencyForecastResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Projection of the dataset currency-forecast (see /v1/datasets/currency-forecast)"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

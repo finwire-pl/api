@@ -3064,6 +3064,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/currencies/forecast": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** finwire exchange rate forecast against PLN for 12 currencies from the latest NBP table A: point, forward rate from the central bank rate difference, 50% and 80% ranges for the next table, 1 week, 1, 3, 6 and 12 months (only horizons that passed the backtest accuracy gate), 10-year backtest accuracy and accuracy of resolved forecasts frozen on the day they were made (finwire_fxcast_eur_3m, finwire_fxcast_usd_3m, finwire_fxcast_gbp_3m, finwire_fxcast_chf_3m, finwire_fxcast_nok_3m). A model range, not investment advice. */
+        get: operations["CurrencyForecastController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/ofe": {
         parameters: {
             query?: never;
@@ -12728,6 +12745,11 @@ export interface components {
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        CurrencyForecastResponseDto: {
+            /** @description Projection of the dataset currency-forecast (see /v1/datasets/currency-forecast) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         OfeResponseDto: {
             /** @description Projection of the dataset ofe (see /v1/datasets/ofe) */
             data: Record<string, never>;
@@ -16643,6 +16665,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FuelRetailEstimateResponseDto"];
+                };
+            };
+        };
+    };
+    CurrencyForecastController_get: {
+        parameters: {
+            query?: {
+                /** @description Currency code, e.g. EUR, USD, GBP, CHF, NOK; default all */
+                currency?: string;
+                /** @description One of 1d, 1w, 1m, 3m, 6m, 12m; default all published */
+                horizon?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CurrencyForecastResponseDto"];
                 };
             };
         };
