@@ -1269,7 +1269,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Child benefits paid by ZUS (Polish Social Insurance Institution): 800 plus (świadczenie wychowawcze) and the three Aktywny Rodzic benefits (working parents, nursery, at home) per month - benefits paid, amounts since January and in the month, children, 800 plus applications, 16 voivodeships with the share of Aktywny Rodzic variants and Wypłaty na dzieci z ZUS finwire (finwire_child_benefits_payout, PLN billion in the month); ZUS data CC0 1.0. Block familyBenefitAmounts: family benefits paid by municipalities from the Council of Ministers regulation (family allowance by age, supplements, income thresholds, birth grant, care benefit, special care allowance), the nursing benefit świadczenie pielęgnacyjne computed from the minimum wage, Dobry Start and Realny zasiłek rodzinny finwire (finwire_family_allowance_real: family allowance in prices of the month of the last review, GUS CPI) */
+        /** Child benefits paid by ZUS (Polish Social Insurance Institution): 800 plus (świadczenie wychowawcze) and the three Aktywny Rodzic benefits (working parents, nursery, at home) per month - benefits paid, amounts since January and in the month, children, 800 plus applications, 16 voivodeships with the share of Aktywny Rodzic variants and Wypłaty na dzieci z ZUS finwire (finwire_child_benefits_payout, PLN billion in the month); ZUS data CC0 1.0. Block familyBenefitAmounts: family benefits paid by municipalities from the Council of Ministers regulation (family allowance by age, supplements, income thresholds, birth grant, care benefit, special care allowance), the nursing benefit świadczenie pielęgnacyjne computed from the minimum wage, Dobry Start and Realny zasiłek rodzinny finwire (finwire_family_allowance_real: family allowance in prices of the month of the last review, GUS CPI). Block socialAssistance: social assistance from municipalities (pomoc społeczna) - income criteria and the maximum permanent allowance (Council of Ministers regulation), rules of the permanent, periodic and purpose allowances, housing allowance thresholds from the GUS average wage, the energy allowance (latest minister announcement) and heating and energy vouchers with application windows */
         get: operations["MacroController_familyBenefits"];
         put?: never;
         post?: never;
@@ -7230,6 +7230,8 @@ export interface components {
             socialPension: Record<string, never> | null;
             /** @description Conditions of the top-up to the minimum pension (art. 87 of the FUS pension act): age and contributory plus non-contributory years for women and men, non-contributory periods capped at 1/3 of contributory periods, exclusions */
             minimumPensionTopUp: Record<string, never>;
+            /** @description Supplementary benefit for persons unable to live independently (świadczenie uzupełniające, Act of 31 July 2019): gross benefits threshold in force from 1 March (ZUS announcement) and the next one when known, maximum 500 PLN a month, the amount rule, age 18+, PIT exemption */
+            supplementaryBenefit: Record<string, never> | null;
             /** @description Latest ZUS month: recipients of pensions (thousand), payouts (thousand PLN), average amounts by benefit */
             recipients: Record<string, never> | null;
         };
@@ -7722,6 +7724,8 @@ export interface components {
             childBenefitsPayout: Record<string, never> | null;
             /** @description Family benefits from municipalities (Council of Ministers regulation, reviewed every 3 years): current and upcoming amounts with legal basis, benefit period, income rule, next review dates, świadczenie pielęgnacyjne (computed from the minimum wage), Dobry Start and finwire_family_allowance_real (PLN in prices of the review month, history) */
             familyBenefitAmounts: Record<string, never> | null;
+            /** @description Social assistance from municipalities (ustawa o pomocy społecznej): income criteria and maximum permanent allowance with legal basis, allowance rules, housing allowance thresholds (GUS average wage), energy allowance, heating and energy vouchers with application windows */
+            socialAssistance: Record<string, never> | null;
         };
         FamilyBenefitsResponseDto: {
             data: components["schemas"]["FamilyBenefitsDataDto"];
