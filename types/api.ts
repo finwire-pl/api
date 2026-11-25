@@ -3877,6 +3877,32 @@ export interface components {
             lifeExpectancy: {
                 [key: string]: unknown;
             };
+            /**
+             * @description Voluntary health insurance in the Polish NFZ (art. 68 of the health care services act): minimum monthly contribution (9% of the average monthly wage in the enterprise sector including profit payouts from the previous quarter, GUS announcement in Monitor Polski) for the current quarter and the next quarter (status announced or finwire_prediction with range and backtest error), last announced quarter, one-off surcharge for a gap in insurance (20-200% of the base, art. 68 ust. 8) with NFZ instalments, bases for volunteers and non-EU students, payment due day
+             * @example {
+             *       "asOf": "2026-11-25",
+             *       "rate": 0.09,
+             *       "dueDay": 20,
+             *       "current": {
+             *         "quarter": "2026-Q4",
+             *         "from": "2026-10-01",
+             *         "wagePeriod": "2026-Q3",
+             *         "status": "announced",
+             *         "minBase": 9386.28,
+             *         "minContribution": 844.77
+             *       },
+             *       "next": {
+             *         "quarter": "2027-Q1",
+             *         "status": "finwire_prediction",
+             *         "minContribution": 891.4,
+             *         "low": 878.1,
+             *         "high": 904.7
+             *       }
+             *     }
+             */
+            voluntaryHealth: {
+                [key: string]: unknown;
+            } | null;
             /** @description Business block: eurRates (NBP mid rate of the first business day of October per year), eurLimits (key, label, measure, legalBasis, rounding, values per year in EUR and PLN), taxOffences (fiscal penal code fines and thresholds from the minimum wage, current and next), companyCarPrivateUse (monthly PLN amounts). Null when the upstream is unavailable. */
             business: {
                 [key: string]: unknown;
