@@ -89,6 +89,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/series/fx-ranking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Most expensive currencies against PLN: NBP tables A and B of the same day, with the place 52 weeks earlier */
+        get: operations["SeriesController_fxRanking"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/series/fx/{code}": {
         parameters: {
             query?: never;
@@ -1050,6 +1067,23 @@ export interface paths {
         };
         /** NBP gold price history for a range counted back from the latest quote */
         get: operations["MacroController_goldHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/series/gold/fineness": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Price of 1 g of gold of each fineness legal in Poland (999, 960, 750, 585, 500, 375, 333) from the NBP price of fineness 1000, troy ounce in USD at the NBP USD mid rate, previous and year-ago quote, all-time high and history */
+        get: operations["MacroController_goldFineness"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3232,6 +3266,88 @@ export interface components {
         };
         FxCustomsResponseDto: {
             data: components["schemas"]["FxCustomsDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        FxRankingTableDto: {
+            /** @enum {string} */
+            table: "A" | "B";
+            /** @example 046/B/NBP/2026 */
+            tableNo: string | null;
+            /** @example 2026-11-18 */
+            date: string;
+        };
+        FxRankingTablesDto: {
+            a: components["schemas"]["FxRankingTableDto"] | null;
+            b: components["schemas"]["FxRankingTableDto"] | null;
+        };
+        FxRankingRowDto: {
+            /**
+             * @description Place by NBP mid rate, high to low; equal rates share a place
+             * @example 1
+             */
+            rank: number;
+            /** @example KWD */
+            code: string;
+            /**
+             * @description Currency name from the NBP table (Polish)
+             * @example Dinar kuwejcki
+             */
+            name: string;
+            /** @enum {string} */
+            table: "A" | "B";
+            /**
+             * @description PLN per 1 unit (NBP mid rate)
+             * @example 13.0171
+             */
+            midPln: number;
+            /**
+             * @description Units of the currency per 1 PLN
+             * @example 0.0768223
+             */
+            unitsPerPln: number;
+            /** @example 2026-11-18 */
+            date: string;
+            /** @example 1 */
+            rankYearAgo: number | null;
+            /** @example 11.937 */
+            midPlnYearAgo: number | null;
+            /**
+             * @description Places gained (+) or lost (-) over 52 weeks
+             * @example 0
+             */
+            rankChange: number | null;
+            /**
+             * @description Change of the PLN rate over 52 weeks, %
+             * @example 9.05
+             */
+            changePct: number | null;
+            /**
+             * @description Rate changed 10 times or more in 52 weeks (e.g. redenomination); the place change is not comparable
+             * @example false
+             */
+            rateJump: boolean;
+        };
+        FxRankingDataDto: {
+            /** @example NBP */
+            source: string;
+            method: string;
+            /** @example 2026-11-18 */
+            asOf: string | null;
+            /** @description Tables of the ranking (the day of the latest table B) */
+            tables: components["schemas"]["FxRankingTablesDto"];
+            /** @description Tables 52 weeks earlier; null when history is shorter */
+            yearAgoTables: components["schemas"]["FxRankingTablesDto"];
+            /**
+             * @description Currencies in the ranking before limit
+             * @example 147
+             */
+            total: number;
+            /** @example 20 */
+            count: number;
+            rows: components["schemas"]["FxRankingRowDto"][];
+        };
+        FxRankingResponseDto: {
+            data: components["schemas"]["FxRankingDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         FxHistoryDataDto: {
@@ -6578,6 +6694,95 @@ export interface components {
         };
         GoldHistoryResponseDto: {
             data: components["schemas"]["GoldHistoryDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        GoldFinenessQuoteDto: {
+            /** @example 2026-11-24 */
+            date: string;
+            /**
+             * @description NBP price of 1 g of gold, fineness 1000, PLN
+             * @example 471.74
+             */
+            pricePerGramPln: number;
+            /**
+             * @description NBP table A mid rate of USD on the quote day or the last earlier day
+             * @example 4.0819
+             */
+            usdPlnRate: number | null;
+            /** @example 2026-11-24 */
+            usdRateDate: string | null;
+            /**
+             * @description USD per troy ounce (31.1035 g) of pure gold
+             * @example 3594.59
+             */
+            ounceUsd: number | null;
+        };
+        GoldFinenessAthDto: {
+            /** @example 2026-03-03 */
+            date: string;
+            /**
+             * @description PLN per 1 g, fineness 1000
+             * @example 624.92
+             */
+            pricePerGramPln: number;
+        };
+        GoldFinenessRowDto: {
+            /**
+             * @description Thousandths of gold in the alloy: 999, 960, 750, 585, 500, 375 or 333 (Prawo probiercze art. 24)
+             * @example 585
+             */
+            fineness: number;
+            /**
+             * @description Karats on the 24-karat scale, rounded
+             * @example 14
+             */
+            karat: number;
+            /**
+             * @description PLN per 1 g of the alloy: gold content only, no margin or workmanship
+             * @example 275.97
+             */
+            pricePerGramPln: number;
+        };
+        GoldFinenessPointDto: {
+            /** @example 2026-11-24 */
+            date: string;
+            /**
+             * @description PLN per 1 g, fineness 1000
+             * @example 471.74
+             */
+            pricePerGramPln: number;
+            /** @example 3594.59 */
+            ounceUsd: number | null;
+        };
+        GoldFinenessDataDto: {
+            /** @example pricePerGramPln: PLN per 1 g of gold of fineness 1000 (NBP) or of the given fineness; ounceUsd: USD per troy ounce of pure gold */
+            unit: string;
+            /** @example 2026-11-24 */
+            asOf: string | null;
+            latest: components["schemas"]["GoldFinenessQuoteDto"];
+            previous: components["schemas"]["GoldFinenessQuoteDto"] | null;
+            /** @description Latest quote on or before the same day a year earlier */
+            yearAgo: components["schemas"]["GoldFinenessQuoteDto"] | null;
+            allTimeHigh: components["schemas"]["GoldFinenessAthDto"] | null;
+            /** @example 2013-01-02 */
+            historyFrom: string | null;
+            fineness: components["schemas"]["GoldFinenessRowDto"][];
+            /**
+             * @description 1y | 5y | max
+             * @example 1y
+             */
+            range: string;
+            /** @example 253 */
+            count: number;
+            /**
+             * @description true: history thinned to at most 500 points (first and last kept)
+             * @example false
+             */
+            thinned: boolean;
+            history: components["schemas"]["GoldFinenessPointDto"][];
+        };
+        GoldFinenessResponseDto: {
+            data: components["schemas"]["GoldFinenessDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
         FuelUnitDto: {
@@ -12603,6 +12808,28 @@ export interface operations {
             };
         };
     };
+    SeriesController_fxRanking: {
+        parameters: {
+            query?: {
+                /** @description Top N places, 1-200; omit for all currencies */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FxRankingResponseDto"];
+                };
+            };
+        };
+    };
     SeriesController_fxHistory: {
         parameters: {
             query?: {
@@ -13767,6 +13994,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GoldHistoryResponseDto"];
+                };
+            };
+        };
+    };
+    MacroController_goldFineness: {
+        parameters: {
+            query?: {
+                /** @description History range counted back from the latest quote. Default 1y */
+                range?: "1y" | "5y" | "max";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GoldFinenessResponseDto"];
                 };
             };
         };

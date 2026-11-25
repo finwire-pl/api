@@ -166,6 +166,39 @@
         ]
       }
     },
+    "/v1/series/fx-ranking": {
+      "get": {
+        "operationId": "SeriesController_fxRanking",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Top N places, 1-200; omit for all currencies",
+            "schema": {
+              "example": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FxRankingResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Most expensive currencies against PLN: NBP tables A and B of the same day, with the place 52 weeks earlier",
+        "tags": [
+          "Time series"
+        ]
+      }
+    },
     "/v1/series/fx/{code}": {
       "get": {
         "operationId": "SeriesController_fxHistory",
@@ -1795,6 +1828,44 @@
           }
         },
         "summary": "NBP gold price history for a range counted back from the latest quote",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/series/gold/fineness": {
+      "get": {
+        "operationId": "MacroController_goldFineness",
+        "parameters": [
+          {
+            "name": "range",
+            "required": false,
+            "in": "query",
+            "description": "History range counted back from the latest quote. Default 1y",
+            "schema": {
+              "enum": [
+                "1y",
+                "5y",
+                "max"
+              ],
+              "type": "string",
+              "example": "1y"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoldFinenessResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Price of 1 g of gold of each fineness legal in Poland (999, 960, 750, 585, 500, 375, 333) from the NBP price of fineness 1000, troy ounce in USD at the NBP USD mid rate, previous and year-ago quote, all-time high and history",
         "tags": [
           "Macro and prices"
         ]
@@ -6440,6 +6511,213 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/FxCustomsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "FxRankingTableDto": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B"
+            ]
+          },
+          "tableNo": {
+            "type": "string",
+            "nullable": true,
+            "example": "046/B/NBP/2026"
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-11-18"
+          }
+        },
+        "required": [
+          "table",
+          "tableNo",
+          "date"
+        ]
+      },
+      "FxRankingTablesDto": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FxRankingTableDto"
+              }
+            ]
+          },
+          "b": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FxRankingTableDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "a",
+          "b"
+        ]
+      },
+      "FxRankingRowDto": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "number",
+            "example": 1,
+            "description": "Place by NBP mid rate, high to low; equal rates share a place"
+          },
+          "code": {
+            "type": "string",
+            "example": "KWD"
+          },
+          "name": {
+            "type": "string",
+            "example": "Dinar kuwejcki",
+            "description": "Currency name from the NBP table (Polish)"
+          },
+          "table": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B"
+            ]
+          },
+          "midPln": {
+            "type": "number",
+            "example": 13.0171,
+            "description": "PLN per 1 unit (NBP mid rate)"
+          },
+          "unitsPerPln": {
+            "type": "number",
+            "example": 0.0768223,
+            "description": "Units of the currency per 1 PLN"
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-11-18"
+          },
+          "rankYearAgo": {
+            "type": "number",
+            "nullable": true,
+            "example": 1
+          },
+          "midPlnYearAgo": {
+            "type": "number",
+            "nullable": true,
+            "example": 11.937
+          },
+          "rankChange": {
+            "type": "number",
+            "nullable": true,
+            "example": 0,
+            "description": "Places gained (+) or lost (-) over 52 weeks"
+          },
+          "changePct": {
+            "type": "number",
+            "nullable": true,
+            "example": 9.05,
+            "description": "Change of the PLN rate over 52 weeks, %"
+          },
+          "rateJump": {
+            "type": "boolean",
+            "example": false,
+            "description": "Rate changed 10 times or more in 52 weeks (e.g. redenomination); the place change is not comparable"
+          }
+        },
+        "required": [
+          "rank",
+          "code",
+          "name",
+          "table",
+          "midPln",
+          "unitsPerPln",
+          "date",
+          "rankYearAgo",
+          "midPlnYearAgo",
+          "rankChange",
+          "changePct",
+          "rateJump"
+        ]
+      },
+      "FxRankingDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "example": "NBP"
+          },
+          "method": {
+            "type": "string"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-18"
+          },
+          "tables": {
+            "description": "Tables of the ranking (the day of the latest table B)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FxRankingTablesDto"
+              }
+            ]
+          },
+          "yearAgoTables": {
+            "description": "Tables 52 weeks earlier; null when history is shorter",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FxRankingTablesDto"
+              }
+            ]
+          },
+          "total": {
+            "type": "number",
+            "example": 147,
+            "description": "Currencies in the ranking before limit"
+          },
+          "count": {
+            "type": "number",
+            "example": 20
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FxRankingRowDto"
+            }
+          }
+        },
+        "required": [
+          "source",
+          "method",
+          "asOf",
+          "tables",
+          "yearAgoTables",
+          "total",
+          "count",
+          "rows"
+        ]
+      },
+      "FxRankingResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FxRankingDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -15629,6 +15907,216 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/GoldHistoryDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "GoldFinenessQuoteDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-11-24"
+          },
+          "pricePerGramPln": {
+            "type": "number",
+            "example": 471.74,
+            "description": "NBP price of 1 g of gold, fineness 1000, PLN"
+          },
+          "usdPlnRate": {
+            "type": "number",
+            "nullable": true,
+            "example": 4.0819,
+            "description": "NBP table A mid rate of USD on the quote day or the last earlier day"
+          },
+          "usdRateDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-24"
+          },
+          "ounceUsd": {
+            "type": "number",
+            "nullable": true,
+            "example": 3594.59,
+            "description": "USD per troy ounce (31.1035 g) of pure gold"
+          }
+        },
+        "required": [
+          "date",
+          "pricePerGramPln",
+          "usdPlnRate",
+          "usdRateDate",
+          "ounceUsd"
+        ]
+      },
+      "GoldFinenessAthDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-03-03"
+          },
+          "pricePerGramPln": {
+            "type": "number",
+            "example": 624.92,
+            "description": "PLN per 1 g, fineness 1000"
+          }
+        },
+        "required": [
+          "date",
+          "pricePerGramPln"
+        ]
+      },
+      "GoldFinenessRowDto": {
+        "type": "object",
+        "properties": {
+          "fineness": {
+            "type": "number",
+            "example": 585,
+            "description": "Thousandths of gold in the alloy: 999, 960, 750, 585, 500, 375 or 333 (Prawo probiercze art. 24)"
+          },
+          "karat": {
+            "type": "number",
+            "example": 14,
+            "description": "Karats on the 24-karat scale, rounded"
+          },
+          "pricePerGramPln": {
+            "type": "number",
+            "example": 275.97,
+            "description": "PLN per 1 g of the alloy: gold content only, no margin or workmanship"
+          }
+        },
+        "required": [
+          "fineness",
+          "karat",
+          "pricePerGramPln"
+        ]
+      },
+      "GoldFinenessPointDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-11-24"
+          },
+          "pricePerGramPln": {
+            "type": "number",
+            "example": 471.74,
+            "description": "PLN per 1 g, fineness 1000"
+          },
+          "ounceUsd": {
+            "type": "number",
+            "nullable": true,
+            "example": 3594.59
+          }
+        },
+        "required": [
+          "date",
+          "pricePerGramPln",
+          "ounceUsd"
+        ]
+      },
+      "GoldFinenessDataDto": {
+        "type": "object",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "example": "pricePerGramPln: PLN per 1 g of gold of fineness 1000 (NBP) or of the given fineness; ounceUsd: USD per troy ounce of pure gold"
+          },
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-24"
+          },
+          "latest": {
+            "$ref": "#/components/schemas/GoldFinenessQuoteDto"
+          },
+          "previous": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoldFinenessQuoteDto"
+              }
+            ]
+          },
+          "yearAgo": {
+            "nullable": true,
+            "description": "Latest quote on or before the same day a year earlier",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoldFinenessQuoteDto"
+              }
+            ]
+          },
+          "allTimeHigh": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GoldFinenessAthDto"
+              }
+            ]
+          },
+          "historyFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": "2013-01-02"
+          },
+          "fineness": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoldFinenessRowDto"
+            }
+          },
+          "range": {
+            "type": "string",
+            "example": "1y",
+            "description": "1y | 5y | max"
+          },
+          "count": {
+            "type": "number",
+            "example": 253
+          },
+          "thinned": {
+            "type": "boolean",
+            "example": false,
+            "description": "true: history thinned to at most 500 points (first and last kept)"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoldFinenessPointDto"
+            }
+          }
+        },
+        "required": [
+          "unit",
+          "asOf",
+          "latest",
+          "previous",
+          "yearAgo",
+          "allTimeHigh",
+          "historyFrom",
+          "fineness",
+          "range",
+          "count",
+          "thinned",
+          "history"
+        ]
+      },
+      "GoldFinenessResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/GoldFinenessDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

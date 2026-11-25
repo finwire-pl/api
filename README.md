@@ -60,6 +60,7 @@ Each dataset name links to its documentation page with fields, source and citati
 | [NBP policy rates](https://public-api.finwire.pl/datasets/interest-rates) (reference, lombard, deposit, rediscount, discount) | `/v1/series/interest-rate/{id}` | [NBP](https://nbp.pl) | on MPC decisions | up to 10 years |
 | [CPI inflation](https://public-api.finwire.pl/datasets/cpi) (YoY, MoM) | `/v1/series/cpi` | [GUS](https://stat.gov.pl) | monthly | since 1982 |
 | [NBP exchange rates](https://public-api.finwire.pl/datasets/fx) (table A mid, table C bid/ask) | `/v1/series/fx/{code}` | [NBP](https://nbp.pl/statystyka-i-sprawozdawczosc/kursy) | daily (business days) | up to 10 years |
+| [Most expensive currencies against PLN](https://public-api.finwire.pl/datasets/fx-ranking) (NBP tables A and B of the same day, place 52 weeks earlier) | `/v1/series/fx-ranking` | [NBP](https://nbp.pl/statystyka-i-sprawozdawczosc/kursy/tabela-b/) | weekly (table B) | current and 52 weeks earlier |
 | [10-year government bond yields](https://public-api.finwire.pl/datasets/bond-yields): PL, DE, euro area, EU + spreads | `/v1/series/bond-yields/{geo}` | [Eurostat irt_lt_mcby_m](https://ec.europa.eu/eurostat/databrowser/view/irt_lt_mcby_m/default/table) | monthly | since 2001 |
 | [Retail government bonds](https://public-api.finwire.pl/datasets/bonds) (OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD) | `/v1/bonds` | [Ministry of Finance](https://www.obligacjeskarbowe.pl) | monthly issues | current issues |
 | [Flat transaction prices per m²](https://public-api.finwire.pl/datasets/transaction-prices) (median, quartiles, primary/secondary) - 17 cities and their districts | `/v1/housing/transactions/{city}` | Real Estate Price Register (RCN, [GUGiK](https://www.geoportal.gov.pl) + city registers) | quarterly, ingested daily | last 12 quarters per city |
@@ -74,6 +75,7 @@ Each dataset name links to its documentation page with fields, source and citati
 | [Consumer sentiment](https://public-api.finwire.pl/datasets/consumer-sentiment): BWUK, WWUK and 13 components | `/v1/macro/consumer-sentiment` | [GUS](https://dbw.stat.gov.pl) | monthly | since 2010 |
 | [Average wage, enterprise sector](https://public-api.finwire.pl/datasets/wages-enterprise) by province | `/v1/wages/enterprise` | [GUS](https://dbw.stat.gov.pl) | monthly | 2 years |
 | [Gold price](https://public-api.finwire.pl/datasets/gold) (1 g, fineness 1000) | `/v1/series/gold` | [NBP](https://nbp.pl/statystyka-i-sprawozdawczosc/kursy/cena-zlota/) | daily (business days) | since 2013 |
+| [Gold price by fineness](https://public-api.finwire.pl/datasets/gold-fineness): 1 g of gold 999, 960, 750, 585, 500, 375, 333 and troy ounce in USD | `/v1/series/gold/fineness` | [NBP](https://nbp.pl/statystyka-i-sprawozdawczosc/kursy/cena-zlota/) (gold price, USD mid rate table A) | daily (business days) | since 2013 |
 | [Maximum fuel prices](https://public-api.finwire.pl/datasets/fuel-max-prices): Pb95, Pb98, diesel | `/v1/fuel-prices` | Minister of Energy ([Monitor Polski](https://eli.gov.pl)) | on announcement | all announcements |
 | [Crude oil Brent and WTI](https://public-api.finwire.pl/datasets/oil-prices): spot prices in USD and PLN per barrel, `finwire_brent_pln`, crude cost per litre next to Polish pump prices | `/v1/oil-prices` | [U.S. Energy Information Administration](https://www.eia.gov/petroleum/prices/), NBP, European Commission | weekly (Wednesday) | full daily history (PLN from the first NBP rate in the dataset) |
 | [Pump price estimate for tomorrow](https://public-api.finwire.pl/datasets/fuel-retail-estimate): average petrol 95 and diesel price at Polish stations from wholesale prices, station margin and VAT, with backtest error, `finwire_hurtcast_pb95`, `finwire_hurtcast_diesel` | `/v1/fuel/retail-estimate` | finwire.pl estimate from ORLEN wholesale prices, [European Commission](https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en) (Weekly Oil Bulletin), Minister of Energy (maximum prices); derived numbers only | daily | 104 weeks |
@@ -234,7 +236,7 @@ print(payload["meta"]["citation"])
 Tools (all read-only, each with `outputSchema`):
 
 - Macro: `get_macro_snapshot`, `list_macro_indicators`, `get_macro_indicator`, `compare_macro_indicators`, `get_macro_changes`, `get_macro_calendar`
-- Rates and prices: `get_interest_rates` (NBP), `get_statutory_interest` (statutory, tax and B2B interest), `get_currency_rates` (NBP FX, gold), `get_fuel_prices` (maximum fuel prices and crude oil Brent and WTI in USD and PLN, EIA), `get_energy_prices` (URE electricity and gas tariffs), `get_retail_prices` (GUS shop prices, finwire shopping basket, excise duty in prices of cigarettes, alcohol and fuel, `finwire_cigarette_excise_share`)
+- Rates and prices: `get_interest_rates` (NBP), `get_statutory_interest` (statutory, tax and B2B interest), `get_currency_rates` (NBP FX, gold, gold by fineness and ounce in USD with `fineness=true`), `get_fuel_prices` (maximum fuel prices and crude oil Brent and WTI in USD and PLN, EIA), `get_energy_prices` (URE electricity and gas tariffs), `get_retail_prices` (GUS shop prices, finwire shopping basket, excise duty in prices of cigarettes, alcohol and fuel, `finwire_cigarette_excise_share`)
 - Pump prices tomorrow: `get_fuel_retail_estimate` (finwire estimate of the average petrol 95 and diesel price at Polish stations from wholesale prices, with backtest error, `finwire_hurtcast_pb95`, `finwire_hurtcast_diesel`)
 - Subsidies: `get_subsidy_stats` (Czyste Powietrze heating subsidy programme: applications, contracts, payouts, payout queue, `finwire_clean_air_payout_rate`)
 - Pensions: `get_pension_stats` (average ZUS pension gross and net, other pensions, allowances, `finwire_pension_wage_ratio`, ZUS pension payment dates)
@@ -338,7 +340,8 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/series/interest-rate/{id}?days=365` | Daily history. `id`: `stopa-referencyjna`, `stopa-lombardowa`, `stopa-depozytowa`, `stopa-redyskontowa`, `stopa-dyskontowa`. `days`: 7-3650 |
 | `GET /v1/series/cpi?type=monthly&limit=24` | CPI YoY and MoM. `type`: `monthly` or `yearly`, `limit`: 1-600 |
 | `GET /v1/series/fx` | Current NBP FX table |
-| `GET /v1/series/fx/{code}?days=365` | FX history, e.g. `EUR`, `USD`, `CHF`, `GBP` |
+| `GET /v1/series/fx/{code}?days=365` | FX history, e.g. `EUR`, `USD`, `CHF`, `GBP`; table B currencies weekly, e.g. `RUB`, `AED` |
+| `GET /v1/series/fx-ranking?limit=20` | Most expensive currencies against PLN, NBP tables A and B, place 52 weeks earlier. `limit`: 1-200 |
 | `GET /v1/series/bond-yields` | Latest 10-year yields for `PL`, `DE`, `EA`, `EU27_2020`, PL-DE and PL-EA spreads in bps |
 | `GET /v1/series/bond-yields/{geo}?since=2015-01` | Monthly history for one `geo` |
 | `GET /v1/series/unemployment` | Registered unemployment rate: Poland and 16 provinces, latest month, YoY change in pp |
@@ -383,6 +386,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/wages/enterprise` | GUS average wage in the enterprise sector, real change, by province |
 | `GET /v1/series/gold` | NBP gold price: latest, period changes, all-time high, 12-month average |
 | `GET /v1/series/gold/history?range=1y` | Gold price history, `range`: `1m`, `1y`, `5y`, `max` |
+| `GET /v1/series/gold/fineness?range=1y` | Price of 1 g of gold of each fineness legal in Poland (999-333) with karats, troy ounce in USD at the NBP USD mid rate, previous and year-ago quote, all-time high, history; `range`: `1y`, `5y`, `max` |
 | `GET /v1/fuel-prices` | Maximum fuel prices: in force today, announced for tomorrow, history |
 | `GET /v1/oil-prices?history=1y` | Crude oil Brent and WTI (EIA spot prices) in USD and PLN per barrel, week, month and year change, 52-week range, Brent-WTI spread, `finwire_brent_pln`, crude cost per litre next to Polish pump prices (European Commission Weekly Oil Bulletin); optional history `1y`, `5y` (daily) or `max` (monthly) |
 | `GET /v1/fuel/retail-estimate?weeks=4` | finwire estimate of the average petrol 95 and diesel pump price for the next day (`finwire_hurtcast_pb95`, `finwire_hurtcast_diesel`), VAT rate, maximum price while it applies, backtest accuracy (mean absolute error, share of weeks within 10 groszy) and recent backtest weeks against the European Commission Weekly Oil Bulletin. Wholesale prices are not redistributed |
