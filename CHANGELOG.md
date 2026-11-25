@@ -3,6 +3,24 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-26
+
+### Added
+
+- `GET /v1/business-poland/suspension` - suspending a sole proprietorship (zawieszenie działalności, Entrepreneurs' Law art. 22-25): ZUS contributions for the partial month (base divided by the days of the month, art. 18(9) of the social insurance act), minimum health contribution, earliest end of suspension, latest end for childcare suspension (art. 36aa), resumption month, ZUS/PIT/VAT deadlines moved to the next business day, VAT deregistration after 6 months.
+- `GET /v1/business-poland/seniority-bonus` - seniority bonus (dodatek stażowy) by employee group (civil service, local government, teachers, budget sector): percent per year, cap, first year, amount from the base salary and the date of the next increase, with the legal basis per group.
+- `GET /v1/business-poland/pay-transparency` - pay transparency obligations (Labour Code art. 18^3ca-18^3d, in force since 24 December 2025) and the transposition status of Directive (EU) 2023/970 with obligations by headcount.
+- `GET /v1/labour-office-support` - labour office support under the labour market act (Dz.U. 2025 poz. 620): start-up grant, training and education loans as multiples of the GUS average wage, PFRON grant, and the sickness benefit after the end of employment (optional `employmentEnd`, `sicknessStart`, `sicknessEnd`: entitlement and end date under art. 7 of the sickness benefits act).
+- `GET /v1/cash-loan-prepayment` - dataset `cash-loan-prepayment`: early repayment of a consumer cash loan (consumer credit act art. 48-50): interest saved with a shorter term or a lower instalment, maximum fee (1% or 0.5% of the repaid amount, fixed rate only, capped at the interest due, applicable only above 3 times the average wage in 12 months).
+- `GET /v1/energy/appliance-costs` - household electricity use: kWh and monthly and yearly cost of appliances at the G11 marginal price from URE tariffs (average or selected operator).
+- `GET /v1/series/fx-cross?base=EUR&quote=USD&range=1Y` - dataset `fx-cross`: cross rates computed from NBP table A mid rates, with history.
+- MCP server 1.42.0: new tools `calc_business_suspension`, `calc_seniority_bonus`, `get_pay_transparency`, `get_labour_office_support`, `calc_cash_loan_prepayment`, `calc_electricity_usage`.
+
+### Changed
+
+- `GET /v1/legal-limits`: new block `civilLawTaxes` (dataset `legal-limits`) - tax on prizes (PIT art. 30(1)(2) and exemptions art. 21(1)(6a) and (68)), tax on civil law transactions for loans (0.5%) and sale of movable property (2%) with exemptions (PCC art. 9) and the PCC-3 filing deadline, renunciation of inheritance vs disclaimer (Civil Code art. 1048 and 1012-1020) with notary fees.
+- MCP server 1.42.0: `get_legal_limits` summarises `civilLawTaxes`; `get_currency_rates` takes `quote` and `range` for cross rates (e.g. `code=EUR quote=USD`).
+
 ## 2026-11-25
 
 ### Changed

@@ -166,6 +166,69 @@
         ]
       }
     },
+    "/v1/series/fx-cross": {
+      "get": {
+        "operationId": "SeriesController_fxCross",
+        "parameters": [
+          {
+            "name": "base",
+            "required": false,
+            "in": "query",
+            "description": "ISO code, default EUR",
+            "schema": {
+              "example": "EUR",
+              "type": "string"
+            }
+          },
+          {
+            "name": "quote",
+            "required": false,
+            "in": "query",
+            "description": "ISO code, default USD",
+            "schema": {
+              "example": "USD",
+              "type": "string"
+            }
+          },
+          {
+            "name": "range",
+            "required": false,
+            "in": "query",
+            "description": "Chart series range, default 1Y",
+            "schema": {
+              "enum": [
+                "1M",
+                "3M",
+                "6M",
+                "1Y",
+                "3Y",
+                "5Y",
+                "10Y",
+                "MAX"
+              ],
+              "type": "string",
+              "example": "1Y"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FxCrossResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cross rate of two NBP table A currencies, e.g. EUR/USD: latest, periods and chart series",
+        "tags": [
+          "Time series"
+        ]
+      }
+    },
     "/v1/series/fx-ranking": {
       "get": {
         "operationId": "SeriesController_fxRanking",
@@ -544,7 +607,7 @@
             }
           }
         },
-        "summary": "Statutory limits of the current year (IKE/IKZE, PIT, tax-free amount) and a business block: euro-denominated limits (small VAT, PIT and CIT taxpayer, flat-rate tax, de minimis one-off depreciation, full accounting threshold) in PLN at the NBP rate of the first business day of October for the previous, current and next year, fiscal penal code fines and thresholds from the minimum wage, and the monthly company car private use amounts",
+        "summary": "Statutory limits of the current year (IKE/IKZE, PIT, tax-free amount) and a business block: euro-denominated limits (small VAT, PIT and CIT taxpayer, flat-rate tax, de minimis one-off depreciation, full accounting threshold) in PLN at the NBP rate of the first business day of October for the previous, current and next year, fiscal penal code fines and thresholds from the minimum wage, the monthly company car private use amounts, and a civilLawTaxes block: Polish tax on winnings (10% flat, exemption thresholds per game type), civil law transactions tax on private loans, sales of movables and property rights (rates, exemption thresholds, PCC-3 deadline) and the maximum costs of renouncing a future inheritance versus disclaiming an inheritance",
         "tags": [
           "Reference data"
         ]
@@ -2995,6 +3058,28 @@
           }
         },
         "summary": "Regulated household electricity (G11, G12, G12w) and gas (W-1.1 to W-4) tariffs approved by URE, in force on a day; net amounts with decision and PDF",
+        "tags": [
+          "Macro and prices"
+        ]
+      }
+    },
+    "/v1/energy/appliance-costs": {
+      "get": {
+        "operationId": "MacroController_applianceCosts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplianceCostsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Typical household appliances in Poland with power, running time, yearly kWh and yearly cost at the electricity price per kWh (G11, VAT included, without fixed fees) from the URE tariffs in force today, mean and per distribution operator",
         "tags": [
           "Macro and prices"
         ]
@@ -5688,6 +5773,253 @@
         ]
       }
     },
+    "/v1/business-poland/suspension": {
+      "get": {
+        "operationId": "BusinessPolandController_suspension",
+        "parameters": [
+          {
+            "name": "start",
+            "required": true,
+            "in": "query",
+            "description": "First day of the suspension (YYYY-MM-DD)",
+            "schema": {
+              "example": "2026-12-16",
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "required": false,
+            "in": "query",
+            "description": "Last day of the suspension (YYYY-MM-DD); omitted = indefinite",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scheme",
+            "required": false,
+            "in": "query",
+            "description": "ZUS scheme before the suspension, default full",
+            "schema": {
+              "enum": [
+                "full",
+                "preferential",
+                "start-relief"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "sickness",
+            "required": false,
+            "in": "query",
+            "description": "Voluntary sickness insurance before the suspension, true/false",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tax",
+            "required": false,
+            "in": "query",
+            "description": "Income tax form: scale, flat 19%, lump sum on revenue; default scale",
+            "schema": {
+              "enum": [
+                "scale",
+                "flat",
+                "lump-sum"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "vatMonthly",
+            "required": false,
+            "in": "query",
+            "description": "Active VAT payer settling monthly, true/false",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "kind",
+            "required": false,
+            "in": "query",
+            "description": "standard or childcare (suspension to care for a child), default standard",
+            "schema": {
+              "enum": [
+                "standard",
+                "childcare"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "childBirth",
+            "required": false,
+            "in": "query",
+            "description": "kind=childcare: date of birth of the child (YYYY-MM-DD)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "en",
+                "pl"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Suspending a Polish sole proprietorship (JDG) in CEIDG: earliest end (30 days or a full February), latest end of a childcare suspension, ZUS social contributions for the part month (base pro rata to insured days), minimum health contribution, ZUS, PIT and VAT deadlines for the suspension and resumption months, VAT register removal after 6 months, with the legal basis",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/seniority-bonus": {
+      "get": {
+        "operationId": "BusinessPolandController_seniorityBonus",
+        "parameters": [
+          {
+            "name": "group",
+            "required": true,
+            "in": "query",
+            "description": "Employee group; regulamin = own company rule (startYears, startPct, stepPct, maxPct)",
+            "schema": {
+              "enum": [
+                "samorzad",
+                "sluzba-cywilna",
+                "urzedy-panstwowe",
+                "sady-prokuratura",
+                "nauczyciele",
+                "regulamin"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "basePay",
+            "required": true,
+            "in": "query",
+            "description": "Gross monthly base pay PLN",
+            "schema": {
+              "example": 6000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "required": false,
+            "in": "query",
+            "description": "Start of the counted service (YYYY-MM-DD), instead of years/months",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "years",
+            "required": false,
+            "in": "query",
+            "description": "Full years of counted service today",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Additional full months (0-11)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startYears",
+            "required": false,
+            "in": "query",
+            "description": "group=regulamin: full years after which the bonus starts",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startPct",
+            "required": false,
+            "in": "query",
+            "description": "group=regulamin: percent at the start",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stepPct",
+            "required": false,
+            "in": "query",
+            "description": "group=regulamin: percentage points per further year",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxPct",
+            "required": false,
+            "in": "query",
+            "description": "group=regulamin: maximum percent",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Polish seniority bonus (dodatek sta\u017cowy, dodatek za wieloletni\u0105 prac\u0119, za wys\u0142ug\u0119 lat): percent and PLN amount from base pay and length of service, date and amount of the next rise, the maximum and when it is reached, for local government, civil service, state offices, courts and prosecution, teachers, or a company rule from pay regulations; with the statutory basis of each group",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/pay-transparency": {
+      "get": {
+        "operationId": "BusinessPolandController_payTransparency",
+        "parameters": [
+          {
+            "name": "employees",
+            "required": false,
+            "in": "query",
+            "description": "Number of employees: only obligations for a company of this size",
+            "schema": {
+              "example": 120,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Pay transparency in Poland (jawno\u015b\u0107 wynagrodze\u0144): employer obligations with dates and their state today - pay range for candidates from 24 Dec 2025 (Labour Code art. 18^3ca, 22^1), and the obligations of EU Directive 2023/970 (right to pay information, gender pay gap reports by headcount, joint pay assessment) with the status of the Polish implementing bill; filter by number of employees",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
     "/v1/business-poland/plan": {
       "get": {
         "operationId": "BusinessPolandController_plan",
@@ -6406,6 +6738,192 @@
           "Calculators"
         ]
       }
+    },
+    "/v1/labour-office-support": {
+      "get": {
+        "operationId": "LabourOfficeSupportController_get",
+        "parameters": [
+          {
+            "name": "employmentEnd",
+            "required": false,
+            "in": "query",
+            "description": "Last day of employment (sickness insurance), YYYY-MM-DD",
+            "schema": {
+              "example": "2026-10-31",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sicknessStart",
+            "required": false,
+            "in": "query",
+            "description": "First day of the inability to work, YYYY-MM-DD; needs employmentEnd",
+            "schema": {
+              "example": "2026-11-10",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sicknessEnd",
+            "required": false,
+            "in": "query",
+            "description": "Last day of the sick leave, YYYY-MM-DD (optional)",
+            "schema": {
+              "example": "2026-12-20",
+              "type": "string"
+            }
+          },
+          {
+            "name": "longIncubation",
+            "required": false,
+            "in": "query",
+            "description": "Infectious disease with incubation over 14 days: 3-month window instead of 14 days, true or false",
+            "schema": {
+              "example": false,
+              "type": "string"
+            }
+          },
+          {
+            "name": "pregnancyOrTb",
+            "required": false,
+            "in": "query",
+            "description": "Pregnancy or tuberculosis: no 91-day limit after the end of employment, true or false",
+            "schema": {
+              "example": false,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LabourOfficeSupportResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Money to start a business in Poland and labour office support: start-up grant of the labour office (up to 6x the average wage, art. 147 of the Act on the labour market), PFRON grant for a person with a disability (up to 15x, art. 12a), social cooperative grant, start-up loan (up to 20x, 0.25% a year), education loan (400%, interest free), local action group premium; amounts in PLN from the average wage in force today (GUS announcement). With employmentEnd and sicknessStart: check of the sickness benefit after the end of employment (art. 7, 8 and 13 of the sickness benefits act).",
+        "tags": [
+          "Calculators"
+        ]
+      }
+    },
+    "/v1/cash-loan-prepayment": {
+      "get": {
+        "operationId": "CashLoanPrepaymentController_get",
+        "parameters": [
+          {
+            "name": "amount",
+            "required": false,
+            "in": "query",
+            "description": "Loan amount in the contract (principal), PLN; default 50000",
+            "schema": {
+              "example": 50000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "months",
+            "required": false,
+            "in": "query",
+            "description": "Number of instalments in the contract, 1-180; default 60",
+            "schema": {
+              "example": 60,
+              "type": "string"
+            }
+          },
+          {
+            "name": "ratePct",
+            "required": false,
+            "in": "query",
+            "description": "Nominal annual interest rate, %; default the NBP average for new consumer loans",
+            "schema": {
+              "example": 9.91,
+              "type": "string"
+            }
+          },
+          {
+            "name": "paidInstalments",
+            "required": false,
+            "in": "query",
+            "description": "Instalments already paid; default 12",
+            "schema": {
+              "example": 12,
+              "type": "string"
+            }
+          },
+          {
+            "name": "prepayment",
+            "required": false,
+            "in": "query",
+            "description": "Prepayment now, PLN; above the balance = full repayment; default 10000",
+            "schema": {
+              "example": 10000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "fixedRate",
+            "required": false,
+            "in": "query",
+            "description": "Fixed interest rate in the repayment period, true or false; default true (fee possible only on a fixed rate)",
+            "schema": {
+              "example": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractFeePct",
+            "required": false,
+            "in": "query",
+            "description": "Early repayment fee in the contract, % of the amount repaid, 0-10 (0 = no fee); default 1",
+            "schema": {
+              "example": 1,
+              "type": "string"
+            }
+          },
+          {
+            "name": "upfrontCosts",
+            "required": false,
+            "in": "query",
+            "description": "Arrangement fee and other costs paid when the loan was taken, PLN (base of the art. 49 refund); default 2500",
+            "schema": {
+              "example": 2500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "priorPrepayments12m",
+            "required": false,
+            "in": "query",
+            "description": "Earlier prepayments within the same 12 consecutive months, PLN; default 0",
+            "schema": {
+              "example": 0,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CashLoanPrepaymentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Prepayment of a consumer cash loan in Poland (equal instalments, fixed rate): interest without prepayment, with a shorter term and with a lower instalment, the early repayment fee under the Consumer Credit Act art. 50 (fixed rate only, above 3 times the December average enterprise-sector wage repaid within 12 months, at most 1% or 0.5%, never above the interest until the end of the contract), the refund of up-front costs under art. 49 (linear estimate) and the net saving. Default interest rate: NBP average for new consumer loans in PLN.",
+        "tags": [
+          "Calculators"
+        ]
+      }
     }
   },
   "info": {
@@ -6894,6 +7412,114 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/FxCustomsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "FxCrossLatestDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-11-24"
+          },
+          "rate": {
+            "type": "number",
+            "example": 1.1522,
+            "description": "Units of the quote currency per 1 unit of the base currency"
+          },
+          "baseMidPln": {
+            "type": "number",
+            "example": 4.24
+          },
+          "quoteMidPln": {
+            "type": "number",
+            "example": 3.68
+          },
+          "tableNo": {
+            "type": "string",
+            "nullable": true,
+            "example": "228/A/NBP/2026"
+          }
+        },
+        "required": [
+          "date",
+          "rate",
+          "baseMidPln",
+          "quoteMidPln",
+          "tableNo"
+        ]
+      },
+      "FxCrossDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "example": "NBP"
+          },
+          "method": {
+            "type": "string"
+          },
+          "base": {
+            "type": "string",
+            "example": "EUR"
+          },
+          "quote": {
+            "type": "string",
+            "example": "USD"
+          },
+          "latest": {
+            "$ref": "#/components/schemas/FxCrossLatestDto"
+          },
+          "previous": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "changePct": {
+            "type": "number",
+            "nullable": true
+          },
+          "firstDate": {
+            "type": "string",
+            "example": "2002-01-02"
+          },
+          "periods": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "series": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "source",
+          "method",
+          "base",
+          "quote",
+          "latest",
+          "previous",
+          "changePct",
+          "firstDate",
+          "periods",
+          "series"
+        ]
+      },
+      "FxCrossResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FxCrossDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
@@ -8295,6 +8921,34 @@
               }
             }
           },
+          "civilLawTaxes": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true,
+            "description": "Taxes on private transactions in Poland from the statutes: prize (tax on winnings, art. 30 ust. 1 pkt 2 of the PIT act: 10% of the whole prize, exemption up to 2280 PLN for lotteries, numbers games and betting, unlimited for casino games licensed in the EU/EEA, up to 2000 PLN for media contests and premium sales, per kind with breakEven = smallest taxed prize that nets more than the threshold), pcc (civil law transactions tax: private loans 0.5% with exemptions for close family and loans up to 1000 PLN from others, sale of movables 2% above the exemption threshold, property rights 1%, PCC-3 return due in 14 days) and inheritance (maximum notary fee for a contract renouncing a future inheritance, notary fee or court fee for disclaiming an inheritance, 6-month deadline)",
+            "example": {
+              "asOf": "2026-11-25",
+              "prize": {
+                "rate": 0.1,
+                "gamesExemptUpTo": 2280,
+                "contestExemptUpTo": 2000
+              },
+              "pcc": {
+                "loanRate": 0.005,
+                "movablesRate": 0.02,
+                "movablesExemptUpTo": 3000,
+                "loanOthersExemptUpTo": 1000,
+                "familyLoanFreeAmount": 36120,
+                "declarationDays": 14
+              },
+              "inheritance": {
+                "declarationMonths": 6,
+                "renunciationNotaryNet": 200,
+                "rejectionNotaryNet": 100,
+                "rejectionCourtFee": 100
+              }
+            }
+          },
           "business": {
             "type": "object",
             "nullable": true,
@@ -8308,6 +8962,7 @@
           "zfss",
           "lifeExpectancy",
           "voluntaryHealth",
+          "civilLawTaxes",
           "business"
         ]
       },
@@ -23550,6 +24205,262 @@
           "meta"
         ]
       },
+      "ApplianceTariffDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number",
+            "nullable": true,
+            "example": 2026
+          },
+          "validFrom": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-01-01"
+          },
+          "validTo": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-12-31"
+          },
+          "inForce": {
+            "type": "boolean",
+            "description": "false = the tariff period ended and the next URE tariff is not in the data yet"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "year",
+          "validFrom",
+          "validTo",
+          "inForce",
+          "sourceUrl"
+        ]
+      },
+      "ApplianceUnitDto": {
+        "type": "object",
+        "properties": {
+          "power": {
+            "type": "string"
+          },
+          "energy": {
+            "type": "string"
+          },
+          "price": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "power",
+          "energy",
+          "price",
+          "cost"
+        ]
+      },
+      "ApplianceOperatorPriceDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true,
+            "example": "tauron"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Tauron"
+          },
+          "area": {
+            "type": "string",
+            "nullable": true
+          },
+          "perKwh": {
+            "type": "number",
+            "nullable": true,
+            "example": 1.08
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "area",
+          "perKwh"
+        ]
+      },
+      "AppliancePriceDto": {
+        "type": "object",
+        "properties": {
+          "avgPerKwh": {
+            "type": "number",
+            "nullable": true,
+            "example": 1.07,
+            "description": "Mean of operators with an approved default-seller tariff"
+          },
+          "byOperator": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplianceOperatorPriceDto"
+            }
+          }
+        },
+        "required": [
+          "avgPerKwh",
+          "byOperator"
+        ]
+      },
+      "ApplianceSourceDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "label",
+          "url"
+        ]
+      },
+      "ApplianceCostDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true,
+            "example": "czajnik"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Czajnik elektryczny"
+          },
+          "group": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "kuchnia",
+              "pranie",
+              "rtv",
+              "ogrzewanie",
+              "dom"
+            ]
+          },
+          "watts": {
+            "type": "number",
+            "nullable": true,
+            "example": 2000
+          },
+          "hoursPerDay": {
+            "type": "number",
+            "nullable": true,
+            "example": 0.25
+          },
+          "daysPerWeek": {
+            "type": "number",
+            "nullable": true,
+            "example": 7
+          },
+          "monthsPerYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 12
+          },
+          "kwhYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 182.6
+          },
+          "costYear": {
+            "type": "number",
+            "nullable": true,
+            "example": 195.4
+          },
+          "note": {
+            "type": "string",
+            "nullable": true,
+            "description": "Polish note on the starting value"
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "group",
+          "watts",
+          "hoursPerDay",
+          "daysPerWeek",
+          "monthsPerYear",
+          "kwhYear",
+          "costYear",
+          "note"
+        ]
+      },
+      "ApplianceCostsDataDto": {
+        "type": "object",
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "nullable": true,
+            "example": "2026-11-17"
+          },
+          "tariff": {
+            "$ref": "#/components/schemas/ApplianceTariffDto"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/ApplianceUnitDto"
+          },
+          "price": {
+            "$ref": "#/components/schemas/AppliancePriceDto"
+          },
+          "ureTypicalKwh": {
+            "type": "number",
+            "nullable": true,
+            "example": 2000
+          },
+          "appliancesSource": {
+            "$ref": "#/components/schemas/ApplianceSourceDto"
+          },
+          "appliances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplianceCostDto"
+            }
+          }
+        },
+        "required": [
+          "asOf",
+          "tariff",
+          "unit",
+          "price",
+          "ureTypicalKwh",
+          "appliancesSource",
+          "appliances"
+        ]
+      },
+      "ApplianceCostsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ApplianceCostsDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "HouseholdInflationSeriesDto": {
         "type": "object",
         "properties": {
@@ -32949,6 +33860,38 @@
           "data": {
             "type": "object",
             "description": "Projection of the dataset parental-leave-plan (see /v1/datasets/parental-leave-plan)"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "LabourOfficeSupportResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Projection of the dataset labour-office-support (see /v1/datasets/labour-office-support)"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "CashLoanPrepaymentResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Projection of the dataset cash-loan-prepayment (see /v1/datasets/cash-loan-prepayment)"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"
