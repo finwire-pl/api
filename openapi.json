@@ -1306,6 +1306,28 @@
         ]
       }
     },
+    "/v1/housing/suburban-discount": {
+      "get": {
+        "operationId": "RealEstateController_housingSuburbanDiscount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuburbanDiscountResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Rabat podmiejski finwire (finwire_suburban_discount): flat price per sqm from notarial deeds (RCN) in 16 voivodeship cities against the municipalities bordering them, last 4 full quarters: city and ring medians, discount in % and PLN per m2, a year earlier, bordering municipalities with prices; index value (median of city discounts) with history from rolling windows",
+        "tags": [
+          "Real estate"
+        ]
+      }
+    },
     "/v1/housing/municipalities": {
       "get": {
         "operationId": "RealEstateController_housingMunicipalities",
@@ -13210,6 +13232,269 @@
           "to"
         ]
       },
+      "SuburbanIndexPointDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "example": "2026-Q2",
+            "description": "Last quarter of the 4-quarter window"
+          },
+          "periodLabel": {
+            "type": "string",
+            "nullable": true,
+            "example": "Q3 2025 - Q2 2026"
+          },
+          "value": {
+            "type": "number",
+            "example": 24.6,
+            "description": "Median of the city discounts, %"
+          },
+          "cities": {
+            "type": "number",
+            "example": 16,
+            "description": "Cities with both medians in the window"
+          }
+        },
+        "required": [
+          "period",
+          "periodLabel",
+          "value",
+          "cities"
+        ]
+      },
+      "SuburbanMunicipalityDto": {
+        "type": "object",
+        "properties": {
+          "teryt": {
+            "type": "string",
+            "example": "1418043"
+          },
+          "name": {
+            "type": "string",
+            "example": "Piaseczno"
+          },
+          "kind": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "miejska",
+              "wiejska",
+              "miejsko-wiejska"
+            ]
+          },
+          "deeds": {
+            "type": "number",
+            "example": 812,
+            "description": "Flat deeds in the municipality window"
+          },
+          "medianM2": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median price per m2 (PLN); null below minDeeds deeds"
+          },
+          "discountPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "How much cheaper than the city, % (positive = cheaper)"
+          },
+          "deedsPer1000": {
+            "type": "number",
+            "nullable": true,
+            "description": "Deeds per 1000 residents"
+          },
+          "smallSample": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "teryt",
+          "name",
+          "kind",
+          "deeds",
+          "medianM2",
+          "discountPct",
+          "deedsPer1000",
+          "smallSample"
+        ]
+      },
+      "SuburbanCityDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "warszawa"
+          },
+          "name": {
+            "type": "string",
+            "example": "Warszawa"
+          },
+          "teryt": {
+            "type": "string",
+            "example": "1465011"
+          },
+          "voivodeship": {
+            "type": "string",
+            "nullable": true,
+            "example": "mazowieckie"
+          },
+          "cityDeeds": {
+            "type": "number",
+            "example": 30368
+          },
+          "cityMedianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 16071
+          },
+          "ringDeeds": {
+            "type": "number",
+            "example": 5521,
+            "description": "Deeds in all municipalities bordering the city"
+          },
+          "ringMedianM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 10939,
+            "description": "Median price per m2 in the bordering municipalities (pooled deeds)"
+          },
+          "ringMunicipalities": {
+            "type": "number",
+            "example": 18,
+            "description": "Municipalities bordering the city (PRG boundaries)"
+          },
+          "discountPct": {
+            "type": "number",
+            "nullable": true,
+            "example": 31.9,
+            "description": "How much cheaper per m2 around the city than in the city, %"
+          },
+          "discountM2": {
+            "type": "number",
+            "nullable": true,
+            "example": 5132,
+            "description": "City median minus ring median, PLN per m2"
+          },
+          "prevDiscountPct": {
+            "type": "number",
+            "nullable": true,
+            "description": "Discount in the window one year earlier, %"
+          },
+          "municipalities": {
+            "description": "Bordering municipalities with deeds, from the largest discount",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SuburbanMunicipalityDto"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "teryt",
+          "voivodeship",
+          "cityDeeds",
+          "cityMedianM2",
+          "ringDeeds",
+          "ringMedianM2",
+          "ringMunicipalities",
+          "discountPct",
+          "discountM2",
+          "prevDiscountPct",
+          "municipalities"
+        ]
+      },
+      "SuburbanDiscountDataDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Data source as named by finwire.pl"
+          },
+          "minDeeds": {
+            "type": "number",
+            "example": 30,
+            "description": "Minimum deeds for a median"
+          },
+          "minCities": {
+            "type": "number",
+            "example": 12,
+            "description": "Minimum cities with both medians for an index value"
+          },
+          "window": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MunicipalityWindowDto"
+              }
+            ]
+          },
+          "dataUntil": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "index": {
+            "nullable": true,
+            "description": "finwire_suburban_discount in the window; null below minCities",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SuburbanIndexPointDto"
+              }
+            ]
+          },
+          "history": {
+            "description": "Index history from rolling 4-quarter windows",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SuburbanIndexPointDto"
+            }
+          },
+          "cities": {
+            "description": "Voivodeship cities from the largest discount",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SuburbanCityDto"
+            }
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/najtansze-mieszkania-w-polsce#rabat-podmiejski"
+          }
+        },
+        "required": [
+          "source",
+          "minDeeds",
+          "minCities",
+          "window",
+          "dataUntil",
+          "updatedAt",
+          "index",
+          "history",
+          "cities",
+          "pageUrl"
+        ]
+      },
+      "SuburbanDiscountResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SuburbanDiscountDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "MunicipalityMarketDto": {
         "type": "object",
         "properties": {
@@ -13442,7 +13727,7 @@
           },
           "pageUrl": {
             "type": "string",
-            "example": "https://finwire.pl/rejestr-cen-nieruchomosci"
+            "example": "https://finwire.pl/najtansze-mieszkania-w-polsce#gminy"
           }
         },
         "required": [

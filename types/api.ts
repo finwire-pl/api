@@ -735,6 +735,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/housing/suburban-discount": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Rabat podmiejski finwire (finwire_suburban_discount): flat price per sqm from notarial deeds (RCN) in 16 voivodeship cities against the municipalities bordering them, last 4 full quarters: city and ring medians, discount in % and PLN per m2, a year earlier, bordering municipalities with prices; index value (median of city discounts) with history from rolling windows */
+        get: operations["RealEstateController_housingSuburbanDiscount"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/housing/municipalities": {
         parameters: {
             query?: never;
@@ -5612,6 +5629,117 @@ export interface components {
              */
             to: string;
         };
+        SuburbanIndexPointDto: {
+            /**
+             * @description Last quarter of the 4-quarter window
+             * @example 2026-Q2
+             */
+            period: string;
+            /** @example Q3 2025 - Q2 2026 */
+            periodLabel: string | null;
+            /**
+             * @description Median of the city discounts, %
+             * @example 24.6
+             */
+            value: number;
+            /**
+             * @description Cities with both medians in the window
+             * @example 16
+             */
+            cities: number;
+        };
+        SuburbanMunicipalityDto: {
+            /** @example 1418043 */
+            teryt: string;
+            /** @example Piaseczno */
+            name: string;
+            /** @enum {string|null} */
+            kind: "miejska" | "wiejska" | "miejsko-wiejska" | null;
+            /**
+             * @description Flat deeds in the municipality window
+             * @example 812
+             */
+            deeds: number;
+            /** @description Median price per m2 (PLN); null below minDeeds deeds */
+            medianM2: number | null;
+            /** @description How much cheaper than the city, % (positive = cheaper) */
+            discountPct: number | null;
+            /** @description Deeds per 1000 residents */
+            deedsPer1000: number | null;
+            smallSample: boolean;
+        };
+        SuburbanCityDto: {
+            /** @example warszawa */
+            slug: string;
+            /** @example Warszawa */
+            name: string;
+            /** @example 1465011 */
+            teryt: string;
+            /** @example mazowieckie */
+            voivodeship: string | null;
+            /** @example 30368 */
+            cityDeeds: number;
+            /** @example 16071 */
+            cityMedianM2: number | null;
+            /**
+             * @description Deeds in all municipalities bordering the city
+             * @example 5521
+             */
+            ringDeeds: number;
+            /**
+             * @description Median price per m2 in the bordering municipalities (pooled deeds)
+             * @example 10939
+             */
+            ringMedianM2: number | null;
+            /**
+             * @description Municipalities bordering the city (PRG boundaries)
+             * @example 18
+             */
+            ringMunicipalities: number;
+            /**
+             * @description How much cheaper per m2 around the city than in the city, %
+             * @example 31.9
+             */
+            discountPct: number | null;
+            /**
+             * @description City median minus ring median, PLN per m2
+             * @example 5132
+             */
+            discountM2: number | null;
+            /** @description Discount in the window one year earlier, % */
+            prevDiscountPct: number | null;
+            /** @description Bordering municipalities with deeds, from the largest discount */
+            municipalities: components["schemas"]["SuburbanMunicipalityDto"][];
+        };
+        SuburbanDiscountDataDto: {
+            /** @description Data source as named by finwire.pl */
+            source: string;
+            /**
+             * @description Minimum deeds for a median
+             * @example 30
+             */
+            minDeeds: number;
+            /**
+             * @description Minimum cities with both medians for an index value
+             * @example 12
+             */
+            minCities: number;
+            window: components["schemas"]["MunicipalityWindowDto"] | null;
+            dataUntil: string | null;
+            updatedAt: string | null;
+            /** @description finwire_suburban_discount in the window; null below minCities */
+            index: components["schemas"]["SuburbanIndexPointDto"] | null;
+            /** @description Index history from rolling 4-quarter windows */
+            history: components["schemas"]["SuburbanIndexPointDto"][];
+            /** @description Voivodeship cities from the largest discount */
+            cities: components["schemas"]["SuburbanCityDto"][];
+            /** @example https://finwire.pl/najtansze-mieszkania-w-polsce#rabat-podmiejski */
+            pageUrl: string;
+        };
+        SuburbanDiscountResponseDto: {
+            data: components["schemas"]["SuburbanDiscountDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         MunicipalityMarketDto: {
             /**
              * @description Flat deeds in the window
@@ -5706,7 +5834,7 @@ export interface components {
             next: string | null;
             /** @description Municipalities with at least one deed in the window, in the requested order */
             municipalities: components["schemas"]["MunicipalityDto"][];
-            /** @example https://finwire.pl/rejestr-cen-nieruchomosci */
+            /** @example https://finwire.pl/najtansze-mieszkania-w-polsce#gminy */
             pageUrl: string;
         };
         MunicipalitiesResponseDto: {
@@ -14273,6 +14401,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HousingCityResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_housingSuburbanDiscount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuburbanDiscountResponseDto"];
                 };
             };
         };
