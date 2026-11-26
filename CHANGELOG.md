@@ -24,6 +24,8 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 - MCP server 1.42.0: `get_legal_limits` summarises `civilLawTaxes`; `get_currency_rates` takes `quote` and `range` for cross rates (e.g. `code=EUR quote=USD`).
 - `GET /v1/legal-limits`: block `civilLawTaxes` gets `privateLoan` (dataset `legal-limits`) - private loan rules from the Civil Code: documentary form above 1000 zł (art. 720 § 2), cap on costs other than interest for a loan to a consumer (art. 720^2: 20% a year, 25% in total), repayment 6 weeks after notice without a date (art. 723), 6-year limitation (art. 118), 19% PIT on interest for the lender (PIT act art. 30a(1)(1)). `privateLoan` is null when unavailable.
 - MCP server 1.43.0: `get_legal_limits` summarises private loan rules.
+- `GET /v1/jst-budget/ranking?metric=debt`: each entry gets `debtToAnnualSpendingPct` (debt at the end of the quarter as % of total spending of the last full year), the response gets `zeroDebtSharePct` (share of units without debt) and `spendingYear`.
+- MCP server 1.43.1: `get_municipal_budget` with `metric=debt` reports debt as % of annual spending and the share of municipalities without debt.
 
 ## 2026-11-25
 
