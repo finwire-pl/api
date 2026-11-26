@@ -3302,6 +3302,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/foreign-income-pit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Polish income tax on a salary from an employment contract abroad (PIT z zagranicy) for a Polish tax resident: method of the double tax treaty for the tax year (exemption with progression or proportional credit, after the MLI convention), each monthly payment converted at the NBP average rate of the last business day before the payment, 30% of the foreign per diem exempt for each day abroad, employee costs, the abolition relief (ulga abolicyjna) with its cap, the tax due in Poland, the surcharge or refund, whether a return (PIT-36 with PIT/ZG, PIT/O) is needed and the filing deadline. Covers 14 countries where most Poles work abroad. */
+        get: operations["ForeignIncomePitController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -13172,6 +13189,11 @@ export interface components {
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        ForeignIncomePitResponseDto: {
+            /** @description Projection of the dataset foreign-income-pit (see /v1/datasets/foreign-income-pit) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
     };
     responses: never;
     parameters: never;
@@ -17459,6 +17481,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CashLoanPrepaymentResponseDto"];
+                };
+            };
+        };
+    };
+    ForeignIncomePitController_get: {
+        parameters: {
+            query: {
+                /** @description Country of work (ISO 3166-1 alpha-2) */
+                country: "DE" | "NL" | "GB" | "NO" | "IE" | "BE" | "DK" | "AT" | "ES" | "FR" | "CZ" | "SE" | "IT" | "US";
+                /** @description Gross salary for the period of work abroad in the currency of that country */
+                grossFx: string;
+                /** @description Income tax paid abroad in the currency of that country; default 0 */
+                foreignTaxFx?: string;
+                /** @description Tax year; default the year of the coming or current PIT season */
+                year?: string;
+                /** @description First month of work abroad, 1-12; default 1 */
+                startMonth?: string;
+                /** @description Months of work abroad in the tax year, 1-12; default 12 */
+                months?: string;
+                /** @description Pay day in the month: 10, 25 or last; default last */
+                payDay?: "10" | "25" | "last";
+                /** @description Days of stay abroad while employed (weekends and leave included); default the calendar days of the period */
+                daysAbroad?: string;
+                /** @description Income from Poland taxed on the scale, after social contributions, PLN; default 0 */
+                plIncome?: string;
+                /** @description Income tax advances withheld in Poland, PLN; default 0 */
+                plAdvances?: string;
+                /** @description Work outside land territory (at sea): abolition relief without the cap, true/false */
+                offshore?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForeignIncomePitResponseDto"];
                 };
             };
         };
