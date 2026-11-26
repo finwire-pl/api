@@ -65,7 +65,7 @@ Each dataset name links to its documentation page with fields, source and citati
 | [Retail government bonds](https://public-api.finwire.pl/datasets/bonds) (OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD) | `/v1/bonds` | [Ministry of Finance](https://www.obligacjeskarbowe.pl) | monthly issues | current issues |
 | [Flat transaction prices per m²](https://public-api.finwire.pl/datasets/transaction-prices) (median, quartiles, primary/secondary) - 17 cities and their districts | `/v1/housing/transactions/{city}` | Real Estate Price Register (RCN, [GUGiK](https://www.geoportal.gov.pl) + city registers) | quarterly, ingested daily | last 12 quarters per city |
 | [Flat prices in municipalities](https://public-api.finwire.pl/datasets/municipality-flat-prices) (deeds, median and quartiles per m² from 30 deeds, primary/secondary, deeds per 1000 residents) - every gmina with deeds | `/v1/housing/municipalities/{teryt}` | Real Estate Price Register (RCN, [GUGiK](https://www.geoportal.gov.pl) + city registers), population GUS | quarterly, ingested daily | quarters since 2010 |
-| [Rabat podmiejski finwire](https://public-api.finwire.pl/datasets/suburban-discount) (`finwire_suburban_discount`: how much cheaper per m² flats are in municipalities bordering 16 voivodeship cities, with each municipality) | `/v1/housing/suburban-discount` | Real Estate Price Register (RCN, [GUGiK](https://www.geoportal.gov.pl)), PRG boundaries | quarterly, ingested daily | rolling 4-quarter windows since 2023 |
+| [finwire Suburban Discount](https://public-api.finwire.pl/datasets/suburban-discount) (`finwire_suburban_discount`: how much cheaper per m² flats are in municipalities bordering 16 voivodeship cities, with each municipality) | `/v1/housing/suburban-discount` | Real Estate Price Register (RCN, [GUGiK](https://www.geoportal.gov.pl)), PRG boundaries | quarterly, ingested daily | rolling 4-quarter windows since 2023 |
 | [Housing prices per m²](https://public-api.finwire.pl/datasets/housing) in 17 cities | `/v1/series/housing/{city}` | [GUS](https://stat.gov.pl) | quarterly | latest quarters |
 | [Housing supply](https://public-api.finwire.pl/datasets/housing-supply): dwellings per 1000, completions, permits, migration | `/v1/housing/supply/{city}` | [GUS BDL](https://bdl.stat.gov.pl), Census 2021 | yearly | since 2010 |
 | [Asking rents](https://public-api.finwire.pl/datasets/rent) per city and district | `/v1/rent/{city}` | [znajdznajem.pl](https://znajdznajem.pl/metodologia) | daily snapshot | current + previous month |
@@ -370,7 +370,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/housing/transactions/{city}` | Districts of a city: 12-month median price per m², transaction count, YoY, difference vs city median |
 | `GET /v1/housing/municipalities?voivodeship=&q=&limit=&offset=&sort=&order=` | Every municipality (gmina) with deeds, in pages (default 100, max 500, `next` = next page): last 4 full quarters of the county, deeds, median and quartiles per m² from 30 deeds, primary vs secondary market, YoY, deeds per 1000 residents |
 | `GET /v1/housing/municipalities/{teryt}` | One municipality by 7-digit TERYT code: the window and quarterly medians since 2010 |
-| `GET /v1/housing/suburban-discount` | Rabat podmiejski finwire: 16 voivodeship cities vs bordering municipalities, median per m², discount in % and PLN, each bordering municipality, index with history |
+| `GET /v1/housing/suburban-discount` | finwire Suburban Discount: 16 voivodeship cities vs bordering municipalities, median per m², discount in % and PLN, each bordering municipality, index with history |
 | `GET /v1/housing/location-premium/{city}` | Districts of a city: actual vs expected price per m² from neighbourhood quality, premium %, model fit (`finwire_location_premium`) |
 | `GET /v1/local-tax-squeeze` | Property tax as % of property tax + PIT share in municipal budgets: Poland, provinces, cities, municipalities in the squeeze (`finwire_local_tax_squeeze`); `/municipalities` for every municipality |
 | `GET /v1/jst-budget/municipalities` | Municipal budgets: spending, debt and EU funding per resident of every municipality (`finwire_gmina_spending_per_capita`); `/municipalities/{teryt}` for one municipality by category vs neighbours, similar municipalities and Poland; `/ranking` by metric |
@@ -429,9 +429,9 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/ev-charging/gas` | CNG, LNG and hydrogen stations with prices per m3 or kg |
 | `GET /v1/ev-charging?months=24` | Public EV charging (UDT EIPA): points, stations and locations today and at month ends since December 2019, sites and fast sites by province and county, `finwire_ev_charging_coverage` |
 | `GET /v1/ppk?months=12` | PPK (Employee Capital Plans) from the monthly PFR Portal PPK bulletin: net assets, active accounts, participants, employers, participation rate, average fee, `finwire_ppk_avg_account`, monthly history |
-| `GET /v1/retail-bond-premium?months=12` | Premia obligacji skarbowych finwire: retail savings bonds vs the finwire deposit and savings indices and the NBP average new deposit, after tax, per series, retail bond debt change, sales response test |
+| `GET /v1/retail-bond-premium?months=12` | finwire Treasury Bond Premium: retail savings bonds vs the finwire deposit and savings indices and the NBP average new deposit, after tax, per series, retail bond debt change, sales response test |
 | `GET /v1/bonds/next-rate?series=EDO1235` | Finwire Bondcast: rate of Polish savings bonds in the next interest period (index = 2nd year of EDO bought 12 months before next month), periods starting in the next 3 months by type, formula inputs (CPI, Finwire Nowcast, NBP reference rate, next RPP decision), how the Ministry of Finance followed RPP decisions; with `series`, all periods of the series |
-| `GET /v1/fixed-cost-burden?region=mazowieckie` | Sztywne koszty gospodarstwa finwire: share of household net income taken by fixed costs, Poland and 16 provinces, components in PLN, monthly history |
+| `GET /v1/fixed-cost-burden?region=mazowieckie` | finwire Household Fixed Costs: share of household net income taken by fixed costs, Poland and 16 provinces, components in PLN, monthly history |
 | `GET /v1/ike-ikze` | IKE and IKZE (KNF, half-yearly): accounts, assets, contributions, withdrawals and returns by institution type, holders by sex and age, average contribution vs annual limit, `finwire_ike_ikze_avg_balance`, history in PLN |
 | `GET /v1/ofe?months=24` | OFE (KNF, monthly): members, accounts, contributions from ZUS, accounting unit and net assets by fund and total; net rates of return over 12, 36, 60 and 120 months (KNF, April and October); 100 PLN in OFE vs 100 PLN on the ZUS subaccount over the same window; yearly subaccount indexation; `finwire_ofe_vs_subaccount_10y` |
 | `GET /v1/car-insurance` | Car insurance (KNF quarterly bulletin, part D): average OC (class 10) and autocasco (class 3) premium per policy over 4 quarters and in the quarter, policies written and in force, claims paid per 100 PLN of premium, 18 non-life classes, `finwire_oc_avg_premium`, quarterly history since 2017 |
@@ -475,7 +475,7 @@ Every response uses the same envelope. Values below are illustrative - call the 
 | `GET /v1/credit-market/monetary?months=25` | NBP household loans, deposits and new loans |
 | `GET /v1/credit-market/banking-sector?months=36` | KNF banking sector: housing and consumer loans with impaired share, household deposits, profit and loss year-to-date, in the month and over 12 months, `finwire_bank_interest_share` |
 | `GET /v1/credit-market/demand?months=12` | BIK housing loan demand, requested vs granted amount, granted loans (BIK) and new housing loans (NBP) |
-| `GET /v1/credit-market/rate-risk?days=30` | Ryzyko raty finwire (chance the payment rises by more than 5% or 10% in 3, 6 and 12 months, payment percentiles, backtest since 2008) and Premia za stałą stopę finwire (5-year fixed minus expected variable cost, daily and monthly from ECB MIR, negative premium windows) |
+| `GET /v1/credit-market/rate-risk?days=30` | finwire Payment Risk (chance the payment rises by more than 5% or 10% in 3, 6 and 12 months, payment percentiles, backtest since 2008) and finwire Fixed Rate Premium (5-year fixed minus expected variable cost, daily and monthly from ECB MIR, negative premium windows) |
 | `GET /v1/credit-market/ecb-rates?product=mortgage_total&period=2026-08` | ECB MIR rate on new loans by country |
 | `GET /v1/credit-market/ecb-rates/series?areas=PL,U2,DE&from=2018-01` | ECB MIR history for selected countries |
 | `GET /v1/calendar?limit=10` | Upcoming releases and decisions with date, Warsaw time, category, importance 1-10 |
@@ -525,127 +525,127 @@ Every index computed by finwire.pl has one stable id, the same in this API, in M
 
 | id | Index | Group | Reading | Aliases |
 |---|---|---|---|---|
-| `finwire_mortgage_barometer` | [Barometr kredytu hipotecznego finwire](https://finwire.pl/barometr-kredytu-hipotecznego) | credit | daily | - |
-| `finwire_credit_capacity_index` | [Indeks zdolności kredytowej finwire](https://finwire.pl/indeksy/zdolnosc-kredytowa) | credit | monthly | - |
-| `finwire_borrowing_power_barometer` ¹ | [Barometr zdolności kredytowej finwire](https://finwire.pl/barometr-zdolnosci-kredytowej) | credit | monthly | `borrowing-power` |
-| `finwire_mortgage_cost_barometer` ¹ | [Barometr kosztu kredytu finwire](https://finwire.pl/barometr-kosztu-kredytu-hipotecznego) | credit | monthly | `credit-cost` |
-| `finwire_rate_risk_gauge` ¹ | [Ryzyko raty finwire](https://finwire.pl/indeksy/ryzyko-raty) | credit | daily | `rate-risk` |
-| `finwire_fixed_rate_premium` ¹ | [Premia za stałą stopę finwire](https://finwire.pl/indeksy/ryzyko-raty) | credit | daily | `rate-risk` |
-| `finwire_credit_market_index` ¹ | [Wskaźnik rynku kredytów hipotecznych finwire](https://finwire.pl/wskaznik-rynku-kredytow) | credit | monthly | `credit-market-index`, `credit-market` |
-| `finwire_npl_forecast` ¹ | [Stres kredytowy wyprzedzający finwire](https://finwire.pl/mapa-stresu-kredytowego#kredyty-zagrozone) | credit | monthly (forecast) | - |
-| `finwire_credit_stress_index` ¹ | [Mapa stresu kredytowego finwire](https://finwire.pl/mapa-stresu-kredytowego) | credit | daily | `credit-stress` |
-| `finwire_deposit_rate_index` | [Indeks lokat finwire](https://finwire.pl/indeksy/lokaty) | savings | monthly | `deposit-rate-index`, `deposit_rate_index` |
-| `finwire_savings_rate_index` | [Indeks kont oszczędnościowych finwire](https://finwire.pl/indeksy/konta-oszczednosciowe) | savings | monthly | - |
-| `finwire_real_deposit_rate_barometer` | [Barometr opłacalności lokat finwire](https://finwire.pl/barometr-oplacalnosci-lokat) | savings | monthly | `real-deposit-rate` |
-| `finwire_purchasing_power_barometer` | [Barometr siły nabywczej złotówki finwire](https://finwire.pl/barometr-sily-nabywczej-zlotowki) | savings | monthly | `purchasing-power` |
-| `finwire_account_cost_index` | [Koszt konta osobistego wg finwire](https://finwire.pl/rankingi/konta-osobiste) | savings | monthly | - |
-| `finwire_household_inflation_index` | [Inflacja gospodarstw domowych finwire](https://finwire.pl/indeksy/inflacja-gospodarstw-domowych) | savings | monthly | - |
-| `finwire_pension_wage_ratio` | [Emerytura do płacy finwire](https://finwire.pl/przecietna-emerytura) | savings | monthly | - |
-| `finwire_fund_flows_index` | [Indeks napływów do funduszy finwire](https://finwire.pl/fundusze-inwestycyjne) | savings | monthly | - |
-| `finwire_new_business_ratio` | [Wskaźnik nowych firm finwire](https://finwire.pl/finanse-firmy) | market | monthly | - |
-| `finwire_car_registrations_pulse` | [Puls rejestracji aut finwire](https://finwire.pl/rejestracje-samochodow) | market | monthly | - |
-| `finwire_chinese_brands_share` | [Udział marek z Chin finwire](https://finwire.pl/rejestracje-samochodow) | market | monthly | - |
-| `finwire_ev_share_new_cars` | [Udział elektryków w nowych autach finwire](https://finwire.pl/samochody-elektryczne) | market | yearly | - |
-| `finwire_ev_charging_coverage` | [Nasycenie ładowarkami finwire](https://finwire.pl/samochody-elektryczne) | market | monthly | - |
-| `finwire_ev_charging_price_index` | [Indeks cen ładowania finwire](https://finwire.pl/indeksy) | market | monthly | - |
-| `finwire_ev_charger_occupancy` | [Obłożenie ładowarek finwire](https://finwire.pl/oblozenie-ladowarek) | market | weekly (full week) | - |
-| `finwire_ev_charger_reliability` | [Sprawność ładowarek finwire](https://finwire.pl/indeksy) | market | daily | - |
-| `finwire_ev_fast_coverage` | [Zasięg ultraszybkich ładowarek finwire](https://finwire.pl/indeksy) | market | daily | - |
-| `finwire_ev_infrastructure_growth` | [Przyrost ładowarek finwire](https://finwire.pl/mapa-ladowarek#przyrost) | market | monthly | - |
-| `finwire_ppk_avg_account` | [Średnie konto PPK finwire](https://finwire.pl/kalkulatory/ppk) | savings | monthly | - |
-| `finwire_retail_bond_premium` | [Premia obligacji skarbowych finwire](https://finwire.pl/indeksy/premia-obligacji-skarbowych) | savings | monthly | - |
+| `finwire_mortgage_barometer` | [finwire Mortgage Barometer](https://finwire.pl/barometr-kredytu-hipotecznego) | credit | daily | - |
+| `finwire_credit_capacity_index` | [finwire Credit Capacity Index](https://finwire.pl/indeksy/zdolnosc-kredytowa) | credit | monthly | - |
+| `finwire_borrowing_power_barometer` ¹ | [finwire Borrowing Power Barometer](https://finwire.pl/barometr-zdolnosci-kredytowej) | credit | monthly | `borrowing-power` |
+| `finwire_mortgage_cost_barometer` ¹ | [finwire Mortgage Cost Barometer](https://finwire.pl/barometr-kosztu-kredytu-hipotecznego) | credit | monthly | `credit-cost` |
+| `finwire_rate_risk_gauge` ¹ | [finwire Payment Risk](https://finwire.pl/indeksy/ryzyko-raty) | credit | daily | `rate-risk` |
+| `finwire_fixed_rate_premium` ¹ | [finwire Fixed Rate Premium](https://finwire.pl/indeksy/ryzyko-raty) | credit | daily | `rate-risk` |
+| `finwire_credit_market_index` ¹ | [finwire Mortgage Market Indicator](https://finwire.pl/wskaznik-rynku-kredytow) | credit | monthly | `credit-market-index`, `credit-market` |
+| `finwire_npl_forecast` ¹ | [finwire Leading Credit Stress](https://finwire.pl/mapa-stresu-kredytowego#kredyty-zagrozone) | credit | monthly (forecast) | - |
+| `finwire_credit_stress_index` ¹ | [finwire Credit Stress Map](https://finwire.pl/mapa-stresu-kredytowego) | credit | daily | `credit-stress` |
+| `finwire_deposit_rate_index` | [finwire Deposit Index](https://finwire.pl/indeksy/lokaty) | savings | monthly | `deposit-rate-index`, `deposit_rate_index` |
+| `finwire_savings_rate_index` | [finwire Savings Account Index](https://finwire.pl/indeksy/konta-oszczednosciowe) | savings | monthly | - |
+| `finwire_real_deposit_rate_barometer` | [finwire Deposit Profitability Barometer](https://finwire.pl/barometr-oplacalnosci-lokat) | savings | monthly | `real-deposit-rate` |
+| `finwire_purchasing_power_barometer` | [finwire Zloty Purchasing Power Barometer](https://finwire.pl/barometr-sily-nabywczej-zlotowki) | savings | monthly | `purchasing-power` |
+| `finwire_account_cost_index` | [finwire Current Account Cost](https://finwire.pl/rankingi/konta-osobiste) | savings | monthly | - |
+| `finwire_household_inflation_index` | [finwire Household Inflation](https://finwire.pl/indeksy/inflacja-gospodarstw-domowych) | savings | monthly | - |
+| `finwire_pension_wage_ratio` | [finwire Pension to Wage](https://finwire.pl/przecietna-emerytura) | savings | monthly | - |
+| `finwire_fund_flows_index` | [finwire Fund Flows Index](https://finwire.pl/fundusze-inwestycyjne) | savings | monthly | - |
+| `finwire_new_business_ratio` | [finwire New Business Ratio](https://finwire.pl/finanse-firmy) | market | monthly | - |
+| `finwire_car_registrations_pulse` | [finwire Car Registrations Pulse](https://finwire.pl/rejestracje-samochodow) | market | monthly | - |
+| `finwire_chinese_brands_share` | [finwire Chinese Brands Share](https://finwire.pl/rejestracje-samochodow) | market | monthly | - |
+| `finwire_ev_share_new_cars` | [finwire EV Share of New Cars](https://finwire.pl/samochody-elektryczne) | market | yearly | - |
+| `finwire_ev_charging_coverage` | [finwire Charger Density](https://finwire.pl/samochody-elektryczne) | market | monthly | - |
+| `finwire_ev_charging_price_index` | [finwire Charging Price Index](https://finwire.pl/indeksy) | market | monthly | - |
+| `finwire_ev_charger_occupancy` | [finwire Charger Occupancy](https://finwire.pl/oblozenie-ladowarek) | market | weekly (full week) | - |
+| `finwire_ev_charger_reliability` | [finwire Charger Reliability](https://finwire.pl/indeksy) | market | daily | - |
+| `finwire_ev_fast_coverage` | [finwire Ultra-Fast Charger Coverage](https://finwire.pl/indeksy) | market | daily | - |
+| `finwire_ev_infrastructure_growth` | [finwire Charger Growth](https://finwire.pl/mapa-ladowarek#przyrost) | market | monthly | - |
+| `finwire_ppk_avg_account` | [finwire Average PPK Account](https://finwire.pl/kalkulatory/ppk) | savings | monthly | - |
+| `finwire_retail_bond_premium` | [finwire Treasury Bond Premium](https://finwire.pl/indeksy/premia-obligacji-skarbowych) | savings | monthly | - |
 | `finwire_bond_next_rate` | [Finwire Bondcast](https://finwire.pl/obligacje-skarbowe/oprocentowanie-w-kolejnym-okresie) | savings | monthly | - |
-| `finwire_fixed_cost_burden` | [Sztywne koszty gospodarstwa finwire](https://finwire.pl/indeksy/sztywne-koszty-gospodarstwa) | housing | monthly | - |
-| `finwire_heating_season_index` | [Indeks chłodu sezonu finwire](https://finwire.pl/sezon-grzewczy) | housing | daily | - |
-| `finwire_heating_season_cost` | [Koszt sezonu grzewczego finwire](https://finwire.pl/sezon-grzewczy#koszt-sezonu) | housing | daily | - |
-| `finwire_ike_ikze_avg_balance` | [Średnie saldo IKE i IKZE finwire](https://finwire.pl/kalkulatory/ike-ikze) | savings | half-yearly | - |
-| `finwire_ofe_vs_subaccount_10y` | [Różnica OFE i subkonta ZUS finwire](https://finwire.pl/ofe) | savings | half-yearly | `ofe` |
-| `finwire_oc_avg_premium` | [Średnia składka OC finwire](https://finwire.pl/ubezpieczenia/srednia-cena-oc) | market | quarterly | - |
-| `finwire_life_avg_premium` | [Średnia składka na polisę na życie finwire](https://finwire.pl/ubezpieczenie-na-zycie) | market | quarterly | - |
-| `finwire_bank_interest_share` | [Udział odsetek w przychodach banków finwire](https://finwire.pl/bank#ile-zarabiaja-banki) | market | monthly | - |
-| `finwire_eu_inflation_gap` | [Luka inflacji Polska-UE finwire](https://finwire.pl/inflacja-w-europie) | market | monthly | - |
-| `finwire_clean_air_payout_rate` | [Wskaźnik wypłat Czystego Powietrza finwire](https://finwire.pl/czyste-powietrze) | housing | weekly | - |
-| `finwire_public_debt_per_capita` | [Dług na osobę finwire](https://finwire.pl/dlug-publiczny) | market | monthly | - |
-| `finwire_poland_rating` | [Rating Polski finwire](https://finwire.pl/dlug-publiczny#rating) | market | yearly (end of year, current year as of today) | - |
-| `finwire_pit_per_capita` | [PIT na mieszkańca finwire](https://finwire.pl/najbogatsze-gminy#podatek-pit) | market | yearly | - |
-| `finwire_pit_top_bracket_multiplier` | [Mnożnik drugiego progu PIT finwire](https://finwire.pl/rozliczenie-pit#pit-w-liczbach) | law | yearly | `pit-national` |
-| `finwire_rcn_price_index` | [Indeks cen transakcyjnych finwire](https://finwire.pl/raporty/indeks-cen-transakcyjnych) | housing | quarterly | - |
-| `finwire_price_gap_index` | [Indeks luki cenowej finwire](https://finwire.pl/indeksy/luka-cenowa) | housing | quarterly | - |
-| `finwire_entry_threshold_index` ¹ | [Próg wejścia finwire](https://finwire.pl/prog-wejscia) | housing | daily | `entry-threshold` |
-| `finwire_housing_affordability_barometer` ¹ | [Barometr dostępności mieszkania finwire](https://finwire.pl/barometr-dostepnosci-mieszkania) | housing | monthly | `housing-affordability` |
-| `finwire_housing_carry` ¹ | [Carry nieruchomości finwire](https://finwire.pl/indeksy/carry-nieruchomosci) | housing | monthly | `housing-carry` |
-| `finwire_city_cost_of_living` | [Koszt życia w mieście finwire](https://finwire.pl/koszty-zycia) | housing | monthly | `cost-of-living` |
-| `finwire_housing_permits_index` | [Indeks pozwoleń na budowę finwire](https://finwire.pl/pozwolenia-na-budowe) | housing | monthly | - |
-| `finwire_housing_pressure` | [Presja demograficzna na mieszkania finwire](https://finwire.pl/indeksy/presja-demograficzna) | housing | yearly | - |
-| `finwire_housing_pipeline` | [Podaż mieszkań za 2 lata finwire](https://finwire.pl/indeksy/podaz-mieszkan) | housing | quarterly | - |
-| `finwire_rent_forecast` | [Prognoza czynszów finwire](https://finwire.pl/indeksy/podaz-mieszkan#czynsze) | housing | monthly | - |
-| `finwire_eu_mortgaged_owners` | [Właściciele mieszkań z kredytem finwire](https://finwire.pl/ceny-mieszkan/europa) | housing | yearly | `eu-living-conditions` |
-| `finwire_offer_ticker` | [Ticker zmian ofert finwire](https://finwire.pl/zmiany-ofert) | market | daily | `offer-changes` |
-| `finwire_demand_index` | [Indeks popytu finwire](https://finwire.pl/indeksy/popyt) | market | monthly | - |
-| `finwire_power_price_index` | [Indeks ceny prądu finwire](https://finwire.pl/ceny-pradu-jutro) | market | daily | - |
-| `finwire_shopping_basket_index` | [Koszyk zakupowy finwire](https://finwire.pl/ceny-w-sklepach) | market | monthly | - |
-| `finwire_cigarette_excise_share` | [Akcyza w cenie papierosów finwire](https://finwire.pl/ceny-w-sklepach#akcyza) | market | yearly | `retail-prices` |
-| `finwire_eu_power_price_gap` | [Luka cen prądu Polska-UE finwire](https://finwire.pl/ceny-pradu-w-europie) | market | half-yearly | - |
-| `finwire_eu_fuel_price_gap` | [Luka cen paliw Polska-UE finwire](https://finwire.pl/ceny-paliw-w-europie) | market | weekly | `eu-fuel-prices` |
-| `finwire_brent_pln` | [Ropa Brent w złotych finwire](https://finwire.pl/ceny-paliw#ropa) | market | daily | `oil-prices` |
-| `finwire_hurtcast_pb95` | [Finwire Hurtcast: benzyna 95](https://finwire.pl/hurtowe-ceny-paliw#metoda) | market | daily | `fuel-retail-estimate` |
-| `finwire_hurtcast_diesel` | [Finwire Hurtcast: olej napędowy](https://finwire.pl/hurtowe-ceny-paliw#metoda) | market | daily | `fuel-retail-estimate` |
-| `finwire_fxcast_eur_3m` | [Finwire FXcast: zasięg kursu euro w 3 miesiące](https://finwire.pl/prognoza-kursu-euro#metoda) | market | daily | `currency-forecast` |
-| `finwire_fxcast_usd_3m` | [Finwire FXcast: zasięg kursu dolara w 3 miesiące](https://finwire.pl/prognoza-kursu-dolara#metoda) | market | daily | `currency-forecast` |
-| `finwire_fxcast_gbp_3m` | [Finwire FXcast: zasięg kursu funta w 3 miesiące](https://finwire.pl/prognoza-kursu-funta#metoda) | market | daily | `currency-forecast` |
-| `finwire_fxcast_chf_3m` | [Finwire FXcast: zasięg kursu franka w 3 miesiące](https://finwire.pl/prognoza-kursu-franka#metoda) | market | daily | `currency-forecast` |
-| `finwire_fxcast_nok_3m` | [Finwire FXcast: zasięg kursu korony norweskiej w 3 miesiące](https://finwire.pl/prognoza-kursu-korony-norweskiej#metoda) | market | daily | `currency-forecast` |
-| `finwire_eu_youth_unemployment_ratio` | [Mnożnik bezrobocia młodych finwire](https://finwire.pl/bezrobocie-w-europie) | market | monthly | - |
-| `finwire_eu_net_wage_gap` | [Pensja w Polsce wobec średniej UE finwire](https://finwire.pl/zarobki/europa) | market | yearly | - |
-| `finwire_eu_convergence_years` | [Licznik doganiania UE finwire](https://finwire.pl/pkb-per-capita) | market | yearly | `eu-gdp-per-capita` |
-| `finwire_eu_debt_threshold_gap` | [Dług Polski wobec progu 60% PKB finwire](https://finwire.pl/dlug-publiczny/europa) | market | quarterly | - |
-| `finwire_eu_household_income_gap` | [Dochód gospodarstw w Polsce wobec UE finwire](https://finwire.pl/zarobki/europa) | market | yearly | `eu-living-conditions` |
-| `finwire_household_invested_share` | [Udział oszczędności pracujących finwire](https://finwire.pl/oszczednosci-polakow) | savings | quarterly | `household-savings` |
-| `finwire_forecast_accuracy` | [Trafność prognoz finwire](https://finwire.pl/prognozy-dla-polski#trafnosc) | market | yearly | `poland-forecasts` |
+| `finwire_fixed_cost_burden` | [finwire Household Fixed Costs](https://finwire.pl/indeksy/sztywne-koszty-gospodarstwa) | housing | monthly | - |
+| `finwire_heating_season_index` | [finwire Heating Season Cold Index](https://finwire.pl/sezon-grzewczy) | housing | daily | - |
+| `finwire_heating_season_cost` | [finwire Heating Season Cost](https://finwire.pl/sezon-grzewczy#koszt-sezonu) | housing | daily | - |
+| `finwire_ike_ikze_avg_balance` | [finwire Average IKE and IKZE Balance](https://finwire.pl/kalkulatory/ike-ikze) | savings | half-yearly | - |
+| `finwire_ofe_vs_subaccount_10y` | [finwire OFE vs ZUS Subaccount Gap](https://finwire.pl/ofe) | savings | half-yearly | `ofe` |
+| `finwire_oc_avg_premium` | [finwire Average Motor TPL Premium](https://finwire.pl/ubezpieczenia/srednia-cena-oc) | market | quarterly | - |
+| `finwire_life_avg_premium` | [finwire Average Life Insurance Premium](https://finwire.pl/ubezpieczenie-na-zycie) | market | quarterly | - |
+| `finwire_bank_interest_share` | [finwire Interest Share of Bank Income](https://finwire.pl/bank#ile-zarabiaja-banki) | market | monthly | - |
+| `finwire_eu_inflation_gap` | [finwire Poland-EU Inflation Gap](https://finwire.pl/inflacja-w-europie) | market | monthly | - |
+| `finwire_clean_air_payout_rate` | [finwire Clean Air Payout Rate](https://finwire.pl/czyste-powietrze) | housing | weekly | - |
+| `finwire_public_debt_per_capita` | [finwire Debt per Person](https://finwire.pl/dlug-publiczny) | market | monthly | - |
+| `finwire_poland_rating` | [finwire Poland Rating](https://finwire.pl/dlug-publiczny#rating) | market | yearly (end of year, current year as of today) | - |
+| `finwire_pit_per_capita` | [finwire PIT per Resident](https://finwire.pl/najbogatsze-gminy#podatek-pit) | market | yearly | - |
+| `finwire_pit_top_bracket_multiplier` | [finwire Top PIT Bracket Multiplier](https://finwire.pl/rozliczenie-pit#pit-w-liczbach) | law | yearly | `pit-national` |
+| `finwire_rcn_price_index` | [finwire Transaction Price Index](https://finwire.pl/raporty/indeks-cen-transakcyjnych) | housing | quarterly | - |
+| `finwire_price_gap_index` | [finwire Price Gap Index](https://finwire.pl/indeksy/luka-cenowa) | housing | quarterly | - |
+| `finwire_entry_threshold_index` ¹ | [finwire Entry Threshold](https://finwire.pl/prog-wejscia) | housing | daily | `entry-threshold` |
+| `finwire_housing_affordability_barometer` ¹ | [finwire Housing Affordability Barometer](https://finwire.pl/barometr-dostepnosci-mieszkania) | housing | monthly | `housing-affordability` |
+| `finwire_housing_carry` ¹ | [finwire Housing Carry](https://finwire.pl/indeksy/carry-nieruchomosci) | housing | monthly | `housing-carry` |
+| `finwire_city_cost_of_living` | [finwire City Cost of Living](https://finwire.pl/koszty-zycia) | housing | monthly | `cost-of-living` |
+| `finwire_housing_permits_index` | [finwire Building Permits Index](https://finwire.pl/pozwolenia-na-budowe) | housing | monthly | - |
+| `finwire_housing_pressure` | [finwire Housing Demographic Pressure](https://finwire.pl/indeksy/presja-demograficzna) | housing | yearly | - |
+| `finwire_housing_pipeline` | [finwire Housing Supply in 2 Years](https://finwire.pl/indeksy/podaz-mieszkan) | housing | quarterly | - |
+| `finwire_rent_forecast` | [finwire Rent Forecast](https://finwire.pl/indeksy/podaz-mieszkan#czynsze) | housing | monthly | - |
+| `finwire_eu_mortgaged_owners` | [finwire Homeowners with a Mortgage](https://finwire.pl/ceny-mieszkan/europa) | housing | yearly | `eu-living-conditions` |
+| `finwire_offer_ticker` | [finwire Offer Change Ticker](https://finwire.pl/zmiany-ofert) | market | daily | `offer-changes` |
+| `finwire_demand_index` | [finwire Demand Index](https://finwire.pl/indeksy/popyt) | market | monthly | - |
+| `finwire_power_price_index` | [finwire Power Price Index](https://finwire.pl/ceny-pradu-jutro) | market | daily | - |
+| `finwire_shopping_basket_index` | [finwire Shopping Basket](https://finwire.pl/ceny-w-sklepach) | market | monthly | - |
+| `finwire_cigarette_excise_share` | [finwire Excise Share in Cigarette Prices](https://finwire.pl/ceny-w-sklepach#akcyza) | market | yearly | `retail-prices` |
+| `finwire_eu_power_price_gap` | [finwire Poland-EU Power Price Gap](https://finwire.pl/ceny-pradu-w-europie) | market | half-yearly | - |
+| `finwire_eu_fuel_price_gap` | [finwire Poland-EU Fuel Price Gap](https://finwire.pl/ceny-paliw-w-europie) | market | weekly | `eu-fuel-prices` |
+| `finwire_brent_pln` | [finwire Brent Oil in PLN](https://finwire.pl/ceny-paliw#ropa) | market | daily | `oil-prices` |
+| `finwire_hurtcast_pb95` | [Finwire Hurtcast: 95 petrol](https://finwire.pl/hurtowe-ceny-paliw#metoda) | market | daily | `fuel-retail-estimate` |
+| `finwire_hurtcast_diesel` | [Finwire Hurtcast: diesel](https://finwire.pl/hurtowe-ceny-paliw#metoda) | market | daily | `fuel-retail-estimate` |
+| `finwire_fxcast_eur_3m` | [Finwire FXcast: euro range in 3 months](https://finwire.pl/prognoza-kursu-euro#metoda) | market | daily | `currency-forecast` |
+| `finwire_fxcast_usd_3m` | [Finwire FXcast: dollar range in 3 months](https://finwire.pl/prognoza-kursu-dolara#metoda) | market | daily | `currency-forecast` |
+| `finwire_fxcast_gbp_3m` | [Finwire FXcast: pound range in 3 months](https://finwire.pl/prognoza-kursu-funta#metoda) | market | daily | `currency-forecast` |
+| `finwire_fxcast_chf_3m` | [Finwire FXcast: franc range in 3 months](https://finwire.pl/prognoza-kursu-franka#metoda) | market | daily | `currency-forecast` |
+| `finwire_fxcast_nok_3m` | [Finwire FXcast: Norwegian krone range in 3 months](https://finwire.pl/prognoza-kursu-korony-norweskiej#metoda) | market | daily | `currency-forecast` |
+| `finwire_eu_youth_unemployment_ratio` | [finwire Youth Unemployment Multiplier](https://finwire.pl/bezrobocie-w-europie) | market | monthly | - |
+| `finwire_eu_net_wage_gap` | [finwire Polish Wage vs EU Average](https://finwire.pl/zarobki/europa) | market | yearly | - |
+| `finwire_eu_convergence_years` | [finwire EU Catch-Up Counter](https://finwire.pl/pkb-per-capita) | market | yearly | `eu-gdp-per-capita` |
+| `finwire_eu_debt_threshold_gap` | [finwire Poland Debt vs 60% of GDP](https://finwire.pl/dlug-publiczny/europa) | market | quarterly | - |
+| `finwire_eu_household_income_gap` | [finwire Polish Household Income vs EU](https://finwire.pl/zarobki/europa) | market | yearly | `eu-living-conditions` |
+| `finwire_household_invested_share` | [finwire Working Savings Share](https://finwire.pl/oszczednosci-polakow) | savings | quarterly | `household-savings` |
+| `finwire_forecast_accuracy` | [finwire Forecast Accuracy](https://finwire.pl/prognozy-dla-polski#trafnosc) | market | yearly | `poland-forecasts` |
 | `finwire_nowcast` | [Finwire Nowcast](https://finwire.pl/nowcast) | market | monthly | `nowcast` |
-| `finwire_cost_pressure` | [Presja kosztowa finwire](https://finwire.pl/nowcast#presja-kosztowa) | market | monthly (forecast) | - |
-| `finwire_legal_calendar` | [Kalendarz zmian w finansach finwire](https://finwire.pl/kalendarz-zmian) | law | daily | - |
-| `finwire_knf_warnings_monitor` | [Monitor ostrzeżeń KNF finwire](https://finwire.pl/ostrzezenia-knf) | law | weekly | `knf-warnings` |
-| `finwire_bfg_guarantee_monitor` | [Licznik instytucji z gwarancją BFG finwire](https://finwire.pl/rankingi/lokaty#gwarancja-bfg) | savings | on every list change | `bfg-guarantee` |
-| `finwire_bank_penalty_count` | [Licznik kar finwire](https://finwire.pl/indeksy?indeks=finwire_bank_penalty_count) | savings | monthly, as of the read day | `bank-penalties` |
-| `finwire_tax_rulings_pulse` | [Puls interpretacji podatkowych finwire](https://finwire.pl/rozliczenie-pit) | law | weekly | `tax-rulings` |
-| `finwire_borrower_win_share` | [Wyroki dla kredytobiorców finwire](https://finwire.pl/wyroki-kredytowe) | law | monthly | `credit-judgments` |
-| `finwire_next_year_limits` | [Limity na przyszły rok finwire](https://finwire.pl/indeksy/limity-na-przyszly-rok) | law | daily | `next-year-limits` |
-| `finwire_local_tax_squeeze` | [Nożyce fiskalne gmin finwire](https://finwire.pl/najbogatsze-gminy#nozyce-fiskalne) | housing | yearly | `local-tax-squeeze` |
-| `finwire_property_tax_cap` | [Granica podatku od mieszkań finwire](https://finwire.pl/kalkulatory/podatek-od-nieruchomosci#przyszly-rok) | housing | daily | `local-tax-next-year` |
-| `finwire_resort_fee_family_week` | [Tydzień rodziny w opłacie miejscowej finwire](https://finwire.pl/oplaty-lokalne#oplata-miejscowa) | law | yearly | `local-fees` |
-| `finwire_gmina_spending_per_capita` | [Wydatki gmin na mieszkańca finwire](https://finwire.pl/budzet-gminy) | market | yearly | `jst-budget` |
-| `finwire_average_pole` | [Przeciętny Polak finwire](https://finwire.pl/przecietny-polak) | credit | monthly | `average-pole` |
-| `finwire_daily_price_index` | [Dzienny indeks cen finwire](https://finwire.pl/dzienny-indeks-cen) | market | daily | `daily-price-index` |
-| `finwire_pension_forecast` | [Prognoza emerytur finwire](https://finwire.pl/prognoza-emerytury) | savings | yearly | `pension-forecast` |
-| `finwire_location_premium` | [Premia za okolicę finwire](https://finwire.pl/ceny-mieszkan/warszawa#premia-za-okolice) | housing | quarterly | `location-premium` |
-| `finwire_coal_price_pl` | [Cena węgla finwire](https://finwire.pl/cena-wegla) | housing | yearly | `coal-waste-prices` |
-| `finwire_waste_fee_pl` | [Opłata za odpady finwire](https://finwire.pl/kalkulatory/oplata-za-smieci) | housing | yearly | `coal-waste-prices` |
-| `finwire_consumer_bankruptcies` | [Licznik upadłości konsumenckich finwire](https://finwire.pl/upadlosc-konsumencka) | credit | monthly | - |
-| `finwire_dev_parking_price` | [Indeks cen miejsc postojowych finwire](https://finwire.pl/ceny-miejsc-postojowych) | housing | weekly | `developer-parking-prices` |
-| `finwire_rkm_offer_fit` | [Mieszkania w limicie kredytu bez wkładu finwire](https://finwire.pl/kredyt-bez-wkladu-wlasnego#limity-cen-m2) | housing | daily | `rkm-price-limits` |
-| `finwire_house_build_cost` | [Koszt budowy domu finwire](https://finwire.pl/koszt-budowy-domu#dom-120-m2) | housing | quarterly | `build-cost` |
-| `finwire_child_benefits_payout` | [Wypłaty na dzieci z ZUS finwire](https://finwire.pl/800-plus) | savings | monthly | `family-benefits` |
-| `finwire_family_allowance_real` | [Realny zasiłek rodzinny finwire](https://finwire.pl/swiadczenia-rodzinne) | savings | monthly | `family-benefits` |
-| `finwire_savings_bond_sales` | [Licznik obligacji oszczędnościowych finwire](https://finwire.pl/obligacje-skarbowe) | savings | monthly | - |
-| `finwire_deposit_choice_premium` | [Premia za wybór lokaty finwire](https://finwire.pl/indeksy/lokaty#premia-za-wybor-lokaty) | savings | monthly | - |
+| `finwire_cost_pressure` | [finwire Cost Pressure](https://finwire.pl/nowcast#presja-kosztowa) | market | monthly (forecast) | - |
+| `finwire_legal_calendar` | [finwire Personal Finance Calendar](https://finwire.pl/kalendarz-zmian) | law | daily | - |
+| `finwire_knf_warnings_monitor` | [finwire KNF Warnings Monitor](https://finwire.pl/ostrzezenia-knf) | law | weekly | `knf-warnings` |
+| `finwire_bfg_guarantee_monitor` | [finwire BFG Guarantee Counter](https://finwire.pl/rankingi/lokaty#gwarancja-bfg) | savings | on every list change | `bfg-guarantee` |
+| `finwire_bank_penalty_count` | [finwire Penalty Counter](https://finwire.pl/indeksy?indeks=finwire_bank_penalty_count) | savings | monthly, as of the read day | `bank-penalties` |
+| `finwire_tax_rulings_pulse` | [finwire Tax Rulings Pulse](https://finwire.pl/rozliczenie-pit) | law | weekly | `tax-rulings` |
+| `finwire_borrower_win_share` | [finwire Rulings for Borrowers](https://finwire.pl/wyroki-kredytowe) | law | monthly | `credit-judgments` |
+| `finwire_next_year_limits` | [finwire Next Year Limits](https://finwire.pl/indeksy/limity-na-przyszly-rok) | law | daily | `next-year-limits` |
+| `finwire_local_tax_squeeze` | [finwire Municipal Fiscal Squeeze](https://finwire.pl/najbogatsze-gminy#nozyce-fiskalne) | housing | yearly | `local-tax-squeeze` |
+| `finwire_property_tax_cap` | [finwire Residential Property Tax Cap](https://finwire.pl/kalkulatory/podatek-od-nieruchomosci#przyszly-rok) | housing | daily | `local-tax-next-year` |
+| `finwire_resort_fee_family_week` | [finwire Family Week Resort Fee](https://finwire.pl/oplaty-lokalne#oplata-miejscowa) | law | yearly | `local-fees` |
+| `finwire_gmina_spending_per_capita` | [finwire Municipal Spending per Resident](https://finwire.pl/budzet-gminy) | market | yearly | `jst-budget` |
+| `finwire_average_pole` | [finwire Average Pole](https://finwire.pl/przecietny-polak) | credit | monthly | `average-pole` |
+| `finwire_daily_price_index` | [finwire Daily Price Index](https://finwire.pl/dzienny-indeks-cen) | market | daily | `daily-price-index` |
+| `finwire_pension_forecast` | [finwire Pension Forecast](https://finwire.pl/prognoza-emerytury) | savings | yearly | `pension-forecast` |
+| `finwire_location_premium` | [finwire Location Premium](https://finwire.pl/ceny-mieszkan/warszawa#premia-za-okolice) | housing | quarterly | `location-premium` |
+| `finwire_coal_price_pl` | [finwire Coal Price](https://finwire.pl/cena-wegla) | housing | yearly | `coal-waste-prices` |
+| `finwire_waste_fee_pl` | [finwire Waste Fee](https://finwire.pl/kalkulatory/oplata-za-smieci) | housing | yearly | `coal-waste-prices` |
+| `finwire_consumer_bankruptcies` | [finwire Consumer Bankruptcy Counter](https://finwire.pl/upadlosc-konsumencka) | credit | monthly | - |
+| `finwire_dev_parking_price` | [finwire Parking Space Price Index](https://finwire.pl/ceny-miejsc-postojowych) | housing | weekly | `developer-parking-prices` |
+| `finwire_rkm_offer_fit` | [finwire Flats Within the No-Deposit Loan Limit](https://finwire.pl/kredyt-bez-wkladu-wlasnego#limity-cen-m2) | housing | daily | `rkm-price-limits` |
+| `finwire_house_build_cost` | [finwire House Building Cost](https://finwire.pl/koszt-budowy-domu#dom-120-m2) | housing | quarterly | `build-cost` |
+| `finwire_child_benefits_payout` | [finwire ZUS Child Benefit Payouts](https://finwire.pl/800-plus) | savings | monthly | `family-benefits` |
+| `finwire_family_allowance_real` | [finwire Real Family Allowance](https://finwire.pl/swiadczenia-rodzinne) | savings | monthly | `family-benefits` |
+| `finwire_savings_bond_sales` | [finwire Savings Bond Counter](https://finwire.pl/obligacje-skarbowe) | savings | monthly | - |
+| `finwire_deposit_choice_premium` | [finwire Deposit Choice Premium](https://finwire.pl/indeksy/lokaty#premia-za-wybor-lokaty) | savings | monthly | - |
 | `finwire_deposit_rate_forecast` | [Finwire Depocast](https://finwire.pl/indeksy/prognoza-oprocentowania-lokat) | savings | monthly | - |
-| `finwire_real_avg_deposit_rate` | [Realne oprocentowanie przeciętnej lokaty finwire](https://finwire.pl/indeksy/lokaty#srednie-oprocentowanie-lokat) | savings | yearly | `deposit-rate-history` |
-| `finwire_policy_rate_rank` | [Pozycja stopy NBP finwire](https://finwire.pl/stopy-procentowe) | market | monthly | `world-policy-rates` |
+| `finwire_real_avg_deposit_rate` | [finwire Real Average Deposit Rate](https://finwire.pl/indeksy/lokaty#srednie-oprocentowanie-lokat) | savings | yearly | `deposit-rate-history` |
+| `finwire_policy_rate_rank` | [finwire NBP Rate Position](https://finwire.pl/stopy-procentowe) | market | monthly | `world-policy-rates` |
 | `finwire_housing_valuation_gap` | [Finwire Housecast](https://finwire.pl/prognoza-cen-mieszkan) | housing | quarterly | `housecast` |
-| `finwire_oecd_pension_gap` | [Emerytura w Polsce wobec OECD finwire](https://finwire.pl/prognoza-emerytury) | savings | yearly | `oecd-comparison` |
-| `finwire_oecd_tax_wedge_gap` | [Klin podatkowy w Polsce wobec OECD finwire](https://finwire.pl/zarobki/europa) | market | yearly | `oecd-comparison` |
-| `finwire_new_companies_pulse` | [Puls nowych firm finwire](https://finwire.pl/finanse-firmy) | market | monthly | `new-companies` |
-| `finwire_tourism_pressure` | [Presja turystyczna finwire](https://finwire.pl/najem-krotkoterminowy) | housing | yearly | `tourism` |
-| `finwire_car_cost_100km` | [Koszt 100 km finwire](https://finwire.pl/koszt-auta#metoda) | market | daily | `car-costs` |
-| `finwire_us_debt_per_second` | [Licznik długu USA finwire](https://finwire.pl/gospodarka-usa#licznik-dlugu-usa) | market | daily | `us-economy` |
-| `finwire_us_real_wage_growth` | [Realne płace w USA finwire](https://finwire.pl/gospodarka-usa#realne-place-w-usa) | market | monthly | `us-economy` |
+| `finwire_oecd_pension_gap` | [finwire Polish Pension vs OECD](https://finwire.pl/prognoza-emerytury) | savings | yearly | `oecd-comparison` |
+| `finwire_oecd_tax_wedge_gap` | [finwire Polish Tax Wedge vs OECD](https://finwire.pl/zarobki/europa) | market | yearly | `oecd-comparison` |
+| `finwire_new_companies_pulse` | [finwire New Companies Pulse](https://finwire.pl/finanse-firmy) | market | monthly | `new-companies` |
+| `finwire_tourism_pressure` | [finwire Tourism Pressure](https://finwire.pl/najem-krotkoterminowy) | housing | yearly | `tourism` |
+| `finwire_car_cost_100km` | [finwire Cost of 100 km](https://finwire.pl/koszt-auta#metoda) | market | daily | `car-costs` |
+| `finwire_us_debt_per_second` | [finwire US Debt Counter](https://finwire.pl/gospodarka-usa#licznik-dlugu-usa) | market | daily | `us-economy` |
+| `finwire_us_real_wage_growth` | [finwire US Real Wages](https://finwire.pl/gospodarka-usa#realne-place-w-usa) | market | monthly | `us-economy` |
 
 ¹ Computed from WIBOR (GPW Benchmark): only the result is published, never WIBOR or POLSTR (`usesBenchmarkRate: true`).
 
 License CC BY 4.0, attribution finwire.pl. Each index carries a ready `citation` with the id and method version, e.g.:
 
-> Source: Indeks zdolności kredytowej finwire (finwire_credit_capacity_index, method v1), finwire.pl, https://finwire.pl/indeksy/zdolnosc-kredytowa, CC BY 4.0
+> Source: finwire Credit Capacity Index (finwire_credit_capacity_index, method v1), finwire.pl, https://finwire.pl/indeksy/zdolnosc-kredytowa, CC BY 4.0
 
 `methodVersion` changes with every change of the definition; history is recomputed or marked.
 

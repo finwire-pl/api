@@ -662,7 +662,7 @@
             }
           }
         },
-        "summary": "Limity na przysz\u0142y rok finwire (finwire_next_year_limits): next-year statutory values computed from the formulas in Polish law before the official act - pension indexation and minimum pension, minimum wage and hourly rate, projected average wage with IKE and IKZE limits, the 30x ZUS cap and ZUS contribution bases, flat-rate tax and small CIT taxpayer limits in PLN. Each item has a stage (projekcja, projekt, obwieszczenie, obowiazuje), an 80% interval, the calculation, inputs with periods, the estimate path and a backtest on past years",
+        "summary": "finwire Next Year Limits (finwire_next_year_limits): next-year statutory values computed from the formulas in Polish law before the official act - pension indexation and minimum pension, minimum wage and hourly rate, projected average wage with IKE and IKZE limits, the 30x ZUS cap and ZUS contribution bases, flat-rate tax and small CIT taxpayer limits in PLN. Each item has a stage (projekcja, projekt, obwieszczenie, obowiazuje), an 80% interval, the calculation, inputs with periods, the estimate path and a backtest on past years",
         "tags": [
           "Reference data"
         ]
@@ -761,7 +761,7 @@
             }
           }
         },
-        "summary": "Granica podatku od mieszka\u0144 finwire (finwire_property_tax_cap): upper limits of the local property tax for the next year from the formula in art. 20 of the local taxes act (this year limit x GUS CPI index for the first half-year, rounded up to full grosz) - estimate from monthly CPI, final figure from the GUS notice, then the Minister of Finance announcement. All 9 categories, 80% interval, estimate path and accuracy on past years",
+        "summary": "finwire Residential Property Tax Cap (finwire_property_tax_cap): upper limits of the local property tax for the next year from the formula in art. 20 of the local taxes act (this year limit x GUS CPI index for the first half-year, rounded up to full grosz) - estimate from monthly CPI, final figure from the GUS notice, then the Minister of Finance announcement. All 9 categories, 80% interval, estimate path and accuracy on past years",
         "tags": [
           "Reference data"
         ]
@@ -1322,7 +1322,7 @@
             }
           }
         },
-        "summary": "Rabat podmiejski finwire (finwire_suburban_discount): flat price per sqm from notarial deeds (RCN) in 16 voivodeship cities against the municipalities bordering them, last 4 full quarters: city and ring medians, discount in % and PLN per m2, a year earlier, bordering municipalities with prices; index value (median of city discounts) with history from rolling windows",
+        "summary": "finwire Suburban Discount (finwire_suburban_discount): flat price per sqm from notarial deeds (RCN) in 16 voivodeship cities against the municipalities bordering them, last 4 full quarters: city and ring medians, discount in % and PLN per m2, a year earlier, bordering municipalities with prices; index value (median of city discounts) with history from rolling windows",
         "tags": [
           "Real estate"
         ]
@@ -1621,7 +1621,7 @@
             }
           }
         },
-        "summary": "Carry nieruchomo\u015bci finwire (finwire_housing_carry): net rental yield of a flat minus the mortgage interest rate per city, percentage points, monthly with history; negative = interest on a loan for the whole price exceeds net rent. Informational data, not investment advice",
+        "summary": "finwire Housing Carry (finwire_housing_carry): net rental yield of a flat minus the mortgage interest rate per city, percentage points, monthly with history; negative = interest on a loan for the whole price exceeds net rent. Informational data, not investment advice",
         "tags": [
           "Real estate"
         ]
@@ -1643,7 +1643,7 @@
             }
           }
         },
-        "summary": "Koszt \u017cycia w mie\u015bcie finwire (finwire_city_cost_of_living): monthly cost of housing and living of a family of 2 adults and 1 child in 17 Polish cities, renting a 3-room flat and owning it without a mortgage, with each component (asking rent, GUS running costs, property tax upper limit, GUS household budget expenses, flat price) and its period",
+        "summary": "finwire City Cost of Living (finwire_city_cost_of_living): monthly cost of housing and living of a family of 2 adults and 1 child in 17 Polish cities, renting a 3-room flat and owning it without a mortgage, with each component (asking rent, GUS running costs, property tax upper limit, GUS household budget expenses, flat price) and its period",
         "tags": [
           "Real estate"
         ]
@@ -2128,7 +2128,7 @@
             }
           }
         },
-        "summary": "Average retail prices of 30 goods and services in Poland (GUS): latest month, month and year changes, minutes of work at the average net wage, finwire shopping basket (finwire_shopping_basket_index) with history; excise duty and VAT in the price of cigarettes, vodka, beer, wine and fuel at today's rates, upcoming excise changes and Akcyza w cenie papieros\u00f3w finwire (finwire_cigarette_excise_share)",
+        "summary": "Average retail prices of 30 goods and services in Poland (GUS): latest month, month and year changes, minutes of work at the average net wage, finwire shopping basket (finwire_shopping_basket_index) with history; excise duty and VAT in the price of cigarettes, vodka, beer, wine and fuel at today's rates, upcoming excise changes and finwire Excise Share in Cigarette Prices (finwire_cigarette_excise_share)",
         "tags": [
           "Macro and prices"
         ]
@@ -2271,7 +2271,7 @@
             }
           }
         },
-        "summary": "Investment funds in Poland (IZFiA): assets, purchases, redemptions and net flows of the market, fund groups (equity, mixed, bond, short-term bond, PPK, target date, commodity, crypto, private market) and IZFiA profiles, bond funds by type, equity funds by region, Indeks nap\u0142yw\u00f3w do funduszy finwire (finwire_fund_flows_index) and monthly history; PLN million, informational data, not investment advice",
+        "summary": "Investment funds in Poland (IZFiA): assets, purchases, redemptions and net flows of the market, fund groups (equity, mixed, bond, short-term bond, PPK, target date, commodity, crypto, private market) and IZFiA profiles, bond funds by type, equity funds by region, finwire Fund Flows Index (finwire_fund_flows_index) and monthly history; PLN million, informational data, not investment advice",
         "tags": [
           "Macro and prices"
         ]
@@ -2304,7 +2304,7 @@
             }
           }
         },
-        "summary": "Business registrations in Poland (CEIDG, Ministry of Development and Technology): monthly applications to register, close, suspend and resume a sole proprietorship, registrations minus closures, same-month comparison with earlier years, share of women among founders, Wska\u017anik nowych firm finwire (finwire_new_business_ratio) and monthly history; counts of applications, not of firms",
+        "summary": "Business registrations in Poland (CEIDG, Ministry of Development and Technology): monthly applications to register, close, suspend and resume a sole proprietorship, registrations minus closures, same-month comparison with earlier years, share of women among founders, finwire New Business Ratio (finwire_new_business_ratio) and monthly history; counts of applications, not of firms",
         "tags": [
           "Macro and prices"
         ]
@@ -2337,7 +2337,7 @@
             }
           }
         },
-        "summary": "New companies in Poland: commercial companies entered in KRS each month (Ministry of Justice KRS API: daily bulletin and current extracts) by legal form, other KRS business-register entities, applications to register a sole proprietorship in CEIDG (MRiT), the current month so far, Puls nowych firm finwire (finwire_new_companies_pulse: new firms year on year) and monthly history",
+        "summary": "New companies in Poland: commercial companies entered in KRS each month (Ministry of Justice KRS API: daily bulletin and current extracts) by legal form, other KRS business-register entities, applications to register a sole proprietorship in CEIDG (MRiT), the current month so far, finwire New Companies Pulse (finwire_new_companies_pulse: new firms year on year) and monthly history",
         "tags": [
           "Macro and prices"
         ]
@@ -2380,7 +2380,7 @@
             }
           }
         },
-        "summary": "Child benefits paid by ZUS (Polish Social Insurance Institution): 800 plus (\u015bwiadczenie wychowawcze) and the three Aktywny Rodzic benefits (working parents, nursery, at home) per month - benefits paid, amounts since January and in the month, children, 800 plus applications, 16 voivodeships with the share of Aktywny Rodzic variants and Wyp\u0142aty na dzieci z ZUS finwire (finwire_child_benefits_payout, PLN billion in the month); ZUS data CC0 1.0. Block familyBenefitAmounts: family benefits paid by municipalities from the Council of Ministers regulation (family allowance by age, supplements, income thresholds, birth grant, care benefit, special care allowance), the nursing benefit \u015bwiadczenie piel\u0119gnacyjne computed from the minimum wage, Dobry Start and Realny zasi\u0142ek rodzinny finwire (finwire_family_allowance_real: family allowance in prices of the month of the last review, GUS CPI). Block socialAssistance: social assistance from municipalities (pomoc spo\u0142eczna) - income criteria and the maximum permanent allowance (Council of Ministers regulation), rules of the permanent, periodic and purpose allowances, housing allowance thresholds from the GUS average wage, the energy allowance (latest minister announcement) and heating and energy vouchers with application windows",
+        "summary": "Child benefits paid by ZUS (Polish Social Insurance Institution): 800 plus (\u015bwiadczenie wychowawcze) and the three Aktywny Rodzic benefits (working parents, nursery, at home) per month - benefits paid, amounts since January and in the month, children, 800 plus applications, 16 voivodeships with the share of Aktywny Rodzic variants and finwire ZUS Child Benefit Payouts (finwire_child_benefits_payout, PLN billion in the month); ZUS data CC0 1.0. Block familyBenefitAmounts: family benefits paid by municipalities from the Council of Ministers regulation (family allowance by age, supplements, income thresholds, birth grant, care benefit, special care allowance), the nursing benefit \u015bwiadczenie piel\u0119gnacyjne computed from the minimum wage, Dobry Start and finwire Real Family Allowance (finwire_family_allowance_real: family allowance in prices of the month of the last review, GUS CPI). Block socialAssistance: social assistance from municipalities (pomoc spo\u0142eczna) - income criteria and the maximum permanent allowance (Council of Ministers regulation), rules of the permanent, periodic and purpose allowances, housing allowance thresholds from the GUS average wage, the energy allowance (latest minister announcement) and heating and energy vouchers with application windows",
         "tags": [
           "Macro and prices"
         ]
@@ -2413,7 +2413,7 @@
             }
           }
         },
-        "summary": "Consumer bankruptcies in Poland (COIG, Centralny O\u015brodek Informacji Gospodarczych, from court announcements in the National Register of Debtors KRZ and Monitor S\u0105dowy i Gospodarczy): people declared bankrupt as consumers per month, year on year, sum since January vs the same period a year earlier, rank of the latest month in the series, yearly totals and Licznik upad\u0142o\u015bci konsumenckich finwire (finwire_consumer_bankruptcies, 12-month sum); data COIG, reuse with attribution",
+        "summary": "Consumer bankruptcies in Poland (COIG, Centralny O\u015brodek Informacji Gospodarczych, from court announcements in the National Register of Debtors KRZ and Monitor S\u0105dowy i Gospodarczy): people declared bankrupt as consumers per month, year on year, sum since January vs the same period a year earlier, rank of the latest month in the series, yearly totals and finwire Consumer Bankruptcy Counter (finwire_consumer_bankruptcies, 12-month sum); data COIG, reuse with attribution",
         "tags": [
           "Macro and prices"
         ]
@@ -2565,7 +2565,7 @@
             }
           }
         },
-        "summary": "Retail savings bonds of the State Treasury sold in Poland per month (Ministry of Finance statistics, since January 2015): total in PLN million with month-on-month and year-on-year change, series (OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD) with shares and amounts, exchange of maturing bonds, IKE/IKZE accounts, sales channels, buyer age, sum since January against the same months of every year, yearly totals and Licznik obligacji oszcz\u0119dno\u015bciowych finwire (finwire_savings_bond_sales, 12-month sum in PLN billion); data gov.pl, reuse with attribution",
+        "summary": "Retail savings bonds of the State Treasury sold in Poland per month (Ministry of Finance statistics, since January 2015): total in PLN million with month-on-month and year-on-year change, series (OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD) with shares and amounts, exchange of maturing bonds, IKE/IKZE accounts, sales channels, buyer age, sum since January against the same months of every year, yearly totals and finwire Savings Bond Counter (finwire_savings_bond_sales, 12-month sum in PLN billion); data gov.pl, reuse with attribution",
         "tags": [
           "Macro and prices"
         ]
@@ -2618,7 +2618,7 @@
             }
           }
         },
-        "summary": "First registrations of vehicles in Poland (Ministry of Digital Affairs, CEPiK data on dane.gov.pl): monthly passenger cars and all vehicles since 2014, 17 vehicle types, provinces per 1000 residents, months held back by the consistency check, Puls rejestracji aut finwire (finwire_car_registrations_pulse), passenger-car brands with the share of brands from China (finwire_chinese_brands_share); new and used imported vehicles",
+        "summary": "First registrations of vehicles in Poland (Ministry of Digital Affairs, CEPiK data on dane.gov.pl): monthly passenger cars and all vehicles since 2014, 17 vehicle types, provinces per 1000 residents, months held back by the consistency check, finwire Car Registrations Pulse (finwire_car_registrations_pulse), passenger-car brands with the share of brands from China (finwire_chinese_brands_share); new and used imported vehicles",
         "tags": [
           "Macro and prices"
         ]
@@ -2651,7 +2651,7 @@
             }
           }
         },
-        "summary": "Electric cars in Poland: battery electric (BEV) and plug-in hybrid (PHEV) passenger cars in the fleet and among new cars by year (Eurostat), fuel mix of new cars, provinces and counties per 1000 passenger cars (GUS BDL, when available), ranking, correlation of charging infrastructure (UDT EIPA) with EV adoption including a version controlling the median wage, Udzia\u0142 elektryk\u00f3w w nowych autach finwire (finwire_ev_share_new_cars)",
+        "summary": "Electric cars in Poland: battery electric (BEV) and plug-in hybrid (PHEV) passenger cars in the fleet and among new cars by year (Eurostat), fuel mix of new cars, provinces and counties per 1000 passenger cars (GUS BDL, when available), ranking, correlation of charging infrastructure (UDT EIPA) with EV adoption including a version controlling the median wage, finwire EV Share of New Cars (finwire_ev_share_new_cars)",
         "tags": [
           "Macro and prices"
         ]
@@ -2684,7 +2684,7 @@
             }
           }
         },
-        "summary": "Public EV charging in Poland (UDT, EIPA register): locations, stations and charging points today and at each month end since December 2019, charging sites and fast sites (>= 50 kW) by province and county, sites by power class (EU AFIR: up to 22 kW, 23-49, 50-149, 150-349, 350+ kW) and connector, top counties by ultra-fast sites and top networks, Nasycenie \u0142adowarkami finwire (finwire_ev_charging_coverage, points per 1000 BEV+PHEV cars)",
+        "summary": "Public EV charging in Poland (UDT, EIPA register): locations, stations and charging points today and at each month end since December 2019, charging sites and fast sites (>= 50 kW) by province and county, sites by power class (EU AFIR: up to 22 kW, 23-49, 50-149, 150-349, 350+ kW) and connector, top counties by ultra-fast sites and top networks, finwire Charger Density (finwire_ev_charging_coverage, points per 1000 BEV+PHEV cars)",
         "tags": [
           "Macro and prices"
         ]
@@ -2706,7 +2706,7 @@
             }
           }
         },
-        "summary": "IKE and IKZE (Polish individual retirement accounts) market, KNF half-yearly data: accounts and assets by institution type (insurers, investment funds, brokers, banks, voluntary pension funds), contributions, withdrawals and returns since January, account holders by sex and age, average annual contribution vs the statutory limit, \u015arednie saldo IKE i IKZE finwire (finwire_ike_ikze_avg_balance) and half-yearly history; PLN, informational data, not investment advice",
+        "summary": "IKE and IKZE (Polish individual retirement accounts) market, KNF half-yearly data: accounts and assets by institution type (insurers, investment funds, brokers, banks, voluntary pension funds), contributions, withdrawals and returns since January, account holders by sex and age, average annual contribution vs the statutory limit, finwire Average IKE and IKZE Balance (finwire_ike_ikze_avg_balance) and half-yearly history; PLN, informational data, not investment advice",
         "tags": [
           "Macro and prices"
         ]
@@ -2728,7 +2728,7 @@
             }
           }
         },
-        "summary": "Car insurance market in Poland, KNF quarterly bulletin \"Rynek ubezpiecze\u0144\" (part D): average OC (motor third-party liability, class 10) and autocasco (class 3) premium per policy over 4 quarters and in the quarter, policies written and in force, claims paid per 100 PLN of premium, 18 non-life insurance classes, \u015arednia sk\u0142adka OC finwire (finwire_oc_avg_premium) and quarterly history; PLN, market averages, not a quote for a specific driver",
+        "summary": "Car insurance market in Poland, KNF quarterly bulletin \"Rynek ubezpiecze\u0144\" (part D): average OC (motor third-party liability, class 10) and autocasco (class 3) premium per policy over 4 quarters and in the quarter, policies written and in force, claims paid per 100 PLN of premium, 18 non-life insurance classes, finwire Average Motor TPL Premium (finwire_oc_avg_premium) and quarterly history; PLN, market averages, not a quote for a specific driver",
         "tags": [
           "Macro and prices"
         ]
@@ -2750,7 +2750,7 @@
             }
           }
         },
-        "summary": "Life insurance market in Poland, KNF quarterly bulletin \"Rynek ubezpiecze\u0144\" (part D, tables D.1a and D.1c): average annual premium per individual life insurance contract (class I total and groups 1-5) over 4 quarters with change vs a year earlier, group premium per person covered by group insurance, individual and group contracts in force, insured persons, premium and single-premium share, claims and benefits paid per 100 PLN of premium, \u015arednia sk\u0142adka na polis\u0119 na \u017cycie finwire (finwire_life_avg_premium) and quarterly history since 2017; PLN, market averages, not a quote for a specific person",
+        "summary": "Life insurance market in Poland, KNF quarterly bulletin \"Rynek ubezpiecze\u0144\" (part D, tables D.1a and D.1c): average annual premium per individual life insurance contract (class I total and groups 1-5) over 4 quarters with change vs a year earlier, group premium per person covered by group insurance, individual and group contracts in force, insured persons, premium and single-premium share, claims and benefits paid per 100 PLN of premium, finwire Average Life Insurance Premium (finwire_life_avg_premium) and quarterly history since 2017; PLN, market averages, not a quote for a specific person",
         "tags": [
           "Macro and prices"
         ]
@@ -2805,7 +2805,7 @@
             }
           }
         },
-        "summary": "PPK (Pracownicze Plany Kapita\u0142owe, Employee Capital Plans) from the monthly PFR Portal PPK bulletin: net assets of target date funds, active accounts, participants, employers, participation rate, average management fee, \u015arednie konto PPK finwire (finwire_ppk_avg_account: net assets per active account) and monthly history",
+        "summary": "PPK (Pracownicze Plany Kapita\u0142owe, Employee Capital Plans) from the monthly PFR Portal PPK bulletin: net assets of target date funds, active accounts, participants, employers, participation rate, average management fee, finwire Average PPK Account (finwire_ppk_avg_account: net assets per active account) and monthly history",
         "tags": [
           "Macro and prices"
         ]
@@ -2838,7 +2838,7 @@
             }
           }
         },
-        "summary": "Premia obligacji skarbowych finwire (finwire_retail_bond_premium): first-year rate of Polish retail savings bonds (OTS, ROR, DOR, TOS, COI, EDO, family ROS and ROD) minus the finwire deposit and savings account indices and the average new household term deposit rate (NBP MIR), after the Polish capital gains tax (Belka tax, rate in taxRate) on both sides, in percentage points; monthly change of retail bond debt (Ministry of Finance) and household term deposits (NBP); correlation test of the premium with bond sales",
+        "summary": "finwire Treasury Bond Premium (finwire_retail_bond_premium): first-year rate of Polish retail savings bonds (OTS, ROR, DOR, TOS, COI, EDO, family ROS and ROD) minus the finwire deposit and savings account indices and the average new household term deposit rate (NBP MIR), after the Polish capital gains tax (Belka tax, rate in taxRate) on both sides, in percentage points; monthly change of retail bond debt (Ministry of Finance) and household term deposits (NBP); correlation test of the premium with bond sales",
         "tags": [
           "Macro and prices"
         ]
@@ -2871,7 +2871,7 @@
             }
           }
         },
-        "summary": "Premia za wyb\u00f3r lokaty finwire (finwire_deposit_choice_premium): finwire deposit index (best 3-month deposits) minus the average rate on new 1-3 month household deposits in Polish banks (NBP MIR), in pp and in PLN per year on PLN 10,000 after tax; NBP MIR rates and values of new deposits by maturity; average rate and APRC of new consumer loans",
+        "summary": "finwire Deposit Choice Premium (finwire_deposit_choice_premium): finwire deposit index (best 3-month deposits) minus the average rate on new 1-3 month household deposits in Polish banks (NBP MIR), in pp and in PLN per year on PLN 10,000 after tax; NBP MIR rates and values of new deposits by maturity; average rate and APRC of new consumer loans",
         "tags": [
           "Macro and prices"
         ]
@@ -2937,7 +2937,7 @@
             }
           }
         },
-        "summary": "Realne oprocentowanie przeci\u0119tnej lokaty finwire (finwire_real_avg_deposit_rate): average rate on new household PLN term deposits in Polish banks (NBP MIR) monthly since 2005, all maturities and up to 1 month, 1-3, 3-6 and 6-12 months; yearly average, annual average CPI (GUS) and the real result in percentage points before and after the Polish capital gains tax; number of years the average deposit beat inflation",
+        "summary": "finwire Real Average Deposit Rate (finwire_real_avg_deposit_rate): average rate on new household PLN term deposits in Polish banks (NBP MIR) monthly since 2005, all maturities and up to 1 month, 1-3, 3-6 and 6-12 months; yearly average, annual average CPI (GUS) and the real result in percentage points before and after the Polish capital gains tax; number of years the average deposit beat inflation",
         "tags": [
           "Macro and prices"
         ]
@@ -2980,7 +2980,7 @@
             }
           }
         },
-        "summary": "Sztywne koszty gospodarstwa finwire (finwire_fixed_cost_burden): share of household net income (two earners on the regional median wage, net from the employment contract calculator) taken by the mortgage payment on a 50 m2 flat, administrative fee, heating, water, waste, electricity and TV licence; Poland and 16 provinces, monthly",
+        "summary": "finwire Household Fixed Costs (finwire_fixed_cost_burden): share of household net income (two earners on the regional median wage, net from the employment contract calculator) taken by the mortgage payment on a 50 m2 flat, administrative fee, heating, water, waste, electricity and TV licence; Poland and 16 provinces, monthly",
         "tags": [
           "Macro and prices"
         ]
@@ -3023,7 +3023,7 @@
             }
           }
         },
-        "summary": "Indeks ch\u0142odu sezonu finwire (finwire_heating_season_index) and Koszt sezonu grzewczego finwire (finwire_heating_season_cost): heating degree days since 1 July vs the 20-season norm from IMGW-PIB synoptic stations, Poland and 17 cities; season cost of a 100 m2 house with an 80% interval only when the backtest gate passes",
+        "summary": "finwire Heating Season Cold Index (finwire_heating_season_index) and finwire Heating Season Cost (finwire_heating_season_cost): heating degree days since 1 July vs the 20-season norm from IMGW-PIB synoptic stations, Poland and 17 cities; season cost of a 100 m2 house with an 80% interval only when the backtest gate passes",
         "tags": [
           "Macro and prices"
         ]
@@ -3147,7 +3147,7 @@
             }
           }
         },
-        "summary": "finwire lead forecasts: Presja kosztowa finwire (finwire_cost_pressure, NBP core inflation in 6 and 12 months from unit labour cost, producer prices and EUR/PLN) and Stres kredytowy wyprzedzaj\u0105cy finwire (finwire_npl_forecast, share of impaired housing and consumer loans in 2 and 4 quarters), 80% intervals, rolling backtest; published only above the accuracy threshold",
+        "summary": "finwire lead forecasts: finwire Cost Pressure (finwire_cost_pressure, NBP core inflation in 6 and 12 months from unit labour cost, producer prices and EUR/PLN) and finwire Leading Credit Stress (finwire_npl_forecast, share of impaired housing and consumer loans in 2 and 4 quarters), 80% intervals, rolling backtest; published only above the accuracy threshold",
         "tags": [
           "Macro and prices"
         ]
@@ -3257,7 +3257,7 @@
             }
           }
         },
-        "summary": "Household inflation in Poland: Inflacja gospodarstw domowych finwire (finwire_household_inflation_index: CPI y/y for family types and income quintiles, finwire.pl method on Statistics Poland weights) next to the official Statistics Poland CPI by socio-economic group; retiree inflation (inflacja emerycka: CPI for households of retirees and pensioners vs total since 2018, year-to-date and annual averages as finwire.pl approximation, which index is higher under art. 89(2) of the pension act, basket shares from Statistics Poland weights, monthly history)",
+        "summary": "Household inflation in Poland: finwire Household Inflation (finwire_household_inflation_index: CPI y/y for family types and income quintiles, finwire.pl method on Statistics Poland weights) next to the official Statistics Poland CPI by socio-economic group; retiree inflation (inflacja emerycka: CPI for households of retirees and pensioners vs total since 2018, year-to-date and annual averages as finwire.pl approximation, which index is higher under art. 89(2) of the pension act, basket shares from Statistics Poland weights, monthly history)",
         "tags": [
           "Macro and prices"
         ]
@@ -3290,7 +3290,7 @@
             }
           }
         },
-        "summary": "Household savings in Poland (oszcz\u0119dno\u015bci Polak\u00f3w): financial assets of households and NPISH at the end of each quarter since 2003 from the quarterly financial accounts compiled by NBP and published by the ECB (QSA), by group (cash, deposits, debt securities, equity, investment funds, life insurance, pension entitlements, other), Udzia\u0142 oszcz\u0119dno\u015bci pracuj\u0105cych finwire (finwire_household_invested_share: share outside cash and deposits), Poland among countries in the OECD financial dashboard (share of currency and deposits, equity, funds, pension; net financial worth per person), and products tracked in other finwire datasets (investment funds, PPK, IKE and IKZE, retail savings bonds)",
+        "summary": "Household savings in Poland (oszcz\u0119dno\u015bci Polak\u00f3w): financial assets of households and NPISH at the end of each quarter since 2003 from the quarterly financial accounts compiled by NBP and published by the ECB (QSA), by group (cash, deposits, debt securities, equity, investment funds, life insurance, pension entitlements, other), finwire Working Savings Share (finwire_household_invested_share: share outside cash and deposits), Poland among countries in the OECD financial dashboard (share of currency and deposits, equity, funds, pension; net financial worth per person), and products tracked in other finwire datasets (investment funds, PPK, IKE and IKZE, retail savings bonds)",
         "tags": [
           "Macro and prices"
         ]
@@ -3936,7 +3936,7 @@
             }
           }
         },
-        "summary": "Cena w\u0119gla finwire (finwire_coal_price_pl) and Op\u0142ata za odpady finwire (finwire_waste_fee_pl): annual average price of a tonne of hard coal and monthly fee for sorted waste collection per person in multi-family buildings, Poland and 16 provinces (GUS BDL)",
+        "summary": "finwire Coal Price (finwire_coal_price_pl) and finwire Waste Fee (finwire_waste_fee_pl): annual average price of a tonne of hard coal and monthly fee for sorted waste collection per person in multi-family buildings, Poland and 16 provinces (GUS BDL)",
         "tags": [
           "Real estate"
         ]
@@ -4377,7 +4377,7 @@
             "description": "Poland, provinces, top municipalities and counties"
           }
         },
-        "summary": "Presja turystyczna finwire (finwire_tourism_pressure): bed places in tourist accommodation on 31 July per 1000 residents, Poland and the ranking of municipalities; nights spent and tourists per year (Poland, provinces, counties), nights and bed occupancy per month (Poland, provinces) from GUS BDL",
+        "summary": "finwire Tourism Pressure (finwire_tourism_pressure): bed places in tourist accommodation on 31 July per 1000 residents, Poland and the ranking of municipalities; nights spent and tourists per year (Poland, provinces, counties), nights and bed occupancy per month (Poland, provinces) from GUS BDL",
         "tags": [
           "Real estate"
         ]
@@ -4560,7 +4560,7 @@
             }
           }
         },
-        "summary": "Polish banking sector, KNF monthly data (FINREP): household housing and consumer loan portfolios with impaired loans (IFRS 9 stage 3), household deposits, and the profit and loss account: net profit year-to-date vs a year earlier, in the month and over 12 months, tax as % of gross profit, costs vs income, and Udzia\u0142 odsetek w przychodach bank\u00f3w finwire (finwire_bank_interest_share: net interest income / total operating income, 12 months); PLN, monthly history",
+        "summary": "Polish banking sector, KNF monthly data (FINREP): household housing and consumer loan portfolios with impaired loans (IFRS 9 stage 3), household deposits, and the profit and loss account: net profit year-to-date vs a year earlier, in the month and over 12 months, tax as % of gross profit, costs vs income, and finwire Interest Share of Bank Income (finwire_bank_interest_share: net interest income / total operating income, 12 months); PLN, monthly history",
         "tags": [
           "Credit market"
         ]
@@ -4593,7 +4593,7 @@
             }
           }
         },
-        "summary": "Ryzyko raty finwire (finwire_rate_risk_gauge): chance a variable-rate mortgage payment rises by more than 5% or 10% in 3, 6 and 12 months with payment percentiles, and Premia za sta\u0142\u0105 stop\u0119 finwire (finwire_fixed_rate_premium): 5-year fixed rate minus expected variable cost, daily and monthly (ECB MIR), with backtest accuracy",
+        "summary": "finwire Payment Risk (finwire_rate_risk_gauge): chance a variable-rate mortgage payment rises by more than 5% or 10% in 3, 6 and 12 months with payment percentiles, and finwire Fixed Rate Premium (finwire_fixed_rate_premium): 5-year fixed rate minus expected variable cost, daily and monthly (ECB MIR), with backtest accuracy",
         "tags": [
           "Credit market"
         ]
@@ -5133,7 +5133,7 @@
             "description": "Charging prices"
           }
         },
-        "summary": "Ad hoc charging prices per kWh by power class (AFIR), AC vs DC, networks and cities (medians with point counts), Indeks cen \u0142adowania finwire (finwire_ev_charging_price_index) monthly, recent price changes",
+        "summary": "Ad hoc charging prices per kWh by power class (AFIR), AC vs DC, networks and cities (medians with point counts), finwire Charging Price Index (finwire_ev_charging_price_index) monthly, recent price changes",
         "tags": [
           "EV charging"
         ]
@@ -5188,7 +5188,7 @@
             "description": "Charger occupancy"
           }
         },
-        "summary": "Charger occupancy measured from the last known status of points whose network sent any status change in the last 24 hours: status now, weekly trend, weekday x hour heatmap, power classes, busiest sites, cities and networks, Ob\u0142o\u017cenie \u0142adowarek finwire (finwire_ev_charger_occupancy, full weeks); history published after 14 days of readings",
+        "summary": "Charger occupancy measured from the last known status of points whose network sent any status change in the last 24 hours: status now, weekly trend, weekday x hour heatmap, power classes, busiest sites, cities and networks, finwire Charger Occupancy (finwire_ev_charger_occupancy, full weeks); history published after 14 days of readings",
         "tags": [
           "EV charging"
         ]
@@ -5224,7 +5224,7 @@
             "description": "Charging infrastructure growth"
           }
         },
-        "summary": "Growth of EV charging infrastructure: EIPA month ends since December 2019 (points, stations, locations, CNG/LNG), monthly change, year on year, records; daily snapshots by power class, province and network; one network (network) or city (city). Przyrost \u0142adowarek finwire (finwire_ev_infrastructure_growth)",
+        "summary": "Growth of EV charging infrastructure: EIPA month ends since December 2019 (points, stations, locations, CNG/LNG), monthly change, year on year, records; daily snapshots by power class, province and network; one network (network) or city (city). finwire Charger Growth (finwire_ev_infrastructure_growth)",
         "tags": [
           "EV charging"
         ]
@@ -5252,7 +5252,7 @@
             "description": "Fast charger coverage"
           }
         },
-        "summary": "Coverage of ultra-fast chargers (from 150 kW): distance from each county to the nearest site, counties without one, Zasi\u0119g ultraszybkich \u0142adowarek finwire (finwire_ev_fast_coverage)",
+        "summary": "Coverage of ultra-fast chargers (from 150 kW): distance from each county to the nearest site, counties without one, finwire Ultra-Fast Charger Coverage (finwire_ev_fast_coverage)",
         "tags": [
           "EV charging"
         ]
@@ -9679,7 +9679,7 @@
           },
           "indexName": {
             "type": "string",
-            "example": "Limity na przysz\u0142y rok finwire"
+            "example": "finwire Next Year Limits"
           },
           "methodVersion": {
             "type": "number",
@@ -10183,7 +10183,7 @@
           },
           "indexName": {
             "type": "string",
-            "example": "Granica podatku od mieszka\u0144 finwire"
+            "example": "finwire Residential Property Tax Cap"
           },
           "methodVersion": {
             "type": "number",
@@ -15214,7 +15214,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Carry nieruchomo\u015bci finwire"
+            "example": "finwire Housing Carry"
           },
           "methodVersion": {
             "type": "number",
@@ -15400,7 +15400,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Koszt \u017cycia w mie\u015bcie finwire"
+            "example": "finwire City Cost of Living"
           },
           "methodVersion": {
             "type": "number",
@@ -18555,7 +18555,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Koszyk zakupowy finwire"
+            "example": "finwire Shopping Basket"
           },
           "value": {
             "type": "number",
@@ -18914,7 +18914,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Emerytura do p\u0142acy finwire"
+            "example": "finwire Pension to Wage"
           },
           "methodVersion": {
             "type": "number",
@@ -19352,7 +19352,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Przeci\u0119tny Polak finwire"
+            "example": "finwire Average Pole"
           },
           "methodVersion": {
             "type": "number",
@@ -19474,7 +19474,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Dzienny indeks cen finwire"
+            "example": "finwire Daily Price Index"
           },
           "methodVersion": {
             "type": "number",
@@ -19610,7 +19610,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Prognoza emerytur finwire"
+            "example": "finwire Pension Forecast"
           },
           "available": {
             "type": "boolean",
@@ -19888,7 +19888,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Indeks nap\u0142yw\u00f3w do funduszy finwire"
+            "example": "finwire Fund Flows Index"
           },
           "methodVersion": {
             "type": "number",
@@ -20123,7 +20123,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Wska\u017anik nowych firm finwire"
+            "example": "finwire New Business Ratio"
           },
           "methodVersion": {
             "type": "number",
@@ -20334,7 +20334,7 @@
           "newCompaniesPulse": {
             "type": "object",
             "nullable": true,
-            "description": "Puls nowych firm finwire (finwire_new_companies_pulse): total new firms year on year, %"
+            "description": "finwire New Companies Pulse (finwire_new_companies_pulse): total new firms year on year, %"
           },
           "history": {
             "description": "Monthly history, oldest first",
@@ -20680,7 +20680,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Licznik upad\u0142o\u015bci konsumenckich finwire"
+            "example": "finwire Consumer Bankruptcy Counter"
           },
           "methodVersion": {
             "type": "number",
@@ -21068,7 +21068,7 @@
           "offerFit": {
             "type": "object",
             "nullable": true,
-            "description": "Mieszkania w limicie kredytu bez wk\u0142adu finwire (finwire_rkm_offer_fit): share of developer offers within the limit per voivodeship city"
+            "description": "finwire Flats Within the No-Deposit Loan Limit (finwire_rkm_offer_fit): share of developer offers within the limit per voivodeship city"
           },
           "housingPrograms": {
             "type": "object",
@@ -21520,7 +21520,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Licznik obligacji oszcz\u0119dno\u015bciowych finwire"
+            "example": "finwire Savings Bond Counter"
           },
           "methodVersion": {
             "type": "number",
@@ -21807,7 +21807,7 @@
           "carRegistrationsPulse": {
             "type": "object",
             "nullable": true,
-            "description": "Puls rejestracji aut finwire (finwire_car_registrations_pulse): 12-month sum of passenger-car first registrations, change year on year in %"
+            "description": "finwire Car Registrations Pulse (finwire_car_registrations_pulse): 12-month sum of passenger-car first registrations, change year on year in %"
           },
           "brands": {
             "type": "object",
@@ -21967,7 +21967,7 @@
           "evShareNewCars": {
             "type": "object",
             "nullable": true,
-            "description": "Udzia\u0142 elektryk\u00f3w w nowych autach finwire (finwire_ev_share_new_cars)"
+            "description": "finwire EV Share of New Cars (finwire_ev_share_new_cars)"
           },
           "records": {
             "type": "array",
@@ -22087,7 +22087,7 @@
           "chargingCoverage": {
             "type": "object",
             "nullable": true,
-            "description": "Nasycenie \u0142adowarkami finwire (finwire_ev_charging_coverage): charging points per 1000 BEV+PHEV cars"
+            "description": "finwire Charger Density (finwire_ev_charging_coverage): charging points per 1000 BEV+PHEV cars"
           },
           "records": {
             "type": "array",
@@ -22152,7 +22152,7 @@
           },
           "name": {
             "type": "string",
-            "example": "\u015arednie saldo IKE i IKZE finwire"
+            "example": "finwire Average IKE and IKZE Balance"
           },
           "methodVersion": {
             "type": "number",
@@ -22301,7 +22301,7 @@
           },
           "name": {
             "type": "string",
-            "example": "\u015arednia sk\u0142adka OC finwire"
+            "example": "finwire Average Motor TPL Premium"
           },
           "methodVersion": {
             "type": "number",
@@ -22495,7 +22495,7 @@
           },
           "name": {
             "type": "string",
-            "example": "\u015arednia sk\u0142adka na polis\u0119 na \u017cycie finwire"
+            "example": "finwire Average Life Insurance Premium"
           },
           "methodVersion": {
             "type": "number",
@@ -22736,7 +22736,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Wska\u017anik wyp\u0142at Czystego Powietrza finwire"
+            "example": "finwire Clean Air Payout Rate"
           },
           "methodVersion": {
             "type": "number",
@@ -23014,7 +23014,7 @@
           },
           "name": {
             "type": "string",
-            "example": "\u015arednie konto PPK finwire"
+            "example": "finwire Average PPK Account"
           },
           "methodVersion": {
             "type": "number",
@@ -23155,7 +23155,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Premia obligacji skarbowych finwire"
+            "example": "finwire Treasury Bond Premium"
           },
           "methodVersion": {
             "type": "number",
@@ -23232,7 +23232,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Premia za wyb\u00f3r lokaty finwire"
+            "example": "finwire Deposit Choice Premium"
           },
           "methodVersion": {
             "type": "number",
@@ -23433,7 +23433,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Realne oprocentowanie przeci\u0119tnej lokaty finwire"
+            "example": "finwire Real Average Deposit Rate"
           },
           "methodVersion": {
             "type": "number",
@@ -23570,7 +23570,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Sztywne koszty gospodarstwa finwire"
+            "example": "finwire Household Fixed Costs"
           },
           "methodVersion": {
             "type": "number",
@@ -25703,7 +25703,7 @@
           },
           "investedShare": {
             "type": "object",
-            "description": "Udzia\u0142 oszcz\u0119dno\u015bci pracuj\u0105cych finwire (finwire_household_invested_share): latest, previous, yearAgo, max, min"
+            "description": "finwire Working Savings Share (finwire_household_invested_share): latest, previous, yearAgo, max, min"
           },
           "oecd": {
             "type": "object",
@@ -26911,7 +26911,7 @@
           "name": {
             "type": "string",
             "nullable": true,
-            "example": "PIT na mieszka\u0144ca finwire"
+            "example": "finwire PIT per Resident"
           },
           "methodVersion": {
             "type": "number",
@@ -29266,7 +29266,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Luka cen pr\u0105du Polska-UE finwire"
+            "example": "finwire Poland-EU Power Price Gap"
           },
           "unit": {
             "type": "string",
@@ -30578,7 +30578,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Licznik doganiania UE finwire"
+            "example": "finwire EU Catch-Up Counter"
           },
           "unit": {
             "type": "string",
@@ -31938,7 +31938,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Udzia\u0142 odsetek w przychodach bank\u00f3w finwire"
+            "example": "finwire Interest Share of Bank Income"
           },
           "valuePct": {
             "type": "number",
@@ -32280,7 +32280,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Ryzyko raty finwire"
+            "example": "finwire Payment Risk"
           },
           "period": {
             "type": "string",
@@ -32348,7 +32348,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Premia za sta\u0142\u0105 stop\u0119 finwire"
+            "example": "finwire Fixed Rate Premium"
           },
           "period": {
             "type": "string",
@@ -32795,12 +32795,19 @@
           "name": {
             "type": "string",
             "nullable": true,
-            "example": "Wska\u017anik rynku kredyt\u00f3w hipotecznych finwire"
+            "example": "finwire Mortgage Market Indicator",
+            "description": "Index name in English"
+          },
+          "namePl": {
+            "type": "string",
+            "nullable": true,
+            "example": "Wska\u017anik rynku kredyt\u00f3w hipotecznych finwire",
+            "description": "Index name on finwire.pl (Polish)"
           },
           "shortName": {
             "type": "string",
             "nullable": true,
-            "example": "Rynek kredyt\u00f3w"
+            "example": "Mortgage market"
           },
           "group": {
             "type": "string",
@@ -32938,6 +32945,7 @@
         "required": [
           "id",
           "name",
+          "namePl",
           "shortName",
           "group",
           "status",
@@ -33059,12 +33067,19 @@
           "name": {
             "type": "string",
             "nullable": true,
-            "example": "Wska\u017anik rynku kredyt\u00f3w hipotecznych finwire"
+            "example": "finwire Mortgage Market Indicator",
+            "description": "Index name in English"
+          },
+          "namePl": {
+            "type": "string",
+            "nullable": true,
+            "example": "Wska\u017anik rynku kredyt\u00f3w hipotecznych finwire",
+            "description": "Index name on finwire.pl (Polish)"
           },
           "shortName": {
             "type": "string",
             "nullable": true,
-            "example": "Rynek kredyt\u00f3w"
+            "example": "Mortgage market"
           },
           "group": {
             "type": "string",
@@ -33217,6 +33232,7 @@
         "required": [
           "id",
           "name",
+          "namePl",
           "shortName",
           "group",
           "status",
