@@ -7,6 +7,8 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 ### Added
 
+- `GET /v1/business-poland/start` - starting a sole proprietorship (JDG) and its first 3 years: steps with dates (CEIDG application, NIP and REGON, ZUS registration within 7 days under art. 36(4) of the social insurance act, VAT registration, business account, cash register), ZUS stages (start relief 6 months, Entrepreneurs' Law art. 18; preferential base 24 months, art. 18a; small ZUS plus, art. 18c; full ZUS) with monthly social and health contributions from the bases of each year, VAT exemption and cash register limits pro rata in the start year (VAT act art. 113(9)).
+- MCP server 1.43.0: new tool `plan_business_start`.
 - `GET /v1/business-poland/suspension` - suspending a sole proprietorship (zawieszenie działalności, Entrepreneurs' Law art. 22-25): ZUS contributions for the partial month (base divided by the days of the month, art. 18(9) of the social insurance act), minimum health contribution, earliest end of suspension, latest end for childcare suspension (art. 36aa), resumption month, ZUS/PIT/VAT deadlines moved to the next business day, VAT deregistration after 6 months.
 - `GET /v1/business-poland/seniority-bonus` - seniority bonus (dodatek stażowy) by employee group (civil service, local government, teachers, budget sector): percent per year, cap, first year, amount from the base salary and the date of the next increase, with the legal basis per group.
 - `GET /v1/business-poland/pay-transparency` - pay transparency obligations (Labour Code art. 18^3ca-18^3d, in force since 24 December 2025) and the transposition status of Directive (EU) 2023/970 with obligations by headcount.
@@ -20,6 +22,8 @@ All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
 - `GET /v1/legal-limits`: new block `civilLawTaxes` (dataset `legal-limits`) - tax on prizes (PIT art. 30(1)(2) and exemptions art. 21(1)(6a) and (68)), tax on civil law transactions for loans (0.5%) and sale of movable property (2%) with exemptions (PCC art. 9) and the PCC-3 filing deadline, renunciation of inheritance vs disclaimer (Civil Code art. 1048 and 1012-1020) with notary fees.
 - MCP server 1.42.0: `get_legal_limits` summarises `civilLawTaxes`; `get_currency_rates` takes `quote` and `range` for cross rates (e.g. `code=EUR quote=USD`).
+- `GET /v1/legal-limits`: block `civilLawTaxes` gets `privateLoan` (dataset `legal-limits`) - private loan rules from the Civil Code: documentary form above 1000 zł (art. 720 § 2), cap on costs other than interest for a loan to a consumer (art. 720^2: 20% a year, 25% in total), repayment 6 weeks after notice without a date (art. 723), 6-year limitation (art. 118), 19% PIT on interest for the lender (PIT act art. 30a(1)(1)). `privateLoan` is null when unavailable.
+- MCP server 1.43.0: `get_legal_limits` summarises private loan rules.
 
 ## 2026-11-25
 

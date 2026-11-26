@@ -317,7 +317,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Statutory limits of the current year (IKE/IKZE, PIT, tax-free amount) and a business block: euro-denominated limits (small VAT, PIT and CIT taxpayer, flat-rate tax, de minimis one-off depreciation, full accounting threshold) in PLN at the NBP rate of the first business day of October for the previous, current and next year, fiscal penal code fines and thresholds from the minimum wage, the monthly company car private use amounts, and a civilLawTaxes block: Polish tax on winnings (10% flat, exemption thresholds per game type), civil law transactions tax on private loans, sales of movables and property rights (rates, exemption thresholds, PCC-3 deadline) and the maximum costs of renouncing a future inheritance versus disclaiming an inheritance */
+        /** Statutory limits of the current year (IKE/IKZE, PIT, tax-free amount) and a business block: euro-denominated limits (small VAT, PIT and CIT taxpayer, flat-rate tax, de minimis one-off depreciation, full accounting threshold) in PLN at the NBP rate of the first business day of October for the previous, current and next year, fiscal penal code fines and thresholds from the minimum wage, the monthly company car private use amounts, and a civilLawTaxes block: Polish tax on winnings (10% flat, exemption thresholds per game type), civil law transactions tax on private loans, sales of movables and property rights (rates, exemption thresholds, PCC-3 deadline), private loan rules from the Civil Code (documentary form threshold, cap on fees other than interest, repayment without a date, limitation, lender PIT on interest) and the maximum costs of renouncing a future inheritance versus disclaiming an inheritance */
         get: operations["ReferenceController_legalLimits"];
         put?: never;
         post?: never;
@@ -2920,6 +2920,23 @@ export interface paths {
         };
         /** Suspending a Polish sole proprietorship (JDG) in CEIDG: earliest end (30 days or a full February), latest end of a childcare suspension, ZUS social contributions for the part month (base pro rata to insured days), minimum health contribution, ZUS, PIT and VAT deadlines for the suspension and resumption months, VAT register removal after 6 months, with the legal basis */
         get: operations["BusinessPolandController_suspension"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Starting a Polish sole proprietorship (JDG) and its first 3 years: steps with dates (CEIDG application, NIP and REGON, ZUS registration within 7 days, VAT registration, business account, cash register), ZUS stages (start relief 6 months, preferential ZUS 24 months, small ZUS plus, full ZUS) with monthly social and health contributions from the contribution bases of each year, VAT exemption and cash register limits pro rata in the start year, with the legal basis */
+        get: operations["BusinessPolandController_start"];
         put?: never;
         post?: never;
         delete?: never;
@@ -16876,6 +16893,41 @@ export interface operations {
                 kind?: "standard" | "childcare";
                 /** @description kind=childcare: date of birth of the child (YYYY-MM-DD) */
                 childBirth?: string;
+                lang?: "en" | "pl";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_start: {
+        parameters: {
+            query: {
+                /** @description First day of business (YYYY-MM-DD), no earlier than the CEIDG application day */
+                start: string;
+                /** @description Expected yearly revenue without VAT, PLN */
+                annualRevenue: string;
+                /** @description Yearly costs PLN (tax scale, flat tax): health contribution and small ZUS plus income */
+                annualCosts?: string;
+                /** @description Yearly sales to private persons PLN, for the cash register limit */
+                consumerSales?: string;
+                /** @description Income tax form: scale, flat 19%, lump sum on revenue; default scale */
+                tax?: "scale" | "flat" | "lump-sum";
+                /** @description Use the 6-month start relief, true/false, default true */
+                startRelief?: string;
+                /** @description First business or 60 months since the last one and not for a former employer, true/false, default true; false = full ZUS from the start */
+                eligibleForReliefs?: string;
+                /** @description Voluntary sickness insurance, true/false */
+                sickness?: string;
                 lang?: "en" | "pl";
             };
             header?: never;
