@@ -317,7 +317,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Statutory limits of the current year (IKE/IKZE, PIT, tax-free amount) and a business block: euro-denominated limits (small VAT, PIT and CIT taxpayer, flat-rate tax, de minimis one-off depreciation, full accounting threshold) in PLN at the NBP rate of the first business day of October for the previous, current and next year, fiscal penal code fines and thresholds from the minimum wage, the monthly company car private use amounts, and a civilLawTaxes block: Polish tax on winnings (10% flat, exemption thresholds per game type), civil law transactions tax on private loans, sales of movables and property rights (rates, exemption thresholds, PCC-3 deadline), private loan rules from the Civil Code (documentary form threshold, cap on fees other than interest, repayment without a date, limitation, lender PIT on interest) and the maximum costs of renouncing a future inheritance versus disclaiming an inheritance */
+        /** Statutory limits of the current year (IKE/IKZE, PIT, tax-free amount) and a business block: euro-denominated limits (small VAT, PIT and CIT taxpayer, flat-rate tax, de minimis one-off depreciation, full accounting threshold) in PLN at the NBP rate of the first business day of October for the previous, current and next year, fiscal penal code fines and thresholds from the minimum wage, the monthly company car private use amounts, and a civilLawTaxes block: Polish tax on winnings (10% flat, exemption thresholds per game type), civil law transactions tax on private loans, sales of movables and property rights (rates, exemption thresholds, PCC-3 deadline), private loan rules from the Civil Code (documentary form threshold, cap on fees other than interest, repayment without a date, limitation, lender PIT on interest), the maximum costs of renouncing a future inheritance versus disclaiming an inheritance, the cost of confirming who inherits (court or notary), the SD-Z2 deadline for close family and the holding period for an inherited flat */
         get: operations["ReferenceController_legalLimits"];
         put?: never;
         post?: never;
@@ -727,6 +727,40 @@ export interface paths {
         };
         /** One city with a finwire.pl price page from notarial deeds (RCN): ranking row, rank from the cheapest, latest quarter with enough deeds and quarterly medians since 2010 (all markets, secondary, primary) */
         get: operations["RealEstateController_housingCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/municipalities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Flat prices per sqm in Polish municipalities (gminy) from notarial deeds (RCN), last 4 full quarters of the county: deeds, median and quartiles from minDeeds deeds (fewer = count only), primary and secondary market, year-over-year change, deeds per 1000 residents. Warsaw districts and city delegations are merged into the city. */
+        get: operations["RealEstateController_housingMunicipalities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/housing/municipalities/{teryt}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One municipality (gmina) from notarial deeds (RCN): 4-quarter window with primary and secondary market and quarterly medians since 2010 */
+        get: operations["RealEstateController_housingMunicipality"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1864,7 +1898,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Residents income per capita by county (powiat): sum of its municipalities */
+        /** Residents income per capita by county (powiat) and province (wojewodztwo): sum of their municipalities */
         get: operations["RegionalController_incomeCounties"];
         put?: never;
         post?: never;
@@ -5566,6 +5600,150 @@ export interface components {
             data: components["schemas"]["HousingCityDataDto"];
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        MunicipalityWindowDto: {
+            /**
+             * @description First quarter of the 4-quarter window
+             * @example 2025-Q3
+             */
+            from: string;
+            /**
+             * @description Last quarter of the window
+             * @example 2026-Q2
+             */
+            to: string;
+        };
+        MunicipalityMarketDto: {
+            /**
+             * @description Flat deeds in the window
+             * @example 166
+             */
+            deeds: number;
+            /**
+             * @description Median price per m2 (PLN); null below minDeeds deeds or with a source gap
+             * @example 8292
+             */
+            medianM2: number | null;
+            p25M2: number | null;
+            p75M2: number | null;
+            /** @description Median flat area (m2) */
+            medianAreaM2: number | null;
+            /** @description Median flat price (PLN) */
+            medianPricePln: number | null;
+            /** @description Deeds in the window one year earlier */
+            prevDeeds: number | null;
+            /** @description Median per m2 in the window one year earlier */
+            prevMedianM2: number | null;
+            /** @description Year-over-year change of the median, % */
+            changePct: number | null;
+            /** @description Fewer than minDeeds deeds: count only, no prices */
+            smallSample: boolean;
+        };
+        MunicipalityDto: {
+            /**
+             * @description TERYT code of the municipality (gmina) with type digit: 1 urban, 2 rural, 3 urban-rural
+             * @example 1465011
+             */
+            teryt: string;
+            /** @example Warszawa */
+            name: string;
+            /** @enum {string|null} */
+            kind: "miejska" | "wiejska" | "miejsko-wiejska" | null;
+            /** @example powiat średzki */
+            county: string | null;
+            /** @example mazowieckie */
+            voivodeship: string | null;
+            /** @example mazowieckie */
+            voivodeshipSlug: string | null;
+            /** @description Population (GUS) */
+            population: number | null;
+            populationYear: number | null;
+            /** @description Last 4 full quarters of the county; earlier than the national window when the county enters deeds late */
+            window: components["schemas"]["MunicipalityWindowDto"];
+            /** @description Window ends earlier than the national window (late deed entries in the county) */
+            windowShifted: boolean;
+            /** @description County without deeds in the latest quarters: window medians withheld */
+            sourceGap: boolean;
+            /**
+             * @description Deeds in the window per 1000 residents
+             * @example 16.3
+             */
+            deedsPer1000: number | null;
+            /** @description Primary and secondary market together */
+            all: components["schemas"]["MunicipalityMarketDto"];
+            primary: components["schemas"]["MunicipalityMarketDto"];
+            secondary: components["schemas"]["MunicipalityMarketDto"];
+        };
+        MunicipalitiesDataDto: {
+            /** @description Data source as named by finwire.pl */
+            source: string;
+            /**
+             * @description Minimum deeds for a median and quartiles
+             * @example 30
+             */
+            minDeeds: number;
+            /** @description National window (most counties) */
+            window: components["schemas"]["MunicipalityWindowDto"] | null;
+            /** @description Date of the newest deed in the data */
+            dataUntil: string | null;
+            updatedAt: string | null;
+            /**
+             * @description Municipalities matching the filters, all pages
+             * @example 1770
+             */
+            total: number;
+            /** @description Municipalities with a median in the window, all pages */
+            withMedian: number;
+            /** @example 100 */
+            limit: number;
+            /** @example 0 */
+            offset: number;
+            /**
+             * @description Municipalities on this page
+             * @example 100
+             */
+            count: number;
+            /** @description URL of the next page; null on the last page */
+            next: string | null;
+            /** @description Municipalities with at least one deed in the window, in the requested order */
+            municipalities: components["schemas"]["MunicipalityDto"][];
+            /** @example https://finwire.pl/rejestr-cen-nieruchomosci */
+            pageUrl: string;
+        };
+        MunicipalitiesResponseDto: {
+            data: components["schemas"]["MunicipalitiesDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        MunicipalityQuarterMarketDto: {
+            deeds: number;
+            medianM2: number | null;
+            p25M2: number | null;
+            p75M2: number | null;
+            smallSample: boolean;
+        };
+        MunicipalityQuarterDto: {
+            /** @example 2026-Q2 */
+            quarter: string;
+            /** @description Quarter not complete yet (after the county window or less than 3 months after its end) */
+            provisional: boolean;
+            all: components["schemas"]["MunicipalityQuarterMarketDto"];
+            primary: components["schemas"]["MunicipalityQuarterMarketDto"] | null;
+            secondary: components["schemas"]["MunicipalityQuarterMarketDto"] | null;
+        };
+        MunicipalityDataDto: {
+            source: string;
+            /** @example 30 */
+            minDeeds: number;
+            dataUntil: string | null;
+            updatedAt: string | null;
+            municipality: components["schemas"]["MunicipalityDto"];
+            /** @description Quarters since 2010 with at least one deed, ascending */
+            quarters: components["schemas"]["MunicipalityQuarterDto"][];
+            pageUrl: string;
+        };
+        MunicipalityResponseDto: {
+            data: components["schemas"]["MunicipalityDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         LandWindowDto: {
             /**
              * @description Start of the last-12-months window
@@ -7454,6 +7632,8 @@ export interface components {
             minimumPensionTopUp: Record<string, never>;
             /** @description Supplementary benefit for persons unable to live independently (świadczenie uzupełniające, Act of 31 July 2019): gross benefits threshold in force from 1 March (ZUS announcement) and the next one when known, maximum monthly amount (maxMonthly), the amount rule, age 18+, PIT exemption */
             supplementaryBenefit: Record<string, never> | null;
+            /** @description Monthly supplements to the pension from 1 March (amount from the announcement in Monitor Polski, eligibility, legal basis): care supplement (dodatek pielęgnacyjny), complete orphan supplement, veteran supplement (dodatek kombatancki), compensatory supplement (15% of the veteran supplement), energy lump sum (ryczałt energetyczny), secret teaching supplement */
+            pensionSupplements: Record<string, never>[];
             /** @description Latest ZUS month: recipients of pensions (thousand), payouts (thousand PLN), average amounts by benefit */
             recipients: Record<string, never> | null;
         };
@@ -10253,6 +10433,8 @@ export interface components {
             count: number;
             /** @description Ranked by income per capita, descending */
             entries: components["schemas"]["IncomeCountyDto"][];
+            /** @description 16 provinces (wojewodztwa) from the same municipal data, ranked by income per capita, descending; teryt has 2 digits */
+            provinces: components["schemas"]["IncomeCountyDto"][];
         };
         IncomeCountiesResponseDto: {
             data: components["schemas"]["IncomeCountiesDataDto"];
@@ -14091,6 +14273,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HousingCityResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_housingMunicipalities: {
+        parameters: {
+            query?: {
+                /** @description Voivodeship TERYT code (2 digits) or slug, e.g. mazowieckie */
+                voivodeship?: string;
+                /** @description Part of the municipality name (diacritics and case ignored), 2-60 characters */
+                q?: string;
+                /** @description Page size, 1-500 (default 100) */
+                limit?: string;
+                /** @description Number of municipalities to skip; next page URL in data.next */
+                offset?: string;
+                /** @description Sort key (default teryt); median puts municipalities without a median last */
+                sort?: "teryt" | "name" | "deeds" | "median";
+                order?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MunicipalitiesResponseDto"];
+                };
+            };
+        };
+    };
+    RealEstateController_housingMunicipality: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Municipality TERYT code, 7 digits, from /v1/housing/municipalities */
+                teryt: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MunicipalityResponseDto"];
                 };
             };
         };
