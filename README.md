@@ -782,4 +782,8 @@ type TransactionPrices =
 - Single bank offers, notarial deeds and rental listings are never exposed - only statistics.
 - Informational data only, not investment advice (see [FAQ](#does-the-api-give-investment-advice)).
 
+## License
+
+Repository files (OpenAPI specification, TypeScript types, `server.json`, docs): [MIT](LICENSE). Data from the API: CC BY 4.0 for finwire indicators and aggregates, the original publisher's terms for public data; `meta.license` in each response.
+
 Built by [finwire.pl](https://finwire.pl) - Polish personal finance tools: [mortgage decision tool](https://finwire.pl/decyzjomat/hipoteka), [flat prices by city](https://finwire.pl/ceny-mieszkan), [deposit rankings](https://finwire.pl/rankingi/lokaty).
