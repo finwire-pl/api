@@ -3,6 +3,23 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-27
+
+### Added
+
+- MCP server 1.50.0: new tools `calc_occasional_leave`, `calc_court_case_costs`, `calc_vat_refund`, `calc_accident_compensation`; `calc_net_income` with `under_26`; `get_legal_limits` with building permit rules.
+- `GET /v1/occasional-leave` - dataset `occasional-leave`: occasional leave (urlop okolicznościowy) under § 15-16 of the regulation on justifying absence from work and granting employees time off: paid days off for the employee's wedding, the birth of a child, the wedding of a child and the death and funeral of a relative by degree of kinship (2 days or 1 day, 0 for persons not on the list), pay per day and for all days from `gross`, table of all events. Parameters `event`, `relation`, `gross`.
+- MCP server: new tool `calc_occasional_leave`.
+- `GET /v1/court-case-costs` - dataset `court-case-costs`: cost of a divorce with property division (`case=divorce`, `estate`, `division` none/disputed/agreed, `noFault`) or of a consumer bankruptcy (`case=consumer-bankruptcy`) for one party, without a lawyer and with a lawyer at the statutory minimum rates: court fees (Court Costs in Civil Cases Act art. 26, 38, 76a, 79), lawyer rates (§ 2, § 4, § 8 of the Minister of Justice regulations), stamp duty on the power of attorney, trustee fee range (Bankruptcy Law art. 491^9).
+- MCP: new tool `calc_court_case_costs`.
+- `GET /v1/business-poland/vat-refund` - Polish VAT refund deadline (VAT act art. 87) for the JPK_V7 filing date (`filed`): every refund type (`standard` 40 days, `vat-account` and `accelerated` 25 days, `retail` 15 days from the return deadline for online cash register sellers, `no-sales` 180 days, `no-sales-secured` 60 days) with the count start, nominal end, last day after the Saturday and public holiday shift (Tax Ordinance art. 12) and its reason; optional `variant` (fills `selected`), `deductionMonth` and `quarterly` for the input VAT deduction window (art. 86(10)-(13)): periods with return deadlines and the correction years.
+- MCP: new tool `calc_vat_refund`.
+- `GET /v1/business-poland/accident-compensation` - dataset `accident-compensation`: one-off compensation from ZUS for an accident at work or an occupational disease (Act on social insurance for accidents at work and occupational diseases, art. 11-15): `mode=injury` PLN per percent of health impairment, the increase after a worsening (`previousPercent`) and for total incapacity (`incapacity`); `mode=death` compensation for the family of a deceased insured (`spouse`, `children`, `others`, `paidToDeceased`) with the equal share; amounts in force on the decision `date` from the yearly ministerial notice in Monitor Polski (or the statutory formula from the GUS average wage before the notice), with the notice used and the history of periods.
+- MCP: new tool `calc_accident_compensation`.
+- `GET /v1/legal-limits`: block `buildingPermit` (dataset `legal-limits`) - building a house without a building permit under the Construction Law: footprint and storey limits of a small house on a notification with building from delivery (art. 29 ust. 1 pkt 1a), objection period for a notification with design, permit decision deadline, recreation cabin limits (art. 29 ust. 1 pkt 16), completion objection period, and setback distances from the plot boundary usable in the transition period of art. 102a (`setback`, null after `transitionUntil`).
+- MCP: `get_legal_limits` summarises the rules for building a house without a building permit.
+- finwire Health Contribution Forecast (`finwire_health_contribution_forecast`) in the finwire index register: `GET /v1/finwire-index/finwire_health_contribution_forecast` - the minimum monthly voluntary NFZ health insurance contribution for the quarter whose base GUS has not announced yet, with range and accuracy of the method; history of ex ante forecasts per quarter. `GET /v1/legal-limits`: `voluntaryHealth.current`, `next` and `lastAnnounced` have `indexId` (set on forecast quarters). MCP server 1.49.0: `get_legal_limits` names the index in the forecast line.
+
 ## 2026-11-26
 
 ### Changed

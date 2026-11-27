@@ -5373,6 +5373,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "under26",
+            "required": false,
+            "in": "query",
+            "description": "zlecenie: person under 26 without pupil or student status (true/false): social security and health contributions, no PIT within the youth relief limit",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5918,6 +5927,68 @@
         ]
       }
     },
+    "/v1/business-poland/vat-refund": {
+      "get": {
+        "operationId": "BusinessPolandController_vatRefund",
+        "parameters": [
+          {
+            "name": "filed",
+            "required": true,
+            "in": "query",
+            "description": "Day the JPK_V7 return (or correction) was filed (YYYY-MM-DD)",
+            "schema": {
+              "example": "2026-11-27",
+              "type": "string"
+            }
+          },
+          {
+            "name": "variant",
+            "required": false,
+            "in": "query",
+            "description": "Refund type; omitted = all types in variants, selected = null",
+            "schema": {
+              "enum": [
+                "standard",
+                "vat-account",
+                "accelerated",
+                "retail",
+                "no-sales",
+                "no-sales-secured"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "deductionMonth",
+            "required": false,
+            "in": "query",
+            "description": "Month the right to deduct input VAT arose (invoice received and tax point at the seller), YYYY-MM",
+            "schema": {
+              "example": "2026-11",
+              "type": "string"
+            }
+          },
+          {
+            "name": "quarterly",
+            "required": false,
+            "in": "query",
+            "description": "Quarterly VAT returns (art. 99(2)-(3)), true/false; default monthly",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Polish VAT refund deadline (VAT act art. 87): last day for the tax office to refund excess input VAT for the filing date of the JPK_V7 return and each refund type (40 days standard, 25 days to the VAT account or accelerated, 15 days for online cash register sellers counted from the return deadline, 180 days without taxable sales, 60 days with security), calendar days with the weekend and holiday shift (Tax Ordinance art. 12), plus the input VAT deduction window (art. 86(10)-(13)), with the legal basis",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
     "/v1/business-poland/suspension": {
       "get": {
         "operationId": "BusinessPolandController_suspension",
@@ -6241,6 +6312,108 @@
           }
         },
         "summary": "Polish seniority bonus (dodatek sta\u017cowy, dodatek za wieloletni\u0105 prac\u0119, za wys\u0142ug\u0119 lat): percent and PLN amount from base pay and length of service, date and amount of the next rise, the maximum and when it is reached, for local government, civil service, state offices, courts and prosecution, teachers, or a company rule from pay regulations; with the statutory basis of each group",
+        "tags": [
+          "Business in Poland"
+        ]
+      }
+    },
+    "/v1/business-poland/accident-compensation": {
+      "get": {
+        "operationId": "BusinessPolandController_accidentCompensation",
+        "parameters": [
+          {
+            "name": "mode",
+            "required": false,
+            "in": "query",
+            "description": "injury (default) = impairment of the insured; death = family of the deceased",
+            "schema": {
+              "enum": [
+                "injury",
+                "death"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "percent",
+            "required": false,
+            "in": "query",
+            "description": "injury: percent of health impairment from the ZUS medical certificate (0-100)",
+            "schema": {
+              "example": 10,
+              "type": "string"
+            }
+          },
+          {
+            "name": "previousPercent",
+            "required": false,
+            "in": "query",
+            "description": "injury: percent already compensated (increase only from +10 points)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "incapacity",
+            "required": false,
+            "in": "query",
+            "description": "injury: true = total incapacity to work and to independent living",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spouse",
+            "required": false,
+            "in": "query",
+            "description": "death: true = spouse entitled",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "children",
+            "required": false,
+            "in": "query",
+            "description": "death: number of entitled children",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "others",
+            "required": false,
+            "in": "query",
+            "description": "death: number of other entitled family members (parents, step-parents)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "paidToDeceased",
+            "required": false,
+            "in": "query",
+            "description": "death: impairment compensation already paid to the deceased (PLN), deducted",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "Date of the ZUS decision YYYY-MM-DD (amounts in force that day); default today",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "One-off compensation from ZUS for an accident at work or occupational disease in Poland (jednorazowe odszkodowanie): PLN for each percent of permanent or long-term health impairment, the increase for total incapacity to work and independent living, the compensation for the family of a deceased insured (spouse, children, other family members) on the date of the ZUS decision, with the amounts of the current and past ministerial notices (Monitor Polski) and their source",
         "tags": [
           "Business in Poland"
         ]
@@ -6991,6 +7164,80 @@
         ]
       }
     },
+    "/v1/occasional-leave": {
+      "get": {
+        "operationId": "OccasionalLeaveController_get",
+        "parameters": [
+          {
+            "name": "event",
+            "required": false,
+            "in": "query",
+            "description": "Event; default funeral",
+            "schema": {
+              "enum": [
+                "own-wedding",
+                "child-birth",
+                "child-wedding",
+                "funeral"
+              ],
+              "type": "string",
+              "example": "funeral"
+            }
+          },
+          {
+            "name": "relation",
+            "required": false,
+            "in": "query",
+            "description": "For event=funeral: who died; other = a person not on the list (aunt, uncle, grandchild); default other",
+            "schema": {
+              "enum": [
+                "spouse",
+                "child",
+                "father",
+                "mother",
+                "stepfather",
+                "stepmother",
+                "sibling",
+                "mother-in-law",
+                "father-in-law",
+                "grandmother",
+                "grandfather",
+                "dependent",
+                "other"
+              ],
+              "type": "string",
+              "example": "grandmother"
+            }
+          },
+          {
+            "name": "gross",
+            "required": false,
+            "in": "query",
+            "description": "Gross monthly pay in PLN, 0-1000000; for the pay of the days off",
+            "schema": {
+              "example": 8000,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OccasionalLeaveResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Occasional leave in Poland (urlop okoliczno\u015bciowy, \u00a7 15-16 of the regulation on justifying absence from work and granting time off): paid days off for the employee's wedding, the birth of a child, the wedding of a child, and the death and funeral of a relative by degree of kinship, with the pay for those days from the gross monthly pay and the table of all events.",
+        "tags": [
+          "Calculators"
+        ]
+      }
+    },
     "/v1/labour-office-support": {
       "get": {
         "operationId": "LabourOfficeSupportController_get",
@@ -7172,6 +7419,69 @@
           }
         },
         "summary": "Prepayment of a consumer cash loan in Poland (equal instalments, fixed rate): interest without prepayment, with a shorter term and with a lower instalment, the early repayment fee under the Consumer Credit Act art. 50 (fixed rate only, above 3 times the December average enterprise-sector wage repaid within 12 months, at most 1% or 0.5%, never above the interest until the end of the contract), the refund of up-front costs under art. 49 (linear estimate) and the net saving. Default interest rate: NBP average for new consumer loans in PLN.",
+        "tags": [
+          "Calculators"
+        ]
+      }
+    },
+    "/v1/court-case-costs": {
+      "get": {
+        "operationId": "CourtCaseCostsController_get",
+        "parameters": [
+          {
+            "name": "case",
+            "required": false,
+            "in": "query",
+            "description": "divorce or consumer-bankruptcy; default divorce",
+            "schema": {
+              "example": "divorce",
+              "type": "string"
+            }
+          },
+          {
+            "name": "estate",
+            "required": false,
+            "in": "query",
+            "description": "Divorce: value of the joint property to divide, PLN; default 400000",
+            "schema": {
+              "example": 400000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "division",
+            "required": false,
+            "in": "query",
+            "description": "Divorce: none (no division), disputed or agreed (agreed division plan); default disputed",
+            "schema": {
+              "example": "disputed",
+              "type": "string"
+            }
+          },
+          {
+            "name": "noFault",
+            "required": false,
+            "in": "query",
+            "description": "Divorce without fault on the joint request of the spouses (half of the fee refunded), true or false; default false",
+            "schema": {
+              "example": false,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourtCaseCostsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cost of a divorce with the division of joint property or of a consumer bankruptcy in Poland for one party, without a lawyer and with a lawyer at the statutory minimum rates: court fees (Court Costs in Civil Cases Act art. 26, 38, 76a, 79), lawyer minimum rates (Minister of Justice regulations on fees of advocates and legal advisers \u00a7 2, \u00a7 4, \u00a7 8), stamp duty on the power of attorney and, for bankruptcy, the trustee fee range (Bankruptcy Law art. 491^9).",
         "tags": [
           "Calculators"
         ]
@@ -9353,6 +9663,25 @@
               }
             }
           },
+          "buildingPermit": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true,
+            "description": "Building a house without a building permit in Poland (Construction Law, art. 29-30): smallHouseMaxFootprintM2 and smallHouseMaxStoreys = detached single-family house built for the investor's own housing needs that needs only a notification and may start on delivery (no site manager required), any detached house with its impact zone within the plot = notification with design and objectionDays for the authority, otherwise building permit decided within permitDecisionDays; recreation cabins up to recreationSmallMaxM2 (or up to recreationMaxM2 within span and cantilever limits, one per recreationPlotM2PerBuilding of plot) on a notification with sketches; completionObjectionDays after the completion notice; setback = minimum distances from the plot boundary usable in the transition period until transitionUntil (null after it)",
+            "example": {
+              "smallHouseMaxFootprintM2": 70,
+              "smallHouseMaxStoreys": 2,
+              "objectionDays": 21,
+              "permitDecisionDays": 65,
+              "completionObjectionDays": 14,
+              "setback": {
+                "windowWallM": 4,
+                "blankWallM": 3,
+                "reducedM": 1.5,
+                "transitionUntil": "2028-03-20"
+              }
+            }
+          },
           "business": {
             "type": "object",
             "nullable": true,
@@ -9367,6 +9696,7 @@
           "lifeExpectancy",
           "voluntaryHealth",
           "civilLawTaxes",
+          "buildingPermit",
           "business"
         ]
       },
@@ -34982,6 +35312,22 @@
           "meta"
         ]
       },
+      "OccasionalLeaveResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Projection of the dataset occasional-leave (see /v1/datasets/occasional-leave)"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
       "LabourOfficeSupportResponseDto": {
         "type": "object",
         "properties": {
@@ -35004,6 +35350,22 @@
           "data": {
             "type": "object",
             "description": "Projection of the dataset cash-loan-prepayment (see /v1/datasets/cash-loan-prepayment)"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "CourtCaseCostsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Projection of the dataset court-case-costs (see /v1/datasets/court-case-costs)"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

@@ -2962,6 +2962,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/business-poland/vat-refund": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Polish VAT refund deadline (VAT act art. 87): last day for the tax office to refund excess input VAT for the filing date of the JPK_V7 return and each refund type (40 days standard, 25 days to the VAT account or accelerated, 15 days for online cash register sellers counted from the return deadline, 180 days without taxable sales, 60 days with security), calendar days with the weekend and holiday shift (Tax Ordinance art. 12), plus the input VAT deduction window (art. 86(10)-(13)), with the legal basis */
+        get: operations["BusinessPolandController_vatRefund"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/business-poland/suspension": {
         parameters: {
             query?: never;
@@ -3005,6 +3022,23 @@ export interface paths {
         };
         /** Polish seniority bonus (dodatek stażowy, dodatek za wieloletnią pracę, za wysługę lat): percent and PLN amount from base pay and length of service, date and amount of the next rise, the maximum and when it is reached, for local government, civil service, state offices, courts and prosecution, teachers, or a company rule from pay regulations; with the statutory basis of each group */
         get: operations["BusinessPolandController_seniorityBonus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/business-poland/accident-compensation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One-off compensation from ZUS for an accident at work or occupational disease in Poland (jednorazowe odszkodowanie): PLN for each percent of permanent or long-term health impairment, the increase for total incapacity to work and independent living, the compensation for the family of a deceased insured (spouse, children, other family members) on the date of the ZUS decision, with the amounts of the current and past ministerial notices (Monitor Polski) and their source */
+        get: operations["BusinessPolandController_accidentCompensation"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3319,6 +3353,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/occasional-leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Occasional leave in Poland (urlop okolicznościowy, § 15-16 of the regulation on justifying absence from work and granting time off): paid days off for the employee's wedding, the birth of a child, the wedding of a child, and the death and funeral of a relative by degree of kinship, with the pay for those days from the gross monthly pay and the table of all events. */
+        get: operations["OccasionalLeaveController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/labour-office-support": {
         parameters: {
             query?: never;
@@ -3345,6 +3396,23 @@ export interface paths {
         };
         /** Prepayment of a consumer cash loan in Poland (equal instalments, fixed rate): interest without prepayment, with a shorter term and with a lower instalment, the early repayment fee under the Consumer Credit Act art. 50 (fixed rate only, above 3 times the December average enterprise-sector wage repaid within 12 months, at most 1% or 0.5%, never above the interest until the end of the contract), the refund of up-front costs under art. 49 (linear estimate) and the net saving. Default interest rate: NBP average for new consumer loans in PLN. */
         get: operations["CashLoanPrepaymentController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/court-case-costs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cost of a divorce with the division of joint property or of a consumer bankruptcy in Poland for one party, without a lawyer and with a lawyer at the statutory minimum rates: court fees (Court Costs in Civil Cases Act art. 26, 38, 76a, 79), lawyer minimum rates (Minister of Justice regulations on fees of advocates and legal advisers § 2, § 4, § 8), stamp duty on the power of attorney and, for bankruptcy, the trustee fee range (Bankruptcy Law art. 491^9). */
+        get: operations["CourtCaseCostsController_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4191,6 +4259,25 @@ export interface components {
              *     }
              */
             civilLawTaxes: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * @description Building a house without a building permit in Poland (Construction Law, art. 29-30): smallHouseMaxFootprintM2 and smallHouseMaxStoreys = detached single-family house built for the investor's own housing needs that needs only a notification and may start on delivery (no site manager required), any detached house with its impact zone within the plot = notification with design and objectionDays for the authority, otherwise building permit decided within permitDecisionDays; recreation cabins up to recreationSmallMaxM2 (or up to recreationMaxM2 within span and cantilever limits, one per recreationPlotM2PerBuilding of plot) on a notification with sketches; completionObjectionDays after the completion notice; setback = minimum distances from the plot boundary usable in the transition period until transitionUntil (null after it)
+             * @example {
+             *       "smallHouseMaxFootprintM2": 70,
+             *       "smallHouseMaxStoreys": 2,
+             *       "objectionDays": 21,
+             *       "permitDecisionDays": 65,
+             *       "completionObjectionDays": 14,
+             *       "setback": {
+             *         "windowWallM": 4,
+             *         "blankWallM": 3,
+             *         "reducedM": 1.5,
+             *         "transitionUntil": "2028-03-20"
+             *       }
+             *     }
+             */
+            buildingPermit: {
                 [key: string]: unknown;
             } | null;
             /** @description Business block: eurRates (NBP mid rate of the first business day of October per year), eurLimits (key, label, measure, legalBasis, rounding, values per year in EUR and PLN), taxOffences (fiscal penal code fines and thresholds from the minimum wage, current and next), companyCarPrivateUse (monthly PLN amounts). Null when the upstream is unavailable. */
@@ -13505,6 +13592,11 @@ export interface components {
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        OccasionalLeaveResponseDto: {
+            /** @description Projection of the dataset occasional-leave (see /v1/datasets/occasional-leave) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         LabourOfficeSupportResponseDto: {
             /** @description Projection of the dataset labour-office-support (see /v1/datasets/labour-office-support) */
             data: Record<string, never>;
@@ -13512,6 +13604,11 @@ export interface components {
         };
         CashLoanPrepaymentResponseDto: {
             /** @description Projection of the dataset cash-loan-prepayment (see /v1/datasets/cash-loan-prepayment) */
+            data: Record<string, never>;
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
+        CourtCaseCostsResponseDto: {
+            /** @description Projection of the dataset court-case-costs (see /v1/datasets/court-case-costs) */
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
@@ -17052,6 +17149,8 @@ export interface operations {
                 student?: string;
                 /** @description Tax year, default current */
                 year?: string;
+                /** @description zlecenie: person under 26 without pupil or student status (true/false): social security and health contributions, no PIT within the youth relief limit */
+                under26?: string;
             };
             header?: never;
             path?: never;
@@ -17294,6 +17393,32 @@ export interface operations {
             };
         };
     };
+    BusinessPolandController_vatRefund: {
+        parameters: {
+            query: {
+                /** @description Day the JPK_V7 return (or correction) was filed (YYYY-MM-DD) */
+                filed: string;
+                /** @description Refund type; omitted = all types in variants, selected = null */
+                variant?: "standard" | "vat-account" | "accelerated" | "retail" | "no-sales" | "no-sales-secured";
+                /** @description Month the right to deduct input VAT arose (invoice received and tax point at the seller), YYYY-MM */
+                deductionMonth?: string;
+                /** @description Quarterly VAT returns (art. 99(2)-(3)), true/false; default monthly */
+                quarterly?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     BusinessPolandController_suspension: {
         parameters: {
             query: {
@@ -17385,6 +17510,42 @@ export interface operations {
                 stepPct?: string;
                 /** @description group=regulamin: maximum percent */
                 maxPct?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BusinessPolandController_accidentCompensation: {
+        parameters: {
+            query?: {
+                /** @description injury (default) = impairment of the insured; death = family of the deceased */
+                mode?: "injury" | "death";
+                /** @description injury: percent of health impairment from the ZUS medical certificate (0-100) */
+                percent?: string;
+                /** @description injury: percent already compensated (increase only from +10 points) */
+                previousPercent?: string;
+                /** @description injury: true = total incapacity to work and to independent living */
+                incapacity?: string;
+                /** @description death: true = spouse entitled */
+                spouse?: string;
+                /** @description death: number of entitled children */
+                children?: string;
+                /** @description death: number of other entitled family members (parents, step-parents) */
+                others?: string;
+                /** @description death: impairment compensation already paid to the deceased (PLN), deducted */
+                paidToDeceased?: string;
+                /** @description Date of the ZUS decision YYYY-MM-DD (amounts in force that day); default today */
+                date?: string;
             };
             header?: never;
             path?: never;
@@ -17815,6 +17976,32 @@ export interface operations {
             };
         };
     };
+    OccasionalLeaveController_get: {
+        parameters: {
+            query?: {
+                /** @description Event; default funeral */
+                event?: "own-wedding" | "child-birth" | "child-wedding" | "funeral";
+                /** @description For event=funeral: who died; other = a person not on the list (aunt, uncle, grandchild); default other */
+                relation?: "spouse" | "child" | "father" | "mother" | "stepfather" | "stepmother" | "sibling" | "mother-in-law" | "father-in-law" | "grandmother" | "grandfather" | "dependent" | "other";
+                /** @description Gross monthly pay in PLN, 0-1000000; for the pay of the days off */
+                gross?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OccasionalLeaveResponseDto"];
+                };
+            };
+        };
+    };
     LabourOfficeSupportController_get: {
         parameters: {
             query?: {
@@ -17879,6 +18066,34 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CashLoanPrepaymentResponseDto"];
+                };
+            };
+        };
+    };
+    CourtCaseCostsController_get: {
+        parameters: {
+            query?: {
+                /** @description divorce or consumer-bankruptcy; default divorce */
+                case?: string;
+                /** @description Divorce: value of the joint property to divide, PLN; default 400000 */
+                estate?: string;
+                /** @description Divorce: none (no division), disputed or agreed (agreed division plan); default disputed */
+                division?: string;
+                /** @description Divorce without fault on the joint request of the spouses (half of the fee refunded), true or false; default false */
+                noFault?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourtCaseCostsResponseDto"];
                 };
             };
         };
