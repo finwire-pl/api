@@ -7010,6 +7010,59 @@
         ]
       }
     },
+    "/v1/ranking-market/{product}": {
+      "get": {
+        "operationId": "RankingMarketController_get",
+        "parameters": [
+          {
+            "name": "product",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "enum": [
+                "business-account",
+                "business-loan",
+                "credit-card",
+                "nonbank-loan"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "description": "Last N daily readings of history, 1-400; default all (up to 400)",
+            "schema": {
+              "example": 90,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankingMarketResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unknown product or days out of range"
+          },
+          "404": {
+            "description": "No data"
+          }
+        },
+        "summary": "finwire ranking market layer, a daily reading from offers of banks and lenders in partner networks, with daily history and the change vs 30 days earlier: business-account = Koszt konta firmowego bez warunk\u00f3w finwire (finwire_business_account_cost, median monthly fee for a business account and card without meeting the waiver condition), business-loan = Prowizja kredytu firmowego finwire (finwire_business_loan_fee, median arrangement fee in PLN for the ranking scenario), credit-card = Oprocentowanie kart kredytowych finwire (finwire_credit_card_rate, median card interest rate against the statutory maximum interest), nonbank-loan = Limit darmowej po\u017cyczki finwire (finwire_free_loan_limit, highest amount of a first loan at 0 PLN). Aggregates only, no single offers.",
+        "tags": [
+          "Credit market"
+        ]
+      }
+    },
     "/v1/cumulative-inflation": {
       "get": {
         "operationId": "CumulativeInflationController_get",
@@ -35270,6 +35323,256 @@
           "data": {
             "type": "object",
             "description": "Projection of the dataset build-cost (see /v1/datasets/build-cost)"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "RankingMarketLatestDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-11-28",
+            "description": "Warsaw day of the reading"
+          },
+          "value": {
+            "type": "number",
+            "example": 8,
+            "description": "Value of the day: median (business-account, business-loan, credit-card) or highest amount (nonbank-loan)"
+          },
+          "min": {
+            "type": "number",
+            "example": 0
+          },
+          "median": {
+            "type": "number",
+            "example": 8
+          },
+          "max": {
+            "type": "number",
+            "example": 77
+          },
+          "sample": {
+            "type": "number",
+            "example": 13,
+            "description": "Offers in the measure (nonbank-loan: lenders with a free first loan)"
+          },
+          "offers": {
+            "type": "number",
+            "example": 13,
+            "description": "All offers in the ranking"
+          },
+          "banks": {
+            "type": "number",
+            "example": 10,
+            "description": "Banks or lenders in the ranking"
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "nullable": true
+            },
+            "example": {
+              "zeroCostOffers": 4,
+              "offersWithWelcomeBonus": 7,
+              "maxWelcomeBonusPln": 6000,
+              "medianWelcomeBonusPln": 5000
+            },
+            "description": "Product details. business-account: zeroCostOffers, offersWithWelcomeBonus, maxWelcomeBonusPln, medianWelcomeBonusPln. business-loan: scenarioAmountPln, scenarioMonths, zeroFeeOffers, medianArrangementFeePct, minCompanyAgeMonthsLowest, minCompanyAgeMonthsMedian, offersWithInterestRate. credit-card: statutoryMaxInterestPct, gapToStatutoryMaxPp, cardsAtStatutoryMax, yearlyFeeMinPln, yearlyFeeMaxPln, zeroFeeCards, interestFreeDaysMin, interestFreeDaysMax. nonbank-loan: lenders, freeFirstLoanOffers."
+          },
+          "dataChangedAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "Last real change of the source offers (ISO)"
+          },
+          "computedAt": {
+            "type": "string",
+            "nullable": true,
+            "description": "When the reading was computed (ISO)"
+          }
+        },
+        "required": [
+          "date",
+          "value",
+          "min",
+          "median",
+          "max",
+          "sample",
+          "offers",
+          "banks",
+          "details",
+          "dataChangedAt",
+          "computedAt"
+        ]
+      },
+      "RankingMarketChangeDto": {
+        "type": "object",
+        "properties": {
+          "baseDate": {
+            "type": "string",
+            "example": "2026-10-29",
+            "description": "Day of the base reading, at least 30 days before the latest"
+          },
+          "baseValue": {
+            "type": "number",
+            "example": 9
+          },
+          "delta": {
+            "type": "number",
+            "example": -1,
+            "description": "Latest minus base (PLN or percentage points)"
+          }
+        },
+        "required": [
+          "baseDate",
+          "baseValue",
+          "delta"
+        ]
+      },
+      "RankingMarketPointDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-11-28",
+            "description": "Warsaw day of the reading"
+          },
+          "value": {
+            "type": "number",
+            "example": 8,
+            "description": "Value of the day: median (business-account, business-loan, credit-card) or highest amount (nonbank-loan)"
+          },
+          "min": {
+            "type": "number",
+            "example": 0
+          },
+          "median": {
+            "type": "number",
+            "example": 8
+          },
+          "max": {
+            "type": "number",
+            "example": 77
+          },
+          "sample": {
+            "type": "number",
+            "example": 13,
+            "description": "Offers in the measure (nonbank-loan: lenders with a free first loan)"
+          }
+        },
+        "required": [
+          "date",
+          "value",
+          "min",
+          "median",
+          "max",
+          "sample"
+        ]
+      },
+      "RankingMarketDataDto": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "type": "string",
+            "enum": [
+              "business-account",
+              "business-loan",
+              "credit-card",
+              "nonbank-loan"
+            ]
+          },
+          "indexId": {
+            "type": "string",
+            "example": "finwire_business_account_cost",
+            "description": "finwire index id (see /v1/finwire-index/{id})"
+          },
+          "name": {
+            "type": "string",
+            "example": "finwire Business Account Cost Without Conditions"
+          },
+          "measure": {
+            "type": "string",
+            "description": "What the value measures"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "pln",
+              "percent"
+            ]
+          },
+          "unitLabel": {
+            "type": "string",
+            "example": "z\u0142/mies."
+          },
+          "methodVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "latest": {
+            "nullable": true,
+            "description": "Latest reading; null before the first one",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RankingMarketLatestDto"
+              }
+            ]
+          },
+          "change30d": {
+            "nullable": true,
+            "description": "Change vs the reading 30 days earlier; null while the series is shorter",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RankingMarketChangeDto"
+              }
+            ]
+          },
+          "firstDate": {
+            "type": "string",
+            "nullable": true,
+            "description": "First day of the series"
+          },
+          "history": {
+            "description": "Daily readings, oldest first; a day with too few offers has no reading",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RankingMarketPointDto"
+            }
+          },
+          "pageUrl": {
+            "type": "string",
+            "example": "https://finwire.pl/rankingi/konta-firmowe#warstwa-rynku"
+          }
+        },
+        "required": [
+          "product",
+          "indexId",
+          "name",
+          "measure",
+          "unit",
+          "unitLabel",
+          "methodVersion",
+          "latest",
+          "change30d",
+          "firstDate",
+          "history",
+          "pageUrl"
+        ]
+      },
+      "RankingMarketResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/RankingMarketDataDto"
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMetaDto"

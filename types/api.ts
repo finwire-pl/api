@@ -3319,6 +3319,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/ranking-market/{product}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** finwire ranking market layer, a daily reading from offers of banks and lenders in partner networks, with daily history and the change vs 30 days earlier: business-account = Koszt konta firmowego bez warunków finwire (finwire_business_account_cost, median monthly fee for a business account and card without meeting the waiver condition), business-loan = Prowizja kredytu firmowego finwire (finwire_business_loan_fee, median arrangement fee in PLN for the ranking scenario), credit-card = Oprocentowanie kart kredytowych finwire (finwire_credit_card_rate, median card interest rate against the statutory maximum interest), nonbank-loan = Limit darmowej pożyczki finwire (finwire_free_loan_limit, highest amount of a first loan at 0 PLN). Aggregates only, no single offers. */
+        get: operations["RankingMarketController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/cumulative-inflation": {
         parameters: {
             query?: never;
@@ -13582,6 +13599,125 @@ export interface components {
             data: Record<string, never>;
             meta: components["schemas"]["ResponseMetaDto"];
         };
+        RankingMarketLatestDto: {
+            /**
+             * @description Warsaw day of the reading
+             * @example 2026-11-28
+             */
+            date: string;
+            /**
+             * @description Value of the day: median (business-account, business-loan, credit-card) or highest amount (nonbank-loan)
+             * @example 8
+             */
+            value: number;
+            /** @example 0 */
+            min: number;
+            /** @example 8 */
+            median: number;
+            /** @example 77 */
+            max: number;
+            /**
+             * @description Offers in the measure (nonbank-loan: lenders with a free first loan)
+             * @example 13
+             */
+            sample: number;
+            /**
+             * @description All offers in the ranking
+             * @example 13
+             */
+            offers: number;
+            /**
+             * @description Banks or lenders in the ranking
+             * @example 10
+             */
+            banks: number;
+            /**
+             * @description Product details. business-account: zeroCostOffers, offersWithWelcomeBonus, maxWelcomeBonusPln, medianWelcomeBonusPln. business-loan: scenarioAmountPln, scenarioMonths, zeroFeeOffers, medianArrangementFeePct, minCompanyAgeMonthsLowest, minCompanyAgeMonthsMedian, offersWithInterestRate. credit-card: statutoryMaxInterestPct, gapToStatutoryMaxPp, cardsAtStatutoryMax, yearlyFeeMinPln, yearlyFeeMaxPln, zeroFeeCards, interestFreeDaysMin, interestFreeDaysMax. nonbank-loan: lenders, freeFirstLoanOffers.
+             * @example {
+             *       "zeroCostOffers": 4,
+             *       "offersWithWelcomeBonus": 7,
+             *       "maxWelcomeBonusPln": 6000,
+             *       "medianWelcomeBonusPln": 5000
+             *     }
+             */
+            details: {
+                [key: string]: number | null;
+            };
+            /** @description Last real change of the source offers (ISO) */
+            dataChangedAt: string | null;
+            /** @description When the reading was computed (ISO) */
+            computedAt: string | null;
+        };
+        RankingMarketChangeDto: {
+            /**
+             * @description Day of the base reading, at least 30 days before the latest
+             * @example 2026-10-29
+             */
+            baseDate: string;
+            /** @example 9 */
+            baseValue: number;
+            /**
+             * @description Latest minus base (PLN or percentage points)
+             * @example -1
+             */
+            delta: number;
+        };
+        RankingMarketPointDto: {
+            /**
+             * @description Warsaw day of the reading
+             * @example 2026-11-28
+             */
+            date: string;
+            /**
+             * @description Value of the day: median (business-account, business-loan, credit-card) or highest amount (nonbank-loan)
+             * @example 8
+             */
+            value: number;
+            /** @example 0 */
+            min: number;
+            /** @example 8 */
+            median: number;
+            /** @example 77 */
+            max: number;
+            /**
+             * @description Offers in the measure (nonbank-loan: lenders with a free first loan)
+             * @example 13
+             */
+            sample: number;
+        };
+        RankingMarketDataDto: {
+            /** @enum {string} */
+            product: "business-account" | "business-loan" | "credit-card" | "nonbank-loan";
+            /**
+             * @description finwire index id (see /v1/finwire-index/{id})
+             * @example finwire_business_account_cost
+             */
+            indexId: string;
+            /** @example finwire Business Account Cost Without Conditions */
+            name: string;
+            /** @description What the value measures */
+            measure: string;
+            /** @enum {string} */
+            unit: "pln" | "percent";
+            /** @example zł/mies. */
+            unitLabel: string;
+            /** @example 1 */
+            methodVersion: number;
+            /** @description Latest reading; null before the first one */
+            latest: components["schemas"]["RankingMarketLatestDto"] | null;
+            /** @description Change vs the reading 30 days earlier; null while the series is shorter */
+            change30d: components["schemas"]["RankingMarketChangeDto"] | null;
+            /** @description First day of the series */
+            firstDate: string | null;
+            /** @description Daily readings, oldest first; a day with too few offers has no reading */
+            history: components["schemas"]["RankingMarketPointDto"][];
+            /** @example https://finwire.pl/rankingi/konta-firmowe#warstwa-rynku */
+            pageUrl: string;
+        };
+        RankingMarketResponseDto: {
+            data: components["schemas"]["RankingMarketDataDto"];
+            meta: components["schemas"]["ResponseMetaDto"];
+        };
         CumulativeInflationResponseDto: {
             /** @description Projection of the dataset cumulative-inflation (see /v1/datasets/cumulative-inflation) */
             data: Record<string, never>;
@@ -17911,6 +18047,44 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["BuildCostResponseDto"];
                 };
+            };
+        };
+    };
+    RankingMarketController_get: {
+        parameters: {
+            query?: {
+                /** @description Last N daily readings of history, 1-400; default all (up to 400) */
+                days?: number;
+            };
+            header?: never;
+            path: {
+                product: "business-account" | "business-loan" | "credit-card" | "nonbank-loan";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RankingMarketResponseDto"];
+                };
+            };
+            /** @description Unknown product or days out of range */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No data */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

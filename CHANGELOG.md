@@ -3,6 +3,13 @@
 Changes to the public finwire API (`https://public-api.finwire.pl`) visible to API consumers.
 All endpoints are under `/v1`. Breaking changes are marked **Breaking**.
 
+## 2026-11-28
+
+### Added
+
+- `GET /v1/ranking-market/{product}` (optional `days`, 1-400) - dataset `ranking-market`: daily market reading of four finwire rankings from offers of banks and lenders in partner networks, with daily history and the change vs the reading 30 days earlier. New indices in `/v1/finwire-index`: `finwire_business_account_cost` (median monthly fee for a business account and card without meeting the waiver condition), `finwire_business_loan_fee` (median arrangement fee in PLN for the ranking business loan scenario), `finwire_credit_card_rate` (median credit card interest rate against the statutory maximum interest), `finwire_free_loan_limit` (highest amount of a first loan at 0 PLN, with the number of lenders). Aggregates only.
+- MCP server 1.51.0: new tool `get_ranking_market` (`product` required, optional `history`).
+
 ## 2026-11-27
 
 ### Added
